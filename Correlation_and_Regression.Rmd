@@ -1,7 +1,7 @@
 ---
 title: "Correlation and Regression"
 author: '[Put your name here]'
-output: pdf_document
+output: html_document
 ---
 
 In this assignment we will learn how to run correlation and regression analyses. Correlation measures the strength of the linear relationship between two numerical variables; regression provides a model for that linear relationship.
@@ -234,7 +234,7 @@ We see that the shape is mostly normal. The tails are not quite shaped the way w
 We should also create a _residual plot_, which looks at the residuals above each value along the x-axis. (In the command below, we also add a horizontal reference line so that it is clear which points have positive or negative residuals.)
 
 ```{r}
-qplot(state$med_income, income_smoke$residuals) + geom_hline(y = 0)
+qplot(state$med_income, income_smoke$residuals) + geom_hline(yintercept = 0)
 ```
 
 Other than the one outlier, this looks good. There is no systematic patterns in the residuals. A residual plot should look like the most boring plot you've ever seen.
@@ -245,7 +245,7 @@ As an example of the latter, let's look at the residual plot for the tipping exa
 
 ```{r}
 bill_tip <- lm(tips$tip ~ tips$total_bill)
-qplot(tips$total_bill, bill_tip$residuals) + geom_hline(y = 0)
+qplot(tips$total_bill, bill_tip$residuals) + geom_hline(yintercept = 0)
 ```
 
 The residuals are quite small toward the left end of the residual plot, and then spread out and get larger toward the right end. This is a violation of the "patterns in the residuals" condition, and is the reason why we are not pursuing a regression analysis of the tip data here.
