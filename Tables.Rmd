@@ -1,0 +1,181 @@
+---
+title: "Tables"
+author: "Put your name here"
+date: "Put the date here"
+output: pdf_document
+---
+<!-- Please don't mess with the next two lines! -->
+\newenvironment{answer}{\definecolor{shadecolor}{RGB}{225, 225, 255}\begin{shaded}}{\end{shaded}}
+<!-- Please don't mess with the previous two lines! -->
+
+
+## Introduction
+
+In this module, we'll learn how to summarize categorical data using tables.
+
+
+## Instructions
+
+Presumably, you have already created a new project and downloaded this file into it. Please knit the document and work back and forth between this R Markdown file and the PDF output as you work through this module.
+
+When you are finished with the assignment, knit to PDF one last time, proofread the PDF file **carefully**, export the PDF file to your computer, and then submit your assignment.
+
+Sometimes you will be asked to add your own R code. That will appear in this document as a code chunk with a request for you to add your own code, like so:
+
+```{r}
+## Add code here to [do some task]...
+```
+
+Be sure to remove the line `## Add code here to [do some task]...` when you have added your own code.
+
+Sometimes you will be asked to type up your thoughts. That will appear in the document as follows:
+
+\begin{answer}
+Please write up your answer here.
+\end{answer}
+
+Again, please be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. If you need to use some R code as well, you can use inline R code inside the block between `\begin{answer}` and `\end{answer}`, or if you need an R code chunk, please go outside the `answer` block and start a new code chunk.
+
+
+## Load Packages
+
+We load the `MASS` package to work with the birth weight data `birthwt` and the `gmodels` package to make nice contingency tables.
+
+```{r, warning = FALSE, message=FALSE}
+library(MASS)
+library(gmodels)
+```
+
+
+## Working with factor variables
+
+R uses the term "factor variable" to refer to a categorical variable. Your data set may already come with its variables coded correctly as factor variables, but often they are not. For example, our birth weight data has several categorical variables, but they are all coded numerically.
+
+The code below is somewhat involved and technical. After the code chunk, I'll explain what each piece does.
+
+```{r}
+race <- factor(birthwt$race,
+               levels = c(1, 2, 3),
+               labels = c("White", "Black", "Other"))
+race_df <- data.frame(race)
+```
+
+First of all, because `birthwt` is a dataset defined in the `MASS` package, we don't want to modify it. Therefore, if we want to change something, we have to assign a new name to the resulting operation. That is why we have `race <-` at the beginning of the code line. The symbol `<-` is taking the result of the command on the right (in this case, the `factor` command) and giving it a new name.
+
+The `factor` command converts `birthwt$race` into a factor variable. The `levels` of the variable are the pre-existing numerical values.  The `labels` are the names we actually want to appear in our output.
+
+The letter `c` in `c(1, 2, 3)` and `c("White", "Black", "Other")` is necessary whenever we want to combine more than one thing into a single expression. (In technical terms, the "c" stands for "combine" or "concatenate" and creates a "vector". Don't worry too much about it now.)
+
+Finally, the last line takes the single vector `race` and turns it into a data frame that we call `race_df`. Many of the commands we will use require that we analyze variables that are sitting inside of data frames. Let's see how this worked.
+
+```{r}
+str(race_df)
+```
+
+You can see from the output that this created a data frame called `race_df` containing a single factor variable called `race` sitting inside it.
+
+
+## Summarizing one categorical variable
+
+If you need to summarize a single categorical variable, a frequency table usually suffices.
+
+```{r}
+table(race_df$race)
+```
+
+If you want percentages, you have to create a table and then apply the `prop.table` command to it:
+
+```{r}
+prop.table(table(race_df$race))
+```
+
+The graphical analogues of these tables are the bar chart and the relative frequency bar chart. (See the module `Graphing_categorical_data.Rmd`.)
+
+### Exercise
+
+Generate a frequency table like above, but this time use the original variable `birthwt$race`.
+
+```{r}
+## Add code here to create a frequency table with birthwt$race.
+```
+
+Explain the advantage of creating a factor variable with meaningful labels over using the original numerical variable.
+
+\begin{answer}
+Please write up your answer here.
+\end{answer}
+
+
+## Summarizing two categorical variables
+
+A table summarizing two categorical variables is called a contingency table (or pivot chart, or cross-tabulation, or probably several other terms as well). There are multiple ways of getting contingency tables out of R, but the most flexible is the `CrossTable` command from the `gmodels` package.
+
+First things first, though. We need to create one more factor variable. We'll use the `smoke` variable about whether the mothers smoked during pregnancy.
+
+```{r}
+smoke <- factor(birthwt$smoke, levels = c(0, 1), labels = c("No", "Yes"))
+race_smoke <- data.frame(race, smoke)
+```
+
+The `smoke` variable is created in exactly the same way as the `race` variable was earlier. Now, though, because we want to analyze both `race` and `smoke` together, we create a data frame called `race_smoke` with both variables. Let's make sure it did what we intended.
+
+```{r}
+str(race_smoke)
+```
+
+Examine the output from the above code to make sure we have a data frame with the two factor variables we want.
+
+And now for the contingency table. The first variable will be your row variable and the second, your column variable. There's no right or wrong way to do this, but I prefer to use the explanatory variable for the rows and the response variable for the columns. For example, I might be interested in knowing if a woman's race is associated with how likely she might have been to smoke. Therefore, `race` will be my row variable and `smoke` will be my column variable. For now, ignore all the extra options on the second line of the code chunk below.
+
+```{r}
+CrossTable(race_smoke$race, race_smoke$smoke,
+           prop.r = FALSE, prop.c = FALSE, prop.t = FALSE, prop.chisq = FALSE)
+```
+
+This table is highly misleading. For example, one cannot compare the 10 black women who smoked to the 12 "other" women who smoked. The 10 are out of 26, but the 12 are out of 67. That's why we need percentages. As the explanatory variable is in the rows, we turn on row percentages using the `prop.r` option of `CrossTable`.
+
+
+```{r}
+CrossTable(race_smoke$race, race_smoke$smoke,
+           prop.r = TRUE, prop.c = FALSE, prop.t = FALSE, prop.chisq = FALSE)
+```
+
+### Exercise
+
+What percentage of black women smoked during pregnancy? What percentage of "other" women smoked during pregnancy?
+
+\begin{answer}
+Please write up your answer here.
+\end{answer}
+
+### Exercise
+
+Does race appear to be associated with the likelihood of smoking during pregnancy for the women in this data set? Or are these variables independent?
+
+\begin{answer}
+Please write up your answer here.
+\end{answer}
+
+### Your turn
+
+Choose two categorical variables of interest from the `birthwt` data set. (Choose at least one variable other than `race` or `smoke`.) Turn them into factor variables with meaningful labels. Create a new data frame containing both variables. Identify one as explanatory and one as response. Then create a contingency table with row percentages. Comment on the association (or independence) of the two variables.
+
+```{r}
+## Add code here to convert one or more variables to factor variables
+## and make a data frame.
+```
+
+```{r}
+## Add code here to create a contingency table with row percentages.
+```
+
+\begin{answer}
+Please write up your answer here.
+\end{answer}
+
+
+## Conclusion
+
+We use frequency tables to summarize a single categorical variable. Both raw counts and percentages can be useful.
+
+We use contingency tables to summarize two categorical variables. Unless groups are of equal size, raw counts can be incredibly misleading here. As long as your explanatory variable appears as the row variable in the table, you should include row percentages to be able to compare the distributions of percentages among groups. If the percentages are roughly the same, the variables are more likely to be independent, whereas if the percentages are different, there may be an association between the variables.
