@@ -39,7 +39,7 @@ Again, please be sure to remove the line "Please write up your answer here" when
 
 ## Load Packages
 
-We load the `mosaic` package as well as the `MASS` package so that we can work with the birth weight data.
+We load the `mosaic` package as well as the `MASS` package so that we can work with data on risk factors associated with low birth weight.
 
 ```{r, warning = FALSE, message=FALSE}
 library(mosaic)
@@ -97,7 +97,7 @@ Another choice for measuring the center and spread of a data set is the median a
 median(birthwt$lwt)
 ```
 
-You can check that this is correct. If we print out the entire `lwt` variable, you can see all 189 values, and if we're clever about it, we can see them in order.
+You can check that this is correct: if we print out the entire `lwt` variable, you can see all 189 values, and if we're clever about it, we can see them in order.
 
 ```{r}
 sort(birthwt$lwt)
@@ -105,7 +105,7 @@ sort(birthwt$lwt)
 
 ### Exercise
 
-If there are 189 mothers in this data set, in which position in the list will the median value appear? (Be careful! You can't just divide 189 by 2!) Verify that the median value 121 does appear in the position you calculated above.
+If there are 189 mothers in this data set, in which position in the list will the median value appear? (Be careful: you can't just divide 189 by 2!) Verify that the median value 121 does appear in the position you calculated.
 
 \begin{answer}
 Please write up your answer here.
@@ -150,11 +150,28 @@ Now compute Q3. Also check that the IQR calculated above matches the value you g
 The median and the IQR should always be reported together.
 
 
+## Robust statistics
+
+Some statistics are more sensitive than others to features of the data. For example, outliers are data points that are far away from the bulk of the data. The mean and especially the standard deviation can change a lot when outliers are present. Also, skewness in the data frequently pulls the mean too far in the direction of the skew while simultaneously inflating the standard deviation.
+
+On the other hand, the median and IQR are "robust", meaning that they do not change much (or at all) in the presence of outliers and they tend to be good summaries even for skewed data.
+
+### Exercise
+
+Explain why the median and IQR are robust. In other words, why does an outlier have little or no influence on the median and IQR?
+
+\begin{answer}
+Please write up your answer here.
+\end{answer}
+
+*****
+
+
 ## Five-number summary
 
 A *five-number summary* is the minimum, Q1, median, Q3, and maximum of a set of numbers.
 
-The `summary` command in R gives you the five-number summary, and throws the mean in for good measure.
+The `summary` command in R gives you the five-number summary, and throws in the mean for good measure.
 
 ```{r}
 summary(birthwt$lwt)
@@ -189,7 +206,7 @@ favstats(birthwt$lwt)
 
 Also, don't forget about the trick for using R commands inline. If you need to mention a statistic in the middle of a sentence, there is no need to break the sentence and display a code chunk. Be sure you're looking at the R Markdown document to note that the numbers in the next sentence are not manually entered, but are calculated on the fly:
 
-There are `r nrow(birthwt)` births represented in this data and the median weight of the women as of their last menstrual period is `r median(birthwt$lwt)` pounds.
+There are `r NROW(birthwt)` births represented in this data and the median weight of the women as of their last menstrual period is `r median(birthwt$lwt)` pounds.
 
 ### Your turn
 
@@ -206,10 +223,10 @@ Using base R, it's not so easy to get summary statistics for each group separate
 For example:
 
 ```{r}
-favstats( ~ birthwt$lwt | birthwt$race)
+favstats( ~ lwt | race, data = birthwt)
 ```
 
-The notation is a little weird. Don't worry about the tilde for now. Just learn that it needs to be there. The important part is the `birthwt$lwt | birthwt$race`. This says, "Look at the numerical variable `birthwt$lwt` broken down by `birthwt$race`." Indeed, the output has three lines, one for each race in the data. This extended notation works for lots of commands, like `mean`, `sd` `median`, `IQR`, `quantile`, etc. as long as the `mosaic` package is loaded.
+The notation is a little weird. Don't worry about the tilde for now. Just learn that it needs to be there. The important part is the `lwt | race`. This says, "Look at the numerical variable `lwt` broken down by `race`." Indeed, the output has three lines, one for each race in the data. This extended notation works for lots of commands, like `mean`, `sd`, `median`, `IQR`, `quantile`, etc. as long as the `mosaic` package is loaded.
 
 ### Your turn
 
@@ -223,5 +240,4 @@ Choose one numerical variable and one categorical variable from the `birthwt` da
 
 ## Conclusion
 
-...
-
+Summary statistics are simple numbers that describe and summarize data sets. Measures of center tell us where the "middle" of our data lies, and measures of spread tell us how spread out our data is. These measures should always be reported in pairs, for example the mean/standard deviation, or the median/IQR. Sometimes it can be useful to report summary statistics with the data separated by a categorical grouping variable.
