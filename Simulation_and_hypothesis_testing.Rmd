@@ -1,0 +1,336 @@
+---
+title: "Simulation and hypothesis testing"
+author: "Put your name here"
+date: "Put the date here"
+output: pdf_document
+---
+<!-- Please don't mess with the next two lines! -->
+\newenvironment{answer}{\definecolor{shadecolor}{RGB}{225, 225, 255}\begin{shaded}}{\end{shaded}}
+<!-- Please don't mess with the previous two lines! -->
+
+
+## Introduction
+
+In this module, we'll learn how simulation can be used to test hypotheses.
+
+
+## Instructions
+
+Presumably, you have already created a new project and downloaded this file into it. Please knit the document and work back and forth between this R Markdown file and the PDF output as you work through this module.
+
+When you are finished with the assignment, knit to PDF one last time, proofread the PDF file **carefully**, export the PDF file to your computer, and then submit your assignment.
+
+Sometimes you will be asked to add your own R code. That will appear in this document as a code chunk with a request for you to add your own code, like so:
+
+```{r}
+## Add code here to [do some task]...
+```
+
+Be sure to remove the line `## Add code here to [do some task]...` when you have added your own code.
+
+Sometimes you will be asked to type up your thoughts. That will appear in the document as follows:
+
+\begin{answer}
+Please write up your answer here.
+\end{answer}
+
+Again, please be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. If you need to use some R code as well, you can use inline R code inside the block between `\begin{answer}` and `\end{answer}`, or if you need an R code chunk, please go outside the `answer` block and start a new code chunk.
+
+
+## Load Packages
+
+We load the `mosaic` package.
+
+```{r, warning = FALSE, message=FALSE}
+library(mosaic)
+```
+
+One more bit of technical detail. Since there will be some randomness involved here, I will need to include an R command to ensure that we all get the same results every time this document is knit. This is called "setting the seed". Don't worry too much about what this is doing. In particular, the number `1234` in the command below is totally arbitrary. It could have been any number at all. If you change the number, you will get different answers later on, but the actual value of the number does not matter.
+
+```{r}
+set.seed(1234)
+```
+
+
+## Exploratory data analysis
+
+We use the birth weight data `birthwt` from the `MASS` package. In particular, we'll investigate a possible association between a mother's smoking status during pregnancy and low birth weight of the baby. Rather than using the actual birth weight of the baby (we'll do that in a future assignment), let's use the categorical variable `low` that is simply an indicator (yes/no) of whether the birth weight is less than 2.5 kg.
+
+We can see below that neither `smoke` nor `low` are factor variables as we need them to be:
+
+```{r}
+str(birthwt)
+```
+
+We'll fix that by creating new factor variables called `smoke` and `low`.
+
+```{r}
+smoke <- factor(birthwt$smoke, levels = c(0, 1), labels = c("No", "Yes"))
+low <- factor(birthwt$low, levels = c(0, 1), labels = c("No", "Yes"))
+```
+
+Now create a contingency table with `smoke` as the row variable and `low` as the column variable with only counts and row percentages displayed. (In other words, as in the last assignment, use extra options in the `CrossTable` command to get rid of all the extra cruft that appears by default.)
+
+```{r}
+## Add code here to create a contingency table with smoke as the 
+## row variable and low as the column variable. 
+```
+
+### Question: By placing `smoke` as the row variable and `low` as the column variable, and then looking at row percentages, we are implying that one variable is explanatory and one is response. Which variable are we treating as explanatory and which are we treating as response? Do you agree with that choice? Why or why not?
+
+<!-- Please write up your answer in the space below -->
+
+
+Although we can read off the percentages in the contingency table, we need a command to extract the proportions for use in further calculations. First, the `prop` command. This command uses the "tilde" notation. The variable on the left of the tilde (`low`) is the variable of interest, and we're dividing up the data into groups based on the variable on the right of the tilde (`smoke`). You can remember this by thinking, "Calculate low birth weight **by** smoking status." Note that this is backwards from the order we used in the `CrossTable` command.
+
+```{r}
+prop(low ~ smoke)
+```
+
+Ignore the confusing column headers in the resulting output. The idea here is that the two percentages listed are the two percentages of interest that we're comparing.
+
+### Question: Interpret these percentages in the context of the data. In other words, what do these percentages say about the women who do not smoke during pregnancy versus the women who do?
+
+<!-- Please write up your answer in the space below -->
+
+
+The real statistic of interest to us, though, is the difference between these percentages.
+
+```{r}
+diff(prop(low ~ smoke))
+```
+
+Let's store this value for future use as well. We can use any name we want, but I've chosen `obs_diff` here for "observed difference".
+
+```{r}
+obs_diff <- diff(prop(low ~ smoke))
+```
+
+## Shuffling
+
+One way to see if there is evidence of an association between smoking and low birth weight is to assume, temporarily, that there is no association. If there is truly no association, then the difference between the non-smoking group and the smoking group should be 0%.
+
+Now, we saw a difference of `r 100*obs_diff`% between the two groups in the data. Then again, non-zero differences can just come about by pure chance alone. We may have accidentally sampled more smokers who also just happened to have babies with low birth weight, even if there were no association.
+
+So how do test the range of values that could arise from just sampling variability? One way to force the variables to  be independent is to use the method described in your textbook of "shuffling" the values of `smoke`. If instead of measuring whether women actually smoke or not, we just randomly and arbitrarily label them as "smokers" or "non-smokers", we know for sure that such an assignment is random and not due to any actual evidence of smoking. In that case, low birth weight babies are equally likely to occur in both groups.
+
+Let's see how shuffling works in R.
+
+```{r}
+head(smoke, 20)
+head(shuffle(smoke), 20)
+```
+
+## Simulation
+
+The idea here is to keep the low birth weight status the same for each woman, but randomly shuffle the smoking labels. There will still be the same number of women who smoke, but now they will be randomly assigned such a designation. In other words, if smoking is truly not associated with low birth weight, then shuffling the women into different smoking statuses should not result in percentages vastly different from the observed percentages calculated earlier.
+
+Again, note that the expected difference under the assumption of independent variables is 0%. In other words, if there is truly no association, then the percentage of women having low birth weight babies should be independent of smoking. However, sampling variability means that we are not likely to see an exact difference of 0%. (In fact, due to the sample sizes in each group, it is impossible to get a difference of exactly 0%.) The real question, then, is how different could the difference be from 0% and still be reasonably possible due to random chance.
+
+Here are a few random simulations. (The randomness is built into the `shuffle` command.)
+
+```{r}
+diff(prop(low ~ shuffle(smoke)))
+diff(prop(low ~ shuffle(smoke)))
+diff(prop(low ~ shuffle(smoke)))
+```
+
+The `do` command from the `mosaic` package allows us to repeat this simulation process any number of times. The results will be gathered together in a data frame. (Also, the assigned name of the resulting variable is terrible, so we'll rename it.)
+
+```{r}
+sims <- do(1000) * diff(prop(low ~ shuffle(smoke)))
+sims <- rename(sims, diffs = No.Yes)
+head(sims, 20)
+```
+
+## Plot results
+
+A histogram will show us the range of possible values under the assumption of independence of the two variables. On the same plot, we graph a line at the value of the observed difference in proportions to see if that value could have reasonably occurred by chance alone.
+
+```{r}
+qplot(sims$diffs, binwidth = 0.05) +
+    geom_vline(x = obs_diff, color = "blue")
+```
+
+## By chance?
+
+How likely is it that the observed difference (or a difference even more extreme) could have resulted from chance alone?
+
+```{r}
+prop( ~ sims$diffs <= obs_diff)
+```
+
+This percentage is small. This shows us that if there were truly no association between low birth weight and smoking, then our data is a rare event. (An observed difference this extreme or more extreme would only occur `r 100 * prop( ~ sims$diffs <= obs_diff)`% of the time.)
+
+## Conclusion
+
+Because the probability above is so small, it seems unlikely that our variables are independent. Therefore, it seems more likely that there is an association between a low birth weight and smoking. We have evidence of a statistically significant difference between the chance of having a baby with low birth weight among women who smoke versus women who don't smoke.
+
+Keep in mind that this data is from an observational study, so we cannot conclude that smoking _causes_ low birth weight.
+
+## Hypothesis testing
+
+The exposition above can be formalized into what is known as a _hypothesis test_. In this section, we will walk through the rubric posted on Canvas for conducting a full and complete hypothesis test for our smoking and low birth weight example above.
+
+A hypothesis test can be organized into four parts:
+
+1. Hypotheses
+2. Model
+3. Mechanics
+4. Conclusion
+
+Below, I'll model the process of walking through a complete hypothesis test, showing how I would address each step. Then, you'll have a turn at doing the same thing for a different question.
+
+Note that there is some mathematical formatting. This is done by enclosing such math in dollar signs. Don't worry too much about the syntax; just mimic what you see in the example.
+
+## Hypotheses
+
+### Identify the sample and a reasonable population of interest.
+
+The sample consists of `r nrow(birthwt)` births from Baystate Medical Center, Springfield, Massachusetts during 1986. The population of interest is probably all births, maybe in the U.S., although we are only really safe coming to conclusions about all births at this particular hospital.
+
+### Express the null and alternative hypotheses as contextually meaningful full sentences.
+
+$H_0$: The null hypothesis states that there is no association between smoking status during pregnancy and low birth weight.
+
+$H_A$: The alternative hypothesis states that there is an association between smoking status during pregnancy and low birth weight.
+
+### Express the null and alternative hypotheses in symbols.
+
+$H_0: p_{smoker} - p_{nonsmoker} = 0$
+
+$H_A: p_{smoker} - p_{nonsmoker} \neq 0$
+
+## Model
+
+### Identify the correct sampling distribution model.
+
+This step is not applicable.
+
+### Check the relevant conditions to ensure that the model assumptions are met.
+
+* Random
+    * We have no evidence that this is a random sample of births from the the Baystate Medical Center. We hope that it is a representative sample. If the population of interest is all births in the U.S., for example, then I have some doubts as to how representative the sample is. (It is possible that the women who go to this hospital may be different from other women in the U.S. Perhaps this hospital serves women from certain backgrounds or socioeconomic statuses.)
+
+* 10%
+    * Regardless of the intended population, `r nrow(birthwt)` births is surely less than 10% of all births under consideration.
+
+## Mechanics
+
+### Compute the test statistic.
+
+```{r}
+obs_diff <- diff(prop(low ~ smoke))
+obs_diff
+
+# We added that last line to print the result to the output file. If
+# only the previous line were included, obs_diff would be defined,
+# but the definition would take place silently, printing nothing to
+# the screen.
+```
+
+### Plot the simulated values of the null distribution.
+
+```{r}
+sims <- do(1000) * diff(prop(low ~ shuffle(smoke)))
+sims <- rename(sims, diffs = No.Yes)
+qplot(sims$diffs, binwidth = 0.05) +
+    geom_vline(x = obs_diff, color = "blue")
+```
+
+### Calculate the P-value.
+
+
+```{r}
+2 * prop( ~ sims$diffs <= obs_diff)
+```
+
+(Note, we multiply here by two because we are conducting a two-sided test.)
+
+## Conclusion
+
+### State the statistical conclusion.
+
+We reject the null hypothesis.
+
+### State (but do not overstate) a contextually meaningful conclusion.
+
+There is sufficient evidence to suggest that there is an association between smoking and low birth weight.
+
+### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+
+As we rejected the null, we run the risk of committing a Type I error. It is possible that there is no association between smoking and low birth weight, but we got an unusual sample that led us to believe that there was such an association.
+
+## Your turn!
+
+Now it's your turn to run a complete hypothesis test. Determine if there is evidence that the presence of uterine irritability is associated with low birth weight. I will give you the template below, then you need to fill in the gaps. Some of the steps will be the same or similar to steps in the example above. For this assignment, you can copy what I've written and modify where needed. In the future, you'll need to put everything in your own words.
+
+
+## Hypotheses
+
+### Identify the sample and a reasonable population of interest.
+
+<!-- Please write up your answer in the space below -->
+
+
+### Express the null and alternative hypotheses as contextually meaningful full sentences.
+
+<!-- Please write up your answer in the space below -->
+
+
+### Express the null and alternative hypotheses in symbols.
+
+<!-- Please write up your answer in the space below -->
+
+
+## Model
+
+### Identify the correct sampling distribution model.
+
+<!-- Please write up your answer in the space below -->
+
+
+### Check the relevant conditions to ensure that the model assumptions are met.
+
+<!-- Please write up your answer in the space below -->
+
+
+## Mechanics
+
+### Compute the test statistic.
+
+```{r}
+## Add code here to compute the test statistic.
+```
+
+### Plot simulated values of the null distribution.
+
+
+```{r}
+## Add code here to plot simulated values of the null distribution.
+```
+
+### Calculate the P-value.
+
+```{r}
+## Add code here to calculate the P-value.
+```
+
+
+## Conclusion
+
+### State the statistical conclusion.
+
+<!-- Please write up your answer in the space below -->
+
+
+### State (but do not overstate) a contextually meaningful conclusion.
+
+<!-- Please write up your answer in the space below -->
+
+
+### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+
+<!-- Please write up your answer in the space below -->
+
+
