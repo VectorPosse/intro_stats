@@ -11,7 +11,7 @@ output: pdf_document
 
 ## Introduction
 
-In this module, we'll learn about simulation and randomization. When we want to understand how sampling works, it's helpful to simulate the process of drawing samples repeatedly from a population. In the days before computing, this was very difficult to do. Now, a few simple lines of computer code can generate thousands (even millions) of random samples, often in a matter of seconds.
+In this module, we'll learn about simulation and randomization. When we want to understand how sampling works, it's helpful to simulate the process of drawing samples repeatedly from a population. In the days before computing, this was very difficult to do. Now, a few simple lines of computer code can generate thousands (even millions) of random samples, often in a matter of seconds or less.
 
 
 ## Instructions
@@ -84,11 +84,6 @@ Please write up your answer here.
 
 *****
 
-The claim made in the introduction was that one can simulate something thousands or even millions of times on a computer. Of course, we don't want to fill up our document with a huge list of heads and tails, so we'll use a slightly different function that gives us only the number of heads. Here's a million flips. It does not take an inordinate amount of time to run this code.
-
-```{r}
-nflip(1000000)
-```
 
 ## Multiple simulations
 
@@ -111,9 +106,10 @@ Looking at the above rows and columns, we see that the output of our little coin
 
 ```{r}
 coin_flips_20_10 <- do(20) * rflip(10)
+coin_flips_20_10
 ```
 
-(Note: the results stored in `coin_flips_20_10` will not be the same as the results generated the last time we ran the `do(20) * rflip(10)` command. Remember that these are randomized simulations. The randomness means that the outcome will be different each time we run the command.)
+(Note: the results stored in `coin_flips_20_10` are not the same as the results generated the last time we ran the `do(20) * rflip(10)` command. Remember that these are randomized simulations. The randomness means that the outcome will be different each time we run the command.)
 
 It is significant that we can store our outcomes this way. Because we have a data frame, we can apply all our data analysis tools (graphs, charts, tables, summary statistics, etc.) to the "data" generated from our simulation.
 
@@ -147,7 +143,7 @@ ggplot(coin_flips_20_10, aes(x = factor(heads))) +
 
 ## Bigger and better!
 
-There are two obvious directions we could go to make our experiment bigger and better. One way is to recruit more students. With only twenty students, it was possible that, for example, nobody would get all heads or all tails. Indeed, in `coin_flips_20_10` there were no students who got all heads or all tails. Also, there were more students with four heads than with five heads, even though we "expected" the average to be five heads. There is nothing particularly significant about that; it happened by pure chance alone. Another run through the above commands would generate a somewhat different outcome. That's what happens when things are random.
+There are two obvious directions we could go to make our experiment bigger and better. One way is to recruit more students. With only twenty students, it was possible that, for example, nobody would get all heads or all tails. Indeed, in `coin_flips_20_10` there were no students who got all heads or all tails. Also, there were more students with four heads and seven heads than with five heads, even though we "expected" the average to be five heads. There is nothing particularly significant about that; it happened by pure chance alone. Another run through the above commands would generate a somewhat different outcome. That's what happens when things are random.
 
 Instead, let's try it again with 2000 students.
 
@@ -221,7 +217,56 @@ It's fair to ask why we go to all this trouble to talk about coin flips. The mos
 
 But now substitute "heads" and "tails" with "cancer" and "no cancer". Or "guilty" and "not guilty". Or "shot" and "not shot". The fact is that many important issues are measured as variables with two possible outcomes. There is some underlying "probability" of seeing one outcome over the other. (It doesn't have to be 50% like the coin.) Statistical methods---including simulation---can say a lot about what we "expect" to see if these outcomes are truly random. More importantly, when we see outcomes that *aren't* consistent with our simulations, we may wonder if there is some underlying mechanism that may be not so random after all. It may not look like it on first blush, but this idea is at the core of the scientific method.
 
+For example, let's suppose that 85% of U.S. adults support some form of background checks for gun buyers.^[This is likely close to the truth. See this article: http://www.people-press.org/2015/08/13/continued-bipartisan-support-for-expanded-background-checks-on-gun-sales] Now, imagine we went out and surveyed a random group of people and asked them a simple yes/no question about their support for background checks. What might we see?
+
+Let's simulate. Imagine flipping a coin, but instead of coming up heads 50% of the time, suppose it were possible for the coin to come up heads 85% of the time.^[The idea of a "weighted" coin that can do this comes up all the time in probability and statistics courses, but it seems that it's not likely one could actually manufacture a coin that could come up heads more or less than 50% of the time when flipped. See this paper for more details: http://www.stat.columbia.edu/~gelman/research/published/diceRev2.pdf] A sequence of heads and tails with this weird coin would be much like randomly surveying people and asking them about background checks.
+
+We can make a "virtual" weird coin with the `rflip` command by specifying how often we want heads to come up.
+
+```{r}
+rflip(100, prob = 0.85)
+```
+
+The results from the above code can be seen as a survey of 100 random U.S. adults about their support for background checks for purchasing guns. "Heads" means "supports" and "tails" means "opposes."
+
+### Your turn
+
+Now imagine that you and your classmates (20 students total) all go out and conduct your survey of 100 random U.S. adults. Write some R code that simulates this. Plot a histogram of the results. (Hint: you'll need the `do` function.)
+
+```{r}
+## Add code here to simulate 20 surveys of 100 U.S. adults.
+## Plot the results in a histogram.
+```
+
+Now do the same this with 2000 students.
+
+```{r}
+## Add code here to simulate 2000 surveys of 100 U.S. adults.
+## Plot the results in a histogram.
+```
+
+Run the simulation one last time, but this time, survey 1000 adults and not just 100.
+
+```{r}
+## Add code here to simulate 2000 surveys of 1000 U.S. adults.
+## Plot the results in a histogram.
+```
+
+What changed when you went from 20 students to 2000?
+
+\begin{answer}
+Please write up your answer here.
+\end{answer}
+
+What changed when you surveyed 1000 people instead of 100?
+
+\begin{answer}
+Please write up your answer here.
+\end{answer}
+
+*****
+
 
 ## Conclusion
 
-Simulation is a tool for understand what happens when a statistical process is repeated many times in a randomized way. The availability of fast computer processing makes simulation easy and accessible. The goal will eventually be to use simulation to answer important questions about data and the processes in the world that generate data. This is possible because, despite the ubiquitous presence of randomness, a certain order emerges when the number of samples and the sample size are large enough.
+Simulation is a tool for understanding what happens when a statistical process is repeated many times in a randomized way. The availability of fast computer processing makes simulation easy and accessible. The goal will eventually be to use simulation to answer important questions about data and the processes in the world that generate data. This is possible because, despite the ubiquitous presence of randomness, a certain order emerges when the number of samples and the sample size are large enough.
