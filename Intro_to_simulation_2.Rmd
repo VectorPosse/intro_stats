@@ -1,5 +1,5 @@
 ---
-title: "Simulation and hypothesis testing"
+title: "Introduction to simulation, Part 2"
 author: "Put your name here"
 date: "Put the date here"
 output: pdf_document
@@ -11,7 +11,7 @@ output: pdf_document
 
 ## Introduction
 
-In this module, we'll learn how simulation can be used to test hypotheses.
+In this module, we'll learn more about simulation and randomization. Instead of flipping coins, in this assignment we'll randomly shuffle our data around in order to explore the effects of randomizing an explanatory variable.
 
 
 ## Instructions
@@ -39,18 +39,18 @@ Again, please be sure to remove the line "Please write up your answer here" when
 
 ## Load Packages
 
-We load the `mosaic` package, the `MASS` package to access the `birthwt` data on risk factors associated with low birth weight, and the `gmodels` package for nice contingency tables using the `CrossTable` command.
+We load the `MASS` package to access the `birthwt` data on risk factors associated with low birth weight. We also load the `mosaic` package for simulation tools and the `gmodels` package for nice contingency tables using the `CrossTable` command.
 
 ```{r, warning = FALSE, message=FALSE}
-library(mosaic)
 library(MASS)
+library(mosaic)
 library(gmodels)
 ```
 
-One more bit of technical detail. Since there will be some randomness involved here, I will need to include an R command to ensure that we all get the same results every time this document is knit. This is called "setting the seed". Don't worry too much about what this is doing. In particular, the number `1234` in the command below is totally arbitrary. It could have been any number at all. If you change the number, you will get different answers later on, but the actual value of the number does not matter.
+As explained in an earlier module, we will set the seed so that our results are reproducible.
 
 ```{r}
-set.seed(1234)
+set.seed(3141593)
 ```
 
 
@@ -68,7 +68,7 @@ We'll fix that by creating new factor variables called `smoke` and `low` and put
 
 **An important note about the order of the levels and labels in a factor variable:**
 
-In a categorical variable (called a "factor" variable in R), the order of the categories usually does not matter. However, in statistics, we often designate one category as the "success" category, or the category of interest to us. All other categories are considered "failures". For example, if I want to measure the proportion of mothers who smoke, then those mothers who are smokers are considered "successes". Yes, the terminology is unfortunate. But we're stuck with it.
+In a categorical variable (called a "factor" variable in R), the order of the categories usually does not matter. However, in statistics, we often designate one category as the "success" category, or the category of interest to us. All other categories are considered "failures". For example, if I want to measure the proportion of mothers who smoke, then those mothers who are smokers are considered "successes". Likewise, it is the low birth weight babies who are of interest to us; therefore a "Yes" in this variable will be considered a "success". The terminology is unfortunate, but we're stuck with it.
 
 In the `factor` command in R, be sure to list the success category first in both the `level` and `label` part of the command. We want to measure the mothers who smoke. Furthermore, we are interested in whether those mothers have babies with low birth weight, so (unfortunately) having low birth weight is considered the "success" condition. Observe the ordering of the levels and labels in the following:
 
@@ -80,7 +80,7 @@ smoke_low <- data.frame(smoke, low)
 
 ### Exercise
 
-Create a contingency table with `smoke` as the row variable and `low` as the column variable with only counts and row percentages displayed. (In other words, use the extra options in the `CrossTable` command to get rid of all the extra cruft that appears by default.) Go back and see the R module `Tables.Rmd` if you need to review the `CrossTable` command.
+Create a contingency table with `smoke` as the row variable and `low` as the column variable with only counts and row percentages displayed. (In other words, use the extra options in the `CrossTable` command to get rid of all the extra cruft that appears by default.) Go back to the R module `Tables.Rmd` if you need to review the `CrossTable` command.
 
 ```{r}
 ## Add code here to create a contingency table with smoke as the 
@@ -95,17 +95,17 @@ Please write up your answer here.
 
 *****
 
-Although we can read off the percentages in the contingency table, we need a command to extract the proportions for use in further calculations. First, the `prop` command. This command uses the "tilde" notation. The variable on the left of the tilde (`low`) is the variable of interest, and we're dividing up the data into groups based on the variable on the right of the tilde (`smoke`). You can remember this by thinking, "Calculate low birth weight **by** smoking status." Note that this is backwards from the order we used in the `CrossTable` command.
+Although we can read off the percentages in the contingency table, we need a command to extract the proportions for use in further calculations. One way is via the `prop` command. This command uses the "tilde" notation. The variable on the left of the tilde (`low`) is the variable of interest, and we're dividing up the data into groups based on the variable on the right of the tilde (`smoke`). You can remember this by thinking, "Calculate low birth weight **by** smoking status." Note that this is backwards from the order we used in the `CrossTable` command.
 
 ```{r}
 prop(low ~ smoke, data = smoke_low)
 ```
 
-Ignore the confusing column headers in the resulting output. The idea here is that the two percentages listed are the two percentages of interest that we're comparing.
+The column headers in the resulting output are a bit opaque. What we have here are the two percentages of interest that we're trying to compare.
 
 ### Exercise
 
-Interpret these percentages in the context of the data. In other words, what do these percentages say about the women who do not smoke during pregnancy versus the women who do?
+Interpret these percentages in the context of the data. In other words, what do these percentages say about the women who do not smoke during pregnancy versus the women who do? (Hint: look back at the contingency table you made earlier. Where do these percentages come from?)
 
 \begin{answer}
 Please write up your answer here.
@@ -116,54 +116,73 @@ Please write up your answer here.
 The real statistic of interest to us, though, is the difference between these percentages. We can use the `diffprop` function from the `mosaic` package.
 
 ```{r}
-diffprop(low ~ smoke)
+diffprop(low ~ smoke, data = smoke_low)
 ```
 
-Let's store this value for future use as well. We can use any name we want, but I've chosen `obs_diff` here for "observed difference".
+Let's store this value for future use. We can use any name we want, but I've chosen `obs_diff` here for "observed difference".
 
 ```{r}
-obs_diff <- diff(prop(low ~ smoke))
+obs_diff <- diffprop(low ~ smoke, data = smoke_low)
+obs_diff
 ```
 
 ### Exercise
 
-In which order are the groups being substracted? In other words, why is the observed difference negative? 
+In which order are the groups being subtracted? In other words, why is the observed difference negative?
+
+\begin{answer}
+Please write up your answer here.
+\end{answer}
+
+*****
 
 ## Shuffling
 
 One way to see if there is evidence of an association between smoking and low birth weight is to assume, temporarily, that there is no association. If there is truly no association, then the difference between the non-smoking group and the smoking group should be 0%.
 
-Now, we saw a difference of `r 100*obs_diff`% between the two groups in the data. Then again, non-zero differences can just come about by pure chance alone. We may have accidentally sampled more smokers who also just happened to have babies with low birth weight, even if there were no association.
+Now, we saw a difference of `r 100*obs_diff`% between the two groups in the data. Then again, non-zero differences can just come about by pure chance alone. We may have accidentally sampled more smokers who also just happened to have babies with low birth weight, even if there were no association in general.
 
-So how do we test the range of values that could arise from just chance along? In other words, how do we explore sampling variability?
+So how do we test the range of values that could arise from just chance alone? In other words, how do we explore sampling variability?
 
-One way to force the variables to  be independent is to "shuffle" the values of `smoke`. If instead of measuring whether women actually smoke or not, we just randomly and arbitrarily label them as "smokers" or "non-smokers", we know for sure that such an assignment is random and not due to any actual evidence of smoking. In that case, low birth weight babies are equally likely to occur in both groups.
+One way to force the variables to  be independent is to "shuffle" the values of `smoke`. If instead of measuring whether women actually smoke or not, we just randomly and arbitrarily label them as "smokers" or "non-smokers" (independent of their *actual* smoking status), we know for sure that such an assignment is random and not due to any actual evidence of smoking. In that case, low birth weight babies are equally likely to occur in both groups.
 
-Let's see how shuffling works in R.
+Let's see how shuffling works in R. To begin with, we look at the first 20 actual values of `smoke` in our data.
 
 ```{r}
-head(smoke, 20)
-head(shuffle(smoke), 20)
+head(smoke_low$smoke, 20)
 ```
+
+Now we "shuffle" all the values around and look at the first 20 again:
+
+```{r}
+head(shuffle(smoke_low$smoke), 20)
+```
+
+Do it again, just to make sure it's random:
+
+```{r}
+head(shuffle(smoke_low$smoke, 20))
+```
+
 
 ## Simulation
 
-The idea here is to keep the low birth weight status the same for each woman, but randomly shuffle the smoking labels. There will still be the same number of women who smoke, but now they will be randomly assigned such a designation. In other words, if smoking is truly not associated with low birth weight, then shuffling the women into different smoking statuses should not result in percentages vastly different from the observed percentages calculated earlier.
+The idea here is to keep the low birth weight status the same for each woman, but randomly shuffle the smoking labels. There will still be the same number of women who "smoke", but now they will be randomly assigned such a designation. Since this new grouping into "smoking" and "non-smoking" is completely random and arbitrary, we expect the likelihood of having a low birth weight baby to be equal for both groups.
 
-Again, note that the expected difference under the assumption of independent variables is 0%. In other words, if there is truly no association, then the percentage of women having low birth weight babies should be independent of smoking. However, sampling variability means that we are not likely to see an exact difference of 0%. (In fact, due to the sample sizes in each group, it is impossible to get a difference of exactly 0%.) The real question, then, is how different could the difference be from 0% and still be reasonably possible due to random chance.
+A more precise way of saying this is that the expected difference under the assumption of independent variables is 0%. If there were truly no association, then the percentage of women having low birth weight babies would be independent of smoking. However, sampling variability means that we are not likely to see an exact difference of 0%. In fact, due to the sample sizes in each group, it is impossible to get a difference of exactly 0%. The real question, then, is how different could the difference be from 0% and still be reasonably possible due to random chance.
 
 Here are a few random simulations. (The randomness is built into the `shuffle` command.)
 
 ```{r}
-diffprop(low ~ shuffle(smoke))
-diffprop(low ~ shuffle(smoke))
-diffprop(low ~ shuffle(smoke))
+diffprop(low ~ shuffle(smoke), data = smoke_low)
+diffprop(low ~ shuffle(smoke), data = smoke_low)
+diffprop(low ~ shuffle(smoke), data = smoke_low)
 ```
 
-The `do` command from the `mosaic` package allows us to repeat this simulation process any number of times. The results will be gathered together in a data frame.
+The `do` command from the `mosaic` package allows us to repeat this simulation process any number of times. From an earlier module, we learned that the number of simulations needs to be sifficiently high to make sure we have a good representative set of outcomes. The results will be gathered together in a data frame that we will call `sims`.
 
 ```{r}
-sims <- do(1000) * diffprop(low ~ shuffle(smoke))
+sims <- do(1000) * diffprop(low ~ shuffle(smoke), data = smoke_low)
 head(sims, 20)
 ```
 
@@ -178,178 +197,98 @@ ggplot(sims, aes(x = diffprop)) +
     geom_vline(xintercept =  obs_diff, color = "blue")
 ```
 
+### Exercise
+
+Why is the mode of the graph above at 0? This has been explained several different times in this module, but put it into your own words to make sure you understand the logic behind the shuffling.
+
+*****
+
 
 ## By chance?
 
-How likely is it that the observed difference (or a difference even more extreme) could have resulted from chance alone? Remember that the variable `diffprop` in the `sims` data frame contains all our simulated differences between smoking mothers and nonsmoking mothers. We want to find out how many of these are smaller than the observed difference, `r obs_diff`.
+How likely is it that the observed difference (or a difference even more extreme) could have resulted from chance alone? Because `sims` contains simulated results after shuffling, the variable `diffprop` contains values that assume that smoking is independent of birth weight. In order to assess how plausible our observed difference is under that assumption, we want to find out how many of the simulated values are at least as small, if not smaller, than the observed difference, `r obs_diff`. We can do this using the same `prop` command we saw before, but used in a slightly different way. In the command below, we put the condition
+
+`sims$diffprop <= obs_diff`.
+
+In other words this is asking, "When is the value of `diffprop` less than or equal to the difference that was actually observed in our data?"
 
 ```{r}
 prop(sims$diffprop <= obs_diff)
 ```
 
-What is this telling us? Well, this percentage is small. This shows us that if there were truly no association between low birth weight and smoking, then our data is a rare event. (An observed difference this extreme or more extreme would only occur `r 100 * prop(sims$diffprop <= obs_diff)`% of the time.)
+What is this telling us? Well, this percentage is small. This shows us that if there were truly no association between smoking and low birth weight, then our data is a rare event. (An observed difference this extreme or more extreme would only occur `r 100 * prop(sims$diffprop <= obs_diff)`% of the time.)
 
-Because the probability above is so small, it seems unlikely that our variables are independent. Therefore, it seems more likely that there is an association between a low birth weight and smoking. We have evidence of a statistically significant difference between the chance of having a baby with low birth weight among women who smoke versus women who don't smoke.
+Because the probability above is so small, it seems unlikely that our variables are independent. Therefore, it seems more likely that there is an association between smoking and low birth weight. We have evidence of a statistically significant difference between the chance of having a baby with low birth weight among women who smoke versus women who don't smoke.
 
-Keep in mind that this data is from an observational study, so we cannot conclude that smoking *causes* low birth weight.
+Keep in mind that this data is from an observational study, so we cannot conclude that smoking *causes* low birth weight. All we can say is that a difference of `r 100*obs_diff`% is evidence that mothers who smoke are more likely to have babies with low birth weight for **some** reason (maybe because they smoke, but maybe some other reason).
 
-## Hypothesis testing
+### Exercise
 
-The exposition above can be formalized into what is known as a *hypothesis test*. In this section, we will introduce a rubric for conducting a full and complete hypothesis test for our smoking and low birth weight example above. Please locate the file `Rubric_for_inference.pdf` to see 
+When we see an association between two variables, it may be that both factors are related to some third variable that we haven't measured. When that happens, that third variable is called a *lurking variable*. Get creative for a minute and see if you can come up with a reasonably plausible lurking variable for the scenario above. In other words, if smoking itself doesn't cause low birth weight babies, can you imagine another factor that would cause low birth weight babies and also be associated with mothers smoking?
 
-A hypothesis test can be organized into four parts:
+\begin{answer}
+Please write up your answer here.
+\end{answer}
 
-1. Hypotheses
-2. Model
-3. Mechanics
-4. Conclusion
+*****
 
-Below, I'll model the process of walking through a complete hypothesis test, showing how I would address each step. Then, you'll have a turn at doing the same thing for a different question.
+The point of the above exercise is not to convince people that smoking during pregnancy is not actually the cause of low birth weight babies. In fact, there is quite a bit of evidence that smoking during pregnancy causes all sorts of problems, including low birth weight.^[See this for example: http://www.ncbi.nlm.nih.gov/pubmed/16323070] However, **association is not causation**. From observational data like this, it is generally impossible to prove a causal relationship. I'm not saying there is never a causal relationship, only that you can't *prove* it from the analysis we did. Nevertheless, there is a clear association between smoking during pregnancy and low birth weight. Make sure you understand the difference.
 
-Note that there is some mathematical formatting. This is done by enclosing such math in dollar signs. Don't worry too much about the syntax; just mimic what you see in the example.
+### Your turn
 
-## Hypotheses
+Walk through the following sequence of steps to explore whether the presence of uterine irritability is associated with low birth weight. You should carefully copy and paste commands from earlier in the module, making the necessary changes to the variable names.
 
-### Identify the sample and a reasonable population of interest.
+Uterine irritability is recorded in the variable `ui` in the `birthwt` data set.
 
-The sample consists of `r NROW(birthwt)` births from Baystate Medical Center, Springfield, Massachusetts during 1986. The population of interest is probably all births, maybe in the U.S., although we are only really safe coming to conclusions about all births at this particular hospital.
-
-### Express the null and alternative hypotheses as contextually meaningful full sentences.
-
-$H_0$: The null hypothesis states that there is no association between smoking status during pregnancy and low birth weight.
-
-$H_A$: The alternative hypothesis states that there is an association between smoking status during pregnancy and low birth weight.
-
-### Express the null and alternative hypotheses in symbols.
-
-$H_0: p_{smoker} - p_{nonsmoker} = 0$
-
-$H_A: p_{smoker} - p_{nonsmoker} \neq 0$
-
-## Model
-
-### Identify the correct sampling distribution model.
-
-This step is not applicable.
-
-### Check the relevant conditions to ensure that the model assumptions are met.
-
-* Random
-    * We have no evidence that this is a random sample of births from the the Baystate Medical Center. We hope that it is a representative sample. If the population of interest is all births in the U.S., for example, then I have some doubts as to how representative the sample is. (It is possible that the women who go to this hospital may be different from other women in the U.S. Perhaps this hospital serves women from certain backgrounds or socioeconomic statuses.)
-
-* 10%
-    * Regardless of the intended population, `r NROW(birthwt)` births is surely less than 10% of all births under consideration.
-
-## Mechanics
-
-### Compute the test statistic.
+1. Convert `ui` to a factor variable, paying careful attention to the assignment of the levels and labels. (Which condition is considered a "success" here?) Then create a new data frame from the factor variables `ui` and `low`. (As `low` is already a factor variable, you don't need to re-do the work for that one.)
 
 ```{r}
-obs_diff <- diffprop(low ~ smoke)
-obs_diff
+## Add code here to convert ui to a factor variable
+## and combine ui and low into a single data frame.
 ```
 
-### Plot the simulated values of the null distribution.
+2. Exploratory data analysis: make a contingency table with `ui` and `low`. You will need to decide which variable is explanatory and which is response, and assign the two variables to the rows and columns accordingly. Don't forget to use row percentages.
 
 ```{r}
-sims <- do(1000) * diffprop(low ~ shuffle(smoke))
-ggplot(sims, aes(x = diffprop)) +
-    geom_histogram(binwidth = 0.05) +
-    geom_vline(xintercept = obs_diff, color = "blue")
+## Add code here to make a contingency table.
 ```
 
-### Calculate the P-value.
+3. Use the `diffprop` function to calculate and store the observed difference in the proportion of low birth weight babies between women with and without uterine irritability.
 
 ```{r}
-2 * prop(sims$diffs <= obs_diff)
+## Add code here to calculate the observed difference.
 ```
 
-(Note, we multiply here by two because we are conducting a two-sided test.)
+4. Simulate 2000 outcomes under the assumption that low birth weight is independent of uterine irritability. Use the `do` command in conjunction with `diffprop` and `shuffle` in a single line of code.
+
+```{r}
+## Add code here to simulate 2000 outcomes under the independence assumption.
+```
+
+5. Plot the simulated values in a histogram. Be sure to include a vertical line at the value of the observed difference.
+
+```{r}
+## Add code here to plot the results.
+```
+
+6. Calculate how likely it is to see our observed difference or something even more extreme among the randomly simulated values.
+
+```{r}
+## Add code here to calculate how likely it is to see 
+## our observed difference or something even more extreme 
+## among the randomly simmulated values.
+```
+
+Finally, comment on what you see. Based on the number you get in step 6 above, is the observed difference rare? In other words, under the assumption that uterine irritiability and low birth weight are indepdent, are we likely to see an observed difference as far away from zero as we actually see in the data? So what is your conclusion then? Do you believe there is an association between uterine irritability and low birth weight?
+
+\begin{answer}
+Please write up your answer here.
+\end{answer}
+
+*****
 
 ## Conclusion
 
-### State the statistical conclusion.
-
-We reject the null hypothesis.
-
-### State (but do not overstate) a contextually meaningful conclusion.
-
-There is sufficient evidence to suggest that there is an association between smoking and low birth weight.
-
-### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
-
-As we rejected the null, we run the risk of committing a Type I error. It is possible that there is no association between smoking and low birth weight, but we got an unusual sample that led us to believe that there was such an association.
-
-## Your turn!
-
-Now it's your turn to run a complete hypothesis test. Determine if there is evidence that the presence of uterine irritability is associated with low birth weight. I will give you the template below, then you need to fill in the gaps. Some of the steps will be the same or similar to steps in the example above. For this assignment, you can copy what I've written and modify where needed. In the future, you'll need to put everything in your own words.
-
-
-## Hypotheses
-
-### Identify the sample and a reasonable population of interest.
-
-<!-- Please write up your answer in the space below -->
-
-
-### Express the null and alternative hypotheses as contextually meaningful full sentences.
-
-<!-- Please write up your answer in the space below -->
-
-
-### Express the null and alternative hypotheses in symbols.
-
-<!-- Please write up your answer in the space below -->
-
-
-## Model
-
-### Identify the correct sampling distribution model.
-
-<!-- Please write up your answer in the space below -->
-
-
-### Check the relevant conditions to ensure that the model assumptions are met.
-
-<!-- Please write up your answer in the space below -->
-
-
-## Mechanics
-
-### Compute the test statistic.
-
-```{r}
-## Add code here to compute the test statistic.
-```
-
-### Plot simulated values of the null distribution.
-
-
-```{r}
-## Add code here to plot simulated values of the null distribution.
-```
-
-### Calculate the P-value.
-
-```{r}
-## Add code here to calculate the P-value.
-```
-
-
-## Conclusion
-
-### State the statistical conclusion.
-
-<!-- Please write up your answer in the space below -->
-
-
-### State (but do not overstate) a contextually meaningful conclusion.
-
-<!-- Please write up your answer in the space below -->
-
-
-### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
-
-<!-- Please write up your answer in the space below -->
+Here we used simulation to explore the idea of two variable being independent or associated. When we assume they are indepedent, we can explore the sampling variability of the differences that occur by pure chance alone. We expect the difference to be zero, but we know that randomness will cause the simulated differences to have a range of values. Is the difference in the observed data far away from zero? In that case, we can say we have evidence that the variables are not independent; in other words, it is more likely that our variables are associated.
 
 
