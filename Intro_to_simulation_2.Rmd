@@ -53,10 +53,14 @@ As explained in an earlier module, we will set the seed so that our results are 
 set.seed(3141593)
 ```
 
+## Our research question
+
+We are interested in finding out if there is an association between smoking during pregnancy and low birth weight. We'll use the birth weight data `birthwt` from the `MASS` package.
+
 
 ## Exploratory data analysis
 
-We use the birth weight data `birthwt` from the `MASS` package. In particular, we'll investigate a possible association between a mother's smoking status during pregnancy and low birth weight of the baby. Rather than using the actual birth weight of the baby (we'll do that in a future assignment), let's use the categorical variable `low` that is simply an indicator (yes/no) of whether the birth weight is less than 2.5 kg.
+Rather than using the actual birth weight of the baby (we'll do that in a future assignment), let's use the categorical variable `low` that is simply an indicator (yes/no) of whether the birth weight is less than 2.5 kg.
 
 We can see below that neither `smoke` nor `low` are factor variables as we need them to be:
 
@@ -161,7 +165,7 @@ head(shuffle(smoke_low$smoke), 20)
 Do it again, just to make sure it's random:
 
 ```{r}
-head(shuffle(smoke_low$smoke, 20))
+head(shuffle(smoke_low$smoke), 20)
 ```
 
 
@@ -179,7 +183,7 @@ diffprop(low ~ shuffle(smoke), data = smoke_low)
 diffprop(low ~ shuffle(smoke), data = smoke_low)
 ```
 
-The `do` command from the `mosaic` package allows us to repeat this simulation process any number of times. From an earlier module, we learned that the number of simulations needs to be sifficiently high to make sure we have a good representative set of outcomes. The results will be gathered together in a data frame that we will call `sims`.
+The `do` command from the `mosaic` package allows us to repeat this simulation process any number of times. From an earlier module, we learned that the number of simulations needs to be sufficiently high to make sure we have a good representative set of outcomes. The results will be gathered together in a data frame that we will call `sims`.
 
 ```{r}
 sims <- do(1000) * diffprop(low ~ shuffle(smoke), data = smoke_low)
@@ -279,7 +283,7 @@ Uterine irritability is recorded in the variable `ui` in the `birthwt` data set.
 ## among the randomly simmulated values.
 ```
 
-Finally, comment on what you see. Based on the number you get in step 6 above, is the observed difference rare? In other words, under the assumption that uterine irritiability and low birth weight are indepdent, are we likely to see an observed difference as far away from zero as we actually see in the data? So what is your conclusion then? Do you believe there is an association between uterine irritability and low birth weight?
+Finally, comment on what you see. Based on the number you get in step 6 above, is the observed difference rare? In other words, under the assumption that uterine irritability and low birth weight are independent, are we likely to see an observed difference as far away from zero as we actually see in the data? So what is your conclusion then? Do you believe there is an association between uterine irritability and low birth weight?
 
 \begin{answer}
 Please write up your answer here.
@@ -289,6 +293,6 @@ Please write up your answer here.
 
 ## Conclusion
 
-Here we used simulation to explore the idea of two variable being independent or associated. When we assume they are indepedent, we can explore the sampling variability of the differences that occur by pure chance alone. We expect the difference to be zero, but we know that randomness will cause the simulated differences to have a range of values. Is the difference in the observed data far away from zero? In that case, we can say we have evidence that the variables are not independent; in other words, it is more likely that our variables are associated.
+Here we used simulation to explore the idea of two variable being independent or associated. When we assume they are independent, we can explore the sampling variability of the differences that occur by pure chance alone. We expect the difference to be zero, but we know that randomness will cause the simulated differences to have a range of values. Is the difference in the observed data far away from zero? In that case, we can say we have evidence that the variables are not independent; in other words, it is more likely that our variables are associated.
 
 

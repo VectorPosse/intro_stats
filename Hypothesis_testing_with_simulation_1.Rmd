@@ -1,5 +1,5 @@
 ---
-title: "Introduction to simulation, Part 3: Hypothesis testing"
+title: "Hypothesis testing with simulation, Part 1"
 author: "Put your name here"
 date: "Put the date here"
 output: pdf_document
@@ -11,7 +11,9 @@ output: pdf_document
 
 ## Introduction
 
-Using a sample to deduce something about a population is called "statistical inference". In this module, we'll learn about one form of statistical inference called "hypothesis testing". There are no new commands here. The focus will be on walking through the previous example from Part 2 of this series of modules on simulation and recasting it as a formal hypothesis test.
+Using a sample to deduce something about a population is called "statistical inference". In this module, we'll learn about one form of statistical inference called "hypothesis testing". The focus will be on walking through the example from Part 2 of "Introduction to simulation" and recasting it here as a formal hypothesis test.
+
+There are no new R commands here, but there are many new ideas that will require careful reading. You are not expected to be an expert on hypothesis testing after this one module. However, within the next few modules, as we learn more about hypothesis testing and work through many more examples, the hope is that you will begin to assimilate and internalize the logic of inference and the steps of a hypothesis test.
 
 
 ## Instructions
@@ -70,7 +72,7 @@ smoke_low <- data.frame(smoke, low)
 
 ## Hypothesis testing
 
-The approach we used in Part 2 was to assume that the two variables were independent. From that assumption, we were able to compare our observed difference from the actual data to the distribution of random values obtained by simulation. When the observed difference was far enough away from zero, we concluded that the assumption of independence was probably false, giving us evidence that the two variables were associated after all.
+The approach we used in Part 2 of "Introduction to Simulation" was to assume that the two variables `smoke` and `low` were independent. From that assumption, we were able to compare the observed difference in low birth weight percentages between smokers and non-smokers from the actual data to the distribution of random values obtained by simulation. When the observed difference was far enough away from zero, we concluded that the assumption of independence was probably false, giving us evidence that the two variables were associated after all.
 
 This logic is formalized into a sequence of steps known as a *hypothesis test*. In this section, we will introduce a rubric for conducting a full and complete hypothesis test for the smoking and low birth weight example. Please locate the file `Rubric_for_inference.pdf` to see the steps for each part of the rubric.
 
@@ -85,9 +87,9 @@ Below, I'll address each of these steps.
 
 ### Hypotheses
 
-We are trying to ask some question about a population of interest. Our sample is only a part of that population. The word inference comes from the verb "infer": we are trying to infer what might be true of a population just from examining a sample. It's also possible that our question involves comparing two or more populations to each other. In this case, we'll have multiple samples, one from each of our populations.
+We are trying to ask some question about a population of interest. However, all we have in our data is a sample of that population. The word inference comes from the verb "infer": we are trying to infer what might be true of a population just from examining a sample. It's also possible that our question involves comparing two or more populations to each other. In this case, we'll have multiple samples, one from each of our populations. For example, in our birth weight question, we are comparing two populations: women who smoked during pregnancy and women who didn't. Our data gives us two samples (again smokers and non-smokers) who form only a part of the larger populations of interest. 
 
-To convince our audience that our analysis is correct, it makes sense to take a skeptical position. If we are trying to prove that there is an association between smoking during pregnancy and low birth weight, we don't just declare it to be so. We start with a "null hypothesis", or an expression of the belief that there is no association. Null hypotheses always represent the "default" position that a skeptic might take. It codifies the idea that "there's nothing to see here."
+To convince our audience that our analysis is correct, it makes sense to take a skeptical position. If we are trying to prove that there is an association between smoking during pregnancy and low birth weight, we don't just declare it to be so. We start with a "null hypothesis", or an expression of the belief that there is no association. A null hypotheses always represent the "default" position that a skeptic might take. It codifies the idea that "there's nothing to see here."
 
 Our job is to gather evidence to show that there is something interesting going on. The statement of interest to us is called the "alternative hypothesis". This is usually the thing we're trying to prove.
 
@@ -105,15 +107,15 @@ The most important thing to know is that the entire hypothesis test up until you
 
 A model is an approximation---usually a simplification---of reality. In a hypothesis test, when we say "model" we are talking specifically about the "null model". In other words, what is true about the population under the assumption of the null? If we sample from the population repeatedly, we find that there is some kind of distribution of values that can occur by pure chance alone. This is called the *sampling distribution model*. We have been learning about how to use simulation to understand the sampling distribution model and how much sampling variability to expect, even when the null hypothesis is true.
 
-Building a model is contingent upon certain conditions being true. For example, there is no hope that we can infer from our sample unless that sample is close to a random sample of the population. Of course, random samples are usually too much to ask for; there is almost never such a thing as a truly random sample of the population. Nevertheless, it is up to us to make the case that our sample is as representative of the population as possible. Additionally, we have to know that our sample comprises less than 10% of the size of the population. The reasons for this are somewhat technical and the 10% figure is just a rough guideline, but we should think carefully about this whenever we want our inference to be correct.
+Building a model is contingent upon certain assumptions being true. We cannot usually demonstrate directly that these assumptions are conclusively met; however, there are often conditions that can be checked with our data that can give us some confidence in saying that the assumptions are probably met. For example, there is no hope that we can infer from our sample unless that sample is close to a random sample of the population. There is rarely any direct evidence of having a properly random sample, and often, random samples are too much to ask for. There is almost never such a thing as a truly random sample of the population. Nevertheless, it is up to us to make the case that our sample is as representative of the population as possible. Additionally, we have to know that our sample comprises less than 10% of the size of the population. The reasons for this are somewhat technical and the 10% figure is just a rough guideline, but we should think carefully about this whenever we want our inference to be correct.
 
-Those are just two examples. For the simulation tests we are running, those are the only two conditions we need to check. For other hypothesis tests in the future that use different types of models, we will need to check more conditions that correspond to the modelling assumptions we will need to make.
+Those are just two examples. For the simulation tests we are running, those are the only two conditions we need to check. For other hypothesis tests in the future that use different types of models, we will need to check more conditions that correspond to the modeling assumptions we will need to make.
 
 ### Mechanics
 
 This is the nitty-gritty, nuts-and-bolts part of a hypothesis test. Once we have a model that tells us how data should behave under the assumption of the null hypothesis, we need to check how our data actually behaved. The measure of where our data is relative to the null model is called the *test statistic*. For example, if the null hypothesis states that there should be a difference of zero between mothers who smoke and mothers who don't smoke, then the test statistic would be the actual observed difference in our data between smokers and non-smokers.
 
-Once we have a test statistic, we can plot it in the same graph as the null model. This gives us a visual sense of how rare or unusual our observed data is. The further our test statistic is from the center of the null model, the more evidence we have that our data would be very unusual if the null model were true. And that, in turn, gives us a reason not to believe the null model.
+Once we have a test statistic, we can plot it in the same graph as the null model. This gives us a visual sense of how rare or unusual our observed data is. The further our test statistic is from the center of the null model, the more evidence we have that our data would be very unusual if the null model were true. And that, in turn, gives us a reason not to believe the null model. When conducting a two-sided test, we will actually graph the test statistic and the negative of the test statistic to acknowledge that we're interested in evidence of an effect in either direction. 
 
 Finally, we convert the visual evidence explained in the previous paragraph to a number called a *P-value*. This measures how likely it is to see our observed data---or data even more extreme---under the assumption of the null. A small P-value, then, means that if the null were really true, we wouldn't be very likely at all to see data like ours. That leaves us with little confidence that the null model is really true. (After all, we *did* see the data we gathered!) If the P-value is large---in other words, if the test statistic is closer to the middle of the null distribution---then our data is perfectly consistent with the null hypothesis. That doesn't mean the null is true, but it certainly does not give us evidence against the null.
 
@@ -125,9 +127,11 @@ Remember the statement made earlier that throughout the hypothesis testing proce
 
 The P-value we calculate in the Mechanics section allows us to determine what our decision will be relative to the null hypothesis. As explained above, when the P-value is small, that means we had data that would be very unlikely had the null been true. The sensible conclusion is then to "reject the null hypothesis". On the other hand, if the data is consistent with the null hypothesis, then we "fail to reject the null hypothesis."
 
+How small does the P-value need to be before we are willing to reject the null hypothesis? That is a decision we have to make based on how much we are willing to risk an incorrect conclusion. A value that is widely used is 0.05; in other words, if $P < 0.05$ we reject the null, and if $P \geq 0.05$, we fail to reject the null. However, for situations where we want to be conservative, we could choose this threshold to be much smaller. If we insist that the P-value be less than 0.01, for example, then we will only reject the null when we have a lot more evidence. The threshold we choose is called the "significance level", denoted by the Greek letter alpha: $\alpha$. Ideally, $\alpha$ should be chosen long before we compute our P-value so that we're not tempted to cheat and change the value of $\alpha$ to suit our P-value (and by doing so, quite literally, move the goalposts).
+
 Note that we never accept the null hypothesis. This procedure gives us no evidence in favor of the null. All we can say is that the evidence is either strong enough to warrant rejection of the null, or else it isn't, in which case we can conclude nothing. If we can't prove the null false, we are left not knowing much of anything at all.
 
-The phrases "reject the null" or "fail to reject the null" are very statsy. Your audience may not be statistically trained. Besides, the *real* conclusion you care about is about the question of interest you posed at the beginning of this process, and that is built into the alternative hypothesis, not the null. Therefore, we need some statement that addresses the alternative hypothesis in words that a general audience will understand. I recommend the following templates:
+The phrases "reject the null" or "fail to reject the null" are very statsy. Your audience may not be statistically trained. Besides, the *real* conclusion you care about concerns the question of interest you posed at the beginning of this process, and that is built into the alternative hypothesis, not the null. Therefore, we need some statement that addresses the alternative hypothesis in words that a general audience will understand. I recommend the following templates:
 
 * When you reject the null, you can safely say, "We have sufficient evidence that [restate the alternative hypothesis]."
 
@@ -135,14 +139,14 @@ The phrases "reject the null" or "fail to reject the null" are very statsy. Your
 
 The last part of your conclusion should be an acknowledgement of the uncertainty in this process. Statistics tries to tame randomness, but in the end, randomness is always somewhat unpredictable. It is possible that we came to the wrong conclusion, not because we made mistakes in our computation, but because statistics just can't be right 100% of the time when randomness is involved. Therefore, we need to explain to our audience that we may have made an error.
 
-A *Type I* error is what happens when the null hypothesis is actually true, but our procedure rejects it anyway. This happens when we get a "freak" sample. For example, perhaps there really is no association between smoking and low birth weight. Even if that were true, we could accidentally survey a group of women who smoked and also---by pure chance alone---happen to have more babies with low birth weight. Our test statistic will be "accidentally" far from the null value, and we will mistakenly reject the null. Whenever we reject the null, we are at risk of making a Type I error.
+A *Type I* error is what happens when the null hypothesis is actually true, but our procedure rejects it anyway. This happens when we get a "freak" sample. For example, perhaps there really is no association between smoking and low birth weight. Even if that were true, we could accidentally survey a group of women who smoked and also---by pure chance alone---happen to have more babies with low birth weight. Our test statistic will be "accidentally" far from the null value, and we will mistakenly reject the null. Whenever we reject the null, we are at risk of making a Type I error. Given that we are conclusively stating a statistically significant finding, if that finding is wrong, this is a *false positive*, a term that is synonymous with a Type I error. The significance level $\alpha$ discussed above is, in fact, the probability of making a Type I error. (If the null is true, we will still reject the null if our P-value happens to be less than $\alpha$.)
 
-On the other hand, the null may actually be false, and yet, we may not manage to gather enough evidence to disprove it. This can also happen due to a "freak sample"---a sample that doesn't conform to the "truth". But there are other ways this can happen as well, most commonly when you have a small sample size (which doesn't allow you to prove much of anything at all) or when the effect you're trying to measure exists, but is so small that it is hard to distinguish from no effect at all (which is what the null postulates). In these cases, we are at risk of making a *Type II* error. Anytime we say that we fail to reject the null, we have to worry about the possibility of making a Type II error.
+On the other hand, the null may actually be false, and yet, we may not manage to gather enough evidence to disprove it. This can also happen due to a "freak sample"---a sample that doesn't conform to the "truth". But there are other ways this can happen as well, most commonly when you have a small sample size (which doesn't allow you to prove much of anything at all) or when the effect you're trying to measure exists, but is so small that it is hard to distinguish from no effect at all (which is what the null postulates). In these cases, we are at risk of making a *Type II* error. Anytime we say that we fail to reject the null, we have to worry about the possibility of making a Type II error, also called a *false negative*.
 
 
 ## Example
 
-Below, I'll model the process of walking through a complete hypothesis test, showing how I would address each step. Then, you'll have a turn at doing the same thing for a slightly different question.
+Below, I'll model the process of walking through a complete hypothesis test, showing how I would address each step. Then, you'll have a turn at doing the same thing for a slightly different question. Unless otherwise stated, we will always assume a significance level of $\alpha = 0.05$. (In other words, we will reject the null if our computed P-value is less than 0.05, and we will fail to reject the null if our P-value is greater than or equal to 0.05.)
 
 Note that there is some mathematical formatting. This is done by enclosing such math in dollar signs. Don't worry too much about the syntax; just mimic what you see in the example.
 
@@ -204,8 +208,11 @@ obs_diff
 sims <- do(1000) * diffprop(low ~ shuffle(smoke), data = smoke_low)
 ggplot(sims, aes(x = diffprop)) +
     geom_histogram(binwidth = 0.05) +
-    geom_vline(xintercept = obs_diff, color = "blue")
+    geom_vline(xintercept = obs_diff, color = "blue") +
+    geom_vline(xintercept = -obs_diff, color = "blue")
 ```
+
+(You'll note that we added two blue vertical lines here. This is because we are conducting a two-sided test, which means that we're interested in values that are more extreme than our observed difference in *both* directions.)
 
 ### Calculate the P-value.
 
@@ -213,27 +220,65 @@ ggplot(sims, aes(x = diffprop)) +
 2 * prop(sims$diffprop <= obs_diff)
 ```
 
-(Note, we multiply here by two because we are conducting a two-sided test. We would be surprised by values that are unusually positive as well as unusually negative.)
+(Note, we multiply here by two because we are conducting a two-sided test. We would be surprised by values that are unusually positive as well as unusually negative. Also, you can safely ignore the word `TRUE` in the output.)
 
 
 ## Conclusion
 
 ### State the statistical conclusion.
 
-We reject the null hypothesis.
+We fail to reject the null hypothesis.
 
 ### State (but do not overstate) a contextually meaningful conclusion.
 
-There is sufficient evidence to suggest that there is an association between smoking and low birth weight.
+There is insufficient evidence to suggest that there is an association between smoking and low birth weight.
 
 ### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
-As we rejected the null, we run the risk of committing a Type I error. It is possible that there is no association between smoking and low birth weight, but we got an unusual sample that led us to believe that there was such an association.
+As we failed to reject the null, we run the risk of committing a Type II error. It is possible that there is an association between smoking and low birth weight, but our samples did not give us evidence that was conclusive enough.
+
+*****
+
+After writing up your conclusions and acknowledging the possibility of a Type I or Type II error, the hypothesis test is complete. (At least for now. In the future, we will add one more step of computing a confidence interval.)
+
+## Failing to reject the null
+
+If you're doing this assignment soon after finishing Part 2 of the "Introduction to simulation", you may have noticed something unusual. In the previous assignment we concluded that there seemed to be evidence of an assocation between smoking and low birth weight. And yet, here in this document, we have failed to reject the null, meaning that we have found insufficient evidence of such an association.
+
+The reason for this is simple. In the previous assignment we did the "intuitive" thing and ran a one-sided test. We did not call it that in the previous assignment; we had not yet developed the vocabulary. But if you go back and look at the previous assignment, you'll find that we computed only simulated values that fell below the observed difference:
+
+```{r}
+prop(sims$diffprop <= obs_diff)
+```
+
+The justification was that we already suspected that smoking mothers were more likely to give birth to babies with low birth weight, and it appears that our evidence (the test statistic, or our observed difference) was pretty far in that direction.
+
+(We did get a slightly different number in the previous assignment. Remember that we are simulating which involves randomness. Therefore, we won't expect to get the exact same numbers each time.)
+
+By way of contrast, in this assignment we computed the two-sided P-value:
+
+```{r}
+2 * prop(sims$diffprop <= obs_diff)
+```
+
+Our P-value in this assignment is twice as large as it could have been if we had run a one-sided test. And doubling the P-value means that it no longer falls under the significance threshold $\alpha = 0.05$.
+
+This raises an obvious question: why use two-sided tests? If the P-values are higher, that makes it less likely that we will reject the null, which means we won't be able to prove our alternative hypothesis. Isn't that a bad thing?
+
+As a matter of fact, there are many researchers in the world who do think it's a bad thing, and routinely do things like use one-sided tests to give them a better chance of getting small P-values. But this is not ethical. The point of research is to do good science, not prove your pet theories correct. There are many incentives in the world for a researcher to prove their theories correct (money, awards, career advancement, fame and recognition, legacy, etc.), but these should be secondary to the ultimate purpose of advancing knowledge. Sadly, many researchers out there have these priorities reversed. I do not claim that researchers set out to cheat; I suspect that the vast majority of researchers act in good faith. Nevertheless, the rewards associated with "successful" research cause cognitive biases that are hard to overcome. And "success" is often very narrowly defined as research that produces small P-values.
+
+A better approach is to be conservative. For example, a two-sided test is not only more conservative because it produces higher P-values, but also because it answers a more general question. That is, it is scientifically interesting when an association goes in either direction (e.g. smoking mothers have more babies with low birth weight, or smoking mothers have fewer babies with low birth weight). This is why we recommended above using two-sided tests by default, and only using a one-sided test when there is a very strong research hypothesis that justifies it.
+
+Also remember that when we fail to reject the null hypothesis, we are not saying that the null hypothesis is true. Neither are we saying it's false. Failure to reject the null is really a failure to conclude anything at all. But rather than looking at it as a failure, a more productive viewpoint is to see it as an opportunity for more research, possibly with larger sample sizes.
+
+Even when we do reject the null, it is important not to see that as the end of the conversation. Too many times, a researcher publishes a "statistically significant" finding in a peer-reviewed journal, and then that result is taken as "Truth". We should, instead, view statistical inference as incremental knowledge that works slowly to refine our state of scientific knowledge, as opposed to a collection of "facts" and "non-facts".
 
 
-## Your turn!
+## Your turn
 
-Now it's your turn to run a complete hypothesis test. Determine if there is evidence that the presence of uterine irritability is associated with low birth weight. I will give you the template below, then you need to fill in the gaps. Some of the steps will be the same or similar to steps in the example above. It is perfectly okay to copy and paste R code, making the necessary changes. It is **not** okay to copy and paste text. You need to put everything into your own words.
+Now it's your turn to run a complete hypothesis test. Determine if there is evidence that the presence of uterine irritability is associated with low birth weight. As we'll always assume unless otherwise stated, use a significance level of $\alpha = 0.05$.
+
+I have copied the template below. You need to fill in each step. Some of the steps will be the same or similar to steps in the example above. It is perfectly okay to copy and paste R code, making the necessary changes. It is **not** okay to copy and paste text. You need to put everything into your own words.
 
 The template below is exactly the same as in the file `Rubric_for_inference.pdf`.
 
@@ -313,6 +358,9 @@ Please write up your answer here.
 Please write up your answer here.
 \end{answer}
 
+*****
+
+
 ##  Conclusion
 
-A hypothesis test is a formal set of steps---a procedure, if you will---for implementing the logic of inference. We take a skeptical position and assume a null hypothesis in contrast to the question of interest (the alternative hypothesis). We build a model under the assumption of the null hypothesis to see if our data is consistent with the null (in which case we fail to reject the null) or unusual/rare relative to the null (in which case we reject the null). We always work under the assumption of the null so that we can convince a skeptical audience using evidence. We also take care to acknowledge that statistical procedures can be wrong.
+A hypothesis test is a formal set of steps---a procedure, if you will---for implementing the logic of inference. We take a skeptical position and assume a null hypothesis in contrast to the question of interest, the alternative hypothesis. We build a model under the assumption of the null hypothesis to see if our data is consistent with the null (in which case we fail to reject the null) or unusual/rare relative to the null (in which case we reject the null). We always work under the assumption of the null so that we can convince a skeptical audience using evidence. We also take care to acknowledge that statistical procedures can be wrong, and not to put too much credence in the results of any single set of data or single hypothesis test.
