@@ -60,15 +60,6 @@ set.seed(9999)
 
 We are interested in finding out if there is an association between smoking during pregnancy and low birth weight.
 
-## Data preparation
-
-You will recall that we need to convert the two variables of interest to factor variables and put them in a new data frame.
-
-```{r}
-smoke <- factor(birthwt$smoke, levels = c(1, 0), labels = c("Yes", "No"))
-low <- factor(birthwt$low, levels = c(1, 0), labels = c("Yes", "No"))
-smoke_low <- data.frame(smoke, low)
-```
 
 ## Hypothesis testing
 
@@ -76,14 +67,29 @@ The approach we used in Part 2 of "Introduction to Simulation" was to assume tha
 
 This logic is formalized into a sequence of steps known as a *hypothesis test*. In this section, we will introduce a rubric for conducting a full and complete hypothesis test for the smoking and low birth weight example. Please locate the file `Rubric_for_inference.pdf` to see the steps for each part of the rubric.
 
-A hypothesis test can be organized into four parts:
+A hypothesis test can be organized into five parts:
 
-1. Hypotheses
-2. Model
-3. Mechanics
-4. Conclusion
+1. Exploratory data analysis
+2. Hypotheses
+3. Model
+4. Mechanics
+5. Conclusion
 
 Below, I'll address each of these steps.
+
+### Exploratory data analysis
+
+Before we can answer questions using data, we need to understand our data.
+
+Most data sets come with some information about the provenance and structure of the data. (Often this is called "metadata".) This is the who, what, when, where, why, and how. Without context, data is just a bunch of letters and numbers. You must understand the nature of the data in order to use the data. Information about the structure of the data is often recorded in a "code book".
+
+For data that you collect yourself, you'll already know all about it, although should probably write that stuff down in case other people want to use your data (or in case "future you" wants to use the data). For other data sets, you hope that other people have recorded information about how the data was collected and what is described in the data. When working with data sets in R as we do for these modules, we've already seen that there are help files (sometimes more or less helpful).
+
+We can also use commands like `str` to explore the structure of the data (the variables and how they're coded), as well as summary functions (like `summary` or---even better---`favstats`) to get a quick sense of the variables.
+
+Sometimes you have to prepare your data for analysis. A common example that we've seen before is converting categorical variables that should be coded as factor variables, but often are coded numerically (like "0" and "1" instead of "No" and "Yes"). Sometimes missing data is coded unusually (like "999") and that has to be fixed before trying to calculate statistics. "Cleaning" data is often a task that takes more time than analyzing it!
+
+Finally, once the data is in a suitably tidy form, we can use visualizations like tables, graphs, and charts to understand the data better. Often, there are conditions about the shape of our data that have to be met before inference is appropriate, and this step can help diagnose problems that could arise in the inferential procedure. This is a good time to look for outliers, for example.
 
 ### Hypotheses
 
@@ -151,28 +157,49 @@ Below, I'll model the process of walking through a complete hypothesis test, sho
 Note that there is some mathematical formatting. This is done by enclosing such math in dollar signs. Don't worry too much about the syntax; just mimic what you see in the example.
 
 
-## Hypotheses
+## Exploratory data analysis
 
-### Identify the sample (or samples) and a reasonable population (or populations) of interest.
+### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
 
-There are technically two samples of interest here. All the data comes from mothers who gave birth at the Baystate Medical Center, Springfield, Massachusetts, during 1986, but one group of interest are mothers who smoked during pregnancy, and the other group of interest are mothers who did not smoke during pregnancy.
+```{r}
+str(birthwt)
+```
 
-The following table shows the sample sizes for each group in the marginal distribution along the right side of the table (i.e., the row sums):
+### Prepare the data for analysis.
+
+We need to convert `smoke` and `low` to factor variables and put them into a separate data frame. Recall from a previous assignment that "Yes" is our "success" condition, so it has to be listed first among the `levels` and `labels` of the `factor` command.
+
+```{r}
+smoke <- factor(birthwt$smoke, levels = c(1, 0), labels = c("Yes", "No"))
+low <- factor(birthwt$low, levels = c(1, 0), labels = c("Yes", "No"))
+smoke_low <- data.frame(smoke, low)
+```
+
+### Make tables or plots to explore data visually.
+
+As we have two categorical variables, a contingency table is a good way of visualizing the distribution of both variables together.
 
 ```{r}
 CrossTable(smoke_low$smoke, smoke_low$low,
            prop.r = TRUE, prop.c = FALSE, prop.t = FALSE, prop.chisq = FALSE)
 ```
 
-So there are 74 mothers who smoked during pregnancy, and 115 mothers who did not.
+
+## Hypotheses
+
+### Identify the sample (or samples) and a reasonable population (or populations) of interest.
+
+There are technically two samples of interest here. All the data comes from mothers who gave birth at the Baystate Medical Center, Springfield, Massachusetts, during 1986, but one group of interest are mothers who smoked during pregnancy, and the other group of interest are mothers who did not smoke during pregnancy.
+
+The contingency table above shows the sample sizes for each group in the marginal distribution along the right side of the table (i.e., the row sums). There are 74 mothers who smoked during pregnancy, and 115 mothers who did not.
 
 The populations of interest are probably all mothers who smoke and all mothers who don't smoke, maybe in the U.S., although we are only really safe coming to conclusions about the births at this particular hospital.
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
-$H_0:$ The null hypothesis states that there is no association between smoking status during pregnancy and low birth weight.
+$H_0:$ There is no association between smoking status during pregnancy and low birth weight.
 
-$H_A:$ The alternative hypothesis states that there is an association between smoking status during pregnancy and low birth weight.
+$H_A:$ There is an association between smoking status during pregnancy and low birth weight.
 
 ### Express the null and alternative hypotheses in symbols.
 
@@ -205,7 +232,7 @@ obs_diff
 ### Plot the simulated values of the null distribution.
 
 ```{r}
-sims <- do(1000) * diffprop(low ~ shuffle(smoke), data = smoke_low)
+sims <- do(5000) * diffprop(low ~ shuffle(smoke), data = smoke_low)
 ggplot(sims, aes(x = diffprop)) +
     geom_histogram(binwidth = 0.05) +
     geom_vline(xintercept = obs_diff, color = "blue") +
@@ -227,25 +254,23 @@ ggplot(sims, aes(x = diffprop)) +
 
 ### State the statistical conclusion.
 
-We fail to reject the null hypothesis.
+We reject the null hypothesis.
 
 ### State (but do not overstate) a contextually meaningful conclusion.
 
-There is insufficient evidence to suggest that there is an association between smoking and low birth weight.
+There is sufficient evidence to suggest that there is an association between smoking and low birth weight.
 
 ### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
-As we failed to reject the null, we run the risk of committing a Type II error. It is possible that there is an association between smoking and low birth weight, but our samples did not give us evidence that was conclusive enough.
+As we rejected the null, we run the risk of committing a Type I error. It is possible that there is no association between smoking during pregnancy and low birth weight, but that we've come across a sample in which smoking mothers had an unusually large number of babies with low birth weight.
 
 *****
 
 After writing up your conclusions and acknowledging the possibility of a Type I or Type II error, the hypothesis test is complete. (At least for now. In the future, we will add one more step of computing a confidence interval.)
 
-## Failing to reject the null
+## More on one-sided and two-sided tests
 
-If you're doing this assignment soon after finishing Part 2 of the "Introduction to simulation", you may have noticed something unusual. In the previous assignment we concluded that there seemed to be evidence of an assocation between smoking and low birth weight. And yet, here in this document, we have failed to reject the null, meaning that we have found insufficient evidence of such an association.
-
-The reason for this is simple. In the previous assignment we did the "intuitive" thing and ran a one-sided test. We did not call it that in the previous assignment; we had not yet developed the vocabulary. But if you go back and look at the previous assignment, you'll find that we computed only simulated values that fell below the observed difference:
+You may have noticed a subtle but important difference between the number we got in "Introduction to simulation, Part 2" and the P-value here. In the previous assignment, we calculated this:
 
 ```{r}
 prop(sims$diffprop <= obs_diff)
@@ -261,9 +286,9 @@ By way of contrast, in this assignment we computed the two-sided P-value:
 2 * prop(sims$diffprop <= obs_diff)
 ```
 
-Our P-value in this assignment is twice as large as it could have been if we had run a one-sided test. And doubling the P-value means that it no longer falls under the significance threshold $\alpha = 0.05$.
+Our P-value in this assignment is twice as large as it could have been if we had run a one-sided test.
 
-This raises an obvious question: why use two-sided tests? If the P-values are higher, that makes it less likely that we will reject the null, which means we won't be able to prove our alternative hypothesis. Isn't that a bad thing?
+Doubling the P-value might mean that it no longer falls under the significance threshold $\alpha = 0.05$ (although in this case, we still came in under 0.05). This raises an obvious question: why use two-sided tests at all? If the P-values are higher, that makes it less likely that we will reject the null, which means we won't be able to prove our alternative hypothesis. Isn't that a bad thing?
 
 As a matter of fact, there are many researchers in the world who do think it's a bad thing, and routinely do things like use one-sided tests to give them a better chance of getting small P-values. But this is not ethical. The point of research is to do good science, not prove your pet theories correct. There are many incentives in the world for a researcher to prove their theories correct (money, awards, career advancement, fame and recognition, legacy, etc.), but these should be secondary to the ultimate purpose of advancing knowledge. Sadly, many researchers out there have these priorities reversed. I do not claim that researchers set out to cheat; I suspect that the vast majority of researchers act in good faith. Nevertheless, the rewards associated with "successful" research cause cognitive biases that are hard to overcome. And "success" is often very narrowly defined as research that produces small P-values.
 
@@ -276,11 +301,32 @@ Even when we do reject the null, it is important not to see that as the end of t
 
 ## Your turn
 
-Now it's your turn to run a complete hypothesis test. Determine if there is evidence that the presence of uterine irritability is associated with low birth weight. As we'll always assume unless otherwise stated, use a significance level of $\alpha = 0.05$.
+Now it's your turn to run a complete hypothesis test. Determine if there is evidence that the presence of uterine irritability is associated with low birth weight. As always, use a significance level of $\alpha = 0.05$.
 
 I have copied the template below. You need to fill in each step. Some of the steps will be the same or similar to steps in the example above. It is perfectly okay to copy and paste R code, making the necessary changes. It is **not** okay to copy and paste text. You need to put everything into your own words.
 
 The template below is exactly the same as in the file `Rubric_for_inference.pdf`.
+
+
+## Exploratory data analysis
+
+### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+
+```{r}
+## Add code here to understand the data.
+```
+
+### Prepare the data for analysis.
+
+```{r}
+## Add code here to prepare the data for analysis.
+```
+
+### Make tables or plots to explore data visually.
+
+```{r}
+## Add code here to make tables or plots.
+```
 
 
 ## Hypotheses
