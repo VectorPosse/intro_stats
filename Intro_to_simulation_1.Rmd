@@ -136,18 +136,22 @@ Please write up your answer here.
 
 *****
 
-Although the variable `heads` is a numerical variable, we are going to treat it like a categorical variable for graphing purposes so that we can see a clear bar sitting over every possible number of heads.
+Let's look at a histogram of the number of heads we see in the simulated flips. (The fancy stuff in `scale_x_continuous` is just making sure that the x-axis goes from 0 to 10 and that the tick marks appear on each whole number.)
 
 ```{r}
-ggplot(coin_flips_20_10, aes(x = factor(heads))) +
-    geom_bar()
+ggplot(coin_flips_20_10, aes(x = heads)) +
+    geom_histogram(binwidth = 0.5) +
+    scale_x_continuous(limits = c(-1, 11),
+                       breaks = seq(0, 10, 1))
 ```
 
 Let's do the same thing, but now let's consider the *proportion* or percentage of heads.
 
 ```{r}
-ggplot(coin_flips_20_10, aes(x = factor(prop))) +
-    geom_bar()
+ggplot(coin_flips_20_10, aes(x = prop)) +
+    geom_histogram(binwidth = 0.05) +
+    scale_x_continuous(limits = c(-0.1, 1.1),
+                       breaks = seq(0, 1, 0.1))
 ```
 
 ## Bigger and better!
@@ -160,8 +164,10 @@ Instead, let's try it again with 2000 students.
 coin_flips_2000_10 <- do(2000) * rflip(10)
 tail(coin_flips_2000_10)
 mean(coin_flips_2000_10$heads)
-ggplot(coin_flips_2000_10, aes(x = factor(heads))) +
-    geom_bar()
+ggplot(coin_flips_2000_10, aes(x = heads)) +
+    geom_histogram(binwidth = 0.5) +
+    scale_x_continuous(limits = c(-1, 11),
+                       breaks = seq(0, 10, 1))
 ```
 
 This is helpful. In contrast with the simulation with twenty students, the bar chart gives us something closer to what we expect. The mode is at five heads, and every possible number of heads is represented, with decreasing counts as one moves away from five. With 2000 people flipping coins, all possible outcomes---including rare ones---are better represented.
@@ -169,8 +175,10 @@ This is helpful. In contrast with the simulation with twenty students, the bar c
 The same chart, this time with the proportion of heads:
 
 ```{r}
-ggplot(coin_flips_2000_10, aes(x = factor(prop))) +
-    geom_bar()
+ggplot(coin_flips_2000_10, aes(x = prop)) +
+    geom_histogram(binwidth = 0.05) +
+    scale_x_continuous(limits = c(-0.1, 1.1),
+                       breaks = seq(0, 1, 0.1))
 ```
 
 
@@ -185,8 +193,6 @@ Please write up your answer here.
 *****
 
 The other direction of growth is to increase the number of coin flips each student performs. Let's go back to our classroom of twenty students, but now, each student will flip the coin 1000 times.
-
-When graphing this, it won't make much sense to look at bars anymore. There are a thousand possible values (technically, 1001 values) along the x-axis. We'll use proper histograms from this point forward.
 
 ```{r}
 coin_flips_20_1000 <- do(20) * rflip(1000)
@@ -208,11 +214,11 @@ ggplot(coin_flips_2000_1000, aes(x = heads)) +
     geom_histogram(binwidth = 10, boundary = 500)
 ```
 
-Now with proportions. (Notice that we have to change the binwidth. Make sure you understand why we can't leave `binwidth = 10` like we had before.)
+Now with proportions.
 
 ```{r}
 ggplot(coin_flips_2000_1000, aes(x = prop)) +
-    geom_histogram(binwidth = 0.01, boundary = 500)
+    geom_histogram(binwidth = 0.01, boundary = 0.5)
 ```
 
 
