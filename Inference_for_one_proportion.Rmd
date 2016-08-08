@@ -1,0 +1,275 @@
+---
+title: "Inference for one proportion"
+author: "Put your name here"
+date: "Put the date here"
+output: pdf_document
+---
+<!-- Please don't mess with the next two lines! -->
+\newenvironment{answer}{\definecolor{shadecolor}{RGB}{225, 225, 255}\begin{shaded}}{\end{shaded}}
+<!-- Please don't mess with the previous two lines! -->
+
+
+## Introduction
+
+Our earlier work with simulations showed us that when the number of successes and failures is large enough, we can use a normal model as our sampling distribution model.
+
+We revisit hypothesis tests for a single proportion, but now, instead of running a simulation to compute a P-value, we take the shortcut of computing the P-value directly from a normal model.
+
+There are no new concepts here. All we are doing is revisiting the rubric for inference and making the necessary changes.
+
+
+## Instructions
+
+Presumably, you have already created a new project and downloaded this file into it. Please knit the document and work back and forth between this R Markdown file and the PDF output as you work through this module.
+
+When you are finished with the assignment, knit to PDF one last time, proofread the PDF file **carefully**, export the PDF file to your computer, and then submit your assignment.
+
+Sometimes you will be asked to add your own R code. That will appear in this document as a code chunk with a request for you to add your own code, like so:
+
+```{r}
+## Add code here to [do some task]...
+```
+
+Be sure to remove the line `## Add code here to [do some task]...` when you have added your own code.
+
+Sometimes you will be asked to type up your thoughts. That will appear in the document as follows:
+
+\begin{answer}
+Please write up your answer here.
+\end{answer}
+
+Again, please be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. If you need to use some R code as well, you can use inline R code inside the block between `\begin{answer}` and `\end{answer}`, or if you need an R code chunk, please go outside the `answer` block and start a new code chunk.
+
+
+## Load Packages
+
+We load the standard `mosaic` package as well as the `broom` package for tidy output, and the `openintro` package to access data on heart transplant candidates.
+
+```{r, message = FALSE, warning = FALSE}
+library(openintro)
+library(broom)
+library(mosaic)
+```
+
+
+## Revisiting the rubric for inference
+
+Instead of running a simulation, we are going to assume that the sampling distribution can be modeled with a normal model as long as the conditions for using a normal model are met.
+
+Although the rubric has not changed, the use of a normal model changes quite a bit about the way we go through the other steps. For example, we won't have simulated values to give us a histogram. Instead, we'll go straight to graphing a normal model. We won't compute the percent of our samples that are at least as extreme as our test statistic to get the P-value. The P-value from a normal model is found directly from the model itself using the `pdist` command.
+
+What follows is a fully-worked example of inference for one proportion. After the hypothesis test (sometimes called a one-proportion z-test for reasons that will become clear), we also follow up by computing a confidence interval. **From now on, we will consider inference to consist of a hypothesis test and a confidence interval.** Whenever you're asked a question that requires statistical inference, you should follow both the rubric steps for a hypothesis test and for a confidence interval.
+
+The example below will pause frequently for commentary on the steps, especially where their execution will be different from what you've seen before when you used simulation. When it's your turn to work through another example on your own, you should follow the outline of the rubric, but you should **not** copy and paste the commentary that accompanies it.
+
+
+## Research question
+
+Data from the Stanford University Heart Transplant Study is located in the `openintro` package in a data frame called `heartTr`. From the help file we learn, "Each patient entering the program was designated officially a heart transplant candidate, meaning that he was gravely ill and would most likely benefit from a new heart." Survival rates are not good for this population. Do such heart transplant candidates have less than a 50% chance of survival?
+
+
+## Inference for one proportion
+
+## Exploratory data analysis
+
+### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+
+[You should type `?heartTr` at the Console to read the help file.]
+
+```{r}
+str(heartTr)
+```
+
+Commentary: The variable of interest is `survived`, which is coded as a factor variable with two categories, "alive" and "dead". Keep in mind that because we are interested in survival rates, the "alive" condition will be considered the "success" condition.^[Finally, a "success" condition that actually sounds successful!]
+
+### Prepare the data for analysis. [Not always necessary.]
+
+In this case, as our variable of interest is already coded as a factor variable, we do not need to do anything to prepare the data.
+
+### Make tables or plots to explore the data visually.
+
+```{r}
+table(heartTr$survived)
+prop.table(table(heartTr$survived))
+```
+
+
+## Hypotheses
+
+### Identify the sample (or samples) and a reasonable population (or populations) of interest.
+
+The sample consists of `r NROW(heartTr)` candidates for a heart transplant in a study at Stanford University. The population of interest is presumably all candidates for heart transplants.
+
+### Express the null and alternative hypotheses as contextually meaningful full sentences.
+
+$H_0$: Candidates for a heart transplant have a 50% chance of survival.
+
+$H_A$: Candidates for a heart transplant have less than a 50% chance of survival.
+
+Commentary: it is slightly unusual that we are conducting a one-sided test. The standard default is typically a two-sided test. However, it is not for us to choose: the proposed research question is unequivocal in hypothesizing "less than 50%" survival.
+
+### Express the null and alternative hypotheses in symbols.
+
+$H_0: p = 0.5$
+
+$H_A: p < 0.5$
+
+
+## Model
+
+### Identify the sampling distribution model.
+
+We will use a normal model.
+
+### Check the relevant conditions to ensure that the assumptions are met.
+
+* Random
+    - Since the `r NROW(heartTr)` patients are from a study at Stanford, we do not have a random sample of all candidates for heart transplants. We hope that the patients recruited to this study were physiologically similar to other heart patients so that they are a representative sample. Without more information, we have no real way of knowing.
+
+* 10%
+    - `r NROW(heartTr)` patients are definitely less than 10% of all candidates for heart transplants.
+
+* Success/failure
+
+$$np = 103(0.5) = 51.5 \geq 10$$
+
+$$n(1 - p) = 103(0.5) = 51.5 \geq 10$$
+
+Commentary: Notice something interesting here. Why did we not use the 28 patients who survived and the 75 who died as the successes and failures? In other words, why did we use $np$ and $n(1 - p)$ instead of $n \hat{p}$ and $n(1 - \hat{p})$?
+
+Remember the logic of inference and the philosophy of the null hypothesis. To convince the skeptics, we must assume the null hypothesis throughout the process. It's only after we present sufficient evidence that can we reject the null and fall back on the alternative hypothesis that encapsulates our research question.
+
+Therefore, under the assumption of the null, the sampling distribution is the *null distribution*, meaning that it's centered at 0.5. All work we do with the normal model, including checking conditions, must use the null model with $p = 0.5$.
+
+That's also why the numbers don't have to be whole numbers. If the null states that of the 103 patients, 50% are expected to survive, then we expect 50% of 103, or 51.5, to survive. Of course, you can't have half of a survivor. But these are not *actual* survivors. Rather, they are the expected number of survivors in a group of 103 patients *on average* under the assumption of the null.
+
+
+## Mechanics
+
+### Compute the test statistic.
+
+```{r}
+surv_test <- tidy(prop.test(heartTr$survived, success = "alive"))
+z <- (surv_test$estimate -  0.5)/sqrt(0.5 * (1 - 0.5) / 103)
+```
+
+The test statistic has a z-score of `r z`.
+
+Commentary: We run the `prop.test` command to give us almost everything we need. As seen before, the `tidy` command from the `broom` package makes everything neat and gives us easy access to the various pieces of the output. What this command does not give us is a z-score. So we calculate it directly using the `estimate` ($\hat{p}$) and the mean and standard error of the null distribution.
+
+**Rememeber that are working under the assumption of the null hypothesis.** This means that we use $p = 0.5$ everywhere in the formula for the standard error. In other words,
+
+$$z = \frac{(0.272 - 0.5)}{\sqrt{\frac{0.5 (1 - 0.5)}{103}}} = -4.631.$$
+
+Either $\hat{p}$ or $z$ could be considered the test statistic. If we use $\hat{p}$ as the test statistic, then we're considering the null model to be
+
+$$N\left(0.5, \sqrt{\frac{0.5 (1 - 0.5)}{103}}\right).$$
+
+If we use $z$ as the test statistic, then we're considering the null model to be the *standard* normal model
+
+$$N(0, 1).$$
+
+The standard normal model is more intuitive and easier to work with, both conceptually, and in R. Therefore, we will henceforth consider $z$ as the test statistic so that we can consider our null model to be the standard normal model. For example, knowing that our test statistic is more than four standard deviations to the left of the null value already tells us a lot. We can anticipate a small P-value leading to rejection of the null.
+
+### Plot the null distribution.
+
+```{r}
+pdist("norm", q = z)
+```
+
+Commentary: It will be the case somewhat often that we have a z-score like this one that is literally "off the charts". You may wonder, then, why we still insist on plotting the null distribution. It's always a good habit to look at plots and it would be more complicated in the rubric if sometimes we did this step and sometimes we skipped it. So go ahead and make this plot every time even though it may not be very informative when you have large z-scores.
+
+Notice how simple this `pdist` command is. One reason is that we're using $z$, which means that we are working with the standard normal model. As this is the default for the `pdist` command, there is no need to specify the `mean` and `sd` in the command.
+
+Contrast this to the command we would need if using $\hat{p}$ as our test statistic:
+
+```{r}
+pdist("norm", q = surv_test$estimate,
+      mean = 0.5, sd = sqrt(0.5 * (1 - 0.5) / 103))
+```
+
+This works and gives us the same answer, but it's a lot more complicated.
+
+The other thing that makes this relatively simple is that we're running a one-sided test corresponding to the alternative hypothesis $p < 0.5$. Keep in mind that if we were running a two-sided test, we would need this instead:
+
+```{r}
+pdist("norm", q = c(-z, z))
+```
+
+### Calculate the P-value.
+
+```{r}
+surv_test$p.value / 2
+```
+
+Commentary: The P-value is computed as part of the `prop.test` function. However, the `prop.test` function assumes by default that you are performing a two-sided test. Therefore, if we want a one-sided p-value, we have to divide this answer by 2.
+
+Also, you may not have had much experience with scientific notation. When you see a number like `2.914281e-06`, that means
+
+$$ 2.914281 \times 10^{-6} = 0.000002914281.$$
+
+In other words, this is a really tiny P-value. (That makes sense. We were expecting a really tiny P-value based on being more than 4 standard errors from the mean.)
+
+Two more technical observations.
+
+1. You might have noticed that the output of the `pdist` command is not the same as the P-value we reported here. As the output of `pdist` is the area to the left of the z-score, this number should be our one-sided P-value. So why is this number different from the P-value computed above as half the P-value from the `prop.test` command? The reason is that, under the hood, the `prop.test` command is not quite using the same method we're using. Therefore, the P-value is slightly different. You don't need to worry too much about it. The two values should be very similar and, therefore, lead to the same conclusion.
+
+2. If you look more deeply into the `prop.test` function, you might discover that there is a way to get it to run a one-sided test. However, doing so messes up the confidence interval that we'll need later in the rubric. It's easy enough just to take the two-sided P-value and divide it by 2. Keep in mind that most of the time, we'll be running two-sided tests.
+
+## Conclusion
+
+### State the statistical conclusion.
+
+We reject the null hypothesis.
+
+### State (but do not overstate) a contextually meaningful conclusion.
+
+We have sufficient evidence that candidates for heart transplants have less than a 50% chance of survival.
+
+### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+
+As we rejected the null, we run the risk of making a Type I error. It is possible that the null is true and that there is a 50% chance of survival for these patients, but we got an unusual sample that appears to have a much smaller chance of survival.
+
+
+## Confidence interval
+
+### Conditions
+
+* Random
+    - Same as above.
+* 10%
+    - Same as above.
+* Success/failure
+    - There were 28 patients who survived and 75 who died in our sample. Both are larger than 10.
+
+Commentary: In the "Confidence Interval" section of the rubric, there is no need to recheck conditions that have already been checked. The sample has not changes, so it met the "Random" and "10%" conditions before, it will meet them now.
+
+So why recheck the success/failure condition?
+
+Keep in mind that in a hypothesis test, we temporarily assume the null is true. The null states that $p = 0.5$ and the resulting null distribution is, therefore, centered at $p = 0.5$. The success/failure condition is a condition that applies to the normal model we're using, and for a hypothesis test, that's the null model.
+
+By contrast, a confidence interval is making no assumption about the "true" value of $p$. The inferential goal of a confidence interval is to try to capture the true value of $p$, so we certainly cannot make any assumptions about it. Therefore, we go back to the original way we learned about the success/failure condition. That is, we check the actual number of successes and failures.
+
+### Calculation
+
+```{r}
+surv_test$conf.low
+surv_test$conf.high
+```
+
+Commentary: there's not much to do here as the confidence interval was already computed as a byproduct of the `prop.test` command.
+
+### Conclusion
+
+We are 95% confident that the true proportion of candidates for heart transplants who survive is captured in the interval (`r 100 * surv_test$conf.low`%, `r 100 * surv_test$conf.high`%).
+
+Commentary: Note that when we state our contextually meaningful conclusion, we also covert the decimal proportions to percentages. Humans like percentages a lot better.
+
+
+## Your turn
+
+Follow the rubric to answer the following research question:
+
+Some heart transplant candidates have already had a prior surgery. Use the variable `prior` in the `heartTr` data set to determine if less than 50% of patients have had a prior surgery. (To be clear, you are being asked to perform a one-sided test again.)
+
+This time, you will not be given the rubric outline. Please copy and paste the steps of the rubric below. You may refer to the worked example above and modify it accordingly. Copying and pasting R code is fine; copying and pasting text is not. Please state everything in your own words. (Also, remember to strip out all the commentary. That is just exposition for your benefit in understanding the steps, but is not meant to form part of the formal inference process.)

@@ -1,8 +1,15 @@
 ---
-title: "Inference for Categorical Data"
-author: '[Put your name here]'
-output: html_document
+title: "Inference for two proportions"
+author: "Put your name here"
+date: "Put the date here"
+output: pdf_document
 ---
+<!-- Please don't mess with the next two lines! -->
+\newenvironment{answer}{\definecolor{shadecolor}{RGB}{225, 225, 255}\begin{shaded}}{\end{shaded}}
+<!-- Please don't mess with the previous two lines! -->
+
+
+## Introduction
 
 In this assignment we will learn how to run hypothesis tests for categorical data in R.
 
@@ -10,11 +17,12 @@ If we have one categorical variable with two categories (a "success" condition a
 
 Things change a little when there are three or more categories. In this case we run a chi-square goodness-of-fit test for one categorical variables and a chi-square test of independence for two categorical variables.
 
+
 ## Instructions
 
-Presumably, you have already created a new project and downloaded this file into it. Please knit the document (probably to HTML as you're working) and work back and forth between this R Markdown file and the knit output to answer the following questions.
+Presumably, you have already created a new project and downloaded this file into it. Please knit the document and work back and forth between this R Markdown file and the PDF output as you work through this module.
 
-When you are finished with the assignment, knit to PDF, export the PDF file to your computer, and then submit to the corresponding assignment in Canvas. Be sure to submit before the deadline!
+When you are finished with the assignment, knit to PDF one last time, proofread the PDF file **carefully**, export the PDF file to your computer, and then submit your assignment.
 
 Sometimes you will be asked to add your own R code. That will appear in this document as a code chunk with a request for you to add your own code, like so:
 
@@ -22,185 +30,25 @@ Sometimes you will be asked to add your own R code. That will appear in this doc
 ## Add code here to [do some task]...
 ```
 
-When you see that in a code chunk, you need to type some R code to complete a task.
+Be sure to remove the line `## Add code here to [do some task]...` when you have added your own code.
 
-Sometimes you will be asked to type up your thoughts. Instructions to do that will be labeled as follows. If you are currently reading this in the knit output, please look back at the R Markdown file to see the following text:
+Sometimes you will be asked to type up your thoughts. That will appear in the document as follows:
 
-<!-- Please write up your answer in the space below -->
+\begin{answer}
+Please write up your answer here.
+\end{answer}
 
-(When you knit the document, you can't see the text from the line above. That's because the crazy notation surrounding that text marks it as a "comment", and therefore it doesn't appear in the output.) In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code (although it may include inline R code when necessary), but rather a free response section where you talk about your analysis and conclusions.
+Again, please be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. If you need to use some R code as well, you can use inline R code inside the block between `\begin{answer}` and `\end{answer}`, or if you need an R code chunk, please go outside the `answer` block and start a new code chunk.
 
 
-##  Getting started
+## Load Packages
 
-### Make sure you're in a project
-
-If you're looking at this document, you should have already created a project and uploaded this R Markdown file to that project folder.
-
-### Save your file!
-
-The first thing we **always** do is save our file. You'll probably want to save this under a new name. Go to the "File" menu and then "Save As". Once you've saved the file with the new name, from them on it's easier to just hit Ctrl-S (or Cmd-S on a Mac) to keep saving it periodically. 
-
-Remember that file names should not have any spaces in them. (In fact, you should avoid other kinds of special characters as well, like periods, commas, number signs, etc. Stick to letters and numerals and you should be just fine.) If you want a multiword file name, I recommend using underscores like this: `this_filename_has_spaces_in_it`.
-
-### Load Packages
-
-We load the standard `mosaic` package as well as the `MASS` package. At the same time, we'll also load the `gmodels` package to make nice contingency tables. (The `CrossTable` command will also have a side benefit in that it also runs the mechanics of a chi-square test)
+We load the standard `mosaic` package as well as the `MASS` package.
 
 ```{r, message = FALSE, warning = FALSE}
 library(mosaic)
 library(MASS)
-library(gmodels)
 ```
-
-## Inference for a single proportion
-
-We know that certain types of cancer are more common among females or males. The `Melanoma` data set in the `MASS` package describes 205 patients in Denmark with malignant melanoma. Is there a sex bias among these patients?
-
-First, let's do some exploratory data analysis. We need to be careful because another package has a data set called `melanoma` with a lower-case "m".
-
-```{r}
-table(Melanoma$sex)
-```
-
-It looks like it will be easier to work with this variable if it is re-coded. The help file says "1 = male, 0 = female".
-
-```{r}
-sex <- factor(Melanoma$sex,
-              levels = c(1, 0),
-              labels = c("male", "female"))
-```
-
-The rubric is below with some commentary mixed in.
-
-## Hypotheses
-
-### Identify the sample and a reasonable population of interest.
-
-The sample consists of 205 patients in Denmark with malignant melanoma. In order for this sample to be representative of the population, we should probably restrict our conclusions to the population of all people in Denmark with malignant melanoma.
-
-### Express the null and alternative hypotheses as contextually meaningful full sentences.
-
-$H_0:$ The null hypothesis states that females comprise 50% of all patients in Denmark with malignant melanoma.
-
-$H_A:$ The alternate hypothesis states that females do not comprise 50% of all patients in Denmark with malignant melanoma.
-
-
-### Express the null and alternative hypotheses in symbols.
-
-$H_0: p = 0$
-
-$H_A: p \neq 0$
-
-
-## Model
-
-### Identify the correct sampling distribution model.
-
-We will use a normal model.
-
-### Check the relevant conditions to ensure that the model assumptions are met.
-
-* Random
-    * We have no information about how this sample was obtained. We hope these 205 patients are representative of other Danish patients with malignant melanoma.
-* 10%
-    * I don't know exactly how many people in Denmark suffer from malignant melanoma, but I imagine over time it's more than 2000.
-* Success/Failure
-
-$np =$ `r length(sex) * 0.5`
-
-$n(1 - p) =$ `r length(sex) * 0.5`
-
-These are both larger than 10.
-    
-## Mechanics
-
-### Compute the test statistic.
-
-We'll run the `binom.test` command.
-
-```{r}
-test <- binom.test(sex, p = 0.5, success = "female")
-```
-
-Unfortunately, this command does not give the z-score and there doesn't seem to be an easy way to get it short of just computing it manually. The sample proportion $\hat{p}$ is computed in the `binom.test` command and will be stored in `test$estimate`.
-
-```{r}
-z <- (test$estimate - 0.5)/sqrt(0.5*(1 - 0.5)/length(sex))
-z
-```
-
-Because `test$estimate` comes with a label called "probability of success", unfortunately, our z-score inherits the name as well, which is super-misleading since the z-score is *not* a probability of success. Let's take care of that now:
-
-```{r}
-z <- unname(z)
-z
-```
-
-That's better.
-
-### Plot the null distribution.
-
-```{r}
-pdist(dist = "norm", q = c(-z, z))
-# Notice that this is using z which was defined in the previous step.
-```
-
-### Calculate the P-value.
-
-```{r}
-test$p.value
-```
-
-
-## Conclusion
-
-### State the statistical conclusion.
-
-We reject the null.
-
-### State (but do not overstate) a contextually meaningful conclusion.
-
-There is sufficient evidence to suggest that females do not comprise 50% of all patients in Denmark with malignant melanoma.
-
-### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
-
-If we've made a Type I error, then this means that females do comprise 50% of all patients in Denmark with malignant melanoma and we've obtained an unusual sample.
-
-## Confidence interval
-
-### Conditions
-
-The only condition that changes for a confidence interval is the success/failure condition. Instead of $np$ and $n(1 - p)$, we use $n \hat{p}$ and $n (1 - \hat{p})$, which are whole numbers that represent the raw number of successes and failures in the data. We can use the `table` command to check this.
-
-```{r}
-table(sex)
-```
-
-Indeed, the counts are each more than 10.
-
-### Calculation
-
-This is part of the `binom.test` output as explained in a previous homework assignment. (In that assignment, you also learned how to change the confidence interval if needed.)
-
-```{r}
-test$conf.int
-```
-
-(Note that `binom.test` uses a slightly different method for computing a confidence interval than the normal model method we use. Therefore, if you do the computation by hand, you might get slightly different results.)
-
-
-### Conclusion
-
-We are 95% confident that the true proportion of Danish patients suffering from malignant melanoma who are female is captured in the interval (`r 100*test$conf.int[1]`%, `r 100*test$conf.int[2]`%).
-
-## Now it's your turn!
-
-Go through the rubric to determine if half of the patients in Denmark with malignant melanoma have an ulcer. This time, I'm not going to give you the whole rubric as an outline. Thoughtfully copy and paste from the example above, making the necessary changes as you go along.
-
-
-
-
 
 
 ## Inference for two proportions
