@@ -43,7 +43,7 @@ Again, please be sure to remove the line "Please write up your answer here" when
 
 ## Load Packages
 
-We load the standard `mosaic` package as well as the `broom` package for tidy output, and the `openintro` package to access data on heart transplant candidates.
+We load the standard `mosaic` package as well as the `broom` package for tidy output and the `openintro` package to access data on heart transplant candidates.
 
 ```{r, message = FALSE, warning = FALSE}
 library(openintro)
@@ -65,7 +65,7 @@ The example below will pause frequently for commentary on the steps, especially 
 
 ## Research question
 
-Data from the Stanford University Heart Transplant Study is located in the `openintro` package in a data frame called `heartTr`. From the help file we learn, "Each patient entering the program was designated officially a heart transplant candidate, meaning that he was gravely ill and would most likely benefit from a new heart." Survival rates are not good for this population. Do such heart transplant candidates have less than a 50% chance of survival?
+Data from the Stanford University Heart Transplant Study is located in the `openintro` package in a data frame called `heartTr`. From the help file we learn, "Each patient entering the program was designated officially a heart transplant candidate, meaning that he was gravely ill and would most likely benefit from a new heart." Survival rates are not good for this population, although they are better for those who receive a heart transplant. Do heart transplant recipients still have less than a 50% chance of survival?
 
 
 ## Inference for one proportion
@@ -82,15 +82,28 @@ str(heartTr)
 
 Commentary: The variable of interest is `survived`, which is coded as a factor variable with two categories, "alive" and "dead". Keep in mind that because we are interested in survival rates, the "alive" condition will be considered the "success" condition.^[Finally, a "success" condition that actually sounds successful!]
 
-### Prepare the data for analysis. [Not always necessary.]
+There are 103 patients, but we are not considering all these patients. Our sample should consist of only those patients who actually received the transplant. The following table shows that only 69 patients were in the "treatment" group (meaning that they received a heart transplant.)
 
-In this case, as our variable of interest is already coded as a factor variable, we do not need to do anything to prepare the data.
+```{r}
+table(heartTr$transplant)
+```
+
+
+### Prepare the data for analysis.
+
+```{r}
+heartTr_2 <- filter(heartTr, transplant == "treatment")
+```
+
+Commentary: Since we only want to look at those who received the transplant, we cannot use the whole data set `heartTr`. The `filter` command is useful for grabbing only certain rows from our data. We will filter the data for those who were in the `treatment` group and assign the resulting data frame to a new variable called `heartTr_2`.
+
+The only unusual thing you might have spotted is the double equal sign. This is used whenever you want to check that two things are equal. Just to illustrate, go to the Console and type `x = 5`. Then type `x == 5`. The first command assigns the number 5 to the variable $x$ (as you should be able to see in your Global Environment). The second command checks if $x$ is equal to 5. (And since you just assigned $x$ to be 5, it is `TRUE`.)
 
 ### Make tables or plots to explore the data visually.
 
 ```{r}
-table(heartTr$survived)
-prop.table(table(heartTr$survived))
+table(heartTr_2$survived)
+prop.table(table(heartTr_2$survived))
 ```
 
 
@@ -98,13 +111,13 @@ prop.table(table(heartTr$survived))
 
 ### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
-The sample consists of `r NROW(heartTr)` candidates for a heart transplant in a study at Stanford University. The population of interest is presumably all candidates for heart transplants.
+The sample consists of `r NROW(heartTr_2)` heart transplant recipients in a study at Stanford University. The population of interest is presumably all heart transplants recipients.
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
-$H_0$: Candidates for a heart transplant have a 50% chance of survival.
+$H_0$: Heart transplant recipients have a 50% chance of survival.
 
-$H_A$: Candidates for a heart transplant have less than a 50% chance of survival.
+$H_A$: Heart transplant recipients have less than a 50% chance of survival.
 
 Commentary: it is slightly unusual that we are conducting a one-sided test. The standard default is typically a two-sided test. However, it is not for us to choose: the proposed research question is unequivocal in hypothesizing "less than 50%" survival.
 
@@ -124,24 +137,24 @@ We will use a normal model.
 ### Check the relevant conditions to ensure that the assumptions are met.
 
 * Random
-    - Since the `r NROW(heartTr)` patients are from a study at Stanford, we do not have a random sample of all candidates for heart transplants. We hope that the patients recruited to this study were physiologically similar to other heart patients so that they are a representative sample. Without more information, we have no real way of knowing.
+    - Since the `r NROW(heartTr_2)` patients are from a study at Stanford, we do not have a random sample of all heart transplant recipients. We hope that the patients recruited to this study were physiologically similar to other heart patients so that they are a representative sample. Without more information, we have no real way of knowing.
 
 * 10%
-    - `r NROW(heartTr)` patients are definitely less than 10% of all candidates for heart transplants.
+    - `r NROW(heartTr_2)` patients are definitely less than 10% of all heart transplant recipients.
 
 * Success/failure
 
-$$np = 103(0.5) = 51.5 \geq 10$$
+$$np = 69(0.5) = 34.5 \geq 10$$
 
-$$n(1 - p) = 103(0.5) = 51.5 \geq 10$$
+$$n(1 - p) = 69(0.5) = 34.5 \geq 10$$
 
-Commentary: Notice something interesting here. Why did we not use the 28 patients who survived and the 75 who died as the successes and failures? In other words, why did we use $np$ and $n(1 - p)$ instead of $n \hat{p}$ and $n(1 - \hat{p})$?
+Commentary: Notice something interesting here. Why did we not use the 24 patients who survived and the 45 who died as the successes and failures? In other words, why did we use $np$ and $n(1 - p)$ instead of $n \hat{p}$ and $n(1 - \hat{p})$?
 
 Remember the logic of inference and the philosophy of the null hypothesis. To convince the skeptics, we must assume the null hypothesis throughout the process. It's only after we present sufficient evidence that can we reject the null and fall back on the alternative hypothesis that encapsulates our research question.
 
 Therefore, under the assumption of the null, the sampling distribution is the *null distribution*, meaning that it's centered at 0.5. All work we do with the normal model, including checking conditions, must use the null model with $p = 0.5$.
 
-That's also why the numbers don't have to be whole numbers. If the null states that of the 103 patients, 50% are expected to survive, then we expect 50% of 103, or 51.5, to survive. Of course, you can't have half of a survivor. But these are not *actual* survivors. Rather, they are the expected number of survivors in a group of 103 patients *on average* under the assumption of the null.
+That's also why the numbers don't have to be whole numbers. If the null states that of the 69 patients, 50% are expected to survive, then we expect 50% of 69, or 34.5, to survive. Of course, you can't have half of a survivor. But these are not *actual* survivors. Rather, they are the expected number of survivors in a group of 69 patients *on average* under the assumption of the null.
 
 
 ## Mechanics
@@ -149,8 +162,8 @@ That's also why the numbers don't have to be whole numbers. If the null states t
 ### Compute the test statistic.
 
 ```{r}
-surv_test <- tidy(prop.test(heartTr$survived, success = "alive"))
-z <- (surv_test$estimate -  0.5)/sqrt(0.5 * (1 - 0.5) / 103)
+surv_test <- tidy(prop.test(heartTr_2$survived, success = "alive"))
+z <- (surv_test$estimate -  0.5)/sqrt(0.5 * (1 - 0.5) / 69)
 ```
 
 The test statistic has a z-score of `r z`.
@@ -159,13 +172,13 @@ Commentary: We run the `prop.test` command to give us almost everything we need.
 
 **Rememeber that are working under the assumption of the null hypothesis.** This means that we use $p = 0.5$ everywhere in the formula for the standard error. In other words,
 
-$$z = \frac{(0.272 - 0.5)}{\sqrt{\frac{0.5 (1 - 0.5)}{103}}} = -4.631.$$
+$$z = \frac{(0.348 - 0.5)}{\sqrt{\frac{0.5 (1 - 0.5)}{69}}} =  -2.53.$$
 
 Either $\hat{p}$ or $z$ could be considered the test statistic. If we use $\hat{p}$ as the test statistic, then we're considering the null model to be
 
-$$N\left(0.5, \sqrt{\frac{0.5 (1 - 0.5)}{103}}\right).$$
+$$N\left(0.5, \sqrt{\frac{0.5 (1 - 0.5)}{69}}\right).$$
 
-If we use $z$ as the test statistic, then we're considering the null model to be the *standard* normal model
+If we use $z$ as the test statistic, then we're considering the null model to be the *standard normal model*
 
 $$N(0, 1).$$
 
@@ -177,15 +190,13 @@ The standard normal model is more intuitive and easier to work with, both concep
 pdist("norm", q = z)
 ```
 
-Commentary: It will be the case somewhat often that we have a z-score like this one that is literally "off the charts". You may wonder, then, why we still insist on plotting the null distribution. It's always a good habit to look at plots and it would be more complicated in the rubric if sometimes we did this step and sometimes we skipped it. So go ahead and make this plot every time even though it may not be very informative when you have large z-scores.
-
-Notice how simple this `pdist` command is. One reason is that we're using $z$, which means that we are working with the standard normal model. As this is the default for the `pdist` command, there is no need to specify the `mean` and `sd` in the command.
+Commentary: Notice how simple this `pdist` command is. One reason is that we're using $z$, which means that we are working with the standard normal model. As this is the default for the `pdist` command, there is no need to specify the `mean` and `sd` in the command.
 
 Contrast this to the command we would need if using $\hat{p}$ as our test statistic:
 
 ```{r}
 pdist("norm", q = surv_test$estimate,
-      mean = 0.5, sd = sqrt(0.5 * (1 - 0.5) / 103))
+      mean = 0.5, sd = sqrt(0.5 * (1 - 0.5) / 69))
 ```
 
 This works and gives us the same answer, but it's a lot more complicated.
@@ -204,17 +215,9 @@ surv_test$p.value / 2
 
 Commentary: The P-value is computed as part of the `prop.test` function. However, the `prop.test` function assumes by default that you are performing a two-sided test. Therefore, if we want a one-sided p-value, we have to divide this answer by 2.
 
-Also, you may not have had much experience with scientific notation. When you see a number like `2.914281e-06`, that means
+You might have noticed that the output of the `pdist` command is not the same as the P-value we reported here. As the output of `pdist` is the area to the left of the z-score, this number should be our one-sided P-value. So why is this number different from the P-value computed above as half the P-value from the `prop.test` command? The reason is that, under the hood, the `prop.test` command is not quite using the same method we're using. Therefore, the P-value is slightly different. You don't need to worry too much about it. The two values should be very similar and, therefore, lead to the same conclusion.
 
-$$ 2.914281 \times 10^{-6} = 0.000002914281.$$
-
-In other words, this is a really tiny P-value. (That makes sense. We were expecting a really tiny P-value based on being more than 4 standard errors from the mean.)
-
-Two more technical observations.
-
-1. You might have noticed that the output of the `pdist` command is not the same as the P-value we reported here. As the output of `pdist` is the area to the left of the z-score, this number should be our one-sided P-value. So why is this number different from the P-value computed above as half the P-value from the `prop.test` command? The reason is that, under the hood, the `prop.test` command is not quite using the same method we're using. Therefore, the P-value is slightly different. You don't need to worry too much about it. The two values should be very similar and, therefore, lead to the same conclusion.
-
-2. If you look more deeply into the `prop.test` function, you might discover that there is a way to get it to run a one-sided test. However, doing so messes up the confidence interval that we'll need later in the rubric. It's easy enough just to take the two-sided P-value and divide it by 2. Keep in mind that most of the time, we'll be running two-sided tests.
+If you look more deeply into the `prop.test` function, you might discover that there is a way to get it to run a one-sided test. However, doing so messes up the confidence interval that we'll need later in the rubric. It's easy enough just to take the two-sided P-value and divide it by 2. Keep in mind that most of the time, we'll be running two-sided tests.
 
 ## Conclusion
 
@@ -224,7 +227,7 @@ We reject the null hypothesis.
 
 ### State (but do not overstate) a contextually meaningful conclusion.
 
-We have sufficient evidence that candidates for heart transplants have less than a 50% chance of survival.
+We have sufficient evidence that heart transplant recipients have less than a 50% chance of survival.
 
 ### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
@@ -240,9 +243,9 @@ As we rejected the null, we run the risk of making a Type I error. It is possibl
 * 10%
     - Same as above.
 * Success/failure
-    - There were 28 patients who survived and 75 who died in our sample. Both are larger than 10.
+    - There were 24 patients who survived and 45 who died in our sample. Both are larger than 10.
 
-Commentary: In the "Confidence Interval" section of the rubric, there is no need to recheck conditions that have already been checked. The sample has not changes, so it met the "Random" and "10%" conditions before, it will meet them now.
+Commentary: In the "Confidence Interval" section of the rubric, there is no need to recheck conditions that have already been checked. The sample has not changed; if it met the "Random" and "10%" conditions before, it will meet them now.
 
 So why recheck the success/failure condition?
 
@@ -261,7 +264,7 @@ Commentary: there's not much to do here as the confidence interval was already c
 
 ### Conclusion
 
-We are 95% confident that the true proportion of candidates for heart transplants who survive is captured in the interval (`r 100 * surv_test$conf.low`%, `r 100 * surv_test$conf.high`%).
+We are 95% confident that the true proportion of heart transplant recipients who survive is captured in the interval (`r 100 * surv_test$conf.low`%, `r 100 * surv_test$conf.high`%).
 
 Commentary: Note that when we state our contextually meaningful conclusion, we also covert the decimal proportions to percentages. Humans like percentages a lot better.
 
@@ -270,6 +273,8 @@ Commentary: Note that when we state our contextually meaningful conclusion, we a
 
 Follow the rubric to answer the following research question:
 
-Some heart transplant candidates have already had a prior surgery. Use the variable `prior` in the `heartTr` data set to determine if less than 50% of patients have had a prior surgery. (To be clear, you are being asked to perform a one-sided test again.)
+Some heart transplant candidates have already had a prior surgery. Use the variable `prior` in the `heartTr` data set to determine if less than 50% of patients have had a prior surgery. (To be clear, you are being asked to perform a one-sided test again.) Be sure to use the full `heartTr` data, not the modified `heartTr_2` from the previous example.
 
 This time, you will not be given the rubric outline. Please copy and paste the steps of the rubric below. You may refer to the worked example above and modify it accordingly. Copying and pasting R code is fine; copying and pasting text is not. Please state everything in your own words. (Also, remember to strip out all the commentary. That is just exposition for your benefit in understanding the steps, but is not meant to form part of the formal inference process.)
+
+Another word of warning: the copy/paste process is not a substitute for your brain. You will often need to modify more than just the names of the data frames and variables to adapt the worked examples to your own work. For example, if you run a two-sided test instead of a one-sided test, there are three or four steps that all have to be adjusted accordingly. Understanding the sampling disribution model and the computation of the P-value goes a long way toward understanding these changes that must be made. Do not blindly copy and paste code without understanding what it does. And you should **never** copy and paste text. All the sentences and paragraphs you write are expressions of your own analysis. They must reflect your own understanding of the inferential process.
