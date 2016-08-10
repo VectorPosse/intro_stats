@@ -74,7 +74,7 @@ Data from the Stanford University Heart Transplant Study is located in the `open
 
 ### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
 
-[You should type `?heartTr` at the Console to read the help file.]
+[You should type `library(openintro)`, then `?heartTr` at the Console to read the help file.]
 
 ```{r}
 str(heartTr)
@@ -134,7 +134,7 @@ $H_A: p < 0.5$
 
 We will use a normal model.
 
-### Check the relevant conditions to ensure that the assumptions are met.
+### Check the relevant conditions to ensure that model assumptions are met.
 
 * Random
     - Since the `r NROW(heartTr_2)` patients are from a study at Stanford, we do not have a random sample of all heart transplant recipients. We hope that the patients recruited to this study were physiologically similar to other heart patients so that they are a representative sample. Without more information, we have no real way of knowing.
@@ -210,14 +210,26 @@ pdist("norm", q = c(-z, z))
 ### Calculate the P-value.
 
 ```{r}
+pdist("norm", q = z, plot = FALSE)
+```
+
+Commentary: Since we are running a one-sided test using the left tail (recall the alternative hypothesis was $p < 0.5$), the result of the `pdist` command is already the correct P-value. We don't need the plot again, so we can put `plot = FALSE` into the command.
+
+The P-value can also be computed as part of the `prop.test` function:
+
+```{r}
+surv_test$p.value
+```
+
+However, under the hood, the `prop.test` command is not quite using the same method we're using. Therefore, the P-value is different. Also, the `prop.test` function assumes by default that you are performing a two-sided test. Therefore, if we want a one-sided p-value, we have to divide this answer by 2:
+
+```{r}
 surv_test$p.value / 2
 ```
 
-Commentary: The P-value is computed as part of the `prop.test` function. However, the `prop.test` function assumes by default that you are performing a two-sided test. Therefore, if we want a one-sided p-value, we have to divide this answer by 2.
+Even this value isn't quite the same as the one generated from our normal model. Nevetheless, the two methods are close, so you should come to the same conclusion (i.e., reject the null or  fail to reject the null).
 
-You might have noticed that the output of the `pdist` command is not the same as the P-value we reported here. As the output of `pdist` is the area to the left of the z-score, this number should be our one-sided P-value. So why is this number different from the P-value computed above as half the P-value from the `prop.test` command? The reason is that, under the hood, the `prop.test` command is not quite using the same method we're using. Therefore, the P-value is slightly different. You don't need to worry too much about it. The two values should be very similar and, therefore, lead to the same conclusion.
-
-If you look more deeply into the `prop.test` function, you might discover that there is a way to get it to run a one-sided test. However, doing so messes up the confidence interval that we'll need later in the rubric. It's easy enough just to take the two-sided P-value and divide it by 2. Keep in mind that most of the time, we'll be running two-sided tests.
+If you look more deeply into the `prop.test` function, you might discover that there is a way to get it to run a one-sided test. However, doing so messes up the confidence interval that we'll need later in the rubric. Most of the time, it's a moot point because we will often be running two-sided tests.
 
 ## Conclusion
 
