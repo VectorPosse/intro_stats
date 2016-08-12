@@ -90,7 +90,7 @@ Occasionally, we are not give the raw number of successes in each group, but rat
 
 $$\hat{p}_{pooled} = \frac{n_{1} \hat{p}_{1} + n_{2} \hat{p}_{2}}{n_{1} + n_{2}}.$$
 
-The normal model can still have a mean of $p_{1} - p_{2}$. (We are assuming this is 0 in the null hypothesis.) But its standard error will use the pooled proportion:
+The normal model can still have a mean of $p_{1} - p_{2}$. (We usually assume this is 0 in the null hypothesis.) But its standard error will use the pooled proportion:
 
 $$N\left( p_{1} - p_{2}, \sqrt{\frac{\hat{p}_{pooled} (1 - \hat{p}_{pooled})}{n_{1}} + \frac{\hat{p}_{pooled} (1 - \hat{p}_{pooled})}{n_{2}}} \right).$$
 
@@ -181,7 +181,7 @@ $H_0: p_{F} - p_{M} = 0$
 
 $H_A: p_{F} - p_{M} \neq 0$
 
-Commentary: The order in which you subtract is irrelevant to the inferential process. However, you should be sure that any future steps respect the order you choose here. A good bet is to look back when you made the factor variables. The first condition listed in the labels of your explanatory variable is going to be the one that gets processed first by the `prop.test` function. In the variable `sex`, we listed "female" first. Therefore, it's safest to subtract $p_{F} - p_{M}$.
+Commentary: The order in which you subtract is irrelevant to the inferential process. However, you should be sure that any future steps respect the order you choose here. A good bet is to look back to when you made the factor variables. The first condition listed in the labels of your explanatory variable is going to be the one that gets processed first by the `prop.test` function. In the variable `sex`, we listed "female" first. Therefore, it's safest to subtract $p_{F} - p_{M}$.
 
 ## Model
 
@@ -195,7 +195,7 @@ We will use a normal model.
     - We have no information about how these samples were obtained. We hope the `r n_F` female patients and `r n_M` male patients are representative of other Danish patients with malignant melanoma.
 
 * 10%
-    - I don't know exactly how many people in Denmark suffer from malignant melanoma, but I imagine over time it's more than 1260 females and 790 males.
+    - We don't know exactly how many people in Denmark suffer from malignant melanoma, but we could imagine over time it's more than 1260 females and 790 males.
 
 * Success/Failure
     - We need to use the pooled proportion of successes to check this. We calculate $\hat{p}_{pooled}$ as described earlier in the module.
@@ -254,6 +254,13 @@ Commentary: Remember that this is a two-sided test.
 2 * pdist("norm", q = z,  plot = FALSE)
 ```
 
+Commentary: As in the one-proportion test, a P-value is stored in the output of the `prop.test` function:
+
+```{r}
+sex_status_test$p.value
+```
+
+Because the `prop.test` function is using a slightly different method under the hood, this P-value will not agree exactly with the one we computed. Nevertheless, they should be somewhat close and lead to the same conclusion.
 
 ## Conclusion
 
@@ -277,8 +284,6 @@ If we have made a Type I error, then there would actually be no difference betwe
 Only the success/failure condition changes. We now need to check the raw counts. We won't reproduce the contingency table here. Just scroll up and check that for both males and females, the counts of those who died and the others are all greater than 10.
 
 ### Calculation
-
-
 
 ```{r}
 sex_status_test$conf.low
