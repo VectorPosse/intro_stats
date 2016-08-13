@@ -1,5 +1,5 @@
 ---
-title: "Boilerplate template"
+title: "Chi-square test for independence"
 author: "Put your name here"
 date: "Put the date here"
 output: pdf_document
@@ -11,14 +11,11 @@ output: pdf_document
 
 ## Introduction
 
-In this assignment we will learn how to run the chi-square goodness-of-fit test and chi-square test for independence.
+In this assignment we will learn how to run the chi-square test for independence.
 
-A chi-square goodness-of-fit test is similar to a test for a single proportion, except instead of two categories (success/failure), we now try to understand the distribution of proportions among three or more categories.
+A chi-square test for independence tests the relationship between two categorical variables. This is an extension of the test for two proportions, except now applied in situations where either the explanatory or response variables (or both) have three or more categories.
 
-A chi-square test for independence is for two categorical variables. This is an extension of the test for two proportions, except now applied in situations where either the explanatory or response variables (or both) have three or more categories.
-
-It is interesting to note that when there are only two categories, one can still run a chi-square test and the results are equivalent to the one-proportion or two-proportion tests (for the goodness-of-fit test and test for independence, respectively).
-
+When there are only two categories, one can still run a chi-square test and the results are nearly equivalent to the two-proportion test.
 
 ## Instructions
 
@@ -43,258 +40,182 @@ Please write up your answer here.
 Again, please be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. If you need to use some R code as well, you can use inline R code inside the block between `\begin{answer}` and `\end{answer}`, or if you need an R code chunk, please go outside the `answer` block and start a new code chunk.
 
 
-
 ## Load Packages
 
-We load the standard `mosaic` package. We also use the `gmodels` package for the `CrossTable` command, the `MASS` package for the `birthwt` data, and the `openintro` package for the `hsb2` and `smoking` data.
+We load the standard `mosaic` package. We also use the `gmodels` package for the `CrossTable` command, the `MASS` package for the `birthwt` data, and the `openintro` package for the `smoking` data.
 
 ```{r, message = FALSE, warning = FALSE}
-library(mosaic)
 library(gmodels)
 library(MASS)
 library(openintro)
-```
-
-## Chi-square goodness-of-fit test
-
-Let's look at the `mtcars` data set with the 1974 Motor Trend magazine car data. In particular, let's focus on the `cyl` variable that indicates how many cylinders there are in the engine (with values 4, 6, or 8).
-
-In order to conduct a hypothesis test, we need to propose a null distribution. In other words, what is the "default" distribution to which we are going to compare our data? Sometimes, this default null comes from substantive expert knowledge. (For example, we might compare the 1974 distribution to a known distribution from another year.) Sometimes we're interested to see if our data deviates from a null distribution that predicts an equal number of observations in each category.
-
-For this test, we will see if there are equal numbers of cars with 4, 6, and 8 cylinders. Let's walk through the rubric.
-
-## Hypotheses
-
-### Identify the sample and a reasonable population of interest.
-
-The sample consists of 32 types of car from 1974. The population is, presumably, all models from 1974. (I don't think we can reasonably infer anything about the number or cylinders in cars today, for example, given data from 1974.)
-
-### Express the null and alternative hypotheses as contextually meaningful full sentences.
-
-$H_0$: The numbers of cars in 1974 with 4, 6, and 8 cylinders are the same.
-
-$H_A$: The numbers of cars in 1974 with 4, 6, and 8 cylinders are different.
-
-### Express the null and alternative hypotheses in symbols.
-
-$H_0: p_4 = p_6 = p_8$
-
-There is no easy way to express the alternate hypothesis in symbols because any deviation in any of the categories can lead to rejection of the null. So the only requirement here is to express the null in symbols.
-
-## Model
-
-### Identify the correct sampling distribution model.
-
-We will use a chi-square model. The degrees of freedom are determined by the number of categories minus one. In our data, we have three categories (4, 6, or 8 cylinders), so there are 2 degrees of freedom.
-
-### Check the relevant conditions to ensure that the model assumptions are met.
-
-* Random
-    * It is not apparent why Motor Trend chose these 32 automobiles, so it's not clear that this is even representative of cars from 1974. We should be cautious in our conclusions.
-* 10%
-    * I do not know how many types of cars were manufactured in 1974, so I do not know if this condition is met. Again, we need to be careful. (Also note that the population is not all automobiles manufactured in 1974. It is all _types_ of automobile manufactured in 1974. There's a big difference.)
-* Expected cell counts
-    * This condition says that under the null, we should see at least 5 cars in each category. The easiest way to check this is to run the chi-square test (a bit prematurely) because its output contains the expected cell counts. One quirk of the chi-square goodness of fit test is that it will not work with the raw data. We have to get a table of the cell counts for each category first and feed that into the `chisq.test` command.
-    
-```{r}
-cyl <- factor(mtcars$cyl)
-cyl_table <- table(cyl)
-cyl_table
-test_gf <- chisq.test(cyl_table)
-test_gf$expected
-```
-
-It's easy to see how these numbers came about. Since there are three categories, and the null states that they should all be equally represented, we expect 32/3 = `r 32/3` cars in each cell of the table.
-
-## Mechanics
-
-### Compute the test statistic.
-
-The test statistic is called chi-square and it is calculated as follows:
-
-$$\chi^{2} = \sum \frac{(O - E)^2}{E}$$
-
-where $O$ is the observed count and $E$ is the expected count in each cell, with the sum taken over all the cells.
-
-```{r}
-test_gf$statistic
-```
-
-### Plot the null distribution.
-
-There are infinitely many chi-square distributions, one for each possible value of degrees of freedom. Here we plot the one with df = 2. All chi-square distributions are postive and skewed to the right. Our P-values will always be shaded to the right. (In other words, all chi-square tests are one-sided.)
-
-```{r}
-1 - pdist(dist = "chisq", df = test_gf$parameter, q = test_gf$statistic)
-```
-
-### Calculate the P-value.
-
-```{r}
-test_gf$p.value
+library(mosaic)
 ```
 
 
-## Conclusion
+## Research question
 
-### State the statistical conclusion.
+Are mothers from certain races more or less likely to have low birth weight babies? In other words, are race and low birth weight associated?
 
-We fail to reject the null hypothesis.
-
-### State (but do not overstate) a contextually meaningful conclusion.
-
-We have insufficient evidence that there is a difference in the number of 4, 6, or 8 cylinder cars among 1974 automobiles.
-
-### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
-
-There is the possibility of making a Type II error here. If this were the case, then there would be a difference in the models with 4, 6, or 8 cylinders, but our sample didn't show enough of a difference to be statistically significant.
-
-## Confidence interval
-
-There is no confidence interval for a chi-square test. Since our test is not about measuring some parameter of interest (like $p$ or $p_1 - p_2$), there is no interval to produce.
-
-However we will perform a different kind of analysis...
-
-## Post hoc analysis
-
-When we reject the null (which we did not do above), we are left with a very vague alternative hypothesis: there is some difference somewhere in one or more categories. Often, we want to follow up to figure out which categories are the ones deviating from the null expectation.
-
-The best way to do this is to look at the _residuals_. A residual for a cell measures how far away the observed count is from the expected count. It does no  good just to calculate $O - E$ however; cells with a large count may be far away from their expected values only because they are large numbers. What we want is some kind of relative distance.
-
-We could use the chi-sq component from each cell; in other words, we could look at
-
-$$\frac{(O- E)^{2}}{E}.$$
-
-It is more traditional in statistics to look at the square root of this quantity:
-
-$$\frac{(O - E)}{\sqrt{E}}.$$
-
-Additionally, the above quantity can be positive or negative, and that gives us more information about the direction in which there is a deviation.
-
-Because we failed to reject the null, we didn't have any evidence of a difference anywhere and so there's not much point in examining the residuals. We'll do it here just for practice.
-
-```{r}
-test_gf$residuals
-```
-
-These numbers don't mean anything in absolute terms; they are only interpretable relative to each other. For example, the first residual is positive, but tiny compared to the others. This means that the observed number of 4-cylinder cars is very close to the expected value. On the other hand, the number of observed 6-cylinder cars is somewhat less than expected, whereas the number of observed 8-cylinder cars is a bit more than expected. If you go back to the table we made earlier, you can verify that.
-
-### What if the null is not a uniform distribution?
-
-Suppose we didn't expect an equal number of 4, 6, and 8 cylinder models. How would we run the test under a different null?
-
-Suppose that we expected 35% 4-cylinder cars, 40% 6-cylinder cars, and 25% 8-cylinder cars. We would run the test as follows:
-
-```{r}
-test_gf2 <- chisq.test(cyl_table, p = c(0.35, 0.4, 0.25))
-```
-
-The numbers defining the null have to add up to 1 (since they are percentages). This causes some trouble, for example, when you have a  percentage that has an infinite number of decimal places. For example, what if we expected under the null a distribution of 6/13,  4/13, 3/13? You can't express any of these as a decimal without rounding. Well it turns out that `chisq.test` can handle any set of numbers as long as you set `rescale.p =  TRUE`:
-
-```{r}
-test_gf3 <- chisq.test(cyl_table, p = c(6, 4, 3), rescale.p = TRUE)
-```
-
-Also note that these change the statements of the null distribution (in sentences and in symbols). For example, in the example above where the null is 35% 4-cylinder cars, 40% 6-cylinder cars, and 25% 8-cylinder cars, our null in symbols would be
-
-$H_0: p_4 = 0.35, p_6 = 0.4, p_8 = 0.25$
-
-## Your turn!
-
-Use the `hsb2` data and determine if the propotion of high school students who attend general programs, academic programs, and vocational programs is 25%, 50%, and 25% respectively. If you reject the null, run a post hoc analysis and comment on the cells that seem to be contributing the most to the discrepancy between observed and expected counts.
 
 ## Chi-square test for independence
 
-Suppose we have two categorical variables. For example, let's consider `race` and `low` from the `birthwt` data set. The `race` variable codes the mother's race and `low` is an indicator of a birth weight less than 2.5 kg. The natural question is if these two variables are associated or independent. In other words, are mothers from certain races more or less likely to have low birth weight babies?
+In a previous module, we learned about the chi-square goodness-of-fit test. With a single categorical variable, we summarized data in a frequency table. Each cell of the table had an observed count from the data which we compared to an expected count from the assumption of a null hypothesis. The chi-square statistic measured the discrepancy between observed and expected.
 
-We'll need to recode these two variables as factor variables with meaningful labels.
+With two categorical variables, we use a contingency table instead of a frequency table. But the principle of the chi-square statistic is the same: each cell in the contingency table has an observed count and an expected count. This forms the basis of a chi-square test for independence.
+
+A test for independence has a simple null hypothesis: the two variables are independent. This makes it easy to compute expected counts. Here's how it works.
+
+After converting to factor variables, look at the contingency table for the relationship between `race` and `low` in the `birthwt` data from the `MASS` package. The new option in the `CrossTable` command is `expected = TRUE`:
+
+\newpage
 
 ```{r}
-low <- factor(birthwt$low, levels = c(0, 1), labels = c("No", "Yes"))
 race <- factor(birthwt$race, level = c(1, 2, 3),
                labels = c("White",  "Black",  "Other"))
+low <- factor(birthwt$low, levels = c(1, 0), labels = c("Yes",  "No"))
+race_low <- data.frame(race, low)
+CrossTable(race_low$race, race_low$low,
+           prop.r = TRUE, prop.c = FALSE, prop.t = FALSE, prop.chisq = FALSE,
+           expected = TRUE)
 ```
 
-Now we can look a contingency table. We'll add some arguments to the `CrossTable` function that we haven't seen before that are related to the chi-square test. We are thinking about `race` as the explanatory variable and `low` as the response.
+To see how these expected counts are computed, look at the marginal distribution at the bottom. If race is ignored, there were 59 low birth weight babies and 130 normal weight babies out of 189 total babies. 59 of 189 is `r 59/189` or `r 100 * 59/189`%, and 130 of 189 is `r 130/189` or `r 100 * 130/189`%.
+
+Now, if race and low birth weight are truly independent, it shouldn't matter if the mothers were white, black, or some other race. In other words, of 96 white mothers, we should still expect `r 100 * 59/189`% of them to have low birth weight babies and `r 100 * 130/189`% of them to have normal weight babies. `r 100 * 59/189`% of 96 is `r 59/189 * 96`. Look in the contingency table above and note that this is the expected cell count for white women with low birth weight babies. Also, `r 100 * 130/189`% of 96 is `r 130/189 * 96`. Again, this is listed in the contingency table in the cell for white mothers with normal weight babies. The same analysis can be done for the next two rows as well.
+
+Unlike the goodness-of-fit test that requires one to specify expected counts for each cell, the test for independence uses only the data to determine the expected counts. For any given cell, if  $C$ is the column total, $R$ is the row total, and $n$ is the grand total (the sample size), the expected count is simply
+
+$$E = \frac{CR}{n}.$$
+
+This is equivalent to the explanation in the previous paragraph. Using white mothers with low birth weight babies as an example, $C/n$ is $59/189$ which is `r 59/189`. Then we multiply this by the row total $R = 96$ to get
+
+$$ \left(\frac{C}{n}\right) R = \frac{CR}{n} = \frac{59*96}{189} =  29.96825.$$
+
+Everything else works almost the same as it did for a chi-square goodness-of-fit test. We still compute $\chi^{2}$ by adding up deviations across all cells:
+
+$$\chi^{2} = \sum \frac{(O - E)^{2}}{E}.$$
+
+Even under the assumption of the null, there will still be some sampling variability. Like any hypothesis test, our job is to determine whether the deviations we see are possible due to pure chance alone. The random values of $\chi^{2}$ that result from sampling variability will follow a chi-square model. But how many degrees of freedom are there? This is a little different from the goodness-of-fit test. Instead of the number of cells minus one, we use the following formula:
+
+$$df = (\#rows - 1)(\#columns - 1).$$
+
+In our example we have 3 rows ("White", "Black", "Other") and 2 columns ("Yes", "No"); therefore,
+
+$$df = (3 - 1)(2 - 1) = 2*1 = 2$$
+
+and we have 2 degrees of freedom (even though there are 6 cells).
+
+We will run the chi-square test for independence with the `chisq.test` command like before, but note that all the information you need is actually in the contingency table above. Let's look at the table one more time, and we'll turn on one more argument (setting `prop.chisq = TRUE`):
+
+\newpage
 
 ```{r}
-CrossTable(race, low, prop.c = FALSE, prop.t = FALSE,
-           expected = TRUE, prop.chisq = TRUE, chisq = TRUE)
+CrossTable(race_low$race, race_low$low,
+           prop.r = TRUE, prop.c = FALSE, prop.t = FALSE, prop.chisq = TRUE,
+           expected = TRUE)
 ```
 
-Let's run through the rubric.
+Not only does this show the chi-square component $\frac{(O - E)^{2}}{E}$ in each cell, but it sums them all up in a summary right below the table, along with the degrees of freedom and a P-value.
+
+Let's run through the rubric in its entirety.
+
+
+## Exploratory data analysis
+
+### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+
+[Type `library(MASS)` then `?birthwt` at the Console to read the help file.]
+
+```{r}
+str(birthwt)
+```
+
+### Prepare the data for analysis.
+
+```{r}
+# Although we've already done this above, 
+# we include it here again for completeness.
+race <- factor(birthwt$race, level = c(1, 2, 3),
+               labels = c("White",  "Black",  "Other"))
+low <- factor(birthwt$low, levels = c(1, 0), labels = c("Yes",  "No"))
+race_low <- data.frame(race, low)
+```
+
+\newpage
+
+### Make tables or plots to explore the data visually.
+
+```{r}
+CrossTable(race_low$race, race_low$low,
+           prop.r = TRUE, prop.c = FALSE, prop.t = FALSE, prop.chisq = TRUE,
+           expected = TRUE)
+```
+
 
 ## Hypotheses
 
-### Identify the sample and a reasonable population of interest.
+### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
-The sample consists of 189 women who gave birth at Baystate Medical Center in Massachusetts during 1986. A reasonable population might be all women who gave birth in that hospital around that time.
+The sample consists of 189 mothers who gave birth at the Baystate Medical Center in Springfield, Massachusetts in 1986. The population is presumably all mothers, although it's safest to conclude only about mothers who gave birth at this hospital.
+
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
-$H_0$: The null hypothesis states that race and low birth weight are independent. 
+$H_0$: Race and low birth weight are independent.
 
-$H_A$: The alternative hypothesis states that race and low birth weight are associated. 
-
+$H_A$: Race and low birth weight are associated.
 
 ### Express the null and alternative hypotheses in symbols.
 
 For a chi-square test for independence, this section is not applicable. With multiple categories in the explanatory and response variables, there are no specific parameters of interest to express symbolically.
 
+
 ## Model
 
-### Identify the correct sampling distribution model.
+### Identify the sampling distribution model.
 
-We will use a chi-square model. If the number of rows in our contingency table (in other words, the number of categories of the explanatory variable) is called $r$ and the number of columns in our contingency table (the number of categories of the response variable) is called $c$, then the degrees of freedom are calculated as follows:
+We will use a chi-square model with 2 degrees of freedom.
 
-$$df = (r - 1)(c - 1).$$
-
-Here, there are three rows and two columns, so our chi-square model has $(3 - 1)(2 - 1) = 2$ degrees of freedom.
-
-### Check the relevant conditions to ensure that the model assumptions are met.
+### Check the relevant conditions to ensure that model assumptions are met.
 
 * Random
-    * We hope that these women are representative of all women who gave birth in this hospital around 1986.
+    - We hope that these 189 women are representative of all women who gave birth in this hospital.
+    
 * 10%
-    * We don't know how many women gave birth at this hospital, but perhaps over several years we might have 1890 women. 
+    - We don't know how many women gave birth at this hospital, but perhaps over many years we might have more than 1890 women.
+
 * Expected cell counts
-    * There are two ways we can get expected counts. One is from the contingency table output of `CrossTable` above. By adding the argument `expected = TRUE`, we can see the expected cell counts and verify that they are all greater than 5.
+    - The contingency table above shows the expected counts. We can verify that they are all greater than 5.
 
-The other place to find expected cell counts is in the output of the `chisq.test` command. As we have to run that command anyway, we might as well run it now.
-
-```{r}
-test_ind <- chisq.test(race, low)
-```
-
-The expected counts are stored in `test_ind$expected`:
-
-```{r}
-test_ind$expected
-```
-
-You can compare these to the ones from the `CrossTable` command above. They are the same.
 
 ## Mechanics
 
 ### Compute the test statistic.
 
 ```{r}
-test_ind$statistic
+race_low_test <- chisq.test(race_low$race, race_low$low)
+race_low_test$statistic
 ```
+
+Commentary: This just reproduces the value of $\chi^{2}$ we already saw in the summary below the contingency table.
 
 ### Plot the null distribution.
 
-
 ```{r}
-1 - pdist(dist = "chisq", df = test_ind$parameter, q = test_ind$statistic)
+pdist("chisq", df = race_low_test$parameter, q = race_low_test$statistic)
 ```
+
+Commentary: We know there are 2 degrees of freedom, but since the result is stored in `race_low_test$parameter`, we might as well use that. It makes our code more portable than if we had manually typed `df = 2`. (The next time we need to run this test, we might not have two degrees of freedom anymore.)
 
 ### Calculate the P-value.
 
 ```{r}
-test_ind$p.value
+1 - pdist("chisq", df = race_low_test$parameter, q = race_low_test$statistic,
+          plot = FALSE)
+race_low_test$p.value
 ```
 
+Commentary: Remember that if we get the P-value from the `pdist` command, we need to subtract from 1 because we are shading the right tail of the distribution.
 
 ## Conclusion
 
@@ -304,20 +225,28 @@ We fail to reject the null hypothesis.
 
 ### State (but do not overstate) a contextually meaningful conclusion.
 
-We have insufficient evidence to suggest that race and low birth weight are associated.
+There is insufficient evidence that race and low birth weight are associated.
 
 ### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
-There is a possibility that we have made a Type II error, which would be if there really was an association between race and low birth weight, but our sample did not show enough of a difference to be statistically significant.
+It's possible that we have made a Type II error. It may be that race and low birth weight are associated, but our sample has not given enough evidence of such an association.
+
 
 ## Confidence interval
 
-As in the goodness-of-fit test, there is no single parameter to estimate with an interval, so this section is irrelevant.
+There are no parameters of interest in a chi-square test, so there is no confidence interval to report.
 
 ## Post hoc analysis
 
 Had we rejected the null, we would look at the residuals to determine which cells were contributing the most to the chi-square statistic. But since we didn't, there's not much to say about residuals.
 
-## Your turn!
+```{r}
+race_low_test$residuals
+```
 
-Use the `smoking` data set. Run a chi-square test for independence to determine if smoking status varies by marital status. If you reject the null, run a post hoc analysis and comment on the cells that seem to be contributing the most to the discrepancy between observed and expected counts.
+If the overall test is not statistically significant, it does not make much sense to try to interpret any of these residuals. They are all too small to distinguish from chance variability.
+
+
+## Your turn
+
+Use the `smoking` data set from the `openintro` package. Run a chi-square test for independence to determine if smoking status is associated with marital status. If you reject the null, run a post hoc analysis and comment on the cells that seem to be contributing the most to the discrepancy between observed and expected counts.
