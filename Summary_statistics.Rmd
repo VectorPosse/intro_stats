@@ -4,9 +4,12 @@ author: "Put your name here"
 date: "Put the date here"
 output: pdf_document
 ---
-<!-- Please don't mess with the next two lines! -->
-\newenvironment{answer}{\definecolor{shadecolor}{RGB}{225, 225, 255}\begin{shaded}}{\end{shaded}}
-<!-- Please don't mess with the previous two lines! -->
+<!-- Please don't mess with the next few lines! -->
+\def\hrulefill{\leavevmode\leaders\hrule height 2pt\hfill\kern 0pt}
+\newcommand{\answerbegin}{\par\textcolor{blue}{\hrulefill\quad ANSWER\quad\hrulefill\newline}}
+\newcommand{\answerend}{\par\textcolor{blue}{\hrulefill}\newline}
+`r options(scipen = 999)`
+<!-- Please don't mess with the previous few lines! -->
 
 
 ## Introduction
@@ -16,25 +19,25 @@ In this module, we'll learn about summary statistics, which are numerical summar
 
 ## Instructions
 
-Presumably, you have already created a new project and downloaded this file into it. Please knit the document and work back and forth between this R Markdown file and the PDF output as you work through this module.
-
-When you are finished with the assignment, knit to PDF one last time, proofread the PDF file **carefully**, export the PDF file to your computer, and then submit your assignment.
+Presumably, you have already created a new project and downloaded this file into it. From the `Run` menu above, select `Run All` to run all existing code chunks.
 
 Sometimes you will be asked to add your own R code. That will appear in this document as a code chunk with a request for you to add your own code, like so:
 
 ```{r}
-## Add code here to [do some task]...
+# Add code here
 ```
 
-Be sure to remove the line `## Add code here to [do some task]...` when you have added your own code.
+Be sure to remove the line `# Add code here` when you have added your own code. You should run each new code chunk you create by clicking on the dark green arrow in the upper-right corner of the code chunk.
 
 Sometimes you will be asked to type up your thoughts. That will appear in the document as follows:
 
-\begin{answer}
+\answerbegin
 Please write up your answer here.
-\end{answer}
+\answerend
 
-Again, please be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. If you need to use some R code as well, you can use inline R code inside the block between `\begin{answer}` and `\end{answer}`, or if you need an R code chunk, please go outside the `answer` block and start a new code chunk.
+Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. If you need to use some R code as well, you can use inline R code or start a new code chunk.
+
+When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files plane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
 
 
 ## Load Packages
@@ -47,7 +50,24 @@ library(MASS)
 ```
 
 
-## Mean and standard deviance
+## A note about mathematical notation
+
+From time to time, we will use mathematical notation that can't be typed directly on the keyboard. For example, let's suppose we want to typeset the quadratic formula, which involves a complicated fraction as well as a square root symbol.
+
+When such notation appears, it will be surrounded by double dollar signs as follows:
+
+$$ x = \frac{-b \pm \sqrt{b^{2} -  4ac}}{2a} $$
+
+The Markdown document will interpret this special mathematical notation and render it on the screen as well as the PDF document.^[This notation is part of a mathematical document preparation system called LaTeX, pronounced "Lay-tek" (not like the rubbery substance).]  If the nicely formatted formula does not appear on your screen, place your cursor anywhere inside the math formula and hit Ctrl-Enter or Cmd-Enter (PC or Mac respectively).
+
+Sometimes, we want such math to appear inline. We can do this with single dollar signs: $(x_{2} - x_{1})^{2} + (y_{2} -  y_{1})^{2} = r^{2}$.
+
+This will *not* render visually in the Markdown document, but it will show up in the PDF file. If you want to check that it worked properly without having to Knit to PDF, you can either hover your cursor over the math formula and wait a second, or you can place your cursor anywhere inside the math formula and hit Ctrl-Enter or Cmd-Enter (PC or Mac respectively) to see a pop-up window previewing the mathematical content properly formatted.
+
+You will be shown examples of any mathematical notation you need to use in any given assignment, so feel free to copy/paste/modify any math notation you need.
+
+
+## Mean and standard deviation
 
 Summary statistics come in two general flavors: measures of center and measures of spread.
 
@@ -65,9 +85,9 @@ mean(birthwt$lwt)
 
 The corresponding measure of spread is the *standard deviation*. Usually this is called $s$ and is calculated using a much more complicated formula:
 
-$$s = \sqrt{\frac{\sum \left( y - \bar{y} \right)^2}{n - 1}}.$$
+$$s = \sqrt{\frac{\sum (y - \bar{y})^2}{n - 1}}.$$
 
-This is a measure of spread because the $\left( y - \bar{y} \right)$ term measures the how far away each data point is from the mean.
+This is a measure of spread because the $(y - \bar{y})$ term measures the how far away each data point is from the mean.
 
 In R, this is calculated with the `sd` command.
 
@@ -79,15 +99,16 @@ The mean and the standard deviation should always be reported together.
 
 Another related measurement is the *variance*, but this is nothing more than the standard deviation squared:
 
-$$s^2 = \frac{\sum \left( y - \bar{y} \right)^2}{n - 1}.$$
+$$s^2 = \frac{\sum (y - \bar{y})^2}{n - 1}.$$
 
-(Compare this formula to the one for the standard deviation. Nothing has changed except for the removal of the square root.) We rarely use the variance in an introductory stats class because it's not as interpretable as the standard deviation.\footnote{The main reason for this is units. If the data variable is the mother's weight in pounds, then both the mean and the standard deviation are also reported in pounds. The variance has units of ``pounds squared'', but what does that even mean?} If you need to do this in R, the command is `var`.
+(Compare this formula to the one for the standard deviation. Nothing has changed except for the removal of the square root.) We rarely use the variance in an introductory stats class because it's not as interpretable as the standard deviation.^[The main reason for this is units. If the data variable is the mother's weight in pounds, then both the mean and the standard deviation are also reported in pounds. The variance has units of "pounds squared", but what does that even mean?] If you need to do this in R, the command is `var`.
 
 ```{r}
 var(birthwt$lwt)
 ```
 
-(You can check and see that the number above really is just `r sd(birthwt$lwt)` squared.)
+(You can check and see that the number above really is just `r sd(birthwt$lwt)` squared. Remember, in the R Markdown document, you can click inside the inline R code chunk from the previous sentence and hit Ctrl-Enter or Cmd-Enter.)
+
 
 ## Median and IQR
 
@@ -105,15 +126,15 @@ sort(birthwt$lwt)
 
 ### Exercise
 
-If there are 189 mothers in this data set, in which position in the list will the median value appear? (Be careful: you can't just divide 189 by 2!) Verify that the median value 121 does appear in the position you calculated.
+If there are 189 mothers in this data set, in which position in the list will the median value appear? (Be careful: you can't just divide 189 by 2,  although if you do, you'll be close to the right answer.) Verify that the median value 121 does appear in the position you calculated.
 
-\begin{answer}
+\answerbegin
 Please write up your answer here.
-\end{answer}
+\answerend
 
 * * * * *
 
-Calculating the *interquartile range*---or *IQR*---requires first the calculation of the first and third quartiles, denoted Q1 and Q3. If the median is the 50% mark in the sorted data, the first and third quartiles are the 25% and the 75% marks, respectively.\footnote{One way to compute these is to calculate the median of the lower and upper halves of the data separately. Then again, it's hard to know how to split the data set into halves if there are an odd number of observations. There are many different methods for computing percentiles in general, but you don't need to worry too much about the particular implementation in R.} Then the IQR is just
+Calculating the *interquartile range*---or *IQR*---requires first the calculation of the first and third quartiles, denoted Q1 and Q3. If the median is the 50% mark in the sorted data, the first and third quartiles are the 25% and the 75% marks, respectively.^[One way to compute these is to calculate the median of the lower and upper halves of the data separately. Then again, it's hard to know how to split the data set into halves if there are an odd number of observations. There are many different methods for computing percentiles in general, but you don't need to worry too much about the particular implementation in R.] Then the IQR is just
 
 $$IQR = Q3 - Q1$$
 
@@ -138,14 +159,18 @@ unname(Q1)
 
 Now compute Q3. Also check that the IQR calculated above matches the value you get from subtracting Q3 minus Q1.
 
+\answerbegin
 ```{r}
-## Add code here to compute and print out Q3.
-## You should use the unname command as in the above chunk.
+# Add code here to compute and print out Q3.
+# You should use the unname command as in the above chunk.
 ```
 
 ```{r}
-## Add code here to compute Q3 - Q1
+# Add code here to compute Q3 - Q1
 ```
+\answerend
+
+*****
 
 The median and the IQR should always be reported together.
 
@@ -160,9 +185,9 @@ On the other hand, the median and IQR are "robust", meaning that they do not cha
 
 Explain why the median and IQR are robust. In other words, why does an outlier have little or no influence on the median and IQR?
 
-\begin{answer}
+\answerbegin
 Please write up your answer here.
-\end{answer}
+\answerend
 
 *****
 
@@ -181,9 +206,17 @@ You can, of course, isolate the various pieces of this. You already know most of
 
 ```{r}
 min(birthwt$lwt)
+```
+```{r}
 median(birthwt$lwt)
+```
+```{r}
 max(birthwt$lwt)
+```
+```{r}
 mean(birthwt$lwt)
+```
+```{r}
 quantile(birthwt$lwt)
 ```
 
@@ -191,9 +224,9 @@ quantile(birthwt$lwt)
 
 What is the difference between the way `quantile` was used in a previous exercise versus the way it was used here? How did that change the output?
 
-\begin{answer}
+\answerbegin
 Please write up your answer here.
-\end{answer}
+\answerend
 
 *****
 
@@ -210,32 +243,35 @@ There are `r NROW(birthwt)` births represented in this data and the median weigh
 
 ### Your turn
 
-Type a full sentence using inline R code (as above) summarizing the minimum and maximum baby weights (in grams) in our data set.
+Type a full, contextually meaningful sentence using inline R code (as above) summarizing the minimum and maximum baby weights (in grams) in our data set.
 
-\begin{answer}
+\answerbegin
 Please write up your answer here.
-\end{answer}
+\answerend
 
 
 ## Summary statistics by group
 
 Using base R, it's not so easy to get summary statistics for each group separately. Fortunately, the `mosaic` package comes to the rescue, allowing for more flexibility.
+
 For example:
 
 ```{r}
-favstats( ~ lwt | race, data = birthwt)
+favstats(lwt ~ race, data = birthwt)
 ```
 
-The notation is a little weird. Don't worry about the tilde for now. Just learn that it needs to be there. The important part is the `lwt | race`. This says, "Look at the numerical variable `lwt` broken down by `race`." Indeed, the output has three lines, one for each race in the data. This extended notation works for lots of commands, like `mean`, `sd`, `median`, `IQR`, `quantile`, etc. as long as the `mosaic` package is loaded.
+The notation is a little weird. Don't worry about the tilde for now. Just learn that it needs to be there. This says, "Look at the numerical variable `lwt` grouped by `race`." Indeed, the output has three lines, one for each race in the data. This extended notation works for lots of commands, like `mean`, `sd`, `median`, `IQR`, `quantile`, etc. as long as the `mosaic` package is loaded.
 
 ### Your turn
 
 Choose one numerical variable and one categorical variable from the `birthwt` data set. Find the five-number summary of your numerical variable grouped by your categorical variable.
 
+\answerbegin
 ```{r}
-## Add code here to compute the five-number summary of your
-## numerical variable grouped by your categorical variable.
+# Add code here to compute the five-number summary of your
+# numerical variable grouped by your categorical variable.
 ```
+\answerend
 
 
 ## Conclusion
