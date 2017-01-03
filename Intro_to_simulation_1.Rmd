@@ -4,9 +4,12 @@ author: "Put your name here"
 date: "Put the date here"
 output: pdf_document
 ---
-<!-- Please don't mess with the next two lines! -->
-\newenvironment{answer}{\definecolor{shadecolor}{RGB}{225, 225, 255}\begin{shaded}}{\end{shaded}}
-<!-- Please don't mess with the previous two lines! -->
+<!-- Please don't mess with the next few lines! -->
+\def\hrulefill{\leavevmode\leaders\hrule height 2pt\hfill\kern 0pt}
+\newcommand{\answerbegin}{\par\textcolor{blue}{\hrulefill\quad ANSWER\quad\hrulefill\newline}}
+\newcommand{\answerend}{\par\textcolor{blue}{\hrulefill}\newline}
+`r options(scipen = 999)`
+<!-- Please don't mess with the previous few lines! -->
 
 
 ## Introduction
@@ -16,25 +19,27 @@ In this module, we'll learn about simulation and randomization. When we want to 
 
 ## Instructions
 
-Presumably, you have already created a new project and downloaded this file into it. Please knit the document and work back and forth between this R Markdown file and the PDF output as you work through this module.
+Presumably, you have already created a new project and downloaded this file into it. From the `Run` menu above, select `Run All` to run all existing code chunks.
 
-When you are finished with the assignment, knit to PDF one last time, proofread the PDF file **carefully**, export the PDF file to your computer, and then submit your assignment.
+When prompted to complete an exercise or demonstrate skills, you will see the following lines in the document:
+
+\answerbegin
+
+\answerend
+
+These lines demarcate the region of the R Markdown document in which you are to show your work.
 
 Sometimes you will be asked to add your own R code. That will appear in this document as a code chunk with a request for you to add your own code, like so:
 
 ```{r}
-## Add code here to [do some task]...
+# Add code here
 ```
 
-Be sure to remove the line `## Add code here to [do some task]...` when you have added your own code.
+Be sure to remove the line `# Add code here` when you have added your own code. You should run each new code chunk you create by clicking on the dark green arrow in the upper-right corner of the code chunk.
 
-Sometimes you will be asked to type up your thoughts. That will appear in the document as follows:
+Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
 
-\begin{answer}
-Please write up your answer here.
-\end{answer}
-
-Again, please be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. If you need to use some R code as well, you can use inline R code inside the block between `\begin{answer}` and `\end{answer}`, or if you need an R code chunk, please go outside the `answer` block and start a new code chunk.
+When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files plane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
 
 
 ## Load Packages
@@ -45,7 +50,7 @@ We load the `mosaic` package.
 library(mosaic)
 ```
 
-One more bit of technical detail. Since there will be some randomness involved here, I will need to include an R command to ensure that we all get the same results every time this document is knit. This is called "setting the seed". Don't worry too much about what this is doing under the hood. The basic idea is that two people who start with the same seed will generate the same sequence of "random" numbers.
+One more bit of technical detail. Since there will be some randomness involved here, I will need to include an R command to ensure that we all get the same results every time this document is run or knit. This is called "setting the seed". Don't worry too much about what this is doing under the hood. The basic idea is that two people who start with the same seed will generate the same sequence of "random" numbers.
 
 The seed `1234` in the command below is totally arbitrary. It could have been any number at all. If you change the seed, you will get different output in later code, so we all need to use the same seed. But the actual common value we all use for the seed is irrelevant.
 
@@ -80,9 +85,9 @@ rflip(10)
 
 In ten coin flips, how many would you generally expect to come up heads? Is that the actual number of heads you saw in the simulations above? Why aren't the simulations coming up with the expected number of heads each time?
 
-\begin{answer}
+\answerbegin
 Please write up your answer here.
-\end{answer}
+\answerend
 
 *****
 
@@ -99,7 +104,7 @@ The `do` command is a way of doing something multiple times. Imagine there are t
 do(20) * rflip(10)
 ```
 
-The syntax could not be any simpler: "`do(20) *`" means, literally, "do twenty times." In other words, this command is telling R to repeat an action twenty times, where the action is flipping a single coin ten times.
+The syntax could not be any simpler: `do(20) *` means, literally, "do twenty times." In other words, this command is telling R to repeat an action twenty times, where the action is flipping a single coin ten times.
 
 
 You'll notice that in place of a list of outcomes (H or T) of all the individual flips, we have instead a summary of the number of heads and tails each student sees. Each row represents a student, and the columns give information about each student's flips. (There are `n = 10` flips for each student, but then the number of heads/tails---and the corresponding "proportion" of heads---changes from student to student.)
@@ -124,15 +129,15 @@ mean(coin_flips_20_10$heads)
 
 ### Your turn
 
-Calculate the mean *proportion* of heads (rather than the mean *count*). Then explain why your answer makes sense in light of the mean count of heads calculated above.
+The data frame `coin_flips_20_10` contains four variables: `n`, `heads`, `tails`, and `prop`. In the code chunk above, we calculated `mean(coin_flips_20_10$heads)` which gave us the mean count of heads for all students flipping coins. Instead of calculating the mean count of heads, change the variable from `heads` to `prop` to calculate the mean *proportion* of heads. Then explain why your answer makes sense in light of the mean count of heads calculated above.
 
+\answerbegin
 ```{r}
-## Add code here to calculate the mean proportion of heads.
+# Add code here to calculate the mean proportion of heads.
 ```
 
-\begin{answer}
 Please write up your answer here.
-\end{answer}
+\answerend
 
 *****
 
@@ -154,23 +159,32 @@ ggplot(coin_flips_20_10, aes(x = prop)) +
                        breaks = seq(0, 1, 0.1))
 ```
 
+
 ## Bigger and better!
 
-There are two obvious directions we could go to make our experiment bigger and better. One way is to recruit more students. With only twenty students, it was possible that, for example, nobody would get all heads or all tails. Indeed, in `coin_flips_20_10` there were no students who got all heads or all tails. Also, there were more students with four heads and seven heads than with five heads, even though we "expected" the average to be five heads. There is nothing particularly significant about that; it happened by pure chance alone. Another run through the above commands would generate a somewhat different outcome. That's what happens when things are random.
+With only twenty students, it was possible that, for example, nobody would get all heads or all tails. Indeed, in `coin_flips_20_10` there were no students who got all heads or all tails. Also, there were more students with four heads and seven heads than with five heads, even though we "expected" the average to be five heads. There is nothing particularly significant about that; it happened by pure chance alone. Another run through the above commands would generate a somewhat different outcome. That's what happens when things are random.
 
-Instead, let's try it again with 2000 students.
+Instead, let's imagine that we recruited all the students at Westminster College to flip coins with us, not just the students in our class. Westminster has about 2000 students, so let's try it again with 2000 students:
 
 ```{r}
 coin_flips_2000_10 <- do(2000) * rflip(10)
 tail(coin_flips_2000_10)
+```
+
+This is the same as we did before, but now there are 2000 rows in the data frame instead of 20.
+
+```{r}
 mean(coin_flips_2000_10$heads)
+```
+
+```{r}
 ggplot(coin_flips_2000_10, aes(x = heads)) +
     geom_histogram(binwidth = 0.5) +
     scale_x_continuous(limits = c(-1, 11),
                        breaks = seq(0, 10, 1))
 ```
 
-This is helpful. In contrast with the simulation with twenty students, the bar chart gives us something closer to what we expect. The mode is at five heads, and every possible number of heads is represented, with decreasing counts as one moves away from five. With 2000 people flipping coins, all possible outcomes---including rare ones---are better represented.
+This is helpful. In contrast with the simulation with twenty students, the last histogram gives us something closer to what we expect. The mode is at five heads, and every possible number of heads is represented, with decreasing counts as one moves away from five. With 2000 people flipping coins, all possible outcomes---including rare ones---are better represented.
 
 The same chart, this time with the proportion of heads:
 
@@ -186,35 +200,34 @@ ggplot(coin_flips_2000_10, aes(x = prop)) +
 
 Do you think the shape of the distribution would be appreciably different if we used 20,000 or even 200,000 students? Why or why not? (Normally, I would encourage you to test your theory by trying it in R. However, it takes a *long* time to simulate that many flips and I don't want you to tie up server resources and memory. Think through this in your head.)
 
-\begin{answer}
+\answerbegin
 Please write up your answer here.
-\end{answer}
+\answerend
 
 *****
 
-The other direction of growth is to increase the number of coin flips each student performs. Let's go back to our classroom of twenty students, but now, each student will flip the coin 1000 times.
+From now on, we will insist on using at least a thousand simulations---if not more---to make sure that we represent the full range of possible outcomes.^[There is some theory behind choosing the number of times we need to simulate, but we're not going to get into all that.]
 
-```{r}
-coin_flips_20_1000 <- do(20) * rflip(1000)
-tail(coin_flips_20_1000)
-mean(coin_flips_20_1000$heads)
-ggplot(coin_flips_20_1000, aes(x = heads)) +
-    geom_histogram()
-```
 
-Okay, this is pretty useless. Given the thousand possible values of `heads`, we're only going to see the twenty that this particular small group of students manages to obtain.
+## More flips
 
-So let's go really big now and use 2000 students, each of whom flips the coin 1000 times. This code chunk accounts for a substantial amount of the time it takes to knit this document.
+Now let's increase the number of coin flips each student performs. We'll still use 2000 simulations (imagine 2000 students all flipping coins), but this time, each student will flip the coin 1000 times instead of only 10 times. The first code chunk below accounts for a substantial amount of the time it takes to run this document.
 
 ```{r}
 coin_flips_2000_1000 <- do(2000) * rflip(1000)
 tail(coin_flips_2000_1000)
+```
+
+```{r}
 mean(coin_flips_2000_1000$heads)
+```
+
+```{r}
 ggplot(coin_flips_2000_1000, aes(x = heads)) +
     geom_histogram(binwidth = 10, boundary = 500)
 ```
 
-Now with proportions.
+And now the same histogram, but with proportions:
 
 ```{r}
 ggplot(coin_flips_2000_1000, aes(x = prop)) +
@@ -226,19 +239,19 @@ ggplot(coin_flips_2000_1000, aes(x = prop)) +
 
 Comment on the histogram above. Describe its shape using the vocabulary of the three important features (modes, symmetry, outliers). Why do you think it's shaped like this?
 
-\begin{answer}
+\answerbegin
 Please write up your answer here.
-\end{answer}
+\answerend
 
 *****
 
 ### Exercise
 
-Given the amount of randomness involved (each students is tossing coins which randomly come up heads or tails), why do we see so much structure and orderliness in the histograms (at least the ones where we use lots of students)?
+Given the amount of randomness involved (each students is tossing coins which randomly come up heads or tails), why do we see so much structure and orderliness in the histograms?
 
-\begin{answer}
+\answerbegin
 Please write up your answer here.
-\end{answer}
+\answerend
 
 *****
 
@@ -250,70 +263,80 @@ But now substitute "heads" and "tails" with "cancer" and "no cancer". Or "guilty
 
 For example, let's suppose that 85% of U.S. adults support some form of background checks for gun buyers.^[This is likely close to the truth. See this article: http://www.people-press.org/2015/08/13/continued-bipartisan-support-for-expanded-background-checks-on-gun-sales] Now, imagine we went out and surveyed a random group of people and asked them a simple yes/no question about their support for background checks. What might we see?
 
-Let's simulate. Imagine flipping a coin, but instead of coming up heads 50% of the time, suppose it were possible for the coin to come up heads 85% of the time.^[The idea of a "weighted" coin that can do this comes up all the time in probability and statistics courses, but it seems that it's not likely one could actually manufacture a coin that could come up heads more or less than 50% of the time when flipped. See this paper for more details: http://www.stat.columbia.edu/~gelman/research/published/diceRev2.pdf] A sequence of heads and tails with this weird coin would be much like randomly surveying people and asking them about background checks.
+Let's simulate. Imagine flipping a coin, but instead of coming up heads 50% of the time, suppose it were possible for the coin to come up heads 85% of the time.^[The idea of a "weighted" coin that can do this comes up all the time in probability and statistics courses, but it seems that it's not likely one could actually manufacture a coin that came up heads more or less than 50% of the time when flipped. See this paper for more details: http://www.stat.columbia.edu/~gelman/research/published/diceRev2.pdf] A sequence of heads and tails with this weird coin would be much like randomly surveying people and asking them about background checks.
 
 We can make a "virtual" weird coin with the `rflip` command by specifying how often we want heads to come up.
+
+```{r}
+rflip(1, prob = 0.85)
+```
+
+If we flip our weird coin a bunch of times, we can see that our coin is not fair. Indeed, it appears to come up heads way more often than not:
 
 ```{r}
 rflip(100, prob = 0.85)
 ```
 
-The results from the above code can be seen as a survey of 100 random U.S. adults about their support for background checks for purchasing guns. "Heads" means "supports" and "tails" means "opposes."
+The results from the above code can be thought of as a survey of 100 random U.S. adults about their support for background checks for purchasing guns. "Heads" means "supports" and "tails" means "opposes." If the majority of Americans support background checks, then we will come across more people in our survey who tell us they support background checks. This shows up in our simulation as the appearance of more heads than tails.
+
+Note that there is no guarantee that our sample will have exactly 85% heads. In fact, it doesn't; it has 86% heads.
+
+Again, keep in mind that we're simulating the act of obtaining a random sample of 100 U.S. adults. If we get a different sample, we'll get different results:
+
+```{r}
+rflip(100, prob = 0.85)
+```
+
+See, this time, only 73% came up heads, even though we expected 85%. That's how randomness works.
 
 ### Your turn
 
-Now imagine that you and your classmates (20 students total) all go out and conduct your survey of 100 random U.S. adults. Write some R code that simulates this. Plot a histogram of the results. (Hint: you'll need the `do` function.) Use the proportion of supporters (`prop`), not the raw count of supporters (`heads`).
+Now imagine that you and all the other students at Westminster College (say, 2000 students total) all go out and conduct surveys of 100 random U.S. adults. Write some R code that simulates this. Plot a histogram of the results. (Hint: you'll need `do(2000) *` in there.) Use the proportion of supporters (`prop`), not the raw count of supporters (`heads`).
 
+\answerbegin
 ```{r}
-## Add code here to simulate 20 surveys of 100 U.S. adults.
-## Plot the results in a histogram using proportions.
+# Add code here to simulate 2000 surveys of 100 U.S. adults.
 ```
 
-Now do the same this with 2000 students.
-
 ```{r}
-## Add code here to simulate 2000 surveys of 100 U.S. adults.
-## Plot the results in a histogram using proportions.
+# Plot the results in a histogram using proportions.
+```
+\answerend
+
+Run another simulation, but this time, have each student survey 1000 adults and not just 100.
+
+\answerbegin
+```{r}
+# Add code here to simulate 2000 surveys of 1000 U.S. adults.
 ```
 
-Run the simulation one last time, but this time, survey 1000 adults and not just 100.
-
 ```{r}
-## Add code here to simulate 2000 surveys of 1000 U.S. adults.
-## Plot the results in a histogram using proportions.
+# Plot the results in a histogram using proportions.
 ```
-
-What changed when you went from 20 students to 2000?
-
-\begin{answer}
-Please write up your answer here.
-\end{answer}
+\answerend
 
 What changed when you surveyed 1000 people instead of 100?
 
-\begin{answer}
+\answerbegin
 Please write up your answer here.
-\end{answer}
+\answerend
 
 *****
+
 
 ## Sampling variability
 
 We've seen that taking repeated samples (using the `do` command) leads to lots of different outcomes. That is randomness in action. We don't expect the results of each survey to be exactly the same every time the survey is administered.
 
-We've also seen that if we don't simulate enough times (for example, when we used the class of size 20), then we don't get a good representation of the distribution of all possible outcomes.
-
-So let's agree from here on out that when we simulate, we will always simulate a "large" number of times. In other words, we won't use `do(20)` anymore. We'll need something like `do(2000)`. (There is some theory behind choosing the number of times we need to simulate, but we're not going to get into all that.)
-
-Do not confuse the number of simulations with the sample size! When we were flipping coins, the sample size was each person's number of flips. When we survey, the sample size is the number of people to whom we present our questions. This number can be small or large.
+But despite this randomness, there is an interesting pattern that we can observe. It has to do with the number of times we flip the coin. Since we're using coin flips to simulate the act of conducting a survey, the number of coin flips is playing the role of the *sample size*. In other words, if we want to simulate a survey of U.S. adults with a sample size of 100, we simulate that by flipping 100 coins.
 
 ### Exercise
 
-Go back and look at all the examples above where we used `do(2000)` and plotted proportions. What do you notice about the range of values on the x-axis when the sample size is small versus large? (In other words, in what way is the histogram of proportions different when using `rflip(10)` or `rflip(100)` versus `rflip(1000)`?)
+Go back and look at all the examples above. What do you notice about the range of values on the x-axis when the sample size is small versus large? (In other words, in what way are the histograms different when using `rflip(10)` or `rflip(100)` versus `rflip(1000)`? It's easier to compare histograms one to another when looking at the proportions instead of the raw head counts because proportions are always on the same scale from 0 to 1.)
 
-\begin{answer}
+\answerbegin
 Please write up your answer here.
-\end{answer}
+\answerend
 
 *****
 
