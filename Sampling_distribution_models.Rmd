@@ -4,9 +4,12 @@ author: "Put your name here"
 date: "Put the date here"
 output: pdf_document
 ---
-<!-- Please don't mess with the next two lines! -->
-\newenvironment{answer}{\definecolor{shadecolor}{RGB}{225, 225, 255}\begin{shaded}}{\end{shaded}}
-<!-- Please don't mess with the previous two lines! -->
+<!-- Please don't mess with the next few lines! -->
+\def\hrulefill{\leavevmode\leaders\hrule height 2pt\hfill\kern 0pt}
+\newcommand{\answerbegin}{\par\textcolor{blue}{\hrulefill\quad ANSWER\quad\hrulefill\newline}}
+\newcommand{\answerend}{\par\textcolor{blue}{\hrulefill}\newline}
+`r options(scipen = 999)`
+<!-- Please don't mess with the previous few lines! -->
 
 
 ## Introduction
@@ -16,30 +19,32 @@ In this module, we'll revisit the idea of a sampling distribution model. We've a
 
 ## Instructions
 
-Presumably, you have already created a new project and downloaded this file into it. Please knit the document and work back and forth between this R Markdown file and the PDF output as you work through this module.
+Presumably, you have already created a new project and downloaded this file into it. From the `Run` menu above, select `Run All` to run all existing code chunks.
 
-When you are finished with the assignment, knit to PDF one last time, proofread the PDF file **carefully**, export the PDF file to your computer, and then submit your assignment.
+When prompted to complete an exercise or demonstrate skills, you will see the following lines in the document:
+
+\answerbegin
+
+\answerend
+
+These lines demarcate the region of the R Markdown document in which you are to show your work.
 
 Sometimes you will be asked to add your own R code. That will appear in this document as a code chunk with a request for you to add your own code, like so:
 
 ```{r}
-## Add code here to [do some task]...
+# Add code here
 ```
 
-Be sure to remove the line `## Add code here to [do some task]...` when you have added your own code.
+Be sure to remove the line `# Add code here` when you have added your own code. You should run each new code chunk you create by clicking on the dark green arrow in the upper-right corner of the code chunk.
 
-Sometimes you will be asked to type up your thoughts. That will appear in the document as follows:
+Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
 
-\begin{answer}
-Please write up your answer here.
-\end{answer}
-
-Again, please be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. If you need to use some R code as well, you can use inline R code inside the block between `\begin{answer}` and `\end{answer}`, or if you need an R code chunk, please go outside the `answer` block and start a new code chunk.
+When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files plane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
 
 
 ## Load Packages
 
-We load the `mosaic` package.
+We load the standard `mosaic` package.
 
 ```{r, warning = FALSE, message=FALSE}
 library(mosaic)
@@ -58,7 +63,7 @@ We know that when we sample from a population, our sample is "wrong": even when 
 
 Let's explore this idea a little further, this time considering how sample size plays a role in sampling variability.
 
-Suppose that a certain candidate in an election actually has 64% of the support of registered voters. We conduct a poll of 10 people, gathering a representative (though not very large) sample of voters.
+Suppose that a certain candidate in an election actually has 64% of the support of registered voters. We conduct a poll of 10 random people, gathering a representative (though not very large) sample of voters.
 
 We can accomplish this task in R by using the `rflip` command from the `mosaic` package. Remember that the default for a coin flip is a 50% probability of heads, so we have to change that if we want to model a candidate with 64% support.
 
@@ -66,7 +71,7 @@ We can accomplish this task in R by using the `rflip` command from the `mosaic` 
 rflip(10, prob = 0.64)
 ```
 
-You can think of the above command as taking one random sample of size 10 and getting a certain number of "successes", where a "success" is a person who votes for our candidate---here encoded as "heads". In other words, in this particular sample, we surveyed 6 people who said they were voting for our candidate and 4 people who were not.
+You can think of the above command as taking one random sample of size 10 and getting a certain number of "successes", where a "success" is a person who votes for our candidate---here encoded as "heads". In other words, of the 10 people in this particular sample, we surveyed 6 people who said they were voting for our candidate and 4 people who were not.
 
 If we use the `do` command, we can simulate many samples, all of size 10. Let's take 1000 and store them in a variable called `sims_1000_10`.
 
@@ -75,7 +80,7 @@ sims_1000_10 <- do(1000) * rflip(10, prob = 0.64)
 head(sims_1000_10, 20)
 ```
 
-Note that with 10 people, it is impossible to get a 64% success rate in any given sample. (That would be 6.4 people!) Nevertheless, you can see that many of the samples gave us around 5--8 successes, as we'd expect if the true population rate is 64%. Also, the mean number of successes across all simulations is `r mean(sims_1000_10$heads)`, which is very close to 6.4.
+Note that with 10 people, it is impossible to get a 64% success rate in any given sample. (That would be 6.4 people!) Nevertheless, you can see that many of the samples gave us around 5--8 successes, as we'd expect when the true population rate is 64%. Also, the mean number of successes across all simulations is `r mean(sims_1000_10$heads)`, which is very close to 6.4.
 
 Instead of focusing on the total number of successes, let's use the proportion of successes in each sample. We can graph our simulated proportions, just as we've done in previous assignments. (The fancy stuff in `scale_x_continuous` is just making sure that the x-axis goes from 0 to 1 and that the tick marks appear as multiples of 0.1.)
 
@@ -103,23 +108,25 @@ ggplot(sims_1000_20, aes(x = prop)) +
 
 Explain how the distribution of simulations has changed going from a sample size of 10 to a sample size of 20.
 
-\begin{answer}
+\answerbegin
 Please write up your answer here.
-\end{answer}
+\answerend
 
 *****
 
 ### Your turn
 
-Run the simulation yourself, this time with samples of size 50. Below the plot, explain how the distribution of simulations has changed going from a sample size of 10 to 20 to 50. Use the same code template from above (especially the `scale_x_continuous` option) so that the x-axis is scaled identically to the previous cases.
+Run the simulation yourself, this time with samples of size 50. Use the same number of simulations (1000) and the same code template from above (especially the `scale_x_continuous` option) so that the x-axis is scaled identically to the previous cases, but change the binwidth to 0.01.
 
+Below the plot, explain how the distribution of simulations has changed going from a sample size of 10 to 20 to 50. 
+
+\answerbegin
 ```{r}
-## Add code here to simulate 1000 random samples of size 50 and plot them.
+# Add code here to simulate 1000 random samples of size 50 and plot them.
 ```
 
-\begin{answer}
 Please write up your answer here.
-\end{answer}
+\answerend
 
 *****
 
@@ -132,15 +139,15 @@ Which normal model do we use? In other words, what is the mean and standard devi
 
 The simulations above are all centered at the same place, 0.64. This is no surprise. If the true population proportion is 0.64, then we expect most of our samples to be around 64% (even if, as above, it is actually impossible to get exactly 64% in any given sample).
 
-But what about the standard deviation? It seems to be changing with each sample.
+But what about the standard deviation? It seems to be changing with each sample size.
 
 ### Exercise
 
-Looking at your simulations above, how does the standard deviation appear to change as the sample size increases? Intuitively, why do you think this happens?
+Looking at your simulations above, how does the standard deviation appear to change as the sample size increases? Intuitively, why do you think this happens? (Hint: think about the relationship between larger sample sizes and accuracy.)
 
-\begin{answer}
+\answerbegin
 Please write up your answer here.
-\end{answer}
+\answerend
 
 *****
 
@@ -168,10 +175,9 @@ For a sample of size 20, the standard error is `r sqrt(0.64 * (1 - 0.64) / 20)`.
 
 Calculate the standard error for a sample size of 50. Give your answer as a contextually meaningful full sentence using inline R code.
 
-
-\begin{answer}
+\answerbegin
 Please write up your answer here.
-\end{answer}
+\answerend
 
 *****
 
@@ -182,17 +188,17 @@ Like anything in statistics, there are assumptions that have to be met before ap
 
 When we want to use a normal model, we have to make sure the sampling distribution model is truly normal (or nearly normal).
 
-First, we need our samples to be random. Clearly, when samples are not random, there is a danger of bias, and then all bets are off. Of course, in real life hardly any sample will be truly random, so being representative is the most we can hope for.
+First, we need our samples to be random. Clearly, when samples are not random, there is a danger of bias, and then all bets are off. Of course, in real life hardly any sample will be truly random, so being representative is the most we can usually hope for.
 
 Second, our sample size must be less than 10% of the population size. The reasons for this are somewhat technical, and 10% is a rough guideline. The idea is that if we are sampling, we need our sample not to be a significant chunk of the population.
 
 These two conditions are always important when sampling. Together, they help ensure that the mathematical assumption of independence is met. In other words, when these two conditions are met, there is a better chance that the data from one member of our sample will not influence nor be influenced by the data from another member. 
 
-For applying normal models, there is one more condition. It is called the "success/failure" condition. We need for the total number of successes to be at least 10 and, similarly, for the total number of failures to  be at least 10.
+For applying normal models, there is one more condition. It is called the "success/failure" condition. We need for the total number of successes to be at least 10 and, similarly, for the total number of failures to be at least 10.
 
 Go back and consider our first simulated sample. The true rate of success in the population was presumed to be 64%. Given that we were sampling only 10 individuals, this implies that, on average, we would expect 6.4 people out of 10 to vote for the candidate. And likewise, that means that we would expect 3.6 people to vote against the candidate. (Clearly, it is impossible in any given sample to get 6.4 votes for, or 3.6 votes against. But *on average*, this is what we expect.) In fact, since the sample size was 10, there was no way that any of the simulated samples could meet the success/failure condition. When we plotted the histogram of simulated proportions, we saw the problem. With such small numbers, the histogram was skewed, and not normal.
 
-We check the success/failure condition by calculating $np$ and $n(1 - p)$: $n$ is the sample size, and $p$ is the proportion of successes, and therefore, $np$ is the total number of successes. Since $1 - p$ is the proportion of failures, then $n(1 - p)$ is the total number of failures. Each of the numbers $np$ and $n(1 - p)$ needs to be bigger than 10.
+We check the success/failure condition by calculating $np$ and $n(1 - p)$: $n$ is the sample size and $p$ is the proportion of successes. Therefore, $np$ is the total number of successes. Since $1 - p$ is the proportion of failures, then $n(1 - p)$ is the total number of failures. Each of the numbers $np$ and $n(1 - p)$ needs to be bigger than 10.
 
 In our example, $n = 10$ (the sample size), and $p = 0.64$ (the probability of success). So
 
@@ -204,7 +210,7 @@ $$n(1 - p) = 10(1 - 0.64) = 10(0.36) = 3.6.$$
 
 Neither of these numbers is bigger than 10.
 
-Notice that when $n$ is large, the quantities $np$ and $n(1 - p)$ will also tend to  be large. This is the content of the Central Limit Theorem: when sample sizes grow, the sampling distribution model becomes more and more normal.
+Notice that when $n$ is large, the quantities $np$ and $n(1 - p)$ will also tend to be large. This is the content of the Central Limit Theorem: when sample sizes grow, the sampling distribution model becomes more and more normal.
 
 There is something else going on too. Suppose that $n = 100$ but $p = 0.01$. The sample seems quite large, but let's look at the sampling distribution through a simulation.
 
@@ -222,9 +228,9 @@ ggplot(sims_1000_100, aes(x = prop)) +
 
 What's the problem here? Despite having a fairly large sample size, why is this distribution so skewed?
 
-\begin{answer}
+\answerbegin
 Please write up your answer here.
-\end{answer}
+\answerend
 
 *****
 
@@ -238,9 +244,9 @@ In other words, in a typical sample, we expect 1 success and 99 failures.
 
 Going back to the election example, check that a sample size of 50 does satisfy the success/failure condition.
 
-\begin{answer}
+\answerbegin
 Please write up your answer here.
-\end{answer}
+\answerend
 
 *****
 
@@ -258,7 +264,8 @@ Let's simulate:
 ```{r}
 survey_sim <- do(1000) * rflip(50, prob = 0.64)
 ggplot(survey_sim, aes(x = prop)) +
-    geom_histogram(binwidth = 0.05)
+    geom_histogram(binwidth = 0.01) +
+    geom_vline(xintercept = 0.5,  color = "blue")
 ```
 
 It looks like there are at least a few simulated samples that could come in less than 50%.
@@ -278,13 +285,13 @@ Since the conditions are satisfied, our sampling distribution model can be appro
 
 $$N(0.64, 0.068).$$
 
-Back to our original question. How likely is it that a random survey of 50 voters predicts defeat for the candidate? Well, any surveys that come in less than 50% will make it look like the candidate is going to lose. So we simply need to figure out how much of the sampling distribution lies below 50%. This is made simple with the `pdist` command. Note that we'll get a more accurate answer if we include the formula for the standard error, rather than rounding it off as 0.068.
+Back to our original question. How likely is it that a random survey of 50 voters predicts defeat for the candidate? Well, any survey that comes in less than 50% will make it look like the candidate is going to lose. So we simply need to figure out how much of the sampling distribution lies below 50%. This is made simple with the `pdist` command. Note that we'll get a more accurate answer if we include the formula for the standard error, rather than rounding it off as 0.068.
 
 ```{r}
-pdist("norm", q = 0.5, mean = 0.64, sd = sqrt(0.64 * (1 - 0.64) / 50))
+pdist("norm", q = 0.5, mean = 0.64, sd = sqrt(0.64 * (1 - 0.64) / 50), invisible = TRUE)
 ```
 
-From the picture and the output, we can see that there is only about a 2% chance that one of our surveys of 50 voters could predict defeat. The vast majority of the time, when we go out and take such a survey, the results will show the candidate in the lead. It will likely not say exactly 64%; there is still a relatively wide range of values that seem to be possible outcomes of such surveys. Nevertheless, this range of values is mostly above 50%.
+From the picture, we can see that there is only about a 2% chance that one of our surveys of 50 voters could predict defeat. Using inline code, we calculate it as `r 100 * pdist("norm", q = 0.5, mean = 0.64, sd = sqrt(0.64 * (1 - 0.64) / 50))`%. The vast majority of the time, then, when we go out and take such a survey, the results will show the candidate in the lead. It will likely not say exactly 64%; there is still a relatively wide range of values that seem to be possible outcomes of such surveys. Nevertheless, this range of values is mostly above 50%. Nevertheless, there is a small chance that the survey will give us the "wrong" answer and predict defeat for the candidate.
 
 
 ## Your turn
@@ -293,42 +300,45 @@ Suppose we are testing a new drug that is intended to reduce cholesterol levels 
 
 First, simulate the sampling distribution using 1000 samples, each of size 143.
 
+\answerbegin
 ```{r}
-## Add code here to simulate 1000 samples of size 143
-## and plot the resulting distribution
+# Add code here to simulate 1000 samples of size 143
+# and plot the resulting distribution.
 ```
+\answerend
 
 Next, check the conditions that would allow you to use a normal model as a sampling distribution model. I've given you an outline below:
 
-* Random
+\answerbegin
 
-\begin{answer}
-Please write up your answer here.
-\end{answer}
+* Random
+    - [Check condition here.]
 
 * 10%
+    - [Check condition here.]
 
-\begin{answer}
-Please write up your answer here.
-\end{answer}
-    
 * Success/failure
+    - [Check condition here.]
 
-\begin{answer}
+\answerend
+
+If the conditions are met, we can use a normal model as the sampling distribution model. What are the mean and standard error of this model? (You should use inline R code to calculate and report the standard error.)
+
+\answerbegin
 Please write up your answer here.
-\end{answer}
-
-If the conditions are met, we can use a normal model as the sampling distribution model. What are the mean and standard error of this model?
-
-\begin{answer}
-Please write up your answer here.
-\end{answer}
+\answerend
 
 Market analysis shows that unless the drug is effective in more than 85% of patients, doctors won't prescribe it. Secretly, we know that the true rate of effectiveness is 83%, but the manufacturer doesn't know that yet. They only have access to their drug trial data in which they had 143 patients with high cholesterol.
 
-Using the normal model you just developed, determine how likely our sample will be to show the drug as "effective" according to the 85% standard. In other words, how often will our sample give us a result that is 85% or higher (even though secretly we know the true effectiveness is only 83%)?
+Using the normal model you just developed, determine how likely the drug trial data will be to show the drug as "effective" according to the 85% standard. In other words, how often will our sample give us a result that is 85% or higher (even though secretly we know the true effectiveness is only 83%)?
+
+\answerbegin
+Please write up your answer here.
+\answerend
+
+*****
 
 
 ## Conclusion
 
-It is very easy to work with normal models. Therefore, when we want to study sampling variability, it is useful to have a normal model as a sampling distribution model. The standard error is a measure of how variable random samples can be. Such variability naturally decreases as our sample size grows. (This makes sense; larger samples give us more precise estimates of the true population, so they should be "closer" to the true population value.) Once conditions are checked, we can use normal models to make predictions about what we are likely to see when we sample from the population.
+It is very easy to work with normal models. Therefore, when we want to study sampling variability, it is useful to have a normal model as a sampling distribution model. The standard error is a measure of how variable random samples can be. Such variability naturally decreases as our sample size grows. (This makes sense: larger samples give us more precise estimates of the true population, so they should be "closer" to the true population value.) Once conditions are checked, we can use normal models to make predictions about what we are likely to see when we sample from the population.
