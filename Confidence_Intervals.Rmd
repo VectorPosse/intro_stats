@@ -4,37 +4,42 @@ author: "Put your name here"
 date: "Put the date here"
 output: pdf_document
 ---
-<!-- Please don't mess with the next two lines! -->
-\newenvironment{answer}{\definecolor{shadecolor}{RGB}{225, 225, 255}\begin{shaded}}{\end{shaded}}
-<!-- Please don't mess with the previous two lines! -->
+<!-- Please don't mess with the next few lines! -->
+\def\hrulefill{\leavevmode\leaders\hrule height 2pt\hfill\kern 0pt}
+\newcommand{\answerbegin}{\par\textcolor{blue}{\hrulefill\quad ANSWER\quad\hrulefill\newline}}
+\newcommand{\answerend}{\par\textcolor{blue}{\hrulefill}\newline}
+`r options(scipen = 999)`
+<!-- Please don't mess with the previous few lines! -->
 
 
 ## Introduction
 
-Sampling variability means that we can never trust a single sample to identify a population parameter exactly. Instead of simply trusting a point estimate, we can look at the entire sampling distribution to create an interval of plausible values, called a confidence interval. Our understanding of standard errors will help us determine how wide we need to make our confidence intervals in order to have some chance of capturing the true population value. Like hypothesis tests, confidence intervals are a form of inference because they use a sample to deduce something about the population.
+Sampling variability means that we can never trust a single sample to identify a population parameter exactly. Instead of simply trusting a point estimate, we can look at the entire sampling distribution to create an interval of plausible values called a confidence interval. Our understanding of standard errors will help us determine how wide we need to make our confidence intervals in order to have some chance of capturing the true population value. Like hypothesis tests, confidence intervals are a form of inference because they use a sample to deduce something about the population.
 
 
 ## Instructions
 
-Presumably, you have already created a new project and downloaded this file into it. Please knit the document and work back and forth between this R Markdown file and the PDF output as you work through this module.
+Presumably, you have already created a new project and downloaded this file into it. From the `Run` menu above, select `Run All` to run all existing code chunks.
 
-When you are finished with the assignment, knit to PDF one last time, proofread the PDF file **carefully**, export the PDF file to your computer, and then submit your assignment.
+When prompted to complete an exercise or demonstrate skills, you will see the following lines in the document:
+
+\answerbegin
+
+\answerend
+
+These lines demarcate the region of the R Markdown document in which you are to show your work.
 
 Sometimes you will be asked to add your own R code. That will appear in this document as a code chunk with a request for you to add your own code, like so:
 
 ```{r}
-## Add code here to [do some task]...
+# Add code here
 ```
 
-Be sure to remove the line `## Add code here to [do some task]...` when you have added your own code.
+Be sure to remove the line `# Add code here` when you have added your own code. You should run each new code chunk you create by clicking on the dark green arrow in the upper-right corner of the code chunk.
 
-Sometimes you will be asked to type up your thoughts. That will appear in the document as follows:
+Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
 
-\begin{answer}
-Please write up your answer here.
-\end{answer}
-
-Again, please be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. If you need to use some R code as well, you can use inline R code inside the block between `\begin{answer}` and `\end{answer}`, or if you need an R code chunk, please go outside the `answer` block and start a new code chunk.
+When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files plane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
 
 
 ## Load Packages
@@ -90,17 +95,14 @@ The quantity $2 SE$ is called the *margin of error*.
 
 The number 2---derived from the 68-95-99.7 rule---is, in fact, slightly incorrect. Using your knowledge of normal models and the `qdist` command, what is the number of standard errors that would enclose exactly 95% of the middle of the sampling distribution? (Hint: `p = 0.95` is **not** the correct argument in the `qdist` function. The middle 95% does not occur at the 95th percentile. If you're still confused, go on and read the next section and revisit this problem later.)
 
+\answerbegin
 ```{r}
-## Add code here to calculate the exact number of standard errors 
-## from the mean that enclose the middle 95% of a normal distribution.
+# Add code here to calculate the exact number of standard errors 
+# from the mean that enclose the middle 95% of a normal distribution.
 ```
 
-**Important note: remember that if you want to type the percent sign % in the blue answer block, you must precede it with a backslash!**
-
-\begin{answer}
 Please write up your answer here.
-The percent sign must be typed like this: \%
-\end{answer}
+\answerend
 
 *****
 
@@ -112,14 +114,19 @@ The general formula, then, is
 
 $$\left(\hat{p} -  z^{*} SE, \hat{p} + z^{*} SE \right)$$
 
-$$\left(\hat{p} -  z^{*} \sqrt{\frac{\hat{p}(1 - \hat{p})}{n}}, \hat{p} + z^{*} \sqrt{\frac{\hat{p}(1 - \hat{p})}{n}} \right).$$
+$$ = \left(\hat{p} -  z^{*} \sqrt{\frac{\hat{p}(1 - \hat{p})}{n}}, \hat{p} + z^{*} \sqrt{\frac{\hat{p}(1 - \hat{p})}{n}} \right).$$
 
 The new symbol $z^{*}$ is called a *critical z-score*. This is the z-score that encloses the confidence level you want. The quantity $z^{*} SE$ is the new margin of error.
 
 For example, suppose we wanted a 90% confidence interval. What is the corresponding critical z-score? Well, the middle 90% of a distribution leaves 5% in each tail. Therefore, we need to use `qdist` with the 5th and 95th percentiles.
 
 ```{r}
-qdist("norm", p = c(0.05, 0.95))
+qdist("norm", p = c(0.05, 0.95),  invisible = TRUE)
+```
+
+
+```{r}
+qdist("norm", p = c(0.05, 0.95),  plot = FALSE)
 ```
 
 The critical z-score is the positive answer, so we could use `qdist` simply to report `r qdist("norm", p = 0.95)`. **Be careful!** The critical z-score for a 90% confidence interval requires `p = 0.95`. This is because the upper endpoint of a 90% interval is actually located at the 95th percentile.
@@ -130,14 +137,14 @@ The critical z-score is the positive answer, so we could use `qdist` simply to r
 
 Now do the same thing for a 99% confidence interval. In other words, calculate the critical z-score that encloses the middle 99% of the normal distribution.
 
+\answerbegin
 ```{r}
-## Add code here to calculate the exact number of standard errors 
-## from the mean that enclose the middle 99% of a normal distribution.
+# Add code here to calculate the exact number of standard errors 
+# from the mean that enclose the middle 99% of a normal distribution.
 ```
 
-\begin{answer}
 Please write up your answer here.
-\end{answer}
+\answerend
 
 *****
 
@@ -167,7 +174,7 @@ Okay, let's formally write down all the conditions that need to be checked:
 * 10%
     - The sample size must be less than 10% of the size of the population.
 * Success/failure
-    - The number of succeses and the number of failures **in our sample** must both exceed 10.
+    - The number of successes and the number of failures **in our sample** must both exceed 10.
 
 
 ## Using R to calculate confidence intervals
@@ -189,7 +196,7 @@ test_1 <- tidy(prop.test(212, n = 326))
 test_1
 ```
 
-For now, ignore everything but the two numbers of interest: the low and high endpoints of our confidence interval. Here is how we report this inline:
+For now, ignore everything but the two numbers of interest: the low and high endpoints of our confidence interval given in the `conf.low` and the `conf.high` columns. Here is how we report this inline:
 
 We are 95% confident that the true proportion of those who support the new initiative is captured in the interval (`r 100 * test_1$conf.low`%, `r 100 * test_1$conf.high`%).
 
@@ -229,11 +236,11 @@ test_3a
 
 ### Exercise
 
-Examine the output above and see if you can spot the problem.
+Examine the output above and see if you can spot the problem. (Hint: does 32 students out of 200 fit with the confidence interval produced above?)
 
-\begin{answer}
+\answerbegin
 Please write up your answer here.
-\end{answer}
+\answerend
 
 *****
 
@@ -261,9 +268,9 @@ test_3c
 
 Is a 90% confidence interval wider or narrower than a 95% confidence interval? Explain why this is so. (In other words, from your understanding of how confidence intervals work, explain why it makes sense that a 90% confidence interval is wider or narrower than a 95% confidence interval.)
 
-\begin{answer}
+\answerbegin
 Please write up your answer here.
-\end{answer}
+\answerend
 
 *****
 
@@ -272,13 +279,17 @@ Please write up your answer here.
 
 Calculating a confidence interval is a form of statistical inference. Typically, you will be asked to report a confidence interval after performing a hypothesis test. Whereas a hypothesis test gives you a "decision criterion" (using data to make a decision to reject the null or fail to reject the null), a confidence interval gives you an estimate of the "effect size" (a range of plausible values for the population parameter).
 
-As such, there is a section in the "Rubric for Inference" that shows the steps of calculating and reporting a confidence interval. They are easy to remember as the "three Cs": Conditions, Calculation, Conclusion.
+As such, there is a section in the "Rubric for Inference" that shows the steps of calculating and reporting a confidence interval. They are as follows:
 
-Here is a worked example.
+1. Check the relevant conditions to ensure that model assumptions are met.
+2. Calculate the confidence interval.
+3. State (but do not overstate) a contextually meaningful interpretation.
+
+Here is a worked example. Unless otherwise stated, we always use a 95% confidence level.
 
 Some of the students in the "High School and Beyond" survey attended vocational programs. What percentage of all high school seniors attend vocational programs?
 
-### Conditions
+### Check the relevant conditions to ensure that model assumptions are met.
 
 * Random
     - The sample is presumably a representative sample of high school seniors from the U.S. as the survey was conducted by the National Center of Education Statistics.
@@ -294,14 +305,14 @@ table(hsb2$prog)
 
 The number of "successes" (students in vocational programs) is 50, which is more than 10, and the number of "failures" (all other programs) is 150, also more than 10.
 
-### Calculation
+### Calculate the confidence interval.
 
 ```{r}
 program <- tidy(prop.test(hsb2$prog, success = "vocational"))
 program
 ```
 
-### Conclusion
+### State (but do not overstate) a contextually meaningful interpretation.
 
 We are 95% confident that the true proportion of U.S. high school seniors who attend a vocational program is captured in the interval (`r 100 * program$conf.low`%, `r 100 * program$conf.high`%).
 
@@ -310,42 +321,43 @@ We are 95% confident that the true proportion of U.S. high school seniors who at
 
 Use the `smoking` data set from the `openintro` package. What percentage of the population of the U.K. smokes tobacco? (The information you need is in the `smoke` variable.)
 
-### Conditions
+### Check the relevant conditions to ensure that model assumptions are met.
+
+\answerbegin
 
 * Random
-
-\begin{answer}
-Please write up your answer here.
-\end{answer}
+    - [Check condition here.]
 
 * 10%
-
-\begin{answer}
-Please write up your answer here.
-\end{answer}
-
+    - [Check condition here.]
+    
 * Success/failure
+    - [Check condition here.]
+    
+\answerend
 
-\begin{answer}
-Please write up your answer here.
-\end{answer}
+### Calculate the confidence interval.
 
-### Calculation
-
+\answerbegin
 ```{r}
-## Add code here to calculate the confidence interval.
+# Add code here to calculate the confidence interval.
 ```
+\answerend
 
-### Conclusion
+###  State (but do not overstate) a contextually meaningful interpretation.
 
-\begin{answer}
+\answerbegin
 Please write up your answer here.
-\end{answer}
+\answerend
+
+*****
 
 
 ## Interpreting confidence intervals
 
-Confidence intervals are notoriously difficult to interpret.^[Several studies have given surveys to statistics students, teachers, and researchers, and find that even these people often misinterpret confidence intervals. See, for example, this paper: http://www.ejwagenmakers.com/inpress/HoekstraEtAlPBR.pdf] Here are several wrong interpretations of a 95% confidence interval:
+Confidence intervals are notoriously difficult to interpret.^[Several studies have given surveys to statistics students, teachers, and researchers, and find that even these people often misinterpret confidence intervals. See, for example, this paper: http://www.ejwagenmakers.com/inpress/HoekstraEtAlPBR.pdf]
+
+Here are several *wrong* interpretations of a 95% confidence interval:
 
 * 95% of the data lies in the interval.
 
@@ -359,7 +371,7 @@ In order to simulate, though, we'll have to pretend temporarily that we know a t
 
 Okay, let's do it again. We get a new sample, a new $\hat{p}$, and, therefore, a new confidence interval. We can do this over and over again through the magic of simulation!
 
-Here's what this simulation looks like in R. One minor technical point: we will use the `mosaic` command `nflip` instead of `rflip` because its output is just a number (instead of all the extra stuff about heads and tails and all that). The following line of code looks complicated, but break it down from inside out. First, we use `nflip(50, prob = 0.64)` to flip a "weighted coin" 50 times as a proxy for surveying 50 voters about the candidate. The result of this (the number of successes) is then fed into the `prop.test` function that creates a confidence interval. Finally, `tidy` cleans up the output the same way we've seen all along in this assignment.
+Here's what this simulation looks like in R. One minor technical point: we will use the `mosaic` command `nflip` instead of `rflip` because its output is just a number (instead of all the extra stuff about heads and tails and all that). The following line of code looks complicated, but break it down from inside out. First, we use `nflip(50, prob = 0.64)` to flip a "weighted coin" 50 times as a proxy for surveying 50 voters about the candidate. The result of this (the number of successes) is then fed into the `prop.test` function that creates a confidence interval for a sample size of `n = 50`. Finally, `tidy` cleans up the output the same way we've seen all along in this assignment.
 
 
 ```{r}
@@ -375,11 +387,13 @@ head(confint_100)
 ```
 
 
-Each sample gives us a slightly different estimate, and therefore, a different confidence interval as well.
+Each sample gives us a slightly different estimate, and therefore, a different confidence interval as well. (Depending on your screen size and resolution, you may have to click the right-facing black arrow in the output above to scroll over to where the `conf.low` and `conf.high` are listed.)
 
 Let's visualize this in a graph. Don't worry about all the complex code here; just look at the pretty picture that follows.
 
 ```{r}
+# Don't worry about the syntax here.
+# You won't have to do this on your own.
 true_val <- 0.64
 confint_100 <- confint_100 %>%
     mutate(color = ifelse(conf.low <= true_val & true_val <= conf.high,
@@ -391,10 +405,11 @@ ggplot(confint_100, aes(x = estimate, y = .index,
     scale_color_manual(values = c("black", "red"), guide = FALSE) +
     geom_segment(aes(x = conf.low, xend = conf.high, yend = .index)) +
     geom_vline(xintercept = true_val, color = "blue") +
-    scale_alpha_identity()
+    scale_alpha_identity() +
+    labs(y = "Simulation", x = "Estimate")
 ```
 
-For each of the 100 simulated intervals, most of them (the black ones) do capture the true value of 0.64 (the blue vertical line). Occassionally they don't (the red ones). We expect 5 red intervals, but since randomness is involved, it won't necessarily be exactly 5. (Here there were only 3 bad intervals.)
+For each of the 100 simulated intervals, most of them (the black ones) do capture the true value of 0.64 (the blue vertical line). Occasionally they don't (the red ones). We expect 5 red intervals, but since randomness is involved, it won't necessarily be exactly 5. (Here there were only 3 bad intervals.)
 
 This is the key to interpreting confidence intervals. The "95%" in a 95% confidence interval means that if we were to collect many random samples, about 95% of them would contain the true population parameter and about 5% would not.
 
@@ -407,7 +422,7 @@ So let's revisit the erroneous statements from the beginning of this section and
     - No. There is 100% chance that the sample proportion lies in the interval. In fact, the sample proportion is always in the dead center of the interval. That's the way we compute the interval: we take $\hat{p}$ and add and subtract the margin of error.
 
 * ~~There is a 95% chance that the population parameter lies in the interval.~~
-    - This is wrong in a more subtle way. The problem here as that it takes our interval as being fixed and special, and then tries to declare that of all possible population parameters, we have a 95% chance of the true one landing in our interval. The logic is backwards. The population parameter is the fixed truth. It doesn't wander around and land in our interval sometimes and not at other times. It is our confidence interval that wanders; it is just one of many intervals we could have obtained from random sampling. When we say "We are 95% confident that...", we are just using a convenient shorthand for, "If we were to repeat the process of sampling and creating confidence intervals many times, about 95% of those times would produce an interval that happens to capture the actual population proportion." But we're lazy and we don't want to say that everytime.
+    - This is wrong in a more subtle way. The problem here as that it takes our interval as being fixed and special, and then tries to declare that of all possible population parameters, we have a 95% chance of the true one landing in our interval. The logic is backwards. The population parameter is the fixed truth. It doesn't wander around and land in our interval sometimes and not at other times. It is our confidence interval that wanders; it is just one of many intervals we could have obtained from random sampling. When we say, "We are 95% confident that...," we are just using a convenient shorthand for, "If we were to repeat the process of sampling and creating confidence intervals many times, about 95% of those times would produce an interval that happens to capture the actual population proportion." But we're lazy and we don't want to say that every time.
 
 
 ## Conclusion
