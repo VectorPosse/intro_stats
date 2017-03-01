@@ -276,6 +276,8 @@ cyl_test_tidy <- tidy(cyl_test)
 cyl_test_tidy$statistic
 ```
 
+The value of $\chi^{2}$ is `r cyl_test_tidy$statistic`.
+
 Commentary: The `chisq.test` command is a little unusual in that you first have to make a table, and then run the test on the table (not the vector of cylinder values.) The $\chi^{2}$ test statistic is, of course, the same value we computed manually by hand earlier.
 
 We've actually run the test twice, once without `tidy` and once with `tidy`. We'll use the `tidy` output when we can, but not everything we'll need to use below appears in the `tidy` output.
@@ -287,7 +289,7 @@ pdist("chisq", df = cyl_test_tidy$parameter, q = cyl_test_tidy$statistic,
       invisible = TRUE)
 ```
 
-Commentary: The `pdist` command is familiar, but since we are using a chi-square model and not a normal model, we use `"chisq"` and not `"norm"`. This also requires us to specify the number of degrees of freedom. (Without it, R does not know which chi-square distribution to use.) We could just type $df = 2$ here, but the degrees of freedom is stored in the output of the `chisq.test` command in the `parameter` variable.
+Commentary: The `pdist` command is familiar, but since we are using a chi-square model and not a normal model, we use `"chisq"` and not `"norm"`. This also requires us to specify the number of degrees of freedom. (Without it, R does not know which chi-square distribution to use.) We know there are 2 degrees of freedom, but since the result is stored in `cyl_test_tidy$parameter`, we might as well use that. It makes our code more portable than if we had manually typed `df = 2`. (The next time we need to run this test, we might not have two degrees of freedom anymore.)
 
 ### Calculate the P-value.
 

@@ -4,9 +4,12 @@ author: "Put your name here"
 date: "Put the date here"
 output: pdf_document
 ---
-<!-- Please don't mess with the next two lines! -->
-\newenvironment{answer}{\definecolor{shadecolor}{RGB}{225, 225, 255}\begin{shaded}}{\end{shaded}}
-<!-- Please don't mess with the previous two lines! -->
+<!-- Please don't mess with the next few lines! -->
+\def\hrulefill{\leavevmode\leaders\hrule height 2pt\hfill\kern 0pt}
+\newcommand{\answerbegin}{\par\textcolor{blue}{\hrulefill\quad ANSWER\quad\hrulefill\newline}}
+\newcommand{\answerend}{\par\textcolor{blue}{\hrulefill}\newline}
+`r options(scipen = 999)`
+<!-- Please don't mess with the previous few lines! -->
 
 
 ## Introduction
@@ -15,81 +18,81 @@ In this assignment we will learn how to run the chi-square test for independence
 
 A chi-square test for independence tests the relationship between two categorical variables. This is an extension of the test for two proportions, except now applied in situations where either the explanatory or response variables (or both) have three or more categories.
 
-When there are only two categories, one can still run a chi-square test and the results are nearly equivalent to the two-proportion test.
 
 ## Instructions
 
-Presumably, you have already created a new project and downloaded this file into it. Please knit the document and work back and forth between this R Markdown file and the PDF output as you work through this module.
+Presumably, you have already created a new project and downloaded this file into it. From the `Run` menu above, select `Run All` to run all existing code chunks.
 
-When you are finished with the assignment, knit to PDF one last time, proofread the PDF file **carefully**, export the PDF file to your computer, and then submit your assignment.
+When prompted to complete an exercise or demonstrate skills, you will see the following lines in the document:
+
+\answerbegin
+
+\answerend
+
+These lines demarcate the region of the R Markdown document in which you are to show your work.
 
 Sometimes you will be asked to add your own R code. That will appear in this document as a code chunk with a request for you to add your own code, like so:
 
 ```{r}
-## Add code here to [do some task]...
+# Add code here
 ```
 
-Be sure to remove the line `## Add code here to [do some task]...` when you have added your own code.
+Be sure to remove the line `# Add code here` when you have added your own code. You should run each new code chunk you create by clicking on the dark green arrow in the upper-right corner of the code chunk.
 
-Sometimes you will be asked to type up your thoughts. That will appear in the document as follows:
+Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
 
-\begin{answer}
-Please write up your answer here.
-\end{answer}
-
-Again, please be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. If you need to use some R code as well, you can use inline R code inside the block between `\begin{answer}` and `\end{answer}`, or if you need an R code chunk, please go outside the `answer` block and start a new code chunk.
+When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files plane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
 
 
 ## Load Packages
 
-We load the standard `mosaic` package. We also use the `gmodels` package for the `CrossTable` command, the `MASS` package for the `birthwt` data, and the `openintro` package for the `smoking` data.
+We load the standard `mosaic` package. We also use the `gmodels` package for the `CrossTable` command, the `MASS` package for the `birthwt` data, and the `openintro` package for the `smoking` data. The `broom` package will give us tidy output.
 
 ```{r, message = FALSE, warning = FALSE}
 library(gmodels)
 library(MASS)
 library(openintro)
+library(broom)
 library(mosaic)
 ```
 
 
 ## Research question
 
-Are mothers from certain races more or less likely to have low birth weight babies? In other words, are race and low birth weight associated?
+Are mothers from certain races more or less likely to have low birth weight babies? In other words, are low birth weight and race associated?
 
 
 ## Chi-square test for independence
 
-In a previous module, we learned about the chi-square goodness-of-fit test. With a single categorical variable, we summarized data in a frequency table. Each cell of the table had an observed count from the data which we compared to an expected count from the assumption of a null hypothesis. The chi-square statistic measured the discrepancy between observed and expected.
+In a previous module, we learned about the chi-square goodness-of-fit test. With a single categorical variable, we summarized data in a frequency table. Each cell of the table had an observed count from the data that we compared to an expected count from the assumption of a null hypothesis. The chi-square statistic measured the discrepancy between observed and expected.
 
 With two categorical variables, we use a contingency table instead of a frequency table. But the principle of the chi-square statistic is the same: each cell in the contingency table has an observed count and an expected count. This forms the basis of a chi-square test for independence.
 
 A test for independence has a simple null hypothesis: the two variables are independent. This makes it easy to compute expected counts. Here's how it works.
 
-After converting to factor variables, look at the contingency table for the relationship between `race` and `low` in the `birthwt` data from the `MASS` package. The new option in the `CrossTable` command is `expected = TRUE`:
-
-\newpage
+After converting to factor variables, look at the contingency table for the relationship between `low` and `race` in the `birthwt` data from the `MASS` package. The new option in the `CrossTable` command is `expected = TRUE`:
 
 ```{r}
+low <- factor(birthwt$low, levels = c(1, 0), labels = c("Yes",  "No"))
 race <- factor(birthwt$race, level = c(1, 2, 3),
                labels = c("White",  "Black",  "Other"))
-low <- factor(birthwt$low, levels = c(1, 0), labels = c("Yes",  "No"))
-race_low <- data.frame(race, low)
-CrossTable(race_low$race, race_low$low,
-           prop.r = TRUE, prop.c = FALSE, prop.t = FALSE, prop.chisq = FALSE,
+low_race <- data.frame(low, race)
+CrossTable(low_race$low, low_race$race,
+           prop.r = FALSE, prop.c = TRUE, prop.t = FALSE, prop.chisq = FALSE,
            expected = TRUE)
 ```
 
-To see how these expected counts are computed, look at the marginal distribution at the bottom. If race is ignored, there were 59 low birth weight babies and 130 normal weight babies out of 189 total babies. 59 of 189 is `r 59/189` or `r 100 * 59/189`%, and 130 of 189 is `r 130/189` or `r 100 * 130/189`%.
+To see how these expected counts are computed, look at the marginal distribution along the right. If race is ignored, there were 59 low birth weight babies and 130 normal weight babies out of 189 total babies. 59 of 189 is `r 59/189` or `r 100 * 59/189`%, and 130 of 189 is `r 130/189` or `r 100 * 130/189`%.
 
-Now, if race and low birth weight are truly independent, it shouldn't matter if the mothers were white, black, or some other race. In other words, of 96 white mothers, we should still expect `r 100 * 59/189`% of them to have low birth weight babies and `r 100 * 130/189`% of them to have normal weight babies. `r 100 * 59/189`% of 96 is `r 59/189 * 96`. Look in the contingency table above and note that this is the expected cell count for white women with low birth weight babies. Also, `r 100 * 130/189`% of 96 is `r 130/189 * 96`. Again, this is listed in the contingency table in the cell for white mothers with normal weight babies. The same analysis can be done for the next two rows as well.
+Now, if low birth weight and race are truly independent, it shouldn't matter if the mothers were white, black, or some other race. In other words, of 96 white mothers, we should still expect `r 100 * 59/189`% of them to have low birth weight babies and `r 100 * 130/189`% of them to have normal weight babies. `r 100 * 59/189`% of 96 is `r 59/189 * 96`. Look in the contingency table above and note that this is the expected cell count for low birth weight babies among white women. Also, `r 100 * 130/189`% of 96 is `r 130/189 * 96`. Again, this is listed in the contingency table in the cell for normal weight babies among white mothers. The same analysis can be done for the next two columns as well.
 
 Unlike the goodness-of-fit test that requires one to specify expected counts for each cell, the test for independence uses only the data to determine the expected counts. For any given cell, if  $C$ is the column total, $R$ is the row total, and $n$ is the grand total (the sample size), the expected count is simply
 
-$$E = \frac{CR}{n}.$$
+$$E = \frac{C \times R}{n}.$$
 
-This is equivalent to the explanation in the previous paragraph. Using white mothers with low birth weight babies as an example, $C/n$ is $59/189$ which is `r 59/189`. Then we multiply this by the row total $R = 96$ to get
+This is equivalent to the explanation in the previous paragraph. Using low birth weight babies among white mothers as an example, $C/n$ is $59/189$ which is `r 59/189`. Then we multiply this by the row total $R = 96$ to get
 
-$$ \left(\frac{C}{n}\right) R = \frac{CR}{n} = \frac{59*96}{189} =  29.96825.$$
+$$ \left(\frac{C}{n}\right) R = \frac{C \times R}{n} = \frac{59 \times 96}{189} =  29.96825.$$
 
 Everything else works almost the same as it did for a chi-square goodness-of-fit test. We still compute $\chi^{2}$ by adding up deviations across all cells:
 
@@ -97,21 +100,19 @@ $$\chi^{2} = \sum \frac{(O - E)^{2}}{E}.$$
 
 Even under the assumption of the null, there will still be some sampling variability. Like any hypothesis test, our job is to determine whether the deviations we see are possible due to pure chance alone. The random values of $\chi^{2}$ that result from sampling variability will follow a chi-square model. But how many degrees of freedom are there? This is a little different from the goodness-of-fit test. Instead of the number of cells minus one, we use the following formula:
 
-$$df = (\#rows - 1)(\#columns - 1).$$
+$$df = (\#columns - 1)(\#rows - 1).$$
 
-In our example we have 3 rows ("White", "Black", "Other") and 2 columns ("Yes", "No"); therefore,
+In our example we have 2 columns ("Yes", "No") and 3 rows ("White", "Black", "Other"); therefore,
 
-$$df = (3 - 1)(2 - 1) = 2*1 = 2$$
+$$df = (2 - 1)(3 - 1) = 1 \times 2 = 2$$
 
 and we have 2 degrees of freedom (even though there are 6 cells).
 
 We will run the chi-square test for independence with the `chisq.test` command like before, but note that all the information you need is actually in the contingency table above. Let's look at the table one more time, and we'll turn on one more argument (setting `prop.chisq = TRUE`):
 
-\newpage
-
 ```{r}
-CrossTable(race_low$race, race_low$low,
-           prop.r = TRUE, prop.c = FALSE, prop.t = FALSE, prop.chisq = TRUE,
+CrossTable(low_race$low, low_race$race,
+           prop.r = FALSE, prop.c = TRUE, prop.t = FALSE, prop.chisq = TRUE,
            expected = TRUE)
 ```
 
@@ -135,19 +136,17 @@ str(birthwt)
 ```{r}
 # Although we've already done this above, 
 # we include it here again for completeness.
+low <- factor(birthwt$low, levels = c(1, 0), labels = c("Yes",  "No"))
 race <- factor(birthwt$race, level = c(1, 2, 3),
                labels = c("White",  "Black",  "Other"))
-low <- factor(birthwt$low, levels = c(1, 0), labels = c("Yes",  "No"))
-race_low <- data.frame(race, low)
+low_race <- data.frame(low, race)
 ```
-
-\newpage
 
 ### Make tables or plots to explore the data visually.
 
 ```{r}
-CrossTable(race_low$race, race_low$low,
-           prop.r = TRUE, prop.c = FALSE, prop.t = FALSE, prop.chisq = TRUE,
+CrossTable(low_race$low, low_race$race,
+           prop.r = FALSE, prop.c = TRUE, prop.t = FALSE, prop.chisq = TRUE,
            expected = TRUE)
 ```
 
@@ -158,16 +157,15 @@ CrossTable(race_low$race, race_low$low,
 
 The sample consists of 189 mothers who gave birth at the Baystate Medical Center in Springfield, Massachusetts in 1986. The population is presumably all mothers, although it's safest to conclude only about mothers who gave birth at this hospital.
 
-
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
-$H_0$: Race and low birth weight are independent.
+$H_{0}$: Low birth weight and race are independent.
 
-$H_A$: Race and low birth weight are associated.
+$H_{A}$: Low birth weight and race are associated.
 
-### Express the null and alternative hypotheses in symbols.
+### Express the null and alternative hypotheses in symbols (when possible).
 
-For a chi-square test for independence, this section is not applicable. With multiple categories in the explanatory and response variables, there are no specific parameters of interest to express symbolically.
+For a chi-square test for independence, this section is not applicable. With multiple categories in the response and explanatory variables, there are no specific parameters of interest to express symbolically.
 
 
 ## Model
@@ -193,29 +191,45 @@ We will use a chi-square model with 2 degrees of freedom.
 ### Compute the test statistic.
 
 ```{r}
-race_low_test <- chisq.test(race_low$race, race_low$low)
-race_low_test$statistic
+low_race_test <- chisq.test(low_race$low, low_race$race)
+low_race_test_tidy <- tidy(low_race_test)
+low_race_test$statistic
 ```
 
+The value of $\chi^{2}$ is `r low_race_test$statistic`.
+
 Commentary: This just reproduces the value of $\chi^{2}$ we already saw in the summary below the contingency table.
+
+Also note that the `chisq.test` function is not supported by the `mosaic` package, which means that we can't use the "tilde" notation as we've done in the past. In other words, the command
+
+`low_race_test <- chisq.test(low ~ race, data = low_race)`
+
+will not work.
 
 ### Plot the null distribution.
 
 ```{r}
-pdist("chisq", df = race_low_test$parameter, q = race_low_test$statistic)
+pdist("chisq", df = low_race_test_tidy$parameter,
+      q = low_race_test_tidy$statistic,
+      invisible = TRUE)
 ```
 
-Commentary: We know there are 2 degrees of freedom, but since the result is stored in `race_low_test$parameter`, we might as well use that. It makes our code more portable than if we had manually typed `df = 2`. (The next time we need to run this test, we might not have two degrees of freedom anymore.)
+Commentary: We know there are 2 degrees of freedom, but since the result is stored in `low_race_test_tidy$parameter`, we might as well use that. It makes our code more portable than if we had manually typed `df = 2`. (The next time we need to run this test, we might not have two degrees of freedom anymore.)
 
 ### Calculate the P-value.
 
 ```{r}
-1 - pdist("chisq", df = race_low_test$parameter, q = race_low_test$statistic,
+1 - pdist("chisq", df = low_race_test_tidy$parameter,
+          q = low_race_test_tidy$statistic,
           plot = FALSE)
-race_low_test$p.value
+```
+
+```{r}
+low_race_test_tidy$p.value
 ```
 
 Commentary: Remember that if we get the P-value from the `pdist` command, we need to subtract from 1 because we are shading the right tail of the distribution.
+
 
 ## Conclusion
 
@@ -225,23 +239,24 @@ We fail to reject the null hypothesis.
 
 ### State (but do not overstate) a contextually meaningful conclusion.
 
-There is insufficient evidence that race and low birth weight are associated.
+There is insufficient evidence that low birth weight and race are associated.
 
 ### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
-It's possible that we have made a Type II error. It may be that race and low birth weight are associated, but our sample has not given enough evidence of such an association.
+It's possible that we have made a Type II error. It may be that low birth weight and race are associated, but our sample has not given enough evidence of such an association.
 
 
 ## Confidence interval
 
 There are no parameters of interest in a chi-square test, so there is no confidence interval to report.
 
+
 ## Post hoc analysis
 
-Had we rejected the null, we would look at the residuals to determine which cells were contributing the most to the chi-square statistic. But since we didn't, there's not much to say about residuals.
+Had we rejected the null, we would look at the residuals to determine which cells were contributing the most to the chi-square statistic. But since we didn't, there's not much to say about residuals. The residuals are not stored as part of the `tidy` output, so we'll have to grab them from the original `low_race_test` object:
 
 ```{r}
-race_low_test$residuals
+low_race_test$residuals
 ```
 
 If the overall test is not statistically significant, it does not make much sense to try to interpret any of these residuals. They are all too small to distinguish from chance variability.
@@ -249,4 +264,139 @@ If the overall test is not statistically significant, it does not make much sens
 
 ## Your turn
 
-Use the `smoking` data set from the `openintro` package. Run a chi-square test for independence to determine if smoking status is associated with marital status. If you reject the null, run a post hoc analysis and comment on the cells that seem to be contributing the most to the discrepancy between observed and expected counts.
+Use the `smoking` data set from the `openintro` package. Run a chi-square test for independence to determine if smoking status is associated with marital status.
+
+The rubric outline is reproduced below. You may refer to the worked example above and modify it accordingly. Remember to strip out all the commentary. That is just exposition for your benefit in understanding the steps, but is not meant to form part of the formal inference process.
+
+Another word of warning: the copy/paste process is not a substitute for your brain. You will often need to modify more than just the names of the data frames and variables to adapt the worked examples to your own work. Do not blindly copy and paste code without understanding what it does. And you should **never** copy and paste text. All the sentences and paragraphs you write are expressions of your own analysis. They must reflect your own understanding of the inferential process.
+
+If you reject the null, run a post hoc analysis and comment on the cells that seem to be contributing the most to the discrepancy between observed and expected counts.
+
+
+## Exploratory data analysis
+
+### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+
+\answerbegin
+```{r}
+# Add code here to understand the data.
+```
+\answerend
+
+### Prepare the data for analysis. [Not always necessary.]
+
+\answerbegin
+```{r}
+# Add code here to prepare the data for analysis.
+```
+\answerend
+
+### Make tables or plots to explore the data visually.
+
+\answerbegin
+```{r}
+# Add code here to make tables or plots.
+```
+\answerend
+
+
+## Hypotheses
+
+### Identify the sample (or samples) and a reasonable population (or populations) of interest.
+
+\answerbegin
+Please write up your answer here.
+\answerend
+
+### Express the null and alternative hypotheses as contextually meaningful full sentences.
+
+\answerbegin
+$H_{0}$: Null hypothesis goes here.
+
+$H_{A}$: Alternative hypothesis goes here.
+\answerend
+
+### Express the null and alternative hypotheses in symbols (when possible).
+
+\answerbegin
+$H_{0}: math$
+
+$H_{A}: math$
+\answerend
+
+
+## Model
+
+### Identify the sampling distribution model.
+
+\answerbegin
+Please write up your answer here.
+\answerend
+
+### Check the relevant conditions to ensure that model assumptions are met.
+
+\answerbegin
+Please write up your answer here. (Some conditions may require R code as well.)
+\answerend
+
+
+## Mechanics
+
+### Compute the test statistic.
+
+\answerbegin
+```{r}
+# Add code here to compute the test statistic.
+```
+\answerend
+
+### Plot the null distribution.
+
+\answerbegin
+```{r}
+# Add code here to plot the null distribution.
+```
+\answerend
+
+### Calculate the P-value.
+
+\answerbegin
+```{r}
+# Add code here to calculate the P-value.
+```
+\answerend
+
+
+## Conclusion
+
+### State the statistical conclusion.
+
+\answerbegin
+Please write up your answer here.
+\answerend
+
+### State (but do not overstate) a contextually meaningful conclusion.
+
+\answerbegin
+Please write up your answer here.
+\answerend
+
+### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+
+\answerbegin
+Please write up your answer here.
+\answerend
+
+
+## Post-hoc analysis (if null was rejected)
+
+You only need to complete the following section if the null was rejected above.
+
+\answerbegin
+```{r}
+# Add code here to calculate the residuals
+```
+
+Please write up your answer here.
+\answerend
+
