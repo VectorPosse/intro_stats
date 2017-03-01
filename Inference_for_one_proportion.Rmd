@@ -176,20 +176,26 @@ That's also why the numbers don't have to be whole numbers. If the null states t
 ### Compute the test statistic.
 
 ```{r}
-surv_test <- tidy(prop.test(heartTr_2$survived, success = "alive"))
+surv_test <- tidy(binom.test(heartTr_2$survived, p = 0.5, success = "alive"))
+surv_test
+```
+
+```{r}
 z <- (surv_test$estimate -  0.5)/sqrt(0.5 * (1 - 0.5) / 69)
 z
 ```
 
 The z-score is `r z`.
 
-Commentary: We run the `prop.test` command to give us almost everything we need. As seen before, the `tidy` command from the `broom` package makes everything neat and gives us easy access to the various pieces of the output. What this command does not give us is a z-score. So we calculate it directly using the `estimate` ($\hat{p}$) and the mean and standard error of the null distribution.
+Commentary: We run the `binom.test` command to give us almost everything we need. The argument `p = 0.5` is the null value, and this might be different for a different research question. Also note that the `binom.test` command allows us to specify the "success" condition (here, "alive").
+
+As seen before, the `tidy` command from the `broom` package makes everything neat and gives us easy access to the various pieces of the output. What this command does not give us is a z-score. So we calculate it directly using the `estimate` ($\hat{p}$) and the mean and standard error of the null distribution.
 
 **Remember that are working under the assumption of the null hypothesis.** This means that we use $p = 0.5$ everywhere in the formula for the standard error. In other words,
 
 $$z = \frac{(\hat{p} - p)}{\sqrt{\frac{p (1 - p)}{n}}} = \frac{(0.348 - 0.5)}{\sqrt{\frac{0.5 (1 - 0.5)}{69}}} =  -2.53.$$
 
-Either $\hat{p}$ or $z$ could be considered the test statistic. If we use $\hat{p}$ as the test statistic, then we're considering the null model to be
+Either $\hat{p}$ or $z$ could be considered the test statistic.^[And there's even a third possibility: the tidy output seems to be considering the raw number of successes (24) as the test statistic.] If we use $\hat{p}$ as the test statistic, then we're considering the null model to be
 
 $$N\left(0.5, \sqrt{\frac{0.5 (1 - 0.5)}{69}}\right).$$
 
@@ -231,21 +237,21 @@ pdist("norm", q = z, plot = FALSE)
 
 Commentary: Since we are running a one-sided test using the left tail (recall the alternative hypothesis was $p < 0.5$), the result of the `pdist` command is already the correct P-value. We don't need the plot again, so we can put `plot = FALSE` into the command.
 
-The P-value can also be computed as part of the `prop.test` function:
+The P-value can also be computed as part of the `binom.test` function:
 
 ```{r}
 surv_test$p.value
 ```
 
-However, under the hood, the `prop.test` command is not quite using the same method we're using. Therefore, the P-value is different. Also, the `prop.test` function assumes by default that you are performing a two-sided test. Therefore, if we want a one-sided p-value, we have to divide this answer by 2:
+The `binom.test` function assumes by default that you are performing a two-sided test. Therefore, if we want a one-sided P-value, we have to divide this answer by 2:
 
 ```{r}
 surv_test$p.value / 2
 ```
 
-Even this value isn't quite the same as the one generated from our normal model. Nevertheless, the two methods are close, so you should come to the same conclusion (i.e., reject the null or fail to reject the null).
+You might notice that this is a little different from the P-value we computed directly from the normal model. Under the hood, the `binom.test` command is not quite using the same method we're using. Therefore, the P-value is different from the one generated from our normal model. Nevertheless, the two methods are close, so you should come to the same conclusion (i.e., reject the null or fail to reject the null).
 
-If you look more deeply into the `prop.test` function, you might discover that there is a way to get it to run a one-sided test. However, doing so messes up the confidence interval that we'll need later in the rubric. Most of the time, it's a moot point because we will often want to run two-sided test anyway.
+If you look more deeply into the `binom.test` function, you might discover that there is a way to get it to run a one-sided test. However, doing so messes up the confidence interval that we'll need later in the rubric. Most of the time, it's a moot point because we will often want to run two-sided test anyway.
 
 
 ## Conclusion
@@ -292,7 +298,7 @@ surv_test$conf.low
 surv_test$conf.high
 ```
 
-Commentary: there's not much to do here as the confidence interval was already computed as a byproduct of the `prop.test` command.
+Commentary: there's not much to do here as the confidence interval was already computed as a byproduct of the `binom.test` command.
 
 ### State (but do not overstate) a contextually meaningful interpretation.
 
@@ -309,10 +315,10 @@ In the previous example, we had access to the actual data frame. In some situati
 
 ### Method 1
 
-You may just have a summary of the total number of successes and failures. In our heart transplant example, we had 24 patients who survived and 45 who died. If that's all we know, we can run the `prop.test` command as follows:
+You may just have a summary of the total number of successes and failures. In our heart transplant example, we had 24 patients who survived and 45 who died. If that's all we know, we can run the `binom.test` command as follows:
 
 ```{r}
-surv_test_count <- tidy(prop.test(24, n = 69))
+surv_test_count <- tidy(binom.test(24, n = 69))
 surv_test_count
 ```
 
@@ -320,10 +326,10 @@ Once this is done (in the step "Compute the test statistic"), all remaining step
 
 ### Method 2
 
-If you are given the percentages of successes and/or failures in your data, you'll have to convert them to whole number totals. You might be told that of 69 patients who received a heart transplant, only 34.8% survived. In that case, we can run the `prop.test` command as follows:
+If you are given the percentages of successes and/or failures in your data, you'll have to convert them to whole number totals. You might be told that of 69 patients who received a heart transplant, only 34.8% survived. In that case, we can run the `binom.test` command as follows:
 
 ```{r}
-surv_test_prop <- tidy(prop.test(round(69*0.348), n = 69))
+surv_test_prop <- tidy(binom.test(round(69*0.348), n = 69))
 surv_test_prop
 ```
 
