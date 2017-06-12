@@ -39,7 +39,7 @@ Be sure to remove the line `# Add code here` when you have added your own code. 
 
 Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
 
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files plane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
+When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
 
 
 ## Load Packages
@@ -81,7 +81,7 @@ Generally, the default binning for `ggplot` histograms is not so great. In fact,
 
 ```{r}
 ggplot(birthwt, aes(x = lwt)) +
-    geom_histogram(binwidth = 10,  boundary = 100)
+    geom_histogram(binwidth = 10, boundary = 100)
 ```
 
 ### Exercise
@@ -162,7 +162,7 @@ Please write up your answer here.
 Now we'll create a scatterplot of the weight of the mother at her last menstrual period and the birth weight of the baby. Since we are now plotting two variables, we have two aesthetics, one on the y-axis (the response variable) and one on the x-axis (the explanatory variable). Since scatterplots use points to plot each data value, the correct layer to add is `geom_point()`.
 
 ```{r}
-ggplot(birthwt, aes(y = bwt,  x = lwt)) +
+ggplot(birthwt, aes(y = bwt, x = lwt)) +
     geom_point()
 ```
 
@@ -205,20 +205,33 @@ Let's go back to the first histogram from this module.
 
 ```{r}
 ggplot(birthwt, aes(x = lwt)) +
-    geom_histogram(binwidth = 10,  boundary = 100)
+    geom_histogram(binwidth = 10, boundary = 100)
 ```
 
 Note that the variable names of this data set are not terribly informative. In other words, if you were using this graph in a publication or presentation for an audience, they would have no idea what `lwt` was. Also note that this graph could use a title. We can do all this with `labs` (for labels). Observe:
 
 ```{r}
 ggplot(birthwt, aes(x = lwt)) +
-    geom_histogram(binwidth = 10,  boundary = 100) +
+    geom_histogram(binwidth = 10, boundary = 100) +
     labs(title = "Distribution of mother's weight at last menstual period",
          x = "Mother's weight (in pounds)")
 ```
 
 You can also see that we took the opportunity to mention the units of measurement (pounds) for our variable in the x-axis label. This is good practice.
 
+A quick note about formatting in R code chunks. Notice that I put different parts of the last `ggplot` command on their own separate lines. The command would still work if I did this:
+
+```{r}
+ggplot(birthwt, aes(x = lwt)) + geom_histogram(binwidth = 10, boundary = 100) + labs(title = "Distribution of mother's weight at last menstual period", x = "Mother's weight (in pounds)")
+```
+
+In the R Markdown document, the code chunk "wraps" to the next line so it's all visible. But now knit the document and look at the PDF version of the code chunk above.
+
+Do you see how it runs off the right edge of the page?
+
+Now imagine your PDF output is being graded and the grader can only see the first few lines of code before it runs off the edge of the paper. Do you think you will earn full points for code that the grader can't even see?
+
+The moral of the story is this: use line breaks judiciously to format your code. If it wraps to the next line in RStudio, there's a good chance it will run off the page in the PDF.
 
 ### Exercise
 
