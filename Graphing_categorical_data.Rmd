@@ -39,7 +39,7 @@ Be sure to remove the line `# Add code here` when you have added your own code. 
 
 Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
 
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files plane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
+When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
 
 
 ## Load Packages
@@ -47,14 +47,18 @@ When you are finished with the assignment, knit to PDF and proofread the PDF fil
 We load the `mosaic` package as well as the `MASS` package for working with the birth weight data. (Note that the `ggplot2` package we will use for graphing is automatically loaded alongside the `mosaic` package.)
 
 ```{r, warning = FALSE, message=FALSE}
-library(mosaic)
 library(MASS)
+library(mosaic)
 ```
 
 
 ## Working with factor variables
 
-R uses the term "factor variable" to refer to a categorical variable. Your data set may already come with its variables coded correctly as factor variables, but often they are not. For example, our birth weight data `birthwt` has several categorical variables, but they are all coded numerically.
+R uses the term "factor variable" to refer to a categorical variable. Your data set may already come with its variables coded correctly as factor variables, but often they are not. For example, our birth weight data `birthwt` has several categorical variables, but they are all coded numerically. (More specifically, they are all coded as integers.) Observe:
+
+```{r}
+str(birthwt)
+```
 
 The code below is somewhat involved and technical. After the code chunk, I'll explain what each piece does.
 
@@ -65,7 +69,7 @@ race <- factor(birthwt$race,
 race_df <- data.frame(race)
 ```
 
-First of all, because `birthwt` is a dataset defined in the `MASS` package, we don't want to modify it. Therefore, if we want to change something, we have to assign a new name to the resulting operation. That is why we have `race <-` at the beginning of the code line. The symbol `<-` is taking the result of the command on the right (in this case, the `factor` command) and giving it a new name.
+First of all, because `birthwt` is a dataset defined in the `MASS` package, we don't want to modify it. Therefore, if we want to change something, we have to assign a new name to the result of any operation. That is why we have `race <-` at the beginning of the code line. The symbol `<-` is taking the result of the command on the right (in this case, the `factor` command) and giving it a new name.
 
 The `factor` command converts `birthwt$race` into a factor variable. The `levels` of the variable are the pre-existing numerical values.  The `labels` are the names we actually want to appear in our output.
 
@@ -76,13 +80,14 @@ The last line takes the single vector `race` and turns it into a data frame that
 ```{r}
 str(race_df)
 ```
+
 ```{r}
 head(race_df)
 ```
 
 You can see from the output that this created a data frame called `race_df` containing a single factor variable called `race` sitting inside it. The values of race are no longer numbers 1, 2, or 3. Instead, those numbers have been replaced by human-readable words describing the three racial categories.
 
-If a variable is already coded as a factor variable in its data frame, it is important **not** to use the `factor` command on it. This will mess up the data and make all future attempts at analysis break.
+If a variable is already coded as a factor variable in its data frame, it is important **not** to use the `factor` command on it. This will mess up the data and make all future attempts at analysis break. It is, therefore, extremely important that you check the original data frame first using `str`. **If the variable of interest is already coded as a factor variable, you cannot use the `factor` command.**
 
 
 ## ggplot
@@ -107,11 +112,11 @@ ggplot(race_df, aes(x = race)) +
 
 Let's walk through this syntax step by step. The first argument of the `ggplot` command is the name of the data frame, in this case, `race_df`. Next we define the aesthetics using `aes` and parentheses. Inside the parentheses, we assign any variables we want to plot to aesthetics of the graph. For this analysis, we are only interested in the variable `race` and for a bar chart, the categorical variable typically goes on the x-axis. That's why it says `x = race` inside the `aes` argument. Next, `ggplot` needs to know what kind of graph we want. Graph types are called "geoms" in the `ggplot` world, and `geom_bar()` tells `ggplot` to add a bar chart layer. (Adding a layer is accomplished by literally typing a plus sign.)
 
-This can be modified somewhat to give percentages (relative frequencies) on the y-axis instead of counts. Unfortunately, the `ggplot` syntax is not very transparent here. My recommendation is to copy and paste the code below if you need to make a relative frequency bar chart in the future, making the necessary changes to the data frame and variable, of course.
+This can be modified somewhat to give proportions (relative frequencies) on the y-axis instead of counts. Unfortunately, the `ggplot` syntax is not very transparent here. My recommendation is to copy and paste the code below if you need to make a relative frequency bar chart in the future, making the necessary changes to the data frame and variable, of course.
 
 ```{r}
-ggplot(race_df, aes(x = race)) +
-    geom_bar(aes(y = (..count..)/sum(..count..)))
+ggplot(race_df, aes(x = race, y = ..prop.., group = 1)) +
+    geom_bar()
 ```
 
 These bar charts are the graphical analogues of a frequency table and a relative frequency table, respectively. (See the module `Tables.Rmd`.)
@@ -146,7 +151,7 @@ smoke_race <- data.frame(smoke, race)
 
 The `smoke` variable is created in exactly the same way as the `race` variable was earlier. Now, though, because we want to analyze both `smoke` and `race` together, we create a data frame called `smoke_race` with both variables.
 
-(When we work with two variables, typically we think of one variable as explanatory, and the other as response. For reasons that will become more clear later on in the course, we will adopt the convention of always listing the response variable first, followed by the explanatory variable. So we use `smoke_race` instead of `race_smoke`.)
+When we work with two variables, typically we think of one variable as response and the other as explanatory. For reasons that will become more clear later, we will adopt the convention of always listing the response variable first, followed by the explanatory variable. So we use `smoke_race` instead of `race_smoke`.
 
 Let's make sure the above commands did what we intended.
 
@@ -177,7 +182,7 @@ ggplot(smoke_race, aes(fill = smoke, x = race)) +
     geom_bar(position = "dodge")
 ```
 
-This is somewhat different from other `ggplot` examples you've seen before, so let's take a moment to go through the syntax. The first argument is the data frame `smoke_race`; no mystery there. The second aesthetic is `x = race`, and that also makes a lot of sense. As `race` is our explanatory variable---we're using race to group the women, and then within each racial group, we're interested in how many women smoked during pregnancy---`race` goes on the x-axis. However, `smoke` does not go on the y-axis! (This is a very common mistake for novices.) The y-axis of a bar chart is always a count or a percentage,  so no variable should ever go on the y-axis of a bar chart. In that case, how does `smoke` enter the picture? Through the use of color! The aesthetic `fill = smoke` says to use the `smoke` variable to shade or "fill" the bars with different colors. You'll also notice that `ggplot` makes a legend automatically with the colors so you can see which color corresponds to which value (in this case, "Yes" or "No").
+This is somewhat different from other `ggplot` examples you've seen before, so let's take a moment to go through the syntax. The first argument is the data frame `smoke_race`; no mystery there. The second aesthetic is `x = race`, and that also makes a lot of sense. As `race` is our explanatory variable---we're using race to group the women, and then within each racial group, we're interested in how many women smoked during pregnancy---`race` goes on the x-axis. However, `smoke` does not go on the y-axis! (This is a very common mistake for novices.) The y-axis of a bar chart is always a count or a percentage, so no variable should ever go on the y-axis of a bar chart. In that case, how does `smoke` enter the picture? Through the use of color! The aesthetic `fill = smoke` says to use the `smoke` variable to shade or "fill" the bars with different colors. You'll also notice that `ggplot` makes a legend automatically with the colors so you can see which color corresponds to which value (in this case, "Yes" or "No").
 
 Another unusual feature is the argument `position = "dodge"` in the `geom_bar` layer. Let's see what happens if we remove it.
 
@@ -190,14 +195,14 @@ We get a stacked bar chart! This is another popular way of displaying two catego
 
 So let's agree to use side-by-side bar charts. There is still one aspect of the side-by-side bar chart that is misleading, though. For example, there are 10 black women who smoked during pregnancy and 12 women from the "Other" category who smoked during pregnancy. So are women from the "Other" category more likely to smoke during pregnancy? No! The 10 black women are only out of 26 total black women, whereas the 12 other women are out of a total of 67. That's really 38.5% of black women compared to 17.9% other women.
 
-To fix this problem, a better option here would be to use relative frequencies (i.e., percentages within each group) instead of counts on the y-axis. (This is analogous to using column percentages in a contingency table; see the module `Tables.Rmd`.) Unfortunately, it is very, very difficult to do this with `ggplot`. A compromise is available: by using `position = fill`, you can create a stacked bar chart that scales every group to 100%. Making comparisons across groups can still be hard, as explained above for any kind of stacked bar chart, but it works okay if there are only two categories in the response variable (as is the case with `smoke` here).
+To fix this problem, a better option here would be to use relative frequencies (i.e., percentages within each group) instead of counts on the y-axis. (This is analogous to using percentages in a contingency table; see the module `Tables.Rmd`.) Unfortunately, it is rather difficult to do this with `ggplot`. A compromise is available: by using `position = fill`, you can create a stacked bar chart that scales every group to 100%. Making comparisons across groups can still be hard, as explained above for any kind of stacked bar chart, but it works okay if there are only two categories in the response variable (as is the case with `smoke` here).
 
 ```{r}
 ggplot(smoke_race, aes(fill = smoke, x = race)) +
     geom_bar(position = "fill")
 ```
 
-This graph does correctly show that a larger percentage of black women smoke during pregnancy when compared to women from the "Other" category. (And white women smoked the most of all; the majority of white women smoked during pregnancy!)
+This graph does correctly show that a larger proportion of black women smoke during pregnancy when compared to women from the "Other" category. (And white women smoked the most of all; the majority of white women smoked during pregnancy!)
 
 ### Your turn
 
@@ -224,15 +229,15 @@ The great thing about `ggplot2` graphics is that they are already quite pretty. 
 Let's go back to the first relative frequency bar chart from this module.
 
 ```{r}
-ggplot(race_df, aes(x = race)) +
-    geom_bar(aes(y = (..count..)/sum(..count..)))
+ggplot(race_df, aes(x = race, y = ..prop.., group = 1)) +
+    geom_bar()
 ```
 
-The variable name `race` is already informative, but the y-axis is labeled with the ugly expression defined inside the `geom_bar` layer. Also note that this graph could use a title. We can do all this with `labs` (for labels). Observe:
+The variable name `race` is already informative, but the y-axis is labeled with "prop". Also note that this graph could use a title. We can do all this with `labs` (for labels). Observe:
 
 ```{r}
-ggplot(race_df, aes(x = race)) +
-    geom_bar(aes(y = (..count..)/sum(..count..))) +
+ggplot(race_df, aes(x = race, y = ..prop.., group = 1)) +
+    geom_bar() +
     labs(title = "Distribution of race",
          y = "Proportion",
          x = "Race")
