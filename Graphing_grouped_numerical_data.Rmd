@@ -39,7 +39,7 @@ Be sure to remove the line `# Add code here` when you have added your own code. 
 
 Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
 
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files plane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
+When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
 
 
 ## Load Packages
@@ -47,14 +47,18 @@ When you are finished with the assignment, knit to PDF and proofread the PDF fil
 We load the `mosaic` package as well as the `MASS` package for working with data on risk factors associated with low birth weight. (Note that the `ggplot2` package we will use for graphing is automatically loaded alongside the `mosaic` package.)
 
 ```{r, warning = FALSE, message=FALSE}
-library(mosaic)
 library(MASS)
+library(mosaic)
 ```
 
 
 ## Working with factor variables
 
-R uses the term "factor variable" to refer to a categorical variable. Your data set may already come with its variables coded correctly as factor variables, but often they are not. For example, our birth weight data `birthwt` has several categorical variables, but they are all coded numerically.
+R uses the term "factor variable" to refer to a categorical variable. Your data set may already come with its variables coded correctly as factor variables, but often they are not. For example, our birth weight data `birthwt` has several categorical variables, but they are all coded numerically. (More specifically, they are all coded as integers.) Observe:
+
+```{r}
+str(birthwt)
+```
 
 The code below is somewhat involved and technical. After the code chunk, I'll explain what each piece does.
 
@@ -65,7 +69,7 @@ race <- factor(birthwt$race,
 race_df <- data.frame(race)
 ```
 
-First of all, because `birthwt` is a dataset defined in the `MASS` package, we don't want to modify it. Therefore, if we want to change something, we have to assign a new name to the resulting operation. That is why we have `race <-` at the beginning of the code line. The symbol `<-` is taking the result of the command on the right (in this case, the `factor` command) and giving it a new name.
+First of all, because `birthwt` is a dataset defined in the `MASS` package, we don't want to modify it. Therefore, if we want to change something, we have to assign a new name to the result of any operation. That is why we have `race <-` at the beginning of the code line. The symbol `<-` is taking the result of the command on the right (in this case, the `factor` command) and giving it a new name.
 
 The `factor` command converts `birthwt$race` into a factor variable. The `levels` of the variable are the pre-existing numerical values.  The `labels` are the names we actually want to appear in our output.
 
@@ -76,13 +80,14 @@ The last line takes the single vector `race` and turns it into a data frame that
 ```{r}
 str(race_df)
 ```
+
 ```{r}
 head(race_df)
 ```
 
 You can see from the output that this created a data frame called `race_df` containing a single factor variable called `race` sitting inside it. The values of race are no longer numbers 1, 2, or 3. Instead, those numbers have been replaced by human-readable words describing the three racial categories.
 
-If a variable is already coded as a factor variable in its data frame, it is important **not** to use the `factor` command on it. This will mess up the data and make all future attempts at analysis break.
+If a variable is already coded as a factor variable in its data frame, it is important **not** to use the `factor` command on it. This will mess up the data and make all future attempts at analysis break. It is, therefore, extremely important that you check the original data frame first using `str`. **If the variable of interest is already coded as a factor variable, you cannot use the `factor` command.**
 
 
 ## ggplot
@@ -96,7 +101,7 @@ It will be easier to explain the `ggplot` syntax in the context of specific grap
 
 ## Graphing grouped numerical data
 
-Suppose you want to analyze one numerical variable and one categorical variable. Usually, the idea here is that the categorical variable divides up the data into groups and you are interested in understanding the numerical variable for each group separately. Another way to say this is that your categorical variable is explanatory and your numerical variable is response. (It is also possible for a numerical variable to be explanatory and for the categorical variable to be the response. This is common in so-called "classification" problems. We will not cover this possibility in this course, but it is covered in more advanced courses.)
+Suppose you want to analyze one numerical variable and one categorical variable. Usually, the idea here is that the categorical variable divides up the data into groups and you are interested in understanding the numerical variable for each group separately. Another way to say this is that your numerical variable is response and your categorical variable is explanatory. (It is also possible for a categorical variable to be response and a numerical variable to be explanatory. This is common in so-called "classification" problems. We will not cover this possibility in this course, but it is covered in more advanced courses.)
 
 For an example, let's consider the mother's weight by race. To be able to work with our newly labeled `race` variable, we'll need to make a data frame that contains it alongside any other variables we want to analyze (in this case, `lwt`). In the following code, note that `race` can be included in the data frame as is, but `birthwt$lwt` has to be renamed as `lwt`. This is because there is a variable called `race` defined in the environment. (We created it earlier by converting the variable `birthwt$race` to a factor variable.) But there is no variable called `lwt` in the environment. Of course, we don't need to *convert* `birthwt$lwt` because it's already coded numerically (in this case as `int`,  meaning an integer, or whole number). But we do need to rename the variable so it enters the new data frame with the concise name `lwt`.
 
@@ -169,7 +174,7 @@ ggplot(lwt_race, aes(x = lwt)) +
     facet_grid(race ~ .)
 ```
 
-Due to some technical issues in `ggplot2`, these are not strictly percentages. (If you were to add up the heights of all the bars, they would not add up to 100%.) Nevertheless, the graph is still useful because it does scale the groups to put them on equal footing. In other words, it treats each group as if they all had the same sample size.
+Due to some technical issues in `ggplot2`, these are not strictly proportions. (If you were to add up the heights of all the bars, they would not add up to 100%.) Nevertheless, the graph is still useful because it does scale the groups to put them on equal footing. In other words, it treats each group as if they all had the same sample size.
 
 ### Your turn
 
