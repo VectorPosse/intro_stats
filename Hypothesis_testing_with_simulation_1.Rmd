@@ -41,17 +41,16 @@ Be sure to remove the line `# Add code here` when you have added your own code. 
 
 Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
 
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files plane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
+When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
 
 
 ## Load Packages
 
-We load the `MASS` package to access the `birthwt` data on risk factors associated with low birth weight. We also load the `mosaic` package for simulation tools and the `gmodels` package for nice contingency tables using the `CrossTable` command.
+We load the `MASS` package to access the `birthwt` data on risk factors associated with low birth weight. We also load the `mosaic` package for simulation tools.
 
 ```{r, warning = FALSE, message=FALSE}
 library(MASS)
 library(mosaic)
-library(gmodels)
 ```
 
 As explained in an earlier module, we will set the seed so that our results are reproducible.
@@ -104,7 +103,7 @@ To convince our audience that our analysis is correct, it makes sense to take a 
 
 Our job is to gather evidence to show that there is something interesting going on. The statement of interest to us is called the "alternative hypothesis". This is usually the thing we're trying to prove related to our research question.
 
-We can perform *one-sided* tests or *two-sided* tests. A one-sided test is when we have a specific direction in mind for the effect. For example, if we are trying to prove that low birth weight babies are *more* likely among smoking mothers, then we would perform a one-sided test. On the other hand, if we only care about proving an association, then low birth weight babies could be either more likely or less likely among smoking mothers. (This is contrasted to the null that states that low birth weight babies are equally likely among smoking mothers and non-smoking mothers.) If it seems weird to run a two-sided test, keep in mind that we want to give our statistical analysis a chance to prove an association regardless of the direction of the association. Wouldn't you be interested to know if it turned out that low birth weight babies are, in fact, *less* likely among smoking mothers?
+We can perform *one-sided* tests or *two-sided* tests. A one-sided test is when we have a specific direction in mind for the effect. For example, if we are trying to prove that low birth weight babies are *more* likely among smoking mothers, then we would perform a one-sided test. On the other hand, if we only care about proving an association, then low birth weight babies could be either more likely or less likely among smoking mothers. (This is contrasted to the null that states that low birth weight babies are *equally* likely among smoking mothers and non-smoking mothers.) If it seems weird to run a two-sided test, keep in mind that we want to give our statistical analysis a chance to prove an association regardless of the direction of the association. Wouldn't you be interested to know if it turned out that low birth weight babies are, in fact, *less* likely among smoking mothers?
 
 You can't cheat and look at the data first. In a normal research study out there in the real world, you develop hypotheses long before you collect data. So you have to decide to do a one-sided or two-sided test before you have the luxury of seeing your data pointing in one direction or the other.
 
@@ -164,7 +163,7 @@ Note that there is some mathematical formatting. As mentioned before, this is do
 
 ## Exploratory data analysis
 
-### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
 
 [You can look at the help file by typing `?birthwt` at the Console. However, do not put that command here in a code chunk. The R Markdown file has no way of displaying a help file when it's processed.]
 
@@ -185,11 +184,14 @@ head(low_smoke)
 
 ### Make tables or plots to explore the data visually.
 
-As we have two categorical variables, a contingency table is a good way of visualizing the distribution of both variables together. (Don't forget to use column percentages!)
+As we have two categorical variables, a contingency table is a good way of visualizing the distribution of both variables together. (Don't forget to include the marginal distribution and create two tables: one with counts and one with percentages!)
 
 ```{r}
-CrossTable(low_smoke$low, low_smoke$smoke,
-           prop.r = FALSE, prop.c = TRUE, prop.t = FALSE, prop.chisq = FALSE)
+tally(low ~ smoke, data = low_smoke, margins = TRUE)
+```
+
+```{r}
+tally(low ~ smoke, data = low_smoke, margins = TRUE, format = "percent")
 ```
 
 
@@ -199,7 +201,7 @@ CrossTable(low_smoke$low, low_smoke$smoke,
 
 There are technically two samples of interest here. All the data comes from mothers who gave birth at the Baystate Medical Center, Springfield, Massachusetts, during 1986, but one group of interest are mothers who smoked during pregnancy, and the other group of interest are mothers who did not smoke during pregnancy.
 
-The contingency table above shows the sample sizes for each group in the marginal distribution along the bottom of the table (i.e., the column sums). There are 74 mothers who smoked during pregnancy, and 115 mothers who did not.
+One of the contingency tables above shows the sample sizes for each group in the marginal distribution along the bottom of the table (i.e., the column sums). There are 74 mothers who smoked during pregnancy, and 115 mothers who did not.
 
 The populations of interest are probably all mothers who smoke and all mothers who don't smoke, maybe in the U.S., although we are only really safe coming to conclusions about the births at this particular hospital.
 
@@ -215,7 +217,7 @@ $H_{0}: p_{nonsmoker} - p_{smoker} = 0$
 
 $H_{A}: p_{nonsmoker} - p_{smoker} \neq 0$
 
-(Note: pay close attention here to the order of the subtraction. While it doesn't matter conceptually, the `diffprop` command later on will do the subtraction a certain way. You need to make sure the order listed here in the hypotheses is consistent with the way `diffprop` works. You'll be able to tell based on whether `diffprop` gives you a negative number or a positive number.)
+Note: pay close attention here to the order of the subtraction. While it doesn't matter conceptually, the `diffprop` command later on will do the subtraction a certain way. You need to make sure the order listed here in the hypotheses is consistent with the way `diffprop` works. Remember that `diffprop` subtracts the first factor *from* the second. When we defined `smoke` above, the factors were listed---in order---"Yes" then "No". Therefore, `diffprop` will subtract smokers *from* nonsmokers. You'll be able to tell if you did it right based on whether `diffprop` gives you a negative number or a positive number.
 
 
 ## Model
@@ -235,14 +237,18 @@ We will simulate the sampling distribution.
 
 ## Mechanics
 
-### Compute the test statistic.
+### Compute and report the test statistic.
 
 ```{r}
 obs_diff <- diffprop(low ~ smoke, data = low_smoke)
 obs_diff
 ```
 
+The observed difference in the proportion of low birth weight babies among smoking mothers versus nonsmoking mothers is `r obs_diff` (subtracting smokers *from* nonsmokers). Or, another way to say this: there is a `r 100 * obs_diff`% difference in  the proportion of low birth weight babies among smoking mothers versus nonsmoking mothers.
+
 ### Plot the null distribution.
+
+(Note: we have to run the simulation before we can plot the possible values that can occur by chance, so we'll do that in this step as well.)
 
 ```{r}
 sims <- do(5000) * diffprop(low ~ shuffle(smoke), data = low_smoke)
@@ -254,11 +260,14 @@ ggplot(sims, aes(x = diffprop)) +
 
 (You'll note that we added two blue vertical lines here. This is because we are conducting a two-sided test, which means that we're interested in values that are more extreme than our observed difference in *both* directions.)
 
-### Calculate the P-value.
+### Calculate and report the P-value.
 
 ```{r}
-2 * prop(sims$diffprop <= obs_diff)
+P <- 2 * prop(sims$diffprop <= obs_diff)
+P
 ```
+
+The P-value is `r P`.
 
 Some important things here:
 
@@ -266,7 +275,11 @@ Some important things here:
 
 2. We multiply here by two because we are conducting a two-sided test. We would be surprised by values that are unusually positive as well as unusually negative. For a one-sided test, you do *not* multiply by 2.
 
-3. You can safely ignore the word `TRUE` in the output. That's just R being weird.
+3. You can safely ignore the word `TRUE` in the output. That's just R being weird. We could get rid of it using the `unname` command if we wanted to:
+
+```{r}
+unname(2 * prop(sims$diffprop <= obs_diff))
+```
 
 4. The P-value is less than 0.05. Remember that as we talk about the conclusion in the next section of the rubric.
 
@@ -298,7 +311,7 @@ I want to emphasize again the difference between conducting a one-sided versus a
 prop(sims$diffprop <= obs_diff)
 ```
 
-The justification was that back then we already suspected that low birth weight babies were more likely among smoking mothers, and it appears that our evidence (the test statistic, or our observed difference) was pretty far in that direction. (Actually, we got a slightly different number in the previous assignment. Remember that we are simulating which involves randomness. Therefore, we won't expect to get the exact same numbers each time.)
+The justification was that, back then, we already suspected that low birth weight babies were more likely among smoking mothers, and it appears that our evidence (the test statistic, or our observed difference) was pretty far in that direction. (Actually, we got a slightly different number in the previous assignment. Remember that we are simulating which involves randomness. Therefore, we won't expect to get the exact same numbers each time.)
 
 By way of contrast, in this assignment we computed the two-sided P-value:
 
@@ -333,7 +346,7 @@ The template below is exactly the same as in the file `Rubric_for_inference.pdf`
 
 ## Exploratory data analysis
 
-### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
 
 \answerbegin
 ```{r}
@@ -369,9 +382,9 @@ Please write up your answer here.
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
 \answerbegin
-$H_{0}$: Null hypothesis goes here.
+$H_{0}:$ Null hypothesis goes here.
 
-$H_{A}$: Alternative hypothesis goes here.
+$H_{A}:$ Alternative hypothesis goes here.
 \answerend
 
 ### Express the null and alternative hypotheses in symbols (when possible).
@@ -400,12 +413,14 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 ## Mechanics
 
-### Compute the test statistic.
+### Compute and report the test statistic.
 
 \answerbegin
 ```{r}
 # Add code here to compute the test statistic.
 ```
+
+Please write up your answer here.
 \answerend
 
 ### Plot the null distribution.
@@ -416,12 +431,14 @@ Please write up your answer here. (Some conditions may require R code as well.)
 ```
 \answerend
 
-### Calculate the P-value.
+### Calculate and report the P-value.
 
 \answerbegin
 ```{r}
 # Add code here to calculate the P-value.
 ```
+
+Please write up your answer here.
 \answerend
 
 
