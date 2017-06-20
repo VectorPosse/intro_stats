@@ -39,7 +39,7 @@ Be sure to remove the line `# Add code here` when you have added your own code. 
 
 Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
 
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files plane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
+When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
 
 
 ## Load Packages
@@ -67,7 +67,7 @@ Let's jump into the "Exploratory data analysis" part of the rubric first.
 
 ## Exploratory data analysis
 
-### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
 
 [You can look at the help file by typing `?Melanoma` at the Console. However, do not put that command here in a code chunk. The R Markdown file has no way of displaying a help file when it's processed. Be careful: there's another data set called `melanoma` with a lower-case "m". Make sure you are using an uppercase "M".]
 
@@ -94,11 +94,11 @@ head(sex_df)
 We only have one categorical variable, so we only need a frequency table. Since we are concerned with proportions, we'll also look at a relative frequency table.
 
 ```{r}
-table(sex_df$sex)
+tally(~ sex, data = sex_df, margins = TRUE)
 ```
 
 ```{r}
-prop.table(table(sex_df$sex))
+tally(~ sex, data = sex_df, margins = TRUE, format = "percent")
 ```
 
 
@@ -161,12 +161,14 @@ We will simulate the sampling distribution.
 
 ## Mechanics
 
-### Compute the test statistic.
+### Compute and report the test statistic.
 
 ```{r}
 female_prop <- prop(sex, data = sex_df)
 female_prop
 ```
+
+The observed percentage of females with melanoma in our sample is `r 100 * female_prop`%.
 
 ### Plot the null distribution.
 
@@ -185,11 +187,14 @@ ggplot(sims, aes(x = prop)) +
 (The last line of the code chunk above requires a little explanation. The proportion of successes is `r female_prop`, but we're running a two-sided test. So we also need to plot another blue line at a value that's as extreme as `r female_prop`, but on the other side of 50%. That number is `r 1 - female_prop`.)
 
 
-### Calculate the P-value.
+### Calculate and report the P-value.
 
 ```{r}
-2 * prop(sims$prop >= female_prop)
+P <- 2 * prop(sims$prop >= female_prop)
+P
 ```
+
+$P < 0.001$.
 
 Three observations here:
 
@@ -232,7 +237,7 @@ The template below is exactly the same as in the file `Rubric_for_inference.pdf`
 
 ## Exploratory data analysis
 
-### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
 
 \answerbegin
 ```{r}
@@ -268,9 +273,9 @@ Please write up your answer here.
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
 \answerbegin
-$H_{0}$: Null hypothesis goes here.
+$H_{0}:$ Null hypothesis goes here.
 
-$H_{A}$: Alternative hypothesis goes here.
+$H_{A}:$ Alternative hypothesis goes here.
 \answerend
 
 ### Express the null and alternative hypotheses in symbols (when possible).
@@ -299,12 +304,14 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 ## Mechanics
 
-### Compute the test statistic.
+### Compute and report the test statistic.
 
 \answerbegin
 ```{r}
 # Add code here to compute the test statistic.
 ```
+
+Please write up your answer here.
 \answerend
 
 ### Plot the null distribution.
@@ -315,12 +322,14 @@ Please write up your answer here. (Some conditions may require R code as well.)
 ```
 \answerend
 
-### Calculate the P-value.
+### Calculate and report the P-value.
 
 \answerbegin
 ```{r}
 # Add code here to calculate the P-value.
 ```
+
+Please write up your answer here.
 \answerend
 
 
