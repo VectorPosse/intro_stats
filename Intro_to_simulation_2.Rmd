@@ -39,17 +39,16 @@ Be sure to remove the line `# Add code here` when you have added your own code. 
 
 Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
 
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files plane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
+When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
 
 
 ## Load Packages
 
-We load the `MASS` package to access the `birthwt` data on risk factors associated with low birth weight. We also load the `mosaic` package for simulation tools and the `gmodels` package for nice contingency tables using the `CrossTable` command.
+We load the `MASS` package to access the `birthwt` data on risk factors associated with low birth weight. We also load the `mosaic` package for simulation tools.
 
-```{r, warning = FALSE, message=FALSE}
+```{r, warning = FALSE, message = FALSE}
 library(MASS)
 library(mosaic)
-library(gmodels)
 ```
 
 As explained in an earlier module, we will set the seed so that our results are reproducible.
@@ -78,26 +77,32 @@ We'll fix that by creating new factor variables called `low` and `smoke` and put
 
 In a categorical variable, the order of the categories usually does not matter. However, in statistics, we often designate one category as the "success" category, or the category of interest to us. All other categories are considered "failures". For example, it is the low birth weight babies who are of interest to us; therefore a "Yes" in this variable will be considered a "success". The terminology is unfortunate, but we're stuck with it.
 
-In the `factor` command in R, be sure to list the success category first in both the `level` and `label` part of the command. We are interested in whether mothers have babies with low birth weight, so (unfortunately) having low birth weight is considered the "success" condition. The order of the categories of `smoke` are less important because that is the explanatory variable. Observe the ordering of the levels and labels in the following:
+In the `factor` command in R, be sure to list the success category first in both the `levels` and `labels` parts of the command. We are interested in whether mothers have babies with low birth weight, so (unfortunately) having low birth weight is considered the "success" condition. The order of the categories of `smoke` is less important because that is the explanatory variable. Observe the ordering of the levels and labels in the following:
 
 ```{r}
 low <- factor(birthwt$low, levels = c(1, 0), labels = c("Yes", "No"))
 smoke <- factor(birthwt$smoke, levels = c(1, 0), labels = c("Yes", "No"))
-low_smoke <- data.frame(smoke, low)
+low_smoke <- data.frame(low, smoke)
 ```
 
 ### Exercise
 
-Create a contingency table with `low` as the row variable and `smoke` as the column variable with only counts and column percentages displayed. (In other words, use the extra options in the `CrossTable` command to get rid of all the extra cruft that appears by default.) Go back to the R module `Tables.Rmd` if you need to review the `CrossTable` command.
+Create two contingency tables with `low` as the row variable and `smoke` as the column variable, one with counts and one with percentages displayed. Be sure to include the marginal distribution (the column sums) as well. Go back to the R module `Tables.Rmd` if you need to review the `tally` command.
 
 \answerbegin
 ```{r}
-# Add code here to create a contingency table with 
+# Add code here to create a contingency tables of counts with 
 # low as the row variable and smoke as the column variable.
 ```
+
+```{r}
+# Add code here to create a contingency tables of percents with 
+# low as the row variable and smoke as the column variable.
+```
+
 \answerend
 
-By placing `low` as the row variable and `smoke` as the column variable, and then looking at column percentages, we are implying that one variable is response and one is explanatory. Which variable are we treating as response and which are we treating as explanatory? Do you agree with that choice? Why or why not?
+By placing `low` as the row variable and `smoke` as the column variable, and then looking at percentages, we are implying that one variable is response and one is explanatory. Which variable are we treating as response and which are we treating as explanatory? Do you agree with that choice? Why or why not?
 
 \answerbegin
 Please write up your answer here.
@@ -267,7 +272,7 @@ Again, 0.0196 is a small number. This shows us that if there were truly no assoc
 
 Because the probability above is so small, it seems unlikely that our variables are independent. Therefore, it seems more likely that there is an association between low birth weight and smoking. We have evidence of a statistically significant difference between the chance of having a baby with low birth weight among women who smoke versus women who don't smoke.
 
-Keep in mind that this data is from an observational study, so we cannot conclude that smoking *causes* low birth weight. All we can say is that a difference of -15.3% is evidence that mothers who smoke are more likely to have babies with low birth weight for *some* reason (maybe because they smoke, but maybe some other reason).
+Keep in mind that this data is from an observational study, so we cannot conclude that smoking *causes* low birth weight. All we can say is that a difference of -15.3% is evidence that mothers who smoke are more likely to have babies with low birth weight for *some* reason (maybe because they smoke, but maybe for some other reason).
 
 ### Exercise
 
@@ -296,12 +301,17 @@ Uterine irritability is recorded in the variable `ui` in the `birthwt` data set.
 ```
 \answerend
 
-2. Exploratory data analysis: make a contingency table with `low` and `ui`. You will need to decide which variable is response and which is explanatory, and assign the two variables to the rows and columns accordingly. Don't forget to use column percentages.
+2. Exploratory data analysis: make two contingency tables with `low` as the response variable and `ui` as the explanatory variable. One table should have counts and the other table should have percentages. (Both tables should include the marginal distribution.)
 
 \answerbegin
 ```{r}
-# Add code here to make a contingency table.
+# Add code here to make a contingency table with counts.
 ```
+
+```{r}
+# Add code here to make a contingency table with percentages.
+```
+
 \answerend
 
 3. Use the `diffprop` function to calculate and store the observed difference in the proportion of low birth weight babies between women with and without uterine irritability. Call this `obs_diff2` so that it doesn't conflict with the earlier `obs_diff`.
@@ -351,4 +361,4 @@ Please write up your answer here.
 
 ## Conclusion
 
-Here we used simulation to explore the idea of two variable being independent or associated. When we assume they are independent, we can explore the sampling variability of the differences that could occur by pure chance alone. We expect the difference to be zero, but we know that randomness will cause the simulated differences to have a range of values. Is the difference in the observed data far away from zero? In that case, we can say we have evidence that the variables are not independent; in other words, it is more likely that our variables are associated.
+Here we used simulation to explore the idea of two variables being independent or associated. When we assume they are independent, we can explore the sampling variability of the differences that could occur by pure chance alone. We expect the difference to be zero, but we know that randomness will cause the simulated differences to have a range of values. Is the difference in the observed data far away from zero? In that case, we can say we have evidence that the variables are not independent; in other words, it is more likely that our variables are associated.
