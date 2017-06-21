@@ -39,7 +39,7 @@ Be sure to remove the line `# Add code here` when you have added your own code. 
 
 Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
 
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files plane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
+When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
 
 
 ## Load Packages
@@ -179,7 +179,7 @@ Okay, let's formally write down all the conditions that need to be checked:
 
 ## Using R to calculate confidence intervals
 
-There are three forms in which you might have categorical data. They all use the command `prop.test`, but in slightly different ways.
+There are three forms in which you might have categorical data. Computing a confidence interval in R uses the command `prop.test` for all three forms, but in slightly different ways.
 
 ### Method 1
 
@@ -198,7 +198,7 @@ test_1
 
 For now, ignore everything but the two numbers of interest: the low and high endpoints of our confidence interval given in the `conf.low` and the `conf.high` columns. Here is how we report this inline:
 
-We are 95% confident that the true proportion of those who support the new initiative is captured in the interval (`r 100 * test_1$conf.low`%, `r 100 * test_1$conf.high`%).
+We are 95% confident that the true percentage of those who support the new initiative is captured in the interval (`r 100 * test_1$conf.low`%, `r 100 * test_1$conf.high`%).
 
 Notice that when communicating proportions to human beings, it's polite to convert them back to percentages.
 
@@ -222,7 +222,7 @@ Finally, it is possible that we have categorical data in a data frame. For examp
 First, check the conditions. The sample is presumably a representative sample of high school seniors from the U.S. as the survey was conducted by the National Center of Education Statistics. The sample size is `r NROW(hsb2)`, which is much less than 10% of the population of all U.S. high school seniors. Finally, we look at the number of successes and failures:
 
 ```{r}
-table(hsb2$schtyp)
+tally(~ schtyp, data = hsb2, margins = TRUE)
 ```
 
 There are more than 10 successes and more than 10 failures (where a success is defined here to mean a senior who goes to private school).
@@ -230,7 +230,7 @@ There are more than 10 successes and more than 10 failures (where a success is d
 Now we are ready to compute. If we do the following, though, we get the wrong answer:
 
 ```{r}
-test_3a <- tidy(prop.test(hsb2$schtyp))
+test_3a <- tidy(prop.test(~ schtyp, data = hsb2))
 test_3a
 ```
 
@@ -247,11 +247,11 @@ Please write up your answer here.
 Try this instead:
 
 ```{r}
-test_3b <- tidy(prop.test(hsb2$schtyp, success = "private"))
+test_3b <- tidy(prop.test(~ schtyp, data = hsb2, success = "private"))
 test_3b
 ```
 
-We are 95% confident that the true proportion of U.S. high school seniors who attend private school is captured in the interval (`r 100 * test_3b$conf.low`%, `r 100 * test_3b$conf.high`%).
+We are 95% confident that the true percentage of U.S. high school seniors who attend private school is captured in the interval (`r 100 * test_3b$conf.low`%, `r 100 * test_3b$conf.high`%).
 
 
 ## Changing the confidence level
@@ -259,7 +259,8 @@ We are 95% confident that the true proportion of U.S. high school seniors who at
 The default confidence level for a confidence interval is almost always 95%. It is possible, however, to use a different level.
 
 ```{r}
-test_3c <- tidy(prop.test(hsb2$schtyp, success = "private",
+test_3c <- tidy(prop.test(~ schtyp, data = hsb2,
+                          success = "private",
                           conf.level = 0.9))
 test_3c
 ```
@@ -300,7 +301,7 @@ Some of the students in the "High School and Beyond" survey attended vocational 
 * Success/failure
 
 ```{r}
-table(hsb2$prog)
+tally(~ prog, data = hsb2, margins = TRUE)
 ```
 
 The number of "successes" (students in vocational programs) is 50, which is more than 10, and the number of "failures" (all other programs) is 150, also more than 10.
@@ -308,13 +309,13 @@ The number of "successes" (students in vocational programs) is 50, which is more
 ### Calculate the confidence interval.
 
 ```{r}
-program <- tidy(prop.test(hsb2$prog, success = "vocational"))
+program <- tidy(prop.test(~ prog, data = hsb2, success = "vocational"))
 program
 ```
 
 ### State (but do not overstate) a contextually meaningful interpretation.
 
-We are 95% confident that the true proportion of U.S. high school seniors who attend a vocational program is captured in the interval (`r 100 * program$conf.low`%, `r 100 * program$conf.high`%).
+We are 95% confident that the true percentage of U.S. high school seniors who attend a vocational program is captured in the interval (`r 100 * program$conf.low`%, `r 100 * program$conf.high`%).
 
 
 ## Your turn
@@ -427,4 +428,4 @@ So let's revisit the erroneous statements from the beginning of this section and
 
 ## Conclusion
 
-A confidence interval is a form of statistical inference that gives us a range of numbers in which we hope to capture the true population parameter. Of course, we can't be certain of that. If we repeatedly collect samples, the expectation is that 95% of those samples will capture the true population parameter, but that also means that 5% will not. We'll never know if our sample was one of the 95% that worked, or one of the 5% that did not. And even if we get one of the intervals that worked, all we have is a range of values and it's impossible to determine which of those values is the true population parameter. Because it's statistics, we just have to live with that uncertainty.
+A confidence interval is a form of statistical inference that gives us a range of numbers in which we hope to capture the true population parameter. Of course, we can't be certain of that. If we repeatedly collect samples, the expectation is that 95% of those samples will produce confidence intervals that capture the true population parameter, but that also means that 5% will not. We'll never know if our sample was one of the 95% that worked, or one of the 5% that did not. And even if we get one of the intervals that worked, all we have is a range of values and it's impossible to determine which of those values is the true population parameter. Because it's statistics, we just have to live with that uncertainty.
