@@ -39,16 +39,15 @@ Be sure to remove the line `# Add code here` when you have added your own code. 
 
 Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
 
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files plane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
+When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
 
 
 ## Load Packages
 
-We load the standard `mosaic` package as well as the `MASS` package for the `Melanoma` data. The `gmodels` package gives us nice contingency tables and the `broom` package gives us tidy output.
+We load the standard `mosaic` package as well as the `MASS` package for the `Melanoma` data. The `broom` package gives us tidy output.
 
 ```{r, message = FALSE, warning = FALSE}
 library(MASS)
-library(gmodels)
 library(broom)
 library(mosaic)
 ```
@@ -65,7 +64,7 @@ When we simulated using shuffling, it looked like the simulated sampling distrib
 
 The question is, "Which normal model?" In other words, what is the mean and standard deviation we should use?
 
-Since we have two groups, let's call the true proportion of success $p_{1}$ for group 1 and $p_{2}$ for group 2. Therefore, the true difference between groups 1 and 2 in the population is $p_{1} - p_{2}$. If we sample repeatedly from groups 1 and 2 and form many sample differences $\hat{p}_{1} - \hat{p}_{2}$,  we should expect most of the values $\hat{p}_{1} - \hat{p}_{2}$ to be close to the true difference $p_{1} - p_{2}$. In other words, the sampling distribution is centered at a mean of $p_{1} - p_{2}$.
+Since we have two groups, let's call the true proportion of success $p_{1}$ for group 1 and $p_{2}$ for group 2. Therefore, the true difference between groups 1 and 2 in the population is $p_{1} - p_{2}$. If we sample repeatedly from groups 1 and 2 and form many sample differences $\hat{p}_{1} - \hat{p}_{2}$, we should expect most of the values $\hat{p}_{1} - \hat{p}_{2}$ to be close to the true difference $p_{1} - p_{2}$. In other words, the sampling distribution is centered at a mean of $p_{1} - p_{2}$.
 
 What about the standard deviation? This is much more technical and complicated. Here is the formula that you'll have to take on faith:
 
@@ -75,38 +74,17 @@ So the somewhat complicated normal model is
 
 $$N\left( p_{1} - p_{2}, \sqrt{\frac{p_{1} (1 - p_{1})}{n_{1}} + \frac{p_{2} (1 - p_{2})}{n_{2}}} \right).$$
 
-
-## Pooling
-
 When we ran hypothesis tests for one proportion, the true proportion $p$ was assumed to be known, set equal to some null value. Therefore, we could calculate the standard error $\sqrt{\frac{p(1 - p)}{n}}$ under the assumption of the null.
 
 We also have a null hypothesis for two proportions. When comparing two groups, the default assumption is that the two groups are the same. This translates into the mathematical statement $p_{1} - p_{2} = 0$ (i.e., there is no difference between $p_{1}$ and $p_{2}$).
 
 But there is a problem here. Although we are assuming something about the difference $p_{1} - p_{2}$, we are not assuming anything about the actual values of $p_{1}$ and $p_{2}$. For example, both groups could be 0.3, or 0.6, or 0.92, or whatever, and the difference between the groups would still be zero.
 
-Without values of $p_{1}$ and $p_{2}$, we cannot plug anything into the ugly standard error formula above.
-
-There is, however, one assumption we can still salvage. Since we're assuming the two groups are the same, let's compute a single overall success rate for both samples together. In other words, if the two groups aren't different, let's just pool them into one single group and calculate the successes for the whole group.
-
-This is called a *pooled proportion*. It's straightforward to compute: just take the total number of successes in both groups and divide by the total size of both groups. Here is the formula:
-
-$$\hat{p}_{pooled} = \frac{successes_{1} + successes_{2}}{n_{1} + n_{2}}.$$
-
-Occasionally, we are not given the raw number of successes in each group, but rather, the proportion of successes in each group, $\hat{p}_{1}$ and $\hat{p}_{2}$. The simple fix is to recompute the raw count of successes as $n_{1} \hat{p}_{1}$ and $n_{2} \hat{p}_{2}$. Here is what it looks like in the formula:
-
-$$\hat{p}_{pooled} = \frac{n_{1} \hat{p}_{1} + n_{2} \hat{p}_{2}}{n_{1} + n_{2}}.$$
-
-The normal model can still have a mean of $p_{1} - p_{2}$. (We usually assume this is 0 in the null hypothesis.) But its standard error will use the pooled proportion:
-
-$$N\left( p_{1} - p_{2}, \sqrt{\frac{\hat{p}_{pooled} (1 - \hat{p}_{pooled})}{n_{1}} + \frac{\hat{p}_{pooled} (1 - \hat{p}_{pooled})}{n_{2}}} \right).$$
-
-Not only do we use the pooled proportion in the standard error, but in fact we use it anywhere we assume the null. For example, the success/failure condition is also subject to the assumption of the null, so we will use the pooled proportion there too.
-
-For a confidence interval, things are different. There is no null hypothesis in effect while computing a confidence interval, so there is no assumption that would justify pooling.
-
-The standard error in the one-proportion interval is $\sqrt{\frac{\hat{p}(1 - \hat{p})}{n}}$, which just substitutes $\hat{p}$ for $p$. We can do the same for the standard error in the two-proportion case:
+Without values of $p_{1}$ and $p_{2}$, we cannot plug anything into the ugly standard error formula above. One easy "cheat" is to just use the sample values $\hat{p}_{1}$ and $\hat{p}_{2}$:
 
 $$SE = \sqrt{\frac{\hat{p}_{1} (1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2} (1 - \hat{p}_{2})}{n_{2}}}.$$
+
+There is a more sophisticated way to address this called "pooling". This more advanced concept is covered in an [optional appendix](#pooling) to this module.
 
 
 ## Inference for two proportions
@@ -118,9 +96,9 @@ The example below will pause frequently for commentary on the steps, especially 
 
 ## Exploratory data analysis
 
-### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
 
-[Type `library(MASS)` then `?Melanoma` at the Console to read the help file.]
+[Type `?Melanoma` at the Console to read the help file.]
 
 ```{r}
 str(Melanoma)
@@ -135,10 +113,11 @@ There is a hitch with `status`. The help file shows three categories: 1. died fr
 **CAUTION: If you are copying and pasting from this example to use for another research question, some of the following code chuck is specific to this research question and not applicable in other contexts.**
 
 ```{r}
-sex <- factor(Melanoma$sex, levels = c(0, 1), labels = c("female", "male"))
 status <- factor(Melanoma$status, levels = c(1, 2, 3))
 levels(status) <- c("died from melanoma", "other", "other")
-status_sex <- data.frame(sex, status)
+sex <- factor(Melanoma$sex, levels = c(0, 1), labels = c("female", "male"))
+status_sex <- data.frame(status, sex)
+head(status_sex)
 ```
 
 ### Make tables or plots to explore the data visually.
@@ -146,42 +125,27 @@ status_sex <- data.frame(sex, status)
 As these are two categorical variables, we should look at a contingency table. The variable `status` is response and `sex` is explanatory.
 
 ```{r}
-CrossTable(status_sex$status, status_sex$sex,
-           prop.r = FALSE, prop.c = TRUE,  prop.t = FALSE, prop.chisq = FALSE)
+tally(status ~ sex, data = status_sex, margins = TRUE)
 ```
-
-It will be helpful for us to extract all the counts from this table and assign them to variables that can be accessed later. Fortunately for us, the `CrossTable` command gives us a way to access all the numbers in the contingency table. So first, we'll give the contingency table a name:
 
 ```{r}
-status_sex_table <- CrossTable(status_sex$status, status_sex$sex,
-           prop.r = FALSE, prop.c = TRUE,  prop.t = FALSE, prop.chisq = FALSE)
+tally(status ~ sex, data = status_sex, margins = TRUE, format = "percent")
 ```
 
-Then we'll grab the stuff we need from the `t` variable in `status_sex_table`:
-
-```{r}
-dead_female <- status_sex_table$t["died from melanoma", "female"]
-dead_male <- status_sex_table$t["died from melanoma", "male"]
-other_female <- status_sex_table$t["other", "female"]
-other_male <- status_sex_table$t["other", "male"]
-n_F <- dead_female + other_female  # This counts all females
-n_M <- dead_male + other_male      # This counts all males
-```
-
-Commentary: You can see why column percentages are necessary in a contingency table. There are `r dead_female` females and `r dead_male` males who died from melanoma, almost a tie. However, there are more females (`r n_F`) than there are males (`r n_M`) who have melanoma in this data set. So the *proportion* of males who died from melanoma is quite a bit larger.
+Commentary: You can see why column percentages are necessary in a contingency table. There are 28 females and 29 males who died from melanoma, almost a tie. However, there are more females (126) than there are males (79) who have melanoma in this data set. So the *proportion* of males who died from melanoma is quite a bit larger.
 
     
 ## Hypotheses
 
 ### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
-There are two samples: `r n_F` female patients and `r n_M` male patients in Denmark with malignant melanoma. In order for these samples to be representative of their respective populations, we should probably restrict our conclusions to the population of all females and males in Denmark with malignant melanoma, although we might be able to make the case that these females and males could be representative of people in other countries who have malignant melanoma.
+There are two samples: 126 female patients and 79 male patients in Denmark with malignant melanoma. In order for these samples to be representative of their respective populations, we should probably restrict our conclusions to the population of all females and males in Denmark with malignant melanoma, although we might be able to make the case that these females and males could be representative of people in other countries who have malignant melanoma.
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
-$H_{0}$: There is no difference between the rate at which women and men in Denmark die from malignant melanoma.
+$H_{0}:$ There is no difference between the rate at which women and men in Denmark die from malignant melanoma.
 
-$H_{A}$: There is a difference between the rate at which women and men in Denmark die from malignant melanoma.
+$H_{A}:$ There is a difference between the rate at which women and men in Denmark die from malignant melanoma.
 
 ### Express the null and alternative hypotheses in symbols (when possible).
 
@@ -201,49 +165,45 @@ We will use a normal model.
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 * Random
-    - We have no information about how these samples were obtained. We hope the `r n_F` female patients and `r n_M` male patients are representative of other Danish patients with malignant melanoma.
+    - We have no information about how these samples were obtained. We hope the 126 female patients and 79 male patients are representative of other Danish patients with malignant melanoma.
 
 * 10%
     - We don't know exactly how many people in Denmark suffer from malignant melanoma, but we could imagine over time it's more than 1260 females and 790 males.
 
 * Success/Failure
-    - We need to use the pooled proportion of successes to check this. We calculate $\hat{p}_{pooled}$ as described earlier in the module.
-    
-```{r}
-phat_pooled <- (dead_female + dead_male)/(n_F + n_M)
-phat_pooled
-```
+    - Checking the contingency table above (the one with counts), we see the numbers 28 and 98 (the successes and failures among females), and 29 and 50 (the successes and failures among males). These are all larger than 10.
 
-Here are the success/failure computations:
+Commentary: Ideally, for the success/failure condition we would like to check $n_{1} p_{1}$, $n_{1} (1 - p_{1})$, $n_{2} p_{2}$, and $n_{2} (1 - p_{2})$; however, the null makes no claim about the values of $p_{1}$ and $p_{2}$. We do the next best thing and estimate these by substituting the sample proportions $\hat{p}_{1}$ and $\hat{p}_{2}$. But $n_{1} \hat{p}_{1}$ and $n_{2} \hat{p}_{2}$ are just the raw counts of successes in each group. Likewise, $n_{1} (1 - \hat{p}_{1})$ and $n_{2} (1 - \hat{p}_{2})$ are just the raw counts of failures in each group. That's why we can just read them off the contingency table.
 
-$n_F \hat{p}_{pooled}$ = `r n_F * phat_pooled`
-
-$n_F (1 - \hat{p}_{pooled})$ = `r n_F * (1 - phat_pooled)`
-
-$n_M \hat{p}_{pooled}$ = `r n_M * phat_pooled`
-
-$n_M (1 - \hat{p}_{pooled})$ = `r n_M * (1 - phat_pooled)`
-
-These are all greater than 10.
-
-Commentary: Hit Ctrl-Enter or Cmd-Enter on each of the above inline R code chunks to see this. You'll also see these values in the knit PDF.
-
-You can check that the value you get for $\hat{p}_{pooled}$ makes sense. It should be somewhere in between the sample proportions for females ($\hat{p}_{F}$ = `r dead_female/n_F`) and the sample proportion for males ($\hat{p}_{M}$ = `r dead_male/n_M`). In fact, since there are more females in our sample, the pooled proportion is a little closer to the female value than the male value. It all checks out.
+For a more sophisticated approach, one could also use "pooled proportions". See the [optional appendix](#pooling) for more information.
 
 
 ## Mechanics
 
-### Compute the test statistic.
+### Compute and report the test statistic.
 
 ```{r}
 status_sex_test <- tidy(prop.test(status ~ sex, data = status_sex))
 status_sex_test
 ```
 
+The test statistic is the difference of proportions in the sample, $\hat{p}_{1} - \hat{p}_{2}$:
+
 ```{r}
-z <- (status_sex_test$estimate1 - status_sex_test$estimate2)/
-    sqrt(phat_pooled * (1 - phat_pooled)/ n_F + 
-         phat_pooled * (1 - phat_pooled)/ n_M)
+status_sex_test$estimate2 - status_sex_test$estimate1
+```
+
+We also compute a z-score.
+
+```{r}
+SE <- sqrt(status_sex_test$estimate1 * (1 - status_sex_test$estimate1)/126 +
+           status_sex_test$estimate2 * (1 - status_sex_test$estimate2)/79)
+SE
+```
+
+```{r}
+z <- (status_sex_test$estimate1 - status_sex_test$estimate2)/SE
+z
 ```
 
 The test statistic has a z-score of `r z`.
@@ -255,18 +215,21 @@ As with the single proportion test, the z-score is not part of the output, so we
 ### Plot the null distribution.
 
 ```{r}
-pdist("norm", q = c(-z, z),  invisible = TRUE)
+pdist("norm", q = c(-z, z), invisible = TRUE)
 ```
 
 Commentary: Remember that this is a two-sided test.
 
-### Calculate the P-value.
+### Calculate and report the P-value.
 
 ```{r}
-2 * pdist("norm", q = z,  plot = FALSE)
+P <- 2 * pdist("norm", q = z, plot = FALSE)
+P
 ```
 
-Commentary: As in the one-proportion test, a P-value is stored in the output of the `prop.test` function:
+The P-value is `r P`.
+
+Commentary: As in the one-proportion test, a two-sided P-value is stored in the output of the `prop.test` function:
 
 ```{r}
 status_sex_test$p.value
@@ -294,7 +257,7 @@ If we have made a Type I error, then there would actually be no difference betwe
 
 ### Check the relevant conditions to ensure that model assumptions are met.
 
-Only the success/failure condition changes. We now need to check the raw counts. We won't reproduce the contingency table here. Just scroll up and check that for both females and males, the counts of those who died and the others are all greater than 10.
+None of the conditions have changed, so they don't need to be rechecked.
 
 ### Calculate the confidence interval.
 
@@ -333,11 +296,12 @@ Once this is done (in the step "Compute the test statistic"), all remaining step
 If you are given the percentages of successes and/or failures in your data, you'll have to convert them to whole number totals. You might be told that of the 126 females, 22.2% died from  melanoma, and of the 79 males, 36.7% died from melanoma. In that case, we can run the `prop.test` command as follows:
 
 ```{r}
-status_sex_test_prop <- tidy(prop.test(round(c(126*0.222, 79*0.367)), n = c(126, 79)))
+status_sex_test_prop <- tidy(prop.test(round(c(126*0.222, 79*0.367)),
+                                       n = c(126, 79)))
 status_sex_test_prop
 ```
 
-Once this is done (in the step "Compute the test statistic"), all remaining steps  of the rubric stay exactly the same except that you'll use `status_sex_test_count` instead of `status_sex_test`.
+Once this is done (in the step "Compute the test statistic"), all remaining steps of the rubric stay exactly the same except that you'll use `status_sex_test_prop` instead of `status_sex_test`.
 
 
 ## Your turn
@@ -351,7 +315,7 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 
 ## Exploratory data analysis
 
-### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
 
 \answerbegin
 ```{r}
@@ -387,9 +351,9 @@ Please write up your answer here.
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
 \answerbegin
-$H_{0}$: Null hypothesis goes here.
+$H_{0}:$ Null hypothesis goes here.
 
-$H_{A}$: Alternative hypothesis goes here.
+$H_{A}:$ Alternative hypothesis goes here.
 \answerend
 
 ### Express the null and alternative hypotheses in symbols (when possible).
@@ -418,7 +382,7 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 ## Mechanics
 
-### Compute the test statistic.
+### Compute and report the test statistic.
 
 \answerbegin
 ```{r}
@@ -434,7 +398,7 @@ Please write up your answer here. (Some conditions may require R code as well.)
 ```
 \answerend
 
-### Calculate the P-value.
+### Calculate and report the P-value.
 
 \answerbegin
 ```{r}
@@ -486,3 +450,28 @@ Please write up your answer here. (Some conditions may require R code as well.)
 Please write up your answer here.
 \answerend
 
+
+## Optional appendix: Pooling {#pooling}
+
+Earlier, we mentioned that that we cannot calculate the standard error directly because the null hypothesis does not give us $p_{1}$ and $p_{2}$. (The null only addresses the value of the difference $p_{1} - p_{2}$.) We dealt with this by simply substituting $\hat{p}_{1}$ for $p_{1}$ and $\hat{p}_{2}$ for $p_{2}$.
+
+There is, however, one assumption from the null we can still salvage that will improve our test. Since the null hypothesis assumes that the two groups are the same, let's compute a single overall success rate for both samples together. In other words, if the two groups aren't different, let's just pool them into one single group and calculate the successes for the whole group.
+
+This is called a *pooled proportion*. It's straightforward to compute: just take the total number of successes in both groups and divide by the total size of both groups. Here is the formula:
+
+$$\hat{p}_{pooled} = \frac{successes_{1} + successes_{2}}{n_{1} + n_{2}}.$$
+
+Occasionally, we are not given the raw number of successes in each group, but rather, the proportion of successes in each group, $\hat{p}_{1}$ and $\hat{p}_{2}$. The simple fix is to recompute the raw count of successes as $n_{1} \hat{p}_{1}$ and $n_{2} \hat{p}_{2}$. Here is what it looks like in the formula:
+
+$$\hat{p}_{pooled} = \frac{n_{1} \hat{p}_{1} + n_{2} \hat{p}_{2}}{n_{1} + n_{2}}.$$
+The normal model can still have a mean of $p_{1} - p_{2}$. (We usually assume this is 0 in the null hypothesis.) But its standard error will use the pooled proportion:
+
+$$N\left( p_{1} - p_{2}, \sqrt{\frac{\hat{p}_{pooled} (1 - \hat{p}_{pooled})}{n_{1}} + \frac{\hat{p}_{pooled} (1 - \hat{p}_{pooled})}{n_{2}}} \right).$$
+
+Not only can we use the pooled proportion in the standard error, but in fact we can use it anywhere we assume the null. For example, the success/failure condition is also subject to the assumption of the null, so we could use the pooled proportion there too.
+
+For a confidence interval, things are different. There is no null hypothesis in effect while computing a confidence interval, so there is no assumption that would justify pooling.
+
+The standard error in the one-proportion interval is $\sqrt{\frac{\hat{p}(1 - \hat{p})}{n}}$, which just substitutes $\hat{p}$ for $p$. We do the same for the standard error in the two-proportion case:
+
+$$SE = \sqrt{\frac{\hat{p}_{1} (1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2} (1 - \hat{p}_{2})}{n_{2}}}.$$
