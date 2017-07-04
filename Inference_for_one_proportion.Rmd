@@ -43,7 +43,7 @@ Be sure to remove the line `# Add code here` when you have added your own code. 
 
 Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
 
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files plane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
+When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
 
 
 ## Load Packages
@@ -75,7 +75,7 @@ Data from the Stanford University Heart Transplant Study is located in the `open
 
 ## Exploratory data analysis
 
-### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
 
 [You should type `?heartTr` at the Console to read the help file.]
 
@@ -90,9 +90,8 @@ Commentary: The variable of interest is `survived`, which is coded as a factor v
 There are 103 patients, but we are not considering all these patients. Our sample should consist of only those patients who actually received the transplant. The following table shows that only 69 patients were in the "treatment" group (meaning that they received a heart transplant.)
 
 ```{r}
-table(heartTr$transplant)
+tally(~ transplant, data = heartTr, margins = TRUE)
 ```
-
 
 ### Prepare the data for analysis.
 
@@ -112,12 +111,13 @@ Again, this step isn't something you need to do for other research questions. Th
 
 Making sure that we refer from now on to the `heartTr_2` data frame and not the original `heartTr` data frame:
 
+
 ```{r}
-table(heartTr_2$survived)
+tally(~ survived, data = heartTr_2, margins = TRUE)
 ```
 
 ```{r}
-prop.table(table(heartTr_2$survived))
+tally(~ survived, data = heartTr_2, margins = TRUE, format = "percent")
 ```
 
 
@@ -129,9 +129,9 @@ The sample consists of `r NROW(heartTr_2)` heart transplant recipients in a stud
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
-$H_{0}$: Heart transplant recipients have a 50% chance of survival.
+$H_{0}:$ Heart transplant recipients have a 50% chance of survival.
 
-$H_{A}$: Heart transplant recipients have less than a 50% chance of survival.
+$H_{A}:$ Heart transplant recipients have less than a 50% chance of survival.
 
 Commentary: it is slightly unusual that we are conducting a one-sided test. The standard default is typically a two-sided test. However, it is not for us to choose: the proposed research question is unequivocal in hypothesizing "less than 50%" survival.
 
@@ -173,15 +173,24 @@ That's also why the numbers don't have to be whole numbers. If the null states t
 
 ## Mechanics
 
-### Compute the test statistic.
+### Compute and report the test statistic.
 
 ```{r}
 surv_test <- tidy(binom.test(heartTr_2$survived, p = 0.5, success = "alive"))
 surv_test
 ```
 
+The test statistic is `r surv_test$estimate`, the proportion of successes in the sample.
+
+We'll also compute the corresponding z-score. 
+
 ```{r}
-z <- (surv_test$estimate -  0.5)/sqrt(0.5 * (1 - 0.5) / 69)
+SE <- sqrt(0.5*(1 - 0.5)/69)
+SE
+```
+
+```{r}
+z <- (surv_test$estimate - 0.5)/SE
 z
 ```
 
@@ -189,13 +198,19 @@ The z-score is `r z`.
 
 Commentary: We run the `binom.test` command to give us almost everything we need. The argument `p = 0.5` is the null value, and this might be different for a different research question. Also note that the `binom.test` command allows us to specify the "success" condition (here, "alive").
 
-As seen before, the `tidy` command from the `broom` package makes everything neat and gives us easy access to the various pieces of the output. What this command does not give us is a z-score. So we calculate it directly using the `estimate` ($\hat{p}$) and the mean and standard error of the null distribution.
+As seen before, the `tidy` command from the `broom` package makes everything neat and gives us easy access to the various pieces of the output. What this command does not give us is a z-score. So while we can report the `estimate` ($\hat{p}$) as the test statistic, we should also compute a z-score. The `statistic` reported in the output is the raw number of successes, but this number is less useful to us. (See the normal models in the next section.)
 
-**Remember that are working under the assumption of the null hypothesis.** This means that we use $p = 0.5$ everywhere in the formula for the standard error. In other words,
+To compute the z-score, it's easiest to compute the standard error first. The formula is
 
-$$z = \frac{(\hat{p} - p)}{\sqrt{\frac{p (1 - p)}{n}}} = \frac{(0.348 - 0.5)}{\sqrt{\frac{0.5 (1 - 0.5)}{69}}} =  -2.53.$$
+$$SE = \sqrt{\frac{p(1 - p)}{n}}.$$
 
-Either $\hat{p}$ or $z$ could be considered the test statistic.^[And there's even a third possibility: the tidy output seems to be considering the raw number of successes (24) as the test statistic.] If we use $\hat{p}$ as the test statistic, then we're considering the null model to be
+We did this in R and stored the result as `SE`.
+
+**Remember that are working under the assumption of the null hypothesis.** This means that we use $p = 0.5$ everywhere in the formula for the standard error. Then our z-score is
+
+$$z = \frac{(\hat{p} - p)}{SE} =  \frac{(\hat{p} - p)}{\sqrt{\frac{p (1 - p)}{n}}} = \frac{(0.348 - 0.5)}{\sqrt{\frac{0.5 (1 - 0.5)}{69}}} =  -2.53.$$
+
+Either $\hat{p}$ or $z$ could be considered the test statistic.^[And the tidy output seems to be considering the raw number of successes (24) as the test statistic.] If we use $\hat{p}$ as the test statistic, then we're considering the null model to be
 
 $$N\left(0.5, \sqrt{\frac{0.5 (1 - 0.5)}{69}}\right).$$
 
@@ -203,7 +218,7 @@ If we use $z$ as the test statistic, then we're considering the null model to be
 
 $$N(0, 1).$$
 
-The standard normal model is more intuitive and easier to work with, both conceptually, and in R. Therefore, we will henceforth consider $z$ as the test statistic so that we can consider our null model to be the standard normal model. For example, knowing that our test statistic is two and a half standard deviations to the left of the null value already tells us a lot. We can anticipate a small P-value leading to rejection of the null.
+The standard normal model is more intuitive and easier to work with, both conceptually, and in R. Generally, then, we will consider $z$ as the test statistic so that we can consider our null model to be the standard normal model. For example, knowing that our test statistic is two and a half standard deviations to the left of the null value already tells us a lot. We can anticipate a small P-value leading to rejection of the null.
 
 ### Plot the null distribution.
 
@@ -216,12 +231,10 @@ Commentary: Notice how simple this `pdist` command is. One reason is that we're 
 Contrast this to the command we would need if using $\hat{p}$ as our test statistic:
 
 ```{r}
-pdist("norm", q = surv_test$estimate,
-      mean = 0.5, sd = sqrt(0.5 * (1 - 0.5) / 69),
-      invisible = TRUE)
+pdist("norm", q = surv_test$estimate, mean = 0.5, sd = SE, invisible = TRUE)
 ```
 
-This works and gives us the same answer, but it's a lot more complicated.
+This works and gives us the same answer, but it's a bit more complicated.
 
 The other thing that makes this relatively simple is that we're running a one-sided test corresponding to the alternative hypothesis $p < 0.5$. Keep in mind that if we were running a two-sided test, we would need this instead:
 
@@ -229,15 +242,18 @@ The other thing that makes this relatively simple is that we're running a one-si
 pdist("norm", q = c(-z, z), invisible = TRUE)
 ```
 
-### Calculate the P-value.
+### Calculate and report the P-value.
 
 ```{r}
-pdist("norm", q = z, plot = FALSE)
+P <- pdist("norm", q = z, plot = FALSE)
+P
 ```
+
+The P-value is `r P`.
 
 Commentary: Since we are running a one-sided test using the left tail (recall the alternative hypothesis was $p < 0.5$), the result of the `pdist` command is already the correct P-value. We don't need the plot again, so we can put `plot = FALSE` into the command.
 
-The P-value can also be computed as part of the `binom.test` function:
+The P-value can also be computed as part of the `binom.test` function. The problem here is that this is wrong:
 
 ```{r}
 surv_test$p.value
@@ -249,7 +265,7 @@ The `binom.test` function assumes by default that you are performing a two-sided
 surv_test$p.value / 2
 ```
 
-You might notice that this is a little different from the P-value we computed directly from the normal model. Under the hood, the `binom.test` command is not quite using the same method we're using. Therefore, the P-value is different from the one generated from our normal model. Nevertheless, the two methods are close, so you should come to the same conclusion (i.e., reject the null or fail to reject the null).
+Even this is a little different from the P-value we computed directly from the normal model. Under the hood, the `binom.test` command is not quite using the same method we're using. Therefore, the P-value is a little different from the one generated from our normal model. Nevertheless, the two methods are close, so you should come to the same conclusion (i.e., reject the null or fail to reject the null).
 
 If you look more deeply into the `binom.test` function, you might discover that there is a way to get it to run a one-sided test. However, doing so messes up the confidence interval that we'll need later in the rubric. Most of the time, it's a moot point because we will often want to run two-sided test anyway.
 
@@ -351,7 +367,7 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 
 ## Exploratory data analysis
 
-### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
 
 \answerbegin
 ```{r}
@@ -387,9 +403,9 @@ Please write up your answer here.
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
 \answerbegin
-$H_{0}$: Null hypothesis goes here.
+$H_{0}:$ Null hypothesis goes here.
 
-$H_{A}$: Alternative hypothesis goes here.
+$H_{A}:$ Alternative hypothesis goes here.
 \answerend
 
 ### Express the null and alternative hypotheses in symbols (when possible).
@@ -418,7 +434,7 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 ## Mechanics
 
-### Compute the test statistic.
+### Compute and report the test statistic.
 
 \answerbegin
 ```{r}
@@ -434,7 +450,7 @@ Please write up your answer here. (Some conditions may require R code as well.)
 ```
 \answerend
 
-### Calculate the P-value.
+### Calculate and report the P-value.
 
 \answerbegin
 ```{r}
