@@ -39,7 +39,7 @@ Be sure to remove the line `# Add code here` when you have added your own code. 
 
 Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
 
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files plane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
+When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
 
 
 ## Load Packages
@@ -61,25 +61,38 @@ set.seed(9090)
 
 ## Research question
 
-We use a classic data set `mtcars` from a 1974 Motor Trend magazine to examine the distribution of the number of engine cylinders (with values 4, 6, or 8). Assuming that this data set is representative of all cars from 1974, were there an equal number of cars with 4, 6, and 8 cylinders? 
+We use a classic data set `mtcars` from a 1974 Motor Trend magazine to examine the distribution of the number of engine cylinders (with values 4, 6, or 8). Assuming that this data set is representative of all cars from 1974, were there an equal number of cars with 4, 6, and 8 cylinders?
+
+Here is the structure of the data:
+
+```{r}
+str(mtcars)
+```
+
+Note that the variable of interest `cyl` is not coded correctly as a factor variable. Let's convert `cyl` to a factor variable first, and put it in its own data frame as we've done many times before. (Since the levels are already called 4, 6, and 8, we do not need to specify `levels` or `labels`.)
+
+```{r}
+cyl <- factor(mtcars$cyl)
+cyl_df <- data.frame(cyl)
+head(cyl_df)
+```
 
 
 ## Chi-squared
 
 When we have three or more categories in a categorical variable, it is natural to ask how the observed counts in each category compare to the counts that we expected to see under the assumption of some null hypothesis. In other words, we're assuming that there is some "default" distribution to which we are going to compare our data. Sometimes, this default null comes from substantive expert knowledge. (For example, we might compare the 1974 distribution to a known distribution from another year.) Sometimes we're interested to see if our data deviates from a null distribution that predicts an equal number of observations in each category, which is the research question in this module.
 
-First of all, what is the actual distribution of cylinders in our data? Let's convert `cyl` to a factor variable first, and then we'll count. (Since the levels are already called "4", "6", and "8", we do not need to specify `levels` or `labels`.)
-
+First of all, what is the actual distribution of cylinders in our data? 
+ 
 ```{r}
-cyl <- factor(mtcars$cyl)
-table(cyl)
+tally(~ cyl, data = cyl_df)
 ```
 
-The numbers in these three cells are the "observed" values (usually denoted by the letter $O$). What are the expected counts? Well, since there are `r NROW(cyl)` cars and there are 3 categories, we would expect there to be `r NROW(cyl)/3` cars at each level. This is the "expected" count (usually denoted by the letter $E$).
+The numbers in these three cells are the "observed" values (usually denoted by the letter $O$). What are the expected counts? Well, since there are 32 cars and there are 3 categories, we would expect there to be $32/3 = 10.67$ cars at each level. This is the "expected" count (usually denoted by the letter $E$).
 
 Why isn't the expected count a whole number? In any given data set, of course, we will see a whole number of cars with 4, 6, or 8 cylinders. However, since this is just the expected count, it's the average over lots of possible sets of 32 cars under the assumption of the null. We don't need for this average to be a whole number.
 
-How should the deviation between the data and the null distribution be measured? We could simply look at the difference between the observed counts and the expected counts $O - E$. However, there will be some positive values (cells where we have more than `r NROW(cyl)/3` cars) and some negative values (cells where we have fewer than `r NROW(cyl)/3` cars). These will all cancel out.
+How should the deviation between the data and the null distribution be measured? We could simply look at the difference between the observed counts and the expected counts $O - E$. However, there will be some positive values (cells where we have more than 10.67 cars) and some negative values (cells where we have fewer than 10.67 cars). These will all cancel out.
 
 If this sounds vaguely familiar, it is because we encountered the same problem with the formula for the standard deviation. The differences $y - \bar{y}$ had the same issue. Do you recall the solution in that case? It was to square these values, making them all positive.
 
@@ -102,35 +115,35 @@ In general, the expected counts do not have to be the same as they are here. Thi
 Or we could just do it in R with the `chisq` command. We will store this value for later.
 
 ```{r}
-obs_chisq <- chisq(cyl)
+obs_chisq <- chisq(~ cyl, data = cyl_df)
 obs_chisq
 ```
 
 
 ## The chi-square distribution
 
-We know that even if the true distribution were `r NROW(cyl)/3` in each cell, we would not see that exactly if we collect a sample of `r NROW(cyl)` cars. (In fact, the "true" distribution is physically impossible because `r NROW(cyl)/3` is not a whole number!) So what kinds of numbers could we get?
+We know that even if the true distribution were 10.67 in each cell, we would not see those exact numbers if we collect a sample of 32 cars. (In fact, the "true" distribution is physically impossible because 10.67 is not a whole number!) So what kinds of numbers could we get?
 
-Let's do a quick simulation to find out. We will use the `sample` command from the `mosaic` package.
+Let's do a quick simulation to find out. We will use the `resample` command from the `mosaic` package.
 
 First of all, recall the actual distribution of cylinders:
 
 ```{r}
-table(cyl)
+tally(~ cyl, data = cyl_df)
 ```
 
-Under the assumption of the null, there should be an equal chance of seeing 4, 6, or 8 cylinders. The `sample` command below takes the `levels` of `cyl` ("4", "6",  or "8") and grabs them at random until there are `r NROW(cyl)` values. We also have to specify `replace = TRUE` to let `sample` know that there can (and should!) be more than one car in any given level.
+Under the assumption of the null, there should be an equal chance of seeing 4, 6, or 8 cylinders. The `resample` command below takes the values of `cyl` ("4", "6",  or "8") and grabs them at random.
 
 ```{r}
-sample(levels(cyl), 32, replace = TRUE)
+tally(~ cyl, data = resample(cyl_df))
 ```
 
-Let's do this a couple of times, this time organizing the output into a table:
+Let's do this a couple more times to see some possibilities.
 
 ```{r}
-table(sample(levels(cyl), 32, replace = TRUE))
-table(sample(levels(cyl), 32, replace = TRUE))
-table(sample(levels(cyl), 32, replace = TRUE))
+tally(~ cyl, data = resample(cyl_df))
+tally(~ cyl, data = resample(cyl_df))
+tally(~ cyl, data = resample(cyl_df))
 ```
 
 Each table represents 32 randomly sampled cars from a population in which we're assuming that there are an equal number of 4, 6, and 8 cylinder cars.
@@ -138,15 +151,15 @@ Each table represents 32 randomly sampled cars from a population in which we're 
 Next, we need to calculate the $\chi^{2}$ value for each sample. This is a simple matter of applying the `chisq` function to each random sample.
 
 ```{r}
-chisq(table(sample(levels(cyl), 32, replace = TRUE)))
-chisq(table(sample(levels(cyl), 32, replace = TRUE)))
-chisq(table(sample(levels(cyl), 32, replace = TRUE)))
+chisq(tally(~ cyl, data = resample(cyl_df)))
+chisq(tally(~ cyl, data = resample(cyl_df)))
+chisq(tally(~ cyl, data = resample(cyl_df)))
 ```
 
 As before, we can use the `do` command to do this a bunch of times and save the results in a data frame.
 
 ```{r}
-sims <- do(5000) * chisq(table(sample(levels(cyl), 32, replace = TRUE)))
+sims <- do(5000) * chisq(tally(~ cyl, data = resample(cyl_df)))
 head(sims)
 ```
 
@@ -154,7 +167,7 @@ Let's graph the resulting random values of $\chi^{2}$ and include the chi-square
 
 ```{r}
 ggplot(sims, aes(x = X.squared)) +
-    geom_histogram(binwidth = 1, boundary =  0) +
+    geom_histogram(binwidth = 2, boundary =  0) +
     geom_vline(xintercept = obs_chisq, color = "blue")
 ```
 
@@ -203,7 +216,7 @@ We'll walk through the engine cylinder example from top to bottom using the rubr
 
 ## Exploratory data analysis
 
-### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
 
 [Type `?mtcars` at the Console to read the help file.]
 
@@ -217,12 +230,14 @@ str(mtcars)
 # Although we've already done this above, 
 # we include it here again for completeness.
 cyl <- factor(mtcars$cyl)
+cyl_df <- data.frame(cyl)
+head(cyl_df)
 ```
 
 ### Make tables or plots to explore the data visually.
 
 ```{r}
-table(cyl)
+tally(~ cyl, data = cyl_df, margins = TRUE)
 ```
 
 
@@ -230,19 +245,19 @@ table(cyl)
 
 ### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
-The sample is a set of `r NROW(cyl)` cars from a 1974 Motor Trends magazine. The population is all cars from 1974. (We would not want to assume that the number of cylinders in cars today would be similar to the distribution in 1974.)
+The sample is a set of `r NROW(cyl_df)` cars from a 1974 Motor Trends magazine. The population is all cars from 1974. (We would not want to assume that the number of cylinders in cars today would be similar to the distribution in 1974.)
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
-$H_{0}$: In 1974, there were the same number of cars with 4, 6, and 8 cylinders.
+$H_{0}:$ In 1974, there were the same number of cars with 4, 6, and 8 cylinders.
 
-$H_{A}$: In 1974, there weren't the same number of cars with 4, 6, and 8 cylinders.
+$H_{A}:$ In 1974, there weren't the same number of cars with 4, 6, and 8 cylinders.
 
 ### Express the null and alternative hypotheses in symbols (when possible).
 
-$H_{0}: p_4 = p_6 = p_8$
+$H_{0}: p_{4} = p_{6} = p_{8}$
 
-There is no easy way to express the alternate hypothesis in symbols because any deviation in any of the categories can lead to rejection of the null. You can't just say $p_4 \neq p_6 \neq p_8$ because two of these categories might be the same and the third different and that would still be consistent with the alternative hypothesis.
+There is no easy way to express the alternate hypothesis in symbols because any deviation in any of the categories can lead to rejection of the null. You can't just say $p_{4} \neq p_{6} \neq p_{8}$ because two of these categories might be the same and the third different and that would still be consistent with the alternative hypothesis.
 
 So the only requirement here is to express the null in symbols.
 
@@ -262,50 +277,53 @@ We use a $\chi^{2}$ model with 2 degrees of freedom.
     - As long as there are at least 320 different car models, we are okay. This sounds like a lot, so this condition might not quite be met. Again, we need to be careful. (Also note that the population is not all automobiles manufactured in 1974. It is all *types* of automobile manufactured in 1974. There's a big difference.)
 
 * Expected cell counts
-    - This condition says that under the null, we should see at least 5 cars in each category. We expect `r NROW(cyl)/3` in each cell, so this condition is met.
+    - This condition says that under the null, we should see at least 5 cars in each category. We expect `r NROW(cyl_df)/3` in each cell, so this condition is met.
 
 
 ## Mechanics
 
-### Compute the test statistic.
+### Compute and report the test statistic.
 
 ```{r}
-cyl_table <- table(cyl)
-cyl_test <- chisq.test(cyl_table)
+cyl_tally <- tally(~ cyl, data = cyl_df)
+cyl_test <- chisq.test(cyl_tally)
 cyl_test_tidy <- tidy(cyl_test)
 cyl_test_tidy$statistic
 ```
 
 The value of $\chi^{2}$ is `r cyl_test_tidy$statistic`.
 
-Commentary: The `chisq.test` command is a little unusual in that you first have to make a table, and then run the test on the table (not the vector of cylinder values.) The $\chi^{2}$ test statistic is, of course, the same value we computed manually by hand earlier.
+Commentary: The `chisq.test` command is a little unusual in that you first have to make a frequency table, and then run the test on the table (not the raw data). The $\chi^{2}$ test statistic is, of course, the same value we computed manually by hand earlier.
 
-We've actually run the test twice, once without `tidy` and once with `tidy`. We'll use the `tidy` output when we can, but not everything we'll need to use below appears in the `tidy` output.
+We've actually run the test twice, once without `tidy` and once with `tidy`. We'll use the `tidy` output when we can, but we'll also need some things that are not saved as part of the tidy output.
 
 ### Plot the null distribution.
 
 ```{r}
-pdist("chisq", df = cyl_test_tidy$parameter, q = cyl_test_tidy$statistic, 
+pdist("chisq", df = cyl_test_tidy$parameter,
+      q = cyl_test_tidy$statistic, 
       invisible = TRUE)
 ```
 
-Commentary: The `pdist` command is familiar, but since we are using a chi-square model and not a normal model, we use `"chisq"` and not `"norm"`. This also requires us to specify the number of degrees of freedom. (Without it, R does not know which chi-square distribution to use.) We know there are 2 degrees of freedom, but since the result is stored in `cyl_test_tidy$parameter`, we might as well use that. It makes our code more portable than if we had manually typed `df = 2`. (The next time we need to run this test, we might not have two degrees of freedom anymore.)
-
-### Calculate the P-value.
+### Calculate and report the P-value.
 
 ```{r}
-1 - pdist("chisq", df = cyl_test_tidy$parameter,
+P <- 1 - pdist("chisq", df = cyl_test_tidy$parameter,
           q = cyl_test_tidy$statistic,
           plot = FALSE)
+P
 ```
+
+The P-value is `r P`.
+
+Commentary: Values that are as extreme or even more extreme than the test statistic are in the right tail. If we use `pdist`, remember that it always shades to the left by default, so we have to subtract the output from 1 to get the correct P-value. Also remember to add `plot = FALSE` as we don't really need to look at the same picture again.
+
+The P-value is also stored in the tidy output:
 
 ```{r}
 cyl_test_tidy$p.value
 ```
 
-Commentary: Values that are as extreme or even more extreme than the test statistic are in the right tail. If we use `pdist`, remember that it always shades to the left by default, so we have to subtract the output from 1 to get the correct P-value. Also remember to add `plot = FALSE` as we don't really need to look at the same picture again.
-
-Alternatively, you can see that the `chisq.test` command gives us the exact same value, storing the result in the `p.value` variable of the output.
 
 
 ## Conclusion
@@ -362,7 +380,7 @@ Suppose we didn't expect an equal number of 4, 6, and 8 cylinder models. How wou
 Suppose that we expected 35% 4-cylinder cars, 40% 6-cylinder cars, and 25% 8-cylinder cars. We would run the test as follows:
 
 ```{r}
-cyl_test_2 <- chisq.test(cyl_table, p = c(0.35, 0.4, 0.25))
+cyl_test_2 <- chisq.test(cyl_tally, p = c(0.35, 0.4, 0.25))
 ```
 
 Once you've run the `chisq.test` command, you can see the expected counts in each category.
@@ -374,15 +392,15 @@ cyl_test_2$expected
 
 You can check on your own that 11.2 is 35%, 12.8 is 40%, and 8.0 is 25% of 32.
 
-The numbers defining the null have to add up to 1 (since they are percentages). This causes some trouble, for example, when you have a  percentage that has an infinite number of decimal places. For example, what if we expected under the null a distribution of 6/13, 4/13, 3/13? You can't express any of these as a decimal without rounding. Well it turns out that `chisq.test` can handle any set of numbers as long as you set `rescale.p =  TRUE`:
+The numbers defining the null have to add up to 1 (since they are proportions). This causes some trouble, for example, when you have a  percentage that has an infinite number of decimal places. For example, what if we expected under the null a distribution of 6/13, 4/13, 3/13? You can't express any of these as a decimal without rounding. Well it turns out that `chisq.test` can handle any set of numbers as long as you set `rescale.p =  TRUE`:
 
 ```{r}
-cyl_test_3 <- chisq.test(cyl_table, p = c(6, 4, 3), rescale.p = TRUE)
+cyl_test_3 <- chisq.test(cyl_tally, p = c(6, 4, 3), rescale.p = TRUE)
 ```
 
 Also note that these change the statements of the null distribution (in sentences and in symbols). For example, in the example above where the null is 35% 4-cylinder cars, 40% 6-cylinder cars, and 25% 8-cylinder cars, our null in symbols would be
 
-$H_{0}: p_4 = 0.35, p_6 = 0.4, p_8 = 0.25$
+$H_{0}: p_{4} = 0.35, p_{6} = 0.4, p_{8} = 0.25$
 
 
 ## Your turn
@@ -398,7 +416,7 @@ If you reject the null, run a post hoc analysis and comment on the cells that se
 
 ## Exploratory data analysis
 
-### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
 
 \answerbegin
 ```{r}
@@ -434,9 +452,9 @@ Please write up your answer here.
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
 \answerbegin
-$H_{0}$: Null hypothesis goes here.
+$H_{0}:$ Null hypothesis goes here.
 
-$H_{A}$: Alternative hypothesis goes here.
+$H_{A}:$ Alternative hypothesis goes here.
 \answerend
 
 ### Express the null and alternative hypotheses in symbols (when possible).
@@ -465,12 +483,14 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 ## Mechanics
 
-### Compute the test statistic.
+### Compute and report the test statistic.
 
 \answerbegin
 ```{r}
 # Add code here to compute the test statistic.
 ```
+
+Please write up your answer here.
 \answerend
 
 ### Plot the null distribution.
@@ -481,12 +501,14 @@ Please write up your answer here. (Some conditions may require R code as well.)
 ```
 \answerend
 
-### Calculate the P-value.
+### Calculate and report the P-value.
 
 \answerbegin
 ```{r}
 # Add code here to calculate the P-value.
 ```
+
+Please write up your answer here.
 \answerend
 
 
