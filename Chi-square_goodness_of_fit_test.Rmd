@@ -237,9 +237,13 @@ head(cyl_df)
 ### Make tables or plots to explore the data visually.
 
 ```{r}
-tally(~ cyl, data = cyl_df, margins = TRUE)
+cyl_tally <- tally(~ cyl, data = cyl_df)
+cyl_tally
 ```
 
+Commentary: Instead of just displaying the frequency table, we save it as `cyl_tally` because we'll need it later.
+
+**Very important**: You must *not* include `margins = TRUE` in the `tally` command before running a chi-square test. R is not quite smart enough to figure out that the "Total" isn't really part of the data.
 
 ## Hypotheses
 
@@ -285,35 +289,32 @@ We use a $\chi^{2}$ model with 2 degrees of freedom.
 ### Compute and report the test statistic.
 
 ```{r}
-cyl_tally <- tally(~ cyl, data = cyl_df)
 cyl_test <- chisq.test(cyl_tally)
-cyl_test_tidy <- tidy(cyl_test)
-cyl_test_tidy$statistic
+cyl_tidy <- tidy(cyl_test)
+cyl_tidy$statistic
 ```
 
-The value of $\chi^{2}$ is `r cyl_test_tidy$statistic`.
+The value of $\chi^{2}$ is `r cyl_tidy$statistic`.
 
-Commentary: The `chisq.test` command is a little unusual in that you first have to make a frequency table, and then run the test on the table (not the raw data).
-
-**Very important**: You must *not* include `margins = TRUE` in the `tally` command right before running a chi-square test. R is not quite smart enough to figure out that the "Total" column isn't really part of the data.
+Commentary: The `chisq.test` command is a little unusual in that you have to run the test on the frequency table and not the raw data.
 
 The $\chi^{2}$ test statistic is, of course, the same value we computed manually by hand earlier.
 
-We've actually run the test twice, once without `tidy` and once with `tidy`. We'll use the `tidy` output when we can, but we'll also need some things that are not saved as part of the tidy output.
+We've actually run the test in two steps, the first using `chisq.test` alone (without `tidy`) and the second applying `tidy` to the output of the `chisq.test` command. We'll use the `tidy` output when we can, but we'll also need some things that are part of the `chisq.test` output, but don't get stored in the tidy output.
 
 ### Plot the null distribution.
 
 ```{r}
-pdist("chisq", df = cyl_test_tidy$parameter,
-      q = cyl_test_tidy$statistic, 
+pdist("chisq", df = cyl_tidy$parameter,
+      q = cyl_tidy$statistic, 
       invisible = TRUE)
 ```
 
 ### Calculate and report the P-value.
 
 ```{r}
-P <- 1 - pdist("chisq", df = cyl_test_tidy$parameter,
-          q = cyl_test_tidy$statistic,
+P <- 1 - pdist("chisq", df = cyl_tidy$parameter,
+          q = cyl_tidy$statistic,
           plot = FALSE)
 P
 ```
@@ -325,7 +326,7 @@ Commentary: Values that are as extreme or even more extreme than the test statis
 The P-value is also stored in the tidy output:
 
 ```{r}
-cyl_test_tidy$p.value
+cyl_tidy$p.value
 ```
 
 
