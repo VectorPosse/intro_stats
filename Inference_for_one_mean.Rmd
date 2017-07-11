@@ -39,7 +39,7 @@ Be sure to remove the line `# Add code here` when you have added your own code. 
 
 Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
 
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files plane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
+When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
 
 
 ## Load Packages
@@ -76,6 +76,9 @@ We summarize our sample by taking the mean and standard deviation:
 
 ```{r}
 mean(SBP_sample)
+```
+
+```{r}
 sd(SBP_sample)
 ```
 
@@ -160,7 +163,7 @@ The problem is that $s$ is not a perfect estimate of $\sigma$. We saw earlier th
 
 Let's run the simulation again, but this time with the added uncertainty of using $s$ to estimate $\sigma$.
 
-The first step is to write a little function of our own to compute simulated t-scores. This function will take a sample of size $n$ from the true population $N(\mu, \sigma)$, calculate the sample mean and sample standard deviation, then compute the t-score.
+The first step is to write a little function of our own to compute simulated t-scores. This function will take a sample of size $n$ from the true population $N(\mu, \sigma)$, calculate the sample mean and sample standard deviation, then compute the t-score. Don't worry: you won't be required to do anything like this on your own.
 
 ```{r}
 sim_t <- function(n, mu, sigma) {
@@ -248,7 +251,7 @@ Let's walk through the rubric.
 
 ## Exploratory data analysis
 
-### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
 
 [Type `library(OIdata)` then `?teacher` to read the help file.]
 
@@ -339,9 +342,9 @@ The sample consists of `r NROW(teacher2)` teachers employed by the St. Louis Pub
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
-$H_0$: Teachers in the St. Louis region earn $63,024 on average. (In other words, these teachers are the same as the teachers anywhere else in Michigan.)
+$H_{0}:$ Teachers in the St. Louis region earn $63,024 on average. (In other words, these teachers are the same as the teachers anywhere else in Michigan.)
 
-$H_A$: Teachers in the St. Louis region do not earn $63,024 on average. (In other words, these teachers are *not* the same as the teachers anywhere else in Michigan.)
+$H_{A}:$ Teachers in the St. Louis region do not earn $63,024 on average. (In other words, these teachers are *not* the same as the teachers anywhere else in Michigan.)
 
 ### Express the null and alternative hypotheses in symbols (when possible).
 
@@ -370,7 +373,7 @@ We will use a t model with 69 degrees of freedom.
 
 ## Mechanics
 
-### Compute the test statistic.
+### Compute and report the test statistic.
 
 ```{r}
 total_test <- tidy(t.test(teacher2$total, mu = 63024))
@@ -383,18 +386,21 @@ The t-score is `r t`.
 ### Plot the null distribution.
 
 ```{r}
-pdist("t", df = total_test$parameter, q = c(-t, t),  invisible = TRUE)
+pdist("t", df = total_test$parameter, q = c(-t, t), invisible = TRUE)
 ```
 
 Commentary: The `pdist` command is the same as always except now we use a `"t"` model instead of `"norm"`. We know there are `r NROW(teacher2) - 1` degrees of freedom, but we might as well use the value stored in the `t.test` output to make our code reusable. Finally, note that `q = c(-t, t)` will plot in both tails of the distribution since we're running a two-sided test. Of course, since the t-score is crazy huge, it doesn't actually appear in the resulting graph.
 
-### Calculate the P-value.
+### Calculate and report the P-value.
 
 ```{r}
-total_test$p.value
+P <- total_test$p.value
+P
 ```
 
-When the P-value is this small, it is traditional to report simply $P < 0.001$.
+$P < 0.001$
+
+Commentary: When the P-value is this small, it is traditional to report simply $P < 0.001$.
 
 
 ## Conclusion
@@ -489,7 +495,7 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 
 ## Exploratory data analysis
 
-### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
 
 \answerbegin
 ```{r}
@@ -525,9 +531,9 @@ Please write up your answer here.
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
 \answerbegin
-$H_{0}$: Null hypothesis goes here.
+$H_{0}:$ Null hypothesis goes here.
 
-$H_{A}$: Alternative hypothesis goes here.
+$H_{A}:$ Alternative hypothesis goes here.
 \answerend
 
 ### Express the null and alternative hypotheses in symbols (when possible).
@@ -556,12 +562,14 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 ## Mechanics
 
-### Compute the test statistic.
+### Compute and report the test statistic.
 
 \answerbegin
 ```{r}
 # Add code here to compute the test statistic.
 ```
+
+Please write up your answer here.
 \answerend
 
 ### Plot the null distribution.
@@ -572,12 +580,14 @@ Please write up your answer here. (Some conditions may require R code as well.)
 ```
 \answerend
 
-### Calculate the P-value.
+### Calculate and report the P-value.
 
 \answerbegin
 ```{r}
 # Add code here to calculate the P-value.
 ```
+
+Please write up your answer here.
 \answerend
 
 
