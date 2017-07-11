@@ -39,7 +39,7 @@ Be sure to remove the line `# Add code here` when you have added your own code. 
 
 Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
 
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files plane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
+When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
 
 
 ## Load Packages
@@ -76,7 +76,7 @@ Let's go through the rubric.
 
 ## Exploratory data analysis
 
-### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
 
 [Type `library(MASS)` then `?immer` at the Console to read the help file.]
 
@@ -127,18 +127,18 @@ If we separate the data into two groups ("M" and all other locations), there is 
 We accomplish this in R by filtering the rows that are not at location "M". The symbol `!=` means "not equal to."
 
 ```{r}
-immer_d_noM <- filter(immer_d, Loc != "M")
+immer_d_no_M <- filter(immer_d, Loc != "M")
 ```
 
-Here is the new histogram and QQ plot:
+Here are the new histogram and QQ plot:
 
 ```{r}
-ggplot(immer_d_noM, aes(x = d)) +
+ggplot(immer_d_no_M, aes(x = d)) +
     geom_histogram(binwidth = 10)
 ```
 
 ```{r}
-ggplot(immer_d_noM, aes(sample = d)) +
+ggplot(immer_d_no_M, aes(sample = d)) +
     geom_qq()
 ```
 
@@ -149,13 +149,13 @@ There is still a significant outlier. There is no real justification for removin
 
 ### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
-The sample consists of `r NROW(immer_d_noM)` plots representing five varieties of barley grown in five different locations. (There were 30 plots across six locations, but remember that we removed the observations from one of the locations to get rid of the extra mode.) The population is all possible locations at which we might try growing these varieties of barley.
+The sample consists of `r NROW(immer_d_no_M)` plots representing five varieties of barley grown in five different locations. (There were 30 plots across six locations, but remember that we removed the observations from one of the locations to get rid of the extra mode.) The population is all possible locations at which we might try growing these varieties of barley.
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
-$H_{0}$: There is no difference in mean barley yield from 1931 to 1932.
+$H_{0}:$ There is no difference in mean barley yield from 1931 to 1932.
 
-$H_{A}$: There is a difference in mean barley yield from 1931 to 1932.
+$H_{A}:$ There is a difference in mean barley yield from 1931 to 1932.
 
 ### Express the null and alternative hypotheses in symbols (when possible).
 
@@ -186,10 +186,10 @@ We use a t model with 24 degrees of freedom.
 
 ## Mechanics
 
-### Compute the test statistic.
+### Compute and report the test statistic.
 
 ```{r}
-barley_test <- tidy(t.test(immer_d_noM$Y2, immer_d_noM$Y1, paired = TRUE))
+barley_test <- tidy(t.test(immer_d_no_M$Y2, immer_d_no_M$Y1, paired = TRUE))
 t <- barley_test$statistic
 t
 ```
@@ -201,7 +201,7 @@ Commentary: The `t.test` command offers an argument `paired = TRUE` that allows 
 Note that we get the exact same answer if we run it as a one-sample t-test with the difference variable `d`:
 
 ```{r}
-barley_test2 <- tidy(t.test(immer_d_noM$d, mu = 0))
+barley_test2 <- tidy(t.test(immer_d_no_M$d, mu = 0))
 barley_test2$statistic
 ```
 
@@ -213,10 +213,11 @@ pdist("t", df = barley_test$parameter, q = c(-t, t), invisible = TRUE)
 
 Commentary: The `parameter` stored in the output of `t.test` is the degrees of freedom. We set `q = c(-t, t)` as this is a two-sided test.
 
-### Calculate the P-value.
+### Calculate and report the P-value.
 
 ```{r}
-barley_test$p.value
+P <- barley_test$p.value
+P
 ```
 
 $P < 0.001$.
@@ -224,7 +225,7 @@ $P < 0.001$.
 This is also the place to check the effect of excluding the outlier.
 
 ```{r}
-immer_d_no_outlier <- filter(immer_d_noM, d < 20)
+immer_d_no_outlier <- filter(immer_d_no_M, d < 20)
 immer_d_no_outlier_test <- tidy(t.test(immer_d_no_outlier$Y2,
                                        immer_d_no_outlier$Y1,
                                        paired = TRUE))
@@ -296,7 +297,7 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 
 ## Exploratory data analysis
 
-### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
 
 \answerbegin
 ```{r}
@@ -332,9 +333,9 @@ Please write up your answer here.
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
 \answerbegin
-$H_{0}$: Null hypothesis goes here.
+$H_{0}:$ Null hypothesis goes here.
 
-$H_{A}$: Alternative hypothesis goes here.
+$H_{A}:$ Alternative hypothesis goes here.
 \answerend
 
 ### Express the null and alternative hypotheses in symbols (when possible).
@@ -363,12 +364,14 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 ## Mechanics
 
-### Compute the test statistic.
+### Compute and report the test statistic.
 
 \answerbegin
 ```{r}
 # Add code here to compute the test statistic.
 ```
+
+Please write up your answer here.
 \answerend
 
 ### Plot the null distribution.
@@ -379,12 +382,14 @@ Please write up your answer here. (Some conditions may require R code as well.)
 ```
 \answerend
 
-### Calculate the P-value.
+### Calculate and report the P-value.
 
 \answerbegin
 ```{r}
 # Add code here to calculate the P-value.
 ```
+
+Please write up your answer here.
 \answerend
 
 
