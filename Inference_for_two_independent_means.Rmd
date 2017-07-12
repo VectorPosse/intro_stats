@@ -39,7 +39,7 @@ Be sure to remove the line `# Add code here` when you have added your own code. 
 
 Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
 
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files plane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
+When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
 
 
 ## Load Packages
@@ -135,17 +135,13 @@ Let's assume that both groups come from populations that are normally distribute
 
 $$N\left(\mu_{1} - \mu_{2}, \sqrt{\frac{\sigma_{1}^{2}}{n_{1}} + \frac{\sigma_{2}^{2}}{n_{2}}}\right).$$
 
-Under the assumption of the null, the difference of the means is zero ($\mu_{1} - \mu_{2} =  0$). Unfortunately, though, we make no assumption on the standard deviations.
-
-If we were testing two proportions with categorical data, we could pool our data. If the groups were truly equal, then they would share the same proportion, so we could use a pooled proportion to estimate it. With numerical data, we can calculate a pooled mean, but that doesn't help with the unknown standard deviations. Nothing in the null hypothesis suggests that the standard deviations of the two groups should be the same.^[In the extremely rare situation in which one can assume equal standard deviations in the two groups, then there is a way to run a pooled t test. But this "extra" assumption of equal standard deviations is typically questionable.]  
-
-It should be clear that the only solution is to substitute the sample standard deviations $s_{1}$ and $s_{2}$ for the population standard deviations $\sigma_{1}$ and $\sigma_{2}$.
+Under the assumption of the null, the difference of the means is zero ($\mu_{1} - \mu_{2} =  0$). Unfortunately, though, we make no assumption on the standard deviations. It should be clear that the only solution is to substitute the sample standard deviations $s_{1}$ and $s_{2}$ for the population standard deviations $\sigma_{1}$ and $\sigma_{2}$.^[When we were testing two proportions with categorical data, one option (described in an optional appendix in that module) was to pool the data. With numerical data, we can calculate a pooled mean, but that doesn't help with the unknown standard deviations. Nothing in the null hypothesis suggests that the standard deviations of the two groups should be the same. In the extremely rare situation in which one can assume equal standard deviations in the two groups, then there is a way to run a pooled t test. But this "extra" assumption of equal standard deviations is typically questionable.]
 
 $$SE = \sqrt{\frac{s_{1}^{2}}{n_{1}} + \frac{s_{2}^{2}}{n_{2}}}$$
 
 However, $s_{1}$ and $s_{2}$ are not perfect estimates of $\sigma_{1}$ and $\sigma_{2}$; they are subject to sampling variability too. This extra variability means that a normal model is no longer appropriate as the sampling distribution model.
 
-In the one-sample case, a Student t model with $df = n - 1$ was the right choice. In the two-sample case, we don't know the right answer. Yes, you read that correctly. Statisticians have not found a formula for the correct sampling distribution. It is a famous unsolved problem, called the Behrens-Fisher problem.
+In the one-sample case, a Student t model with $df = n - 1$ was the right choice. In the two-sample case, we don't know the right answer. And I don't mean that we haven't learned it yet. I mean, statisticians have not found a formula for the correct sampling distribution. It is a famous unsolved problem, called the Behrens-Fisher problem.
 
 Several researchers have proposed solutions that are "close" though. One compelling one is called "Welch's t-test". Welch showed that even though it's not quite right, a Student t model is very close as long as you pick the degrees of freedom carefully. Unfortunately, the way to compute the right degrees of freedom is crazy complicated. Fortunately, R is good at crazy complicated computations. The `t.test` command uses the Welch's t-test by default when there are two groups.
 
@@ -154,9 +150,9 @@ Let's go through the full rubric using the cabbage example.
 
 ## Exploratory data analysis
 
-### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
 
-[Type `library(MASS)` then `?cabbages` to read the help file.]
+[Type `?cabbages` to read the help file.]
 
 ```{r}
 str(cabbages)
@@ -177,7 +173,7 @@ The cultivar variable `Cult` is already a factor variable, as it should be.
 How many cabbages of each cultivar type do we have?
 
 ```{r}
-table(cabbages$Cult)
+tally(~ Cult, data = cabbages)
 ```
 
 With a numerical response variable and a categorical explanatory variable, there are two useful plots: a side-by-side boxplot and a stacked histogram.
@@ -193,7 +189,7 @@ ggplot(cabbages, aes(x = HeadWt)) +
     facet_grid(Cult ~ .)
 ```
 
-The individual group histograms looks reasonably normal, although it's a bit hard to tell with a sample size of 30 in each group. Here are the QQ plots to give us another way to ascertain normality of the data.
+The individual group histograms look reasonably normal, although it's a bit hard to tell with a sample size of 30 in each group. Here are the QQ plots to give us another way to ascertain normality of the data.
 
 ```{r}
 ggplot(cabbages, aes(sample = HeadWt)) +
@@ -212,9 +208,9 @@ The samples consist of 30 cabbages from the c39 group and 30 cabbages from the c
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
-$H_{0}$: There is no difference in the head weight of c39 cabbages and c52 cabbages.
+$H_{0}:$ There is no difference in the head weight of c39 cabbages and c52 cabbages.
 
-$H_{A}$: There is a difference in the head weight of c39 cabbages and c52 cabbages.
+$H_{A}:$ There is a difference in the head weight of c39 cabbages and c52 cabbages.
 
 ### Express the null and alternative hypotheses in symbols (when possible).
 
@@ -242,6 +238,8 @@ We use a t model. Since we ran the `t.test` command already, we can see the degr
 cabbage_test$parameter
 ```
 
+So we will use a t model with `r cabbage_test$parameter` degrees of freedom.
+
 Commentary: For Welch's t test, the degrees of freedom won't usually be a whole number. Be sure you understand that the formula is no longer $df = n - 1$. That doesn't even make any sense as there isn't a single $n$ in a *two*-sample test.
 
 ### Check the relevant conditions to ensure that model assumptions are met.
@@ -258,7 +256,7 @@ Commentary: For Welch's t test, the degrees of freedom won't usually be a whole 
 
 ## Mechanics
 
-### Compute the test statistic.
+### Compute and report the test statistic.
 
 ```{r}
 t <- cabbage_test$statistic
@@ -273,11 +271,14 @@ The t-score is `r t`.
 pdist("t", df = cabbage_test$parameter, q = c(-t, t), invisible = TRUE)
 ```
 
-### Calculate the P-value.
+### Calculate and report the P-value.
 
 ```{r}
-cabbage_test$p.value
+P <- cabbage_test$p.value
+P
 ```
+
+The P-value is `r P`.
 
 
 ## Conclusion
@@ -361,7 +362,7 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 
 ## Exploratory data analysis
 
-### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
 
 \answerbegin
 ```{r}
@@ -397,9 +398,9 @@ Please write up your answer here.
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
 \answerbegin
-$H_{0}$: Null hypothesis goes here.
+$H_{0}:$ Null hypothesis goes here.
 
-$H_{A}$: Alternative hypothesis goes here.
+$H_{A}:$ Alternative hypothesis goes here.
 \answerend
 
 ### Express the null and alternative hypotheses in symbols (when possible).
@@ -428,12 +429,14 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 ## Mechanics
 
-### Compute the test statistic.
+### Compute and report the test statistic.
 
 \answerbegin
 ```{r}
 # Add code here to compute the test statistic.
 ```
+
+Please write up your answer here.
 \answerend
 
 ### Plot the null distribution.
@@ -444,12 +447,14 @@ Please write up your answer here. (Some conditions may require R code as well.)
 ```
 \answerend
 
-### Calculate the P-value.
+### Calculate and report the P-value.
 
 \answerbegin
 ```{r}
 # Add code here to calculate the P-value.
 ```
+
+Please write up your answer here.
 \answerend
 
 
