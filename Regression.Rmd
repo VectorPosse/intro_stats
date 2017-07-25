@@ -39,7 +39,7 @@ Be sure to remove the line `# Add code here` when you have added your own code. 
 
 Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
 
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files plane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
+When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
 
 
 ## Load Packages
@@ -73,7 +73,7 @@ ggplot(bdims, aes(y = wgt, x = wri.di)) +
     geom_point()
 ```
 
-If certain conditions are met, we can graph a regression line;  just add a `geom_smooth` layer to the scatterplot:
+If certain conditions are met, we can graph a regression line; just add a `geom_smooth` layer to the scatterplot:
 
 ```{r}
 ggplot(bdims, aes(y = wgt, x = wri.di)) +
@@ -89,7 +89,7 @@ What is the equation of this line? In your algebra class you learn that a line t
 
 $$\hat{y} = b_{0} + b_{1} x.$$
 
-The intercept is $b_{0}$ and the slope is $b_{1}$. We use $\hat{y}$ instead of $y$ because plugging in values of $x$ does not give us back the exact values of $y$ from the data. The line, after all, does not actually pass through most (if any) actual data points. Instead, this equation gives us "predicted" values of $y$ that lie on the regression line. These predicted $y$ values are called $\hat{y}$.
+The intercept is $b_{0}$ and the slope is $b_{1}$. We use $\hat{y}$ instead of $y$ because when we plug in values of $x$, we do not get back the exact values of $y$ from the data. The line, after all, does not actually pass through most (if any) actual data points. Instead, this equation gives us "predicted" values of $y$ that lie on the regression line. These predicted $y$ values are called $\hat{y}$.
 
 To run a regression analysis, we use the `lm` command in R. (`lm` stands for "linear model".) We wrap the results in the `tidy` command to make the output a little cleaner. There is one tiny change we'll make to the `tidy` command: unlike previous hypothesis tests we've seen, the `tidy` command for `lm` does not automatically include a confidence interval. So we'll need to add an argument `conf.int = TRUE`.
 
@@ -120,11 +120,11 @@ Therefore, the equation of the regression line could be written
 
 $$\hat{y} = -44.77 + 10.81 x.$$
 
-When we report the equation of the regression line, we typically use words instead of $y$ and $x$ to make the equation more interpretable in the context of the problem. For example, for this data, we would write the equation as
+When we report the equation of the regression line, we typically use words instead of $\hat{y}$ and $x$ to make the equation more interpretable in the context of the problem. For example, for this data, we would write the equation as
 
 $$\widehat{weight} = -44.77 + 10.81 wrist.$$
 
-The slope $b_{1}$ is always interpretable. This model predicts that one unit of increase in the x-axis corresponds to a change of `r wgt_wrist_tidy$estimate[2]` units in the y-direction. Let's phrase it this way:
+The slope $b_{1}$ is always interpretable. This model predicts that one unit of increase in the x-axis corresponds to a change of 10.81 units in the y-direction. Let's phrase it this way, using inline code:
 
 > The model predicts that an increase of one cm in wrist diamater corresponds to a weight increase of `r wgt_wrist_tidy$estimate[2]` kg.
 
@@ -132,7 +132,7 @@ The intercept $b_{0}$ is a different story. There is always a literal interpreta
 
 > The model predicts that someone with a wrist diameter of zero will weigh `r wgt_wrist_tidy$estimate[1]` kg.
 
-It is true that the model makes that prediction, so the preceding sentence is technically correct. However, that prediction is nonsensical. Aside from the fact that it is impossible for a wrist to have zero diameter and impossible for a weight to be negative, this is extrapolation---in other words, a prediction outside the range of the data.
+It is true that the model makes that prediction, so the preceding sentence is technically correct. However, that prediction is nonsensical. Aside from the fact that it is impossible for a wrist to have zero diameter and impossible for a weight to be negative, this is *extrapolation*---in other words, a prediction outside the range of the data.
 
 The rest of the `tidy` output involves inference on the two parameters (intercept and slope). We'll get back to that later.
 
@@ -195,7 +195,7 @@ $$e = y - \hat{y} = 65.6 - 67.60664 = -2.00664.$$
 
 Yup, it works!
 
-Skip to the last column of the output `.std.resid`. These are similar to z-scores for the residuals. It is common to use these to create our graphs. Because they are like z-scores, they are easy to interpret.
+Skip to the last column of the output `.std.resid`. These are similar to z-scores for the residuals, so they're easy to interpret.^[The real story is quite a bit more complicated than that, but there is little harm in thinking of these as if they were z-scores.] One can examine either the raw residuals (stored in `.resid`) or the standardized residuals (`.std.resid`), but we'll do the latter.
 
 To check for patterns in the residuals, we'll use several different plots. First, we want our residuals to be normally distributed. We check this with a histogram and a QQ plot, as usual.
 
@@ -216,7 +216,7 @@ We should also create a *residual plot*, which looks at the residuals above each
 ```{r}
 ggplot(wgt_wrist_aug, aes(y = .std.resid, x = wri.di)) +
     geom_point() +
-    geom_hline(yintercept = 0, color = "blue")
+    geom_hline(yintercept = 0)
 ```
 
 This looks good. There are no systematic patterns in the residuals. A residual plot should look like the most boring plot you've ever seen.
@@ -230,7 +230,7 @@ tips <- reshape2::tips
 tip_bill_aug <- augment(lm(tip ~ total_bill, data = tips))
 ggplot(tip_bill_aug, aes(y = .std.resid, x = total_bill)) +
     geom_point() +
-    geom_hline(yintercept = 0, color = "blue")
+    geom_hline(yintercept = 0)
 ```
 
 The residuals are quite small toward the left end of the residual plot, and then spread out and get larger toward the right end. This is a violation of the "patterns in the residuals" condition. It would be problematic to pursue a regression analysis of the tip data even though correlation was okay to report.
@@ -249,7 +249,7 @@ wgt_wrist_glance <- glance(wgt_wrist_lm)
 wgt_wrist_glance
 ```
 
-A more advanced statistics course might discuss the other model summaries present in the `glance` output. The $R^{2}$ value is stored in `wgt_wrist_glance$r.squared`. Its value is `r wgt_wrist_glance$r.squared`. We will word it this way:
+A more advanced statistics course might discuss the other model summaries present in the `glance` output. The $R^{2}$ value is stored in `wgt_wrist_glance$r.squared`. Its value is 0.585. We will word it this way:
 
 > `r 100*wgt_wrist_glance$r.squared`% of the variability in weight can be explained by variability in wrist diameter.
 
@@ -277,7 +277,7 @@ Also note that a typical regression analysis will start by checking conditions s
 
 ## Exploratory data analysis
 
-### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
 
 [Type `?bdims` at the Console to read the help file.]
 
@@ -320,9 +320,9 @@ The sample consists of 507 physically active individuals (a mix of females and m
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
-$H_0$: There is no relationship between weight and wrist diameter.
+$H_0:$ There is no relationship between weight and wrist diameter.
 
-$H_A$: There is a relationship between weight and wrist diameter.
+$H_A:$ There is a relationship between weight and wrist diameter.
 
 ### Express the null and alternative hypotheses in symbols (when possible).
 
@@ -346,7 +346,7 @@ The conditions have already been checked.
 
 ## Mechanics
 
-### Compute the test statistic.
+### Compute and report the test statistic.
 
 ```{r}
 t <- wgt_wrist_tidy$statistic[2]
@@ -365,7 +365,7 @@ pdist("t", df = wgt_wrist_glance$df.residual, q =  c(-t, t), invisible = TRUE)
 
 Commentary: The correct degrees of freedom are stored in `wgt_wrist_glance$df.residual`, not `wgt_wrist_glance$df` as you might expect.
 
-### Calculate the P-value.
+### Calculate and report the P-value.
 
 ```{r}
 wgt_wrist_tidy$p.value[2]
@@ -418,7 +418,7 @@ We are 95% confident that the true slope of the relationship between weight and 
 
 The `Rubber` data set contains data on the testing of tires. (Since it was a British study, they tested "tyres".)
 
-Explore the relationship between the loss of tire material in an abrasion test (measured in grams per hour) and the hardness of the tire (measured in something called Shore units---Google it if you want to know more).
+Explore the relationship between the loss of tire material in an abrasion test (measured in grams per hour) and the hardness of the tire (measured in something called Shore units---Google it if you want to know more). We will consider the loss of tire material to be response and hardness to be explanatory.
 
 Please perform the steps below, following the code examples from earlier in the module.
 
@@ -471,7 +471,7 @@ Please write up your answer here.
 
 ## Exploratory data analysis
 
-### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
 
 \answerbegin
 ```{r}
@@ -507,9 +507,9 @@ Please write up your answer here.
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
 \answerbegin
-$H_{0}$: Null hypothesis goes here.
+$H_{0}:$ Null hypothesis goes here.
 
-$H_{A}$: Alternative hypothesis goes here.
+$H_{A}:$ Alternative hypothesis goes here.
 \answerend
 
 ### Express the null and alternative hypotheses in symbols (when possible).
@@ -538,12 +538,14 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 ## Mechanics
 
-### Compute the test statistic.
+### Compute and report the test statistic.
 
 \answerbegin
 ```{r}
 # Add code here to compute the test statistic.
 ```
+
+Please write up your answer here.
 \answerend
 
 ### Plot the null distribution.
@@ -554,12 +556,14 @@ Please write up your answer here. (Some conditions may require R code as well.)
 ```
 \answerend
 
-### Calculate the P-value.
+### Calculate and report the P-value.
 
 \answerbegin
 ```{r}
 # Add code here to calculate the P-value.
 ```
+
+Please write up your answer here.
 \answerend
 
 

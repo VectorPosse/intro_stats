@@ -39,7 +39,7 @@ Be sure to remove the line `# Add code here` when you have added your own code. 
 
 Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
 
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files plane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
+When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
 
 
 ## Load Packages
@@ -68,12 +68,13 @@ Is there is a correlation between the size of a restaurant bill and the size of 
 
 ## Correlation
 
-The word correlation describes a linear relationship between two numerical variables. As long as certain conditions are met, we can calculate a statistic called the Pearson correlation coefficient, denoted R. This value will be some number between -1 and 1. Coefficients close to zero indicate little or no correlation, coefficients close to 1 indicate strong positive correlations, and coefficients close to -1 indicate strong negative correlations. In between, we often use words like weak, moderately weak, moderate, and moderately strong. There are no exact cutoffs for when such words apply. You must learn from experience how to judge scatterplots and R values to make such determinations.
+The word correlation describes a linear relationship between two numerical variables. As long as certain conditions are met, we can calculate a statistic called the Pearson correlation coefficient, denoted R.^[In most places, the Pearson correlation coefficient is denoted by a lowercase r, but the OpenIntro book uses an uppercase R.] This value will be some number between -1 and 1. Coefficients close to zero indicate little or no correlation, coefficients close to 1 indicate strong positive correlation, and coefficients close to -1 indicate strong negative correlation. In between, we often use words like weak, moderately weak, moderate, and moderately strong. There are no exact cutoffs for when such words apply. You must learn from experience how to judge scatterplots and R values to make such determinations.
 
 Let's examine a data set called `tips` from the `reshape2` package. Since there is also a `tips` data set in the `openintro` package, we'll use a trick to make sure we get the right one. The double colon is placed between the name of the package and the name of the data frame:
 
 ```{r}
 tips <- reshape2::tips
+str(tips)
 ```
 
 These 244 observations were collected by one waiter over a period of a few months working in a restaurant. Our research question asks us to consider the variables `tip` and `total_bill`.
@@ -81,7 +82,8 @@ These 244 observations were collected by one waiter over a period of a few month
 If all we wanted was the value of R, we could find it by using the `cor` command.
 
 ```{r}
-cor(tip ~ total_bill, data = tips)
+R <- cor(tip ~ total_bill, data = tips)
+R
 ```
 
 This sample correlation R is an estimate of the true population correlation, called $\rho$, the Greek letter "rho". A typical null hypothesis is that there is no correlation between the two variables---in other words, $\rho = 0$. Under that assumption, the sampling distribution is somewhat complicated. Although the sample correlations don't follow a simple distribution, if we calculate
@@ -111,7 +113,7 @@ sims <- do(2000) * cor(tip ~ shuffle(total_bill), data = tips)
 head(sims)
 ```
 
-The t scores follow a Student t distribution, not the correlations themselves, so we have to calculate the t scores. We use the `mutate` command to compute the t score for each row of `sims`. The number 242 is $n - 2$.
+The t scores follow a Student t distribution, not the correlations themselves, so we have to calculate the t scores. We use the `mutate` command^[The `mutate` command comes from a package called `dplyr` which is helpfully loaded for you when you load the `mosaic` package.] to compute the t score for each row of `sims`. The number 242 is $n - 2$.
 
 ```{r}
 sims <- mutate(sims, t = cor/(sqrt((1 - cor^2)/242)))
@@ -136,7 +138,7 @@ In addition to the standard "Random" and "10%" conditions, we introduce two new 
 
 ## Exploratory data analysis
 
-### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
 
 [Type `?tips` at the Console to read the help file.]
 
@@ -188,9 +190,9 @@ The sample consists of `r NROW(tips)` meals a waiter served over the course of s
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
-$H_{0}$: There is no correlation between the tip and the total bill.
+$H_{0}:$ There is no correlation between the tip and the total bill.
 
-$H_{A}$: There is a correlation between the tip and the total bill.
+$H_{A}:$ There is a correlation between the tip and the total bill.
 
 ### Express the null and alternative hypotheses in symbols (when possible).
 
@@ -219,14 +221,14 @@ We use a t model with `r NROW(tips) - 2` degrees of freedom.
     - The scatterplot shows a reasonably linear pattern.
 
 * Outliers
-    - We don't see any significant outliers. There are a few dots here and there that are a little far from the main cloud, but nothing that worries us too much, especially given the large sample size.
+    - We don't see any significant outliers in the scatterplot. There are a few dots here and there that are a little far from the main cloud, but nothing that worries us too much, especially given the large sample size.
 
 Commentary: No data will ever line up in a perfect straight line. The "linear association" condition is meant to suggest that the "cloud of dots" should be more or less in a straight pattern moving across the plot. We are most concerned here with checking that the pattern does not curve substantially, and this does not appear to.
 
 
 ## Mechanics
 
-### Compute the test statistic.
+### Compute and report the test statistic.
 
 ```{r}
 cor_test <- tidy(cor.test(tips$tip, tips$total_bill))
@@ -246,10 +248,11 @@ You may have noticed that this is an insanely large t score. This is typical of 
 pdist("t", df = cor_test$parameter, q = c(-t, t), invisible = TRUE)
 ```
 
-### Calculate the P-value.
+### Calculate and report the P-value.
 
 ```{r}
-cor_test$p.value
+P <- cor_test$p.value
+P
 ```
 
 $P < 0.001$
@@ -308,7 +311,7 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 
 ## Exploratory data analysis
 
-### Use data documentaton (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
 
 \answerbegin
 ```{r}
@@ -344,9 +347,9 @@ Please write up your answer here.
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
 \answerbegin
-$H_{0}$: Null hypothesis goes here.
+$H_{0}:$ Null hypothesis goes here.
 
-$H_{A}$: Alternative hypothesis goes here.
+$H_{A}:$ Alternative hypothesis goes here.
 \answerend
 
 ### Express the null and alternative hypotheses in symbols (when possible).
@@ -375,12 +378,14 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 ## Mechanics
 
-### Compute the test statistic.
+### Compute and report the test statistic.
 
 \answerbegin
 ```{r}
 # Add code here to compute the test statistic.
 ```
+
+Please write up your answer here.
 \answerend
 
 ### Plot the null distribution.
@@ -391,12 +396,14 @@ Please write up your answer here. (Some conditions may require R code as well.)
 ```
 \answerend
 
-### Calculate the P-value.
+### Calculate and report the P-value.
 
 \answerbegin
 ```{r}
 # Add code here to calculate the P-value.
 ```
+
+Please write up your answer here.
 \answerend
 
 
