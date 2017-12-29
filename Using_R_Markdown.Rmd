@@ -23,7 +23,7 @@ If you are looking at this document, that means you successfully completed the "
 
 Look at the upper right corner of the screen. Under your username, does it say `Using_R_Markdown`? If so, congratulations! You are in your project and you can safely skip down to the next section "What is R Markdown?"
 
-If not, click on whatever it does say there (probably `Project: (None)`).
+If you're not in the `Using_R_Markdown` project, click on whatever it does say in the upper right corner (probably `Project: (None)`).
 
 **When you do the next step, this file will likely close and you'll have to re-open it again!**
 
@@ -52,7 +52,7 @@ The PDF file will be the "pretty" output file that you submit when you turn in y
 
 ## Literate programming
 
-R Markdown is one way to implement a "literate programming" paradigm. The concept of literate programming was famously described by Donald Knuth, an eminent computer scientist. The idea is that computer programs should not appear in a sterile file that's full of hard to read, abstruse lines of computer code. Instead, functional computer code should appear interspersed with writing that explains the code.
+R Markdown is one way to implement a "literate programming" paradigm. The concept of literate programming was famously described by Donald Knuth, an eminent computer scientist. The idea is that computer programs should not appear in a sterile file that's full of hard-to-read, abstruse lines of computer code. Instead, functional computer code should appear interspersed with writing that explains the code.
 
 
 ## Reproducible research
@@ -66,14 +66,16 @@ Reproducibility should be a minimum prerequisite for all statistical analysis. S
 
 ## Structure of an R Markdown document
 
-Let's start from the top. Look at the very beginning of the plain R Markdown file. The section that starts and ends with three hyphens is called the YAML header. (Google it if you really care why.) The title of the document appears already, but you'll need to substitute your name and today's date in the obvious places. Scroll up and do that now. 
+Let's start from the top. Look at the very beginning of the plain R Markdown file. (If you're in RStudio, you are looking at the R Markdown file. If you are looking at the pretty PDF file, you'll need to go back to RStudio.) The section that starts and ends with three hyphens is called the YAML header. (Google it if you really care why.) The title of the document appears already, but you'll need to substitute your name and today's date in the obvious places. Scroll up and do that now. 
 
-You've made changes to the document, so you'll need to push the "Knit" button again. Once the knitting is done, look at the PDF document again. The YAML header has been converted into a nicely formatted document header with the new information you've provided.
+You've made changes to the document, so you'll need to push the "Knit" button again. Once the knitting is done, look at the PDF document. The YAML header has been converted into a nicely formatted document header with the new information you've provided.
 
-Next, there is some weird looking code with instructions not to touch it. I recommend heeding that advice. This code will allow you to answer questions and have your responses appear between pretty blue lines. Let's try it: 
+Next, there is some weird looking code with instructions not to touch it. I recommend heeding that advice. This code will allow you to answer questions and have your responses appear between pretty blue lines. You need to make sure there are blank lines before and after the `\answerbegin` and `\answerend` commands. Let's try it: 
 
 \answerbegin
+
 Replace this text here with something else. Then knit the document and see how it appears in the PDF file.
+
 \answerend
 
 To be clear, the colorful "answer" bars are not part of the standard R Markdown tool set. That's why we had to define them manually near the top of the file. Note that the weird code itself does not show up in the PDF file. It works in the background to define the blue bars that show up in the PDF file.
@@ -97,7 +99,7 @@ Put a blank line before and after the line above that says "Is this a new sectio
 
 You can make text *italic* or **bold** by using asterisks. (Don't forget to look at the knit document to see the result.)
 
-You can make bullet-point lists. These are also made with asterisks, but at the beginning of a line, followed by a space. If you want sub-items, indent four spaces and use a minus sign followed by a space. (Search online for syntax that will allow even deeper levels of nesting.)
+You can make bullet-point lists. These are also made with asterisks, but you'll need to start after a blank line, then put the asterisks at the beginning of each new line, followed by a space. If you want sub-items, indent four spaces and use a minus sign followed by a space. (Search online for syntax that will allow even deeper levels of nesting.)
 
 * Item
     - Sub-item
@@ -105,7 +107,7 @@ You can make bullet-point lists. These are also made with asterisks, but at the 
 * Item
 * Item
 
-Or you can make ordered lists. Just use numbers and R Markdown will do all the work for you. Sub-items work the same way as above.
+Or you can make ordered lists. Just use numbers and R Markdown will do all the work for you. Sub-items work the same way as above. (Again, make sure you're starting after a blank line and that there is a space after the periods and hyphens.)
 
 1. First Item
     - Sub-item
@@ -117,7 +119,7 @@ We can make horizontal rules. There are lots of ways of doing this, but I prefer
 
 *****
 
-There are many more formatting tricks available. For a good resource on all R Markdown stuff, click on [this link](http://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf) for a "cheat sheet". And note the syntax for including hyperlinks in your document in the raw R Markdown file.
+There are many more formatting tricks available. For a good resource on all R Markdown stuff, click on [this link](http://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf) for a "cheat sheet". And note in the previous sentence the syntax for including hyperlinks in your document.
 
 
 ## R code chunks
@@ -132,7 +134,7 @@ test <- c(1, 2, 3, 4)
 sum(test)
 ```
 
-After pushing the dark green arrow, you should notice that the output of the R code appeared like magic. If you go to the PDF file, you should see the same output appear. If you hover your mouse over the dark green arrow, you should see the words "Run Current Chunk". We'll call this the Run button for short.
+After pushing the dark green arrow, you should notice that the output of the R code appeared like magic. If you knit and look at the PDF output, you should see the same output appear. If you hover your mouse over the dark green arrow, you should see the words "Run Current Chunk". We'll call this the Run button for short.
 
 **We need to address something here that always confuses people new to R and R Markdown.** A number sign (aka "hashtag") in an R Markdown document gives us headers. In R, however, a number sign indicates a "comment" line. In the R code above, the line `# Here's some sample R code` is not executed as R code. But you can clearly see that the two lines following were executed as R code. (Perhaps even more confusingly, the R output in the PDF file is preceded by two number signs.) So be careful! Number signs inside and outside R code chunks behave very differently.
 
@@ -142,7 +144,7 @@ Typically, the first code chunk that appears in our document will load any packa
 library(mosaic)
 ```
 
-The output here is very messy because it just consists of a bunch of messages that are generated when trying to load the package. Let's change the code chunk in RStudio to look like this instead. (As before, press the Run button.)
+The output here is very messy because it just consists of a bunch of messages that are generated when trying to load the package. (These are not errors, but you have to read the message carefully to know that; errors will also appear as red messages below the code chunk. Usually, errors appear with the word "Error", so it's typically clear.) Let's change the code chunk in RStudio to look like this instead. (As before, press the Run button.)
 
 ```{r, warning = FALSE, message = FALSE}
 library(mosaic)
@@ -159,11 +161,11 @@ str(mtcars)
 summary(mtcars)
 ```
 
-If you're looking at this in RStudio, this is a big mess. RStudio did its best to give you what you asked for, but there are four separate commands here. The first two (`head` and `tail`) print some of the data, so the first two boxes of output are tables showing you the head and the tail of the data. The next two (`str` and `summary`) normally just print some information to the Console. So RStudio gave you an R Console box with the output of *both* of those commands.
+If you're looking at this in RStudio, it's a big mess. RStudio did its best to give you what you asked for, but there are four separate commands here. The first two (`head` and `tail`) print some of the data, so the first two boxes of output are tables showing you the head and the tail of the data. The next two (`str` and `summary`) normally just print some information to the Console. So RStudio gave you an R Console box with the output of *both* of those commands.
 
 If you look at the PDF file, you can see the situation isn't as bad. Each command and its corresponding output appear nicely separated there.
 
-Nevertheless, it will be good practice and a good habit to get into to put multiple output-generating commands in their own R code chunks. Compare:
+Nevertheless, it will be good practice and a good habit to get into to put multiple output-generating commands in their own R code chunks. Run the following code chunks and compare the output to the mess you saw above:
 
 ```{r}
 head(mtcars)
@@ -212,7 +214,7 @@ test2 <- c("a", "b", "c")
 test2
 ```
 
-The first line defines `test2` invisibly. The second line just asks R to print the value of `test2`, so in the PDF file, we see "a" "b" "c" just as we expect.
+The first line defines `test2` invisibly. The second line just asks R to print the value of `test2`, so in the PDF file, we see `"a" "b" "c"` just as we expect.
 
 Okay, now go to the Console in RStudio (in the lower left corner of the screen). Try typing test2. You should get an "Error: object 'test2' not found."
 
@@ -259,12 +261,24 @@ It's a good idea to "Run All" when you first open a new R Markdown document. Thi
 
 You can "Run All" from time to time, but it's easier just to "Run All" once at the beginning, and then Run individual R code chunks manually as you create them. It's also a good idea to "Run All" at the end of your session as well to make sure you haven't introduced any inadvertent errors.
 
+If you get really screwed up and if it seems like the R Markdown code isn't in line with what you see in the Global Environment, you can always clear the Global Environment. Look in the Environment tab and find the icon that looks like a broom in the toolbar. Click it now and confirm that "Yes" you want to remove all objects from the environment.
+
+Now try to run the following code chunk:
+
+```{r}
+test
+```
+
+You should get an error. But if you knit to PDF right now, it will work just fine. (Again, think about it and make sure you understand why.)
+
+Go to the Run menu and "Run All". Not only does your Global Environment repopulate correctly, but the code chunk above no longer shows an error.
+
 
 ## Inline R commands
 
 You don't need a standalone R code chunk to do computations. One neat feature is the ability to use R to calculate things right in the middle of your text.
 
-Here's an example. Suppose I wanted to compute the mean mpg for the cars in the `mtcars` dataset. I could do this, of course:
+Here's an example. Suppose we wanted to compute the mean mpg for the cars in the `mtcars` dataset. We could do this, of course:
 
 ```{r}
 mean(mtcars$mpg)
@@ -276,7 +290,7 @@ The mean mpg for cars in the `mtcars` dataset is `r mean(mtcars$mpg)`.
 
 You can (and should) check to make sure your inline R code is working, but you don't necessarily need to go to the PDF file to find out. In RStudio, click so that the cursor is somewhere in the middle of the inline code chunk in the paragraph above. Now type Ctrl-Enter or Cmd-Enter (PC or Mac respectively). A little box should pop up that shows you the answer!
 
-Notice that in addition to the inline R command that calculated the mean, I also enclosed `mtcars` in backticks to make it stand out in the output. I'll continue to do that for all computer commands and R functions.
+Notice that in addition to the inline R command that calculated the mean, I also enclosed `mtcars` in backticks to make it stand out in the output. I'll continue to do that for all computer commands and R functions. But to be clear, putting a word in backticks is just a formatting trick. If you want inline R code, you also need the letter r followed by a space inside the backticks.
 
 
 ## Exporting the PDF file
@@ -316,8 +330,11 @@ In order to be successful in these modules, you must do the following:
 One final note about copying and pasting. Sometimes, people will try to copy and paste code from the PDF output file. This is a bad idea. The PDF document uses special characters to make the output look pretty, but these
 characters don't actually work as plain text in an R markdown document. The same applies to things copied and pasted from a Word document or a website. If you need to copy and paste code, be sure to find the plain text R Markdown file (the one with the .Rmd extension here in RStudio) and copy and paste from that.
 
+
 ## Conclusion
 
-That's it! There wasn't too much you were asked to do for this assignment that will actually show up in the PDF output. (Make sure you did do the two things that were asked of you, however: one was typing something between the blue answer bars, and the other was to make a section header appear properly.) As you gain confidence and as we move into more serious stats material, you will be asked to do a lot more.
+That's it! There wasn't too much you were asked to do for this assignment that will actually show up in the PDF output. (Make sure you did do the three things that were asked of you however: one was adding your name and the date to the YAML header, one was typing something between the blue answer bars, and the last was to make a section header appear properly.) As you gain confidence and as we move into more serious stats material, you will be asked to do a lot more.
 
 Now you know how to use an R Markdown file to generate pretty output files. If you look in your project folder, you should see three files. One is the `.Rproj` file that you were instructed never to touch. The one with extension `.Rmd` is your R Markdown file. It is really nothing more than a text file; you could open it up in the most basic notepad program on your computer with no trouble. Then you also have a `.pdf` file that is the pretty output file generated when you knit to PDF. (There may also be other internal files, perhaps starting with a period, in the folder, but you can ignore those too.)
+
+Don't forget to Export the PDF file using RStudio (**not the Download button in the PDF viewer**) so that you can turn it in.
