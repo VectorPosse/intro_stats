@@ -60,6 +60,12 @@ R uses the term "factor variable" to refer to a categorical variable. Your data 
 str(birthwt)
 ```
 
+We are interested in the `race` variable. At the Console, type
+
+?birthwt
+
+and scroll down to read information about how the `race` variable is coded. You'll see that "1 = white, 2 = black, 3 = other".
+
 The code below is somewhat involved and technical. After the code chunk, I'll explain what each piece does.
 
 ```{r}
@@ -75,11 +81,21 @@ The `factor` command converts `birthwt$race` into a factor variable. The `levels
 
 The letter `c` in `c(1, 2, 3)` and `c("White", "Black", "Other")` is necessary whenever we want to combine more than one thing into a single expression. (In technical terms, the "c" stands for "combine" or "concatenate" and creates a "vector".)
 
-The last line takes the single vector `race` and turns it into a data frame that we call `race_df`. Many of the commands we will use require that we analyze variables that are sitting inside of data frames. Let's see how this worked.
+The last line takes the single vector `race` and turns it into a data frame that we call `race_df`. Many of the commands we will use require that we analyze variables that are sitting inside of data frames. Let's see how this worked. First, go to the Console and type 
+
+View(race_df)
+
+(Be sure to remember that `View` has a capital "V". We're doing this in the Console because the `View` command has no effect inside an R Markdown document. There's no way for R Markdown to show the spreadsheet view of the data that's available in RStudio.)
+
+You can see that `race_df` is a data frame with one variable (one column). That variable is called `race`.
+
+Another way to look at variables in a data frame is to use the `str` command.
 
 ```{r}
 str(race_df)
 ```
+
+Finally, we can use `head` to print some of our data in the output.
 
 ```{r}
 head(race_df)
@@ -92,7 +108,7 @@ If a variable is already coded as a factor variable in its data frame, it is imp
 
 ## ggplot
 
-The `ggplot` command is an all-purpose graphing utility. It uses a graphing philosophy derived from a book called *The Grammar of Graphics* by Leland Wilkinson. The basic idea is that each variable you want to plot should correspond to some element or "aesthetic" component of the graph. The obvious places for data to go are along the x-axis or y-axis, but other aesthetics are important too; graphs often use color, shape, or size to illustrate different aspects of data. Once these aesthetics have been defined, we will add "layers" to the graph. These are objects like dots, boxes, lines, or bars that dictate the type of graph we want to see.
+The `ggplot` command is an all-purpose graphing utility. It uses a graphing philosophy derived from a book called *The Grammar of Graphics* by Leland Wilkinson. The basic idea is that each variable you want to plot should correspond to some element or "aesthetic" component of the graph. The obvious places for data to go are along the y-axis or x-axis, but other aesthetics are important too; graphs often use color, shape, or size to illustrate different aspects of data. Once these aesthetics have been defined, we will add "layers" to the graph. These are objects like dots, boxes, lines, or bars that dictate the type of graph we want to see.
 
 In an introductory course, we won't get too fancy with these graphs. But be aware that there's a whole field of data visualization that studies clear and interesting ways to understand data graphically.
 
@@ -126,14 +142,16 @@ These bar charts are the graphical analogues of a frequency table and a relative
 In a sentence or two at most, describe the distribution of race in this data set.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 *****
 
 What about pie charts? Just. Don't.
 
-Seriously. Pie charts suck.
+Seriously. Pie charts suck.^[https://medium.com/the-mission/to-pie-charts-3b1f57bcb34a]
 
 
 ## Graphing two categorical variables
@@ -149,11 +167,17 @@ smoke <- factor(birthwt$smoke,
 smoke_race <- data.frame(smoke, race)
 ```
 
-The `smoke` variable is created in exactly the same way as the `race` variable was earlier. Now, though, because we want to analyze both `smoke` and `race` together, we create a data frame called `smoke_race` with both variables.
+The `smoke` variable is created in exactly the same way as the `race` variable was earlier. Now, though, because we want to analyze both `smoke` and `race` together, we create a new data frame called `smoke_race` with both variables.
 
 When we work with two variables, typically we think of one variable as response and the other as explanatory. For reasons that will become more clear later, we will adopt the convention of always listing the response variable first, followed by the explanatory variable. So we use `smoke_race` instead of `race_smoke`.
 
-Let's make sure the above commands did what we intended.
+Let's make sure the above commands did what we intended. Type
+
+View(smoke_race)
+
+in the Console.
+
+Then, we'll use `str` and `head` to print output here in this file.
 
 ```{r}
 str(smoke_race)
@@ -182,7 +206,7 @@ ggplot(smoke_race, aes(fill = smoke, x = race)) +
     geom_bar(position = "dodge")
 ```
 
-This is somewhat different from other `ggplot` examples you've seen before, so let's take a moment to go through the syntax. The first argument is the data frame `smoke_race`; no mystery there. The second aesthetic is `x = race`, and that also makes a lot of sense. As `race` is our explanatory variable---we're using race to group the women, and then within each racial group, we're interested in how many women smoked during pregnancy---`race` goes on the x-axis. However, `smoke` does not go on the y-axis! (This is a very common mistake for novices.) The y-axis of a bar chart is always a count or a percentage, so no variable should ever go on the y-axis of a bar chart. In that case, how does `smoke` enter the picture? Through the use of color! The aesthetic `fill = smoke` says to use the `smoke` variable to shade or "fill" the bars with different colors. You'll also notice that `ggplot` makes a legend automatically with the colors so you can see which color corresponds to which value (in this case, "Yes" or "No").
+This is somewhat different from other `ggplot` examples you've seen before, so let's take a moment to go through the syntax. The first argument is the data frame `smoke_race`; no mystery there. The second aesthetic `x = race` also makes a lot of sense. As `race` is our explanatory variable---we're using race to group the women, and then within each racial group, we're interested in how many women smoked during pregnancy---`race` goes on the x-axis. However, `smoke` does not go on the y-axis! (This is a very common mistake for novices.) The y-axis of a bar chart is always a count or a percentage, so no variable should ever go on the y-axis of a bar chart. In that case, how does `smoke` enter the picture? Through the use of color! The aesthetic `fill = smoke` says to use the `smoke` variable to shade or "fill" the bars with different colors. You'll also notice that `ggplot` makes a legend automatically with the colors so you can see which color corresponds to which value (in this case, "Yes" or "No").
 
 Another unusual feature is the argument `position = "dodge"` in the `geom_bar` layer. Let's see what happens if we remove it.
 
@@ -202,13 +226,14 @@ ggplot(smoke_race, aes(fill = smoke, x = race)) +
     geom_bar(position = "fill")
 ```
 
-This graph does correctly show that a larger proportion of black women smoke during pregnancy when compared to women from the "Other" category. (And white women smoked the most of all; the majority of white women smoked during pregnancy!)
+This graph does correctly show that a larger proportion of black women smoke during pregnancy when compared to women from the "Other" category. (And white women smoked the most of all; the majority of white women smoked during pregnancy in this data set!)
 
 ### Your turn
 
-Choose two categorical variables of interest from the `birthwt` data set. (Choose at least one variable other than `race` or `smoke`.) Turn them into factor variables with meaningful labels. Create a new data frame containing both variables. Identify one as response and one as explanatory. Then create a side-by-side bar chart. Comment on the association (or independence) of the two variables.
+Choose two categorical variables of interest from the `birthwt` data set. Identify one as response and one as explanatory. (Choose at least one variable other than `race` or `smoke`.) Turn them into factor variables with meaningful labels. (If you use `race` or `smoke` again, **do not** use factor again!) Create a new data frame containing both variables. Then create a side-by-side bar chart. Comment on the association (or independence) of the two variables.
 
 \answerbegin
+
 ```{r}
 # Add code here to convert one or more variables to factor variables
 # and make a data frame.
@@ -219,6 +244,7 @@ Choose two categorical variables of interest from the `birthwt` data set. (Choos
 ```
 
 Please write up your answer here.
+
 \answerend
 
 
@@ -243,22 +269,38 @@ ggplot(race_df, aes(x = race, y = ..prop.., group = 1)) +
          x = "Race")
 ```
 
+A quick note about formatting in R code chunks. Notice that I put different parts of the last `ggplot` command on their own separate lines. The command would still work if I did this:
+
+```{r}
+ggplot(race_df, aes(x = race, y = ..prop.., group = 1)) + geom_bar() + labs(title = "Distribution of race", y = "Proportion", x = "Race")
+```
+
+In the R Markdown document, the code chunk "wraps" to the next line so it's all visible. But now knit the document and look at the PDF version of the code chunk above.
+
+Do you see how it runs off the right edge of the page?
+
+Now imagine your PDF output is being graded and the grader can only see the first few lines of code before it runs off the edge of the paper. Do you think you will earn full points for code that the grader can't even see?
+
+**The moral of the story is this: use line breaks judiciously to format your code. If it wraps to the next line in RStudio, there's a good chance it will run off the page in the PDF.**
+
 ### Exercise
 
 Modify the following side-by-side bar chart by adding a title and labels for both the fill variable and the x-axis variable.
 
 \answerbegin
+
 ```{r}
 # Modify the following side-by-side bar chart by adding a title and 
 # labels for both the x-axis and the fill variable.
 ggplot(smoke_race, aes(fill = smoke, x = race)) +
     geom_bar(position = "dodge")
 ```
+
 \answerend
 
 *****
 
-Every part of the graph can be customized, from the color scheme to the tick marks on the axes, to the major and minor grid lines that appear on the background. We won't go into all that, but you can look at the [ggplot2 documentation](http://docs.ggplot2.org/current/) online and search Google for examples if you want to dig in and figure out how to do some of that stuff. However, the default options are often (but not always) the best, so be careful that your messing around doesn't inadvertently make the graph less clear or less appealing.
+Every part of the graph can be customized, from the color scheme to the tick marks on the axes, to the major and minor grid lines that appear on the background. We won't go into all that, but you can look at the [ggplot2 documentation](http://ggplot2.tidyverse.org/) online and search Google for examples if you want to dig in and figure out how to do some of that stuff. However, the default options are often (but not always) the best, so be careful that your messing around doesn't inadvertently make the graph less clear or less appealing.
 
 
 ## Conclusion
