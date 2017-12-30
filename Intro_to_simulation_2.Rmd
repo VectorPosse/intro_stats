@@ -85,11 +85,22 @@ smoke <- factor(birthwt$smoke, levels = c(1, 0), labels = c("Yes", "No"))
 low_smoke <- data.frame(low, smoke)
 ```
 
+Use `View` at the Console to look at a spreadsheet view of `low_smoke` and make sure that everything looks okay. We'll also use `str` and `head`.
+
+```{r}
+str(low_smoke)
+```
+
+```{r}
+head(low_smoke)
+```
+
 ### Exercise
 
 Create two contingency tables with `low` as the row variable and `smoke` as the column variable, one with counts and one with percentages displayed. Be sure to include the marginal distribution (the column sums) as well. Go back to the R module `Tables.Rmd` if you need to review the `tally` command.
 
 \answerbegin
+
 ```{r}
 # Add code here to create a contingency tables of counts with 
 # low as the row variable and smoke as the column variable.
@@ -105,7 +116,9 @@ Create two contingency tables with `low` as the row variable and `smoke` as the 
 By placing `low` as the row variable and `smoke` as the column variable, and then looking at percentages, we are implying that one variable is response and one is explanatory. Which variable are we treating as response and which are we treating as explanatory? Do you agree with that choice? Why or why not?
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 *****
@@ -123,7 +136,9 @@ The column headers in the resulting output are a bit opaque. What we have here a
 Interpret these percentages in the context of the data. In other words, what do these percentages say about the women who smoke during pregnancy versus the women who do not? (Hint: look back at the contingency table you made earlier. Where do these percentages come from?)
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 *****
@@ -146,7 +161,9 @@ obs_diff
 In which order are the groups being subtracted? In other words, why is the observed difference negative?
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 *****
@@ -175,19 +192,19 @@ One way to force the variables to  be independent is to "shuffle" the values of 
 Let's see how shuffling works in R. To begin with, look at the first 20 actual values of `smoke` in our data:
 
 ```{r}
-head(low_smoke$smoke, 20)
+head(low_smoke$smoke, n = 20)
 ```
 
 Now we "shuffle" all the values around and look at the first 20 again:
 
 ```{r}
-head(shuffle(low_smoke$smoke), 20)
+head(shuffle(low_smoke$smoke), n = 20)
 ```
 
 Do it again, just to make sure it's random:
 
 ```{r}
-head(shuffle(low_smoke$smoke), 20)
+head(shuffle(low_smoke$smoke), n = 20)
 ```
 
 
@@ -215,7 +232,7 @@ The `do` command from the `mosaic` package allows us to repeat this simulation p
 
 ```{r}
 sims <- do(5000) * diffprop(low ~ shuffle(smoke), data = low_smoke)
-head(sims, 20)
+head(sims, n = 20)
 ```
 
 Think carefully about what this pile of numbers means. Each row of the `sims` data frame represents a simulated difference in the proportion of low birth weight babies between groups of women who smoke or who don't smoke. The `shuffle` part of the simulation ensures that there is no actual relationship between smoking and low birth weight among these simulated values. We expect each simulated difference to be close to zero, but we also expect deviations from zero due to randomness and chance.
@@ -228,7 +245,7 @@ A histogram will show us the range of possible values under the assumption of in
 ```{r}
 ggplot(sims, aes(x = diffprop)) +
     geom_histogram(binwidth = 0.05) +
-    geom_vline(xintercept =  obs_diff, color = "blue")
+    geom_vline(xintercept = obs_diff, color = "blue")
 ```
 
 ### Exercise
@@ -236,7 +253,9 @@ ggplot(sims, aes(x = diffprop)) +
 Why is the mode of the graph above at 0? This has been explained several different times in this module, but put it into your own words to make sure you understand the logic behind the shuffling.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 *****
@@ -249,12 +268,12 @@ How likely is it that the observed difference (or a difference even more extreme
 Look at the 100 smallest entries of the values of `diffprop`:
 
 ```{r}
-head(sort(sims$diffprop), 100)
+head(sort(sims$diffprop), n = 100)
 ```
 
 Of the 5000 simulations, the most extreme difference of about 24% occurred once, just by chance. That seems like a pretty extreme value when expecting a value of 0%, but the laws of probability tell us that extreme values will be observed from time to time, even if rarely. Also recall that the observed difference in the actual data was -0.1532315. This specific value came up quite a bit in our simulated data. In fact, the 98th entry of the sorted data above is the last occurrence of the value -0.1532315. After that, the next higher value is -0.1310223.
 
-So let's return to the original question. How many simulated values are as small---if not smaller---than the observed difference? Apparently, 98 out of 5000, which is `r 98/5000`. In other words `r 100* 98/5000`% of the simulated data is as extreme or more extreme than the actual difference in low birth weight prevalence between smoking and nonsmoking women in the real data. That's not very large. In other words, a difference like -0.1532315 could occur just by chance---like flipping 10 out of 10 heads or something like that. But it doesn't happen very often.
+So let's return to the original question. How many simulated values are as small---if not smaller---than the observed difference? Apparently, 98 out of 5000, which is `r 98/5000`. In other words `r 100 * 98/5000`% of the simulated data is as extreme or more extreme than the actual difference in low birth weight prevalence between smoking and nonsmoking women in the real data. That's not very large. In other words, a difference like -0.1532315 could occur just by chance---like flipping 10 out of 10 heads or something like that. But it doesn't happen very often.
 
 We can automate this using the same `prop` command we saw before, but used in a slightly different way. In the command below, we use the condition
 
@@ -268,7 +287,7 @@ prop(sims$diffprop <= obs_diff)
 
 **COPY/PASTE WARNING**: If the observed difference were positive, then extreme values of interest would be *greater* than 0.1532315, not less than -0.1532315. You must note if the observed difference is positive or negative and then use `<=` or `>=` as appropriate!
 
-Again, 0.0196 is a small number. This shows us that if there were truly no association between low birth weight and smoking, then our data is a rare event. (An observed difference this extreme or more extreme would only occur about 2% of the time.)
+Again, 0.0196 is a small number. This shows us that if there were truly no association between low birth weight and smoking, then our data is a rare event. (An observed difference this extreme or more extreme would only occur about 2% of the time by chance.)
 
 Because the probability above is so small, it seems unlikely that our variables are independent. Therefore, it seems more likely that there is an association between low birth weight and smoking. We have evidence of a statistically significant difference between the chance of having a baby with low birth weight among women who smoke versus women who don't smoke.
 
@@ -279,7 +298,9 @@ Keep in mind that this data is from an observational study, so we cannot conclud
 When we see an association between two variables, it may be that both factors are related to some third variable that we haven't measured. When that happens, that third variable is called a *lurking variable*. Get creative for a minute and see if you can come up with a reasonably plausible lurking variable for the scenario above. In other words, if smoking itself doesn't cause low birth weight babies, can you imagine another factor that would cause low birth weight babies and also be associated with mothers smoking?
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 *****
@@ -292,18 +313,21 @@ Walk through the following sequence of steps to explore whether low birth weight
 
 Uterine irritability is recorded in the variable `ui` in the `birthwt` data set.
 
-1. Convert `ui` to a factor variable, paying careful attention to the assignment of the levels and labels. (Which condition is considered a "success" here?) Then create a new data frame from the factor variables `low` and `ui`. (As `low` is already a factor variable, you don't need to re-do the work for that one.) Call this data frame `low_ui`.
+1. Convert `ui` to a factor variable. Then create a new data frame from the factor variables `low` and `ui`. (As `low` is already a factor variable, you don't need to re-do the work for that one.) Call this data frame `low_ui`.
 
 \answerbegin
+
 ```{r}
 # Add code here to convert ui to a factor variable.
 # Combine low and ui into a single data frame called low_ui.
 ```
+
 \answerend
 
 2. Exploratory data analysis: make two contingency tables with `low` as the response variable and `ui` as the explanatory variable. One table should have counts and the other table should have percentages. (Both tables should include the marginal distribution.)
 
 \answerbegin
+
 ```{r}
 # Add code here to make a contingency table with counts.
 ```
@@ -317,43 +341,53 @@ Uterine irritability is recorded in the variable `ui` in the `birthwt` data set.
 3. Use the `diffprop` function to calculate and store the observed difference in the proportion of low birth weight babies between women with and without uterine irritability. Call this `obs_diff2` so that it doesn't conflict with the earlier `obs_diff`.
 
 \answerbegin
+
 ```{r}
 # Add code here to calculate the observed difference.
 # Store this as obs_diff2.
 ```
+
 \answerend
 
 4. Simulate 2000 outcomes under the assumption that low birth weight is independent of uterine irritability. Use the `do` command in conjunction with `diffprop` and `shuffle` in a single line of code. Call the simulated data frame `sims2` so that it doesn't conflict with the earlier `sims`.
 
 \answerbegin
+
 ```{r}
 # Add code here to simulate 2000 outcomes under the independence assumption
 # and store the simulations in a data frame called sims2.
 ```
+
 \answerend
 
 5. Plot the simulated values in a histogram. Be sure to include a vertical line at the value of the observed difference.
 
 \answerbegin
+
 ```{r}
 # Add code here to plot the results.
 ```
+
 \answerend
 
 6. Calculate how likely it is to see our observed difference or something even more extreme among the randomly simulated values. Pay close attention to whether the observed difference is positive or negative and choose `>=` or `<=` accordingly.
 
 \answerbegin
+
 ```{r}
 # Add code here to calculate how likely it is to see 
 # our observed difference or something even more extreme 
-# among the randomly simmulated values.
+# among the randomly simulated values.
 ```
+
 \answerend
 
 Finally, comment on what you see. Based on the number you get in step 6 above, is the observed difference rare? In other words, under the assumption that low birth weight and uterine irritability are independent, are we likely to see an observed difference as far away from zero as we actually see in the data? So what is your conclusion then? Do you believe there is an association between low birth weight and uterine irritability?
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 *****
