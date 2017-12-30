@@ -60,6 +60,12 @@ R uses the term "factor variable" to refer to a categorical variable. Your data 
 str(birthwt)
 ```
 
+We are interested in the `race` variable. At the Console, type
+
+?birthwt
+
+and scroll down to read information about how the `race` variable is coded. You'll see that "1 = white, 2 = black, 3 = other".
+
 The code below is somewhat involved and technical. After the code chunk, I'll explain what each piece does.
 
 ```{r}
@@ -75,11 +81,22 @@ The `factor` command converts `birthwt$race` into a factor variable. The `levels
 
 The letter `c` in `c(1, 2, 3)` and `c("White", "Black", "Other")` is necessary whenever we want to combine more than one thing into a single expression. (In technical terms, the "c" stands for "combine" or "concatenate" and creates a "vector".)
 
-The last line takes the single vector `race` and turns it into a data frame that we call `race_df`. Many of the commands we will use require that we analyze variables that are sitting inside of data frames. Let's see how this worked.
+The last line takes the single vector `race` and turns it into a data frame that we call `race_df`. Many of the commands we will use require that we analyze variables that are sitting inside of data frames. Let's see how this worked. First, go to the Console and type 
+
+View(race_df)
+
+(Be sure to remember that `View` has a capital "V". We're doing this in the Console because the `View` command has no effect inside an R Markdown document. There's no way for R Markdown to show the spreadsheet view of the data that's available in RStudio.)
+
+You can see that `race_df` is a data frame with one variable (one column). That variable is called `race`.
+
+Another way to look at variables in a data frame is to use the `str` command.
 
 ```{r}
 str(race_df)
 ```
+
+Finally, we can use `head` to print some of our data in the output.
+
 ```{r}
 head(race_df)
 ```
@@ -114,15 +131,19 @@ The graphical analogues of these tables are the bar chart and the relative frequ
 Generate a frequency table like above, but this time use `data = birthwt` to grab the unmodified `race` variable from the original `birthwt` data frame.
 
 \answerbegin
+
 ```{r}
 # Add code here to create a frequency table of race with data = birthwt.
 ```
+
 \answerend
 
 Explain the advantage of creating a factor variable with meaningful labels over using the original numerical variable.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 
@@ -139,11 +160,17 @@ smoke <- factor(birthwt$smoke,
 smoke_race <- data.frame(smoke, race)
 ```
 
-The `smoke` variable is created in exactly the same way as the `race` variable was earlier. Now, though, because we want to analyze both `smoke` and `race` together, we create a data frame called `smoke_race` with both variables.
+The `smoke` variable is created in exactly the same way as the `race` variable was earlier. Now, though, because we want to analyze both `smoke` and `race` together, we create a new data frame called `smoke_race` with both variables.
 
 When we work with two variables, typically we think of one variable as response and the other as explanatory. For reasons that will become more clear later, we will adopt the convention of always listing the response variable first, followed by the explanatory variable. So we use `smoke_race` instead of `race_smoke`.
 
-Let's make sure the above commands did what we intended.
+Let's make sure the above commands did what we intended. Type
+
+View(smoke_race)
+
+in the Console.
+
+Then, we'll use `str` and `head` to print output here in this file.
 
 ```{r}
 str(smoke_race)
@@ -169,7 +196,7 @@ The `tally` command uses R's "formula" notation to indicate which variable is re
 
 `response ~ explanatory`
 
-For example, I might be interested in knowing if a woman's race is associated with how likely she might have been to smoke. In other words, we are using knowledge of a woman's race to *predict* if she is a smoker. Therefore, `smoke` is response and `race` is explanatory. In the `tally` command, we'll need to use the formula
+For example, I might be interested in knowing if smoking during pregnancy is associated with a woman's race. In other words, we are using knowledge of a woman's race to *predict* if she is a smoker. Therefore, `smoke` is response and `race` is explanatory. In the `tally` command, we'll need to use the formula
 
 `smoke ~ race`.
 
@@ -192,22 +219,27 @@ Now we can see that each column adds up to 100%. In other words, each racial gro
 What percentage of black women smoked during pregnancy? What percentage of "other" women smoked during pregnancy?
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
-Does race appear to be associated with the likelihood of smoking during pregnancy for the women in this data set? Or are these variables independent?
+Does the likelihood of smoking during pregnancy appear to be associated with race for the women in this data set? Or are these variables independent?
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 *****
 
 ### Your turn
 
-Choose two categorical variables of interest from the `birthwt` data set. (Choose at least one variable other than `race` or `smoke`.) Turn them into factor variables with meaningful labels. Create a new data frame containing both variables. Identify one as response and one as explanatory. Then create a contingency table with percentages. Comment on the association (or independence) of the two variables.
+Choose two categorical variables of interest from the `birthwt` data set. Identify one as response and one as explanatory. (Choose at least one variable other than `race` or `smoke`.) Turn them into factor variables with meaningful labels. (If you use `race` or `smoke` again, **do not** use factor again!) Create a new data frame containing both variables.  Then create a contingency table with percentages. Comment on the association (or independence) of the two variables.
 
 \answerbegin
+
 ```{r}
 # Add code here to convert one or more variables to factor variables
 # and make a data frame.
@@ -218,6 +250,7 @@ Choose two categorical variables of interest from the `birthwt` data set. (Choos
 ```
 
 Please write up your answer here.
+
 \answerend
 
 
