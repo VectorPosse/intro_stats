@@ -47,14 +47,14 @@ When you are finished with the assignment, knit to PDF and proofread the PDF fil
 We load the `mosaic` package as well as the `MASS` package for working with data on risk factors associated with low birth weight. (Note that the `ggplot2` package we will use for graphing is automatically loaded alongside the `mosaic` package.)
 
 ```{r, warning = FALSE, message=FALSE}
-library(mosaic)
 library(MASS)
+library(mosaic)
 ```
 
 
 ## ggplot
 
-The `ggplot` command is an all-purpose graphing utility. It uses a graphing philosophy derived from a book called *The Grammar of Graphics* by Leland Wilkinson. The basic idea is that each variable you want to plot should correspond to some element or "aesthetic" component of the graph. The obvious places for data to go are along the x-axis or y-axis, but other aesthetics are important too; graphs often use color, shape, or size to illustrate different aspects of data. Once these aesthetics have been defined, we will add "layers" to the graph. These are objects like dots, boxes, lines, or bars that dictate the type of graph we want to see.
+The `ggplot` command is an all-purpose graphing utility. It uses a graphing philosophy derived from a book called *The Grammar of Graphics* by Leland Wilkinson. The basic idea is that each variable you want to plot should correspond to some element or "aesthetic" component of the graph. The obvious places for data to go are along the y-axis or x-axis, but other aesthetics are important too; graphs often use color, shape, or size to illustrate different aspects of data. Once these aesthetics have been defined, we will add "layers" to the graph. These are objects like dots, boxes, lines, or bars that dictate the type of graph we want to see.
 
 In an introductory course, we won't get too fancy with these graphs. But be aware that there's a whole field of data visualization that studies clear and interesting ways to understand data graphically.
 
@@ -75,9 +75,15 @@ ggplot(birthwt, aes(x = lwt)) +
 Let's walk through this syntax step by step. The first argument of the `ggplot` command is the name of the data frame, in this case, `birthwt`. Next we define the aesthetics using `aes` and parentheses. Inside the parentheses, we assign any variables we want to plot to aesthetics of the graph. For this analysis, we are only interested in the variable `lwt` and for a histogram, the numerical variable typically goes on the x-axis. That's why it says `x = lwt` inside the `aes` argument. Next, `ggplot` needs to know what kind of graph we want. Graph types are called "geoms" in the `ggplot` world, and `geom_histogram()` tells `ggplot` to add a histogram layer. (Adding a layer is accomplished by literally typing a plus sign.)
 
 
-## Binwidths
+## Binwidths and boundaries
 
-Generally, the default binning for `ggplot` histograms is not so great. In fact, if you look at the output from the graphing command above, you can see that `ggplot` informs you that you can pick a better value. Let's try bins that are a little wider and that line up with numbers that are easy to see in the plot. Use `binwidth` to set the binwidth, and `boundary` to determine where you want one of the bin boundaries to fall. (The latter number is pretty arbitrary. We'd get the same graph if the boundary were set to 110 or 150, or any other multiple of 10.)
+Generally, the default binning for `ggplot` histograms is not so great. In fact, if you look at the output from the graphing command above, you can see that `ggplot` informs you that you should pick a better value. You can also see that the bins aren't ideal. They are too narrow, which means that arbitrary differences between bins show up as "random" spikes all over the graph.
+
+Instead, we should aim to use bins that show the overall shape of the data and smooth it out a bit. Look back at the scale of the x-axis to assess how wide each bar should be. There's no one correct answer. In this case, the bins ought to be a little wider. Since our x-axis goes from about 75 to 250, maybe we should try binwidths of 10. And if 10 doesn't look good, nothing prevents us from trying a different number.
+
+It's also easier to interpret the histogram when the bins' edges line up with numbers that are easy to see in the plot. Use `boundary` to determine where you want one of the bin boundaries to fall.  For example, if we set the boundary to 100, that means that one bar will start with its left edge at 100. The latter number is pretty arbitrary; once one boundary is set, it determines where all the other bins will line up. With a binwidth of 10, we'd get the same graph if the boundary were set to 110 or 150, or any other multiple of 10.
+
+We use `binwidth` and `boundary` inside the parentheses of the `geom_histogram` to modify these parameters.
 
 ```{r}
 ggplot(birthwt, aes(x = lwt)) +
@@ -89,23 +95,26 @@ ggplot(birthwt, aes(x = lwt)) +
 Write a paragraph or so describing the shape of the distribution of the `lwt` variable, focusing on the three key features (modes, symmetry, and outliers). Be sure to speak about these in the context of the data; in other words, your answer should refer to women and their weight, and not just abstract numbers and stats words.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Your turn
 
-Create a histogram of the baby's birth weight (in grams). Adjust the binwidth if necessary to more clearly see the shape of the distribution. Then describe the shape of the distribution as you did for the `lwt` variable above.
+Create a histogram of the baby's birth weight (in grams). Adjust the binwidth and boundary to see the shape of the distribution more clearly. Then describe the shape of the distribution as you did for the `lwt` variable above.
 
 \answerbegin
+
 ```{r}
 # Add code here to create a histogram for the distribution of 
 # the baby's birth weight (in grams). 
-# Don't forget to adjust the bins if necessary.
+# Don't forget to adjust the binwidth and boundary.
 ```
 
 Please write up your answer here.
-\answerend
 
+\answerend
 
 ### Exercise
 
@@ -121,7 +130,9 @@ ggplot(faithful, aes(x = waiting)) +
 Write a paragraph or so describing the shape of the distribution of waiting times, focusing on the three key features (modes, symmetry, and outliers).
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 This is a trick question! According to one website^[http://www.geyserstudy.org/geyser.aspx?pGeyserNo=OLDFAITHFUL],
@@ -131,10 +142,12 @@ This is a trick question! According to one website^[http://www.geyserstudy.org/g
 Change the binwidth (no need to change the boundary) to something more sensible to see the bimodal nature of the distribution.
 
 \answerbegin
+
 ```{r}
 # Change the binwidth of the last histogram to see
 # see the bimodal nature of the distribution.
 ```
+
 \answerend
 
 *****
@@ -154,12 +167,14 @@ The proper graph for two numerical variables is a scatterplot. We graph the resp
 If you were interested in exploring a possible association between the weight of the mother at her last menstrual period and the birth weight of the baby, which variable would you consider to be the response variable and which would be the explanatory variable? Explain your reasoning. Be careful not to use language that suggests cause or effect. There may, in fact, be a causal relationship, but that is not going to be proven from observational data. Instead, when there is an association, we say that the explanatory variable might be used to "predict" the value of the response variable.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ******
 
-Now we'll create a scatterplot of the weight of the mother at her last menstrual period and the birth weight of the baby. Since we are now plotting two variables, we have two aesthetics, one on the y-axis (the response variable) and one on the x-axis (the explanatory variable). Since scatterplots use points to plot each data value, the correct layer to add is `geom_point()`.
+Now we'll create a scatterplot of the birth weight of the baby and the weight of the mother at her last menstrual period. Since we are now plotting two variables, we have two aesthetics, one on the y-axis (the response variable) and one on the x-axis (the explanatory variable). Since scatterplots use points to plot each data value, the correct layer to add is `geom_point()`.
 
 ```{r}
 ggplot(birthwt, aes(y = bwt, x = lwt)) +
@@ -171,7 +186,9 @@ ggplot(birthwt, aes(y = bwt, x = lwt)) +
 Comment on the nature of the association. (Is is positive/negative, or are these two variables independent?) As always, be sure to word your answer in the context of the data.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Your turn
@@ -179,21 +196,27 @@ Please write up your answer here.
 Consider the two variables `bwt` and `age`. Which variables would you consider as response and explanatory?
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
-Now create a scatterplot to visualize the relationship between the birth weight of the baby the mother's age. Be careful to make sure you put the variables on the right axes!
+Now create a scatterplot to visualize the relationship between the birth weight of the baby and the mother's age. Be careful to make sure you put the variables on the right axes!
 
 \answerbegin
+
 ```{r}
 # Add code here to create a scatterplot using bwt and age.
 ```
+
 \answerend
 
 Now comment on the nature of the association.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 
@@ -231,24 +254,26 @@ Do you see how it runs off the right edge of the page?
 
 Now imagine your PDF output is being graded and the grader can only see the first few lines of code before it runs off the edge of the paper. Do you think you will earn full points for code that the grader can't even see?
 
-The moral of the story is this: use line breaks judiciously to format your code. If it wraps to the next line in RStudio, there's a good chance it will run off the page in the PDF.
+**The moral of the story is this: use line breaks judiciously to format your code. If it wraps to the next line in RStudio, there's a good chance it will run off the page in the PDF.**
 
 ### Exercise
 
 Modify the following scatterplot by adding a title and labels for both the y-axis and x-axis.
 
 \answerbegin
+
 ```{r}
 # Modify the following scatterplot by adding a title and 
-# labels for both the x-axis and y-axis.
+# labels for both the y-axis and x-axis.
 ggplot(birthwt, aes(y = bwt, x = lwt)) +
     geom_point()
 ```
+
 \answerend
 
 *****
 
-Every part of the graph can be customized, from the color scheme to the tick marks on the axes, to the major and minor grid lines that appear on the background. We won't go into all that, but you can look at the [ggplot2 documentation](http://docs.ggplot2.org/current/) online and search Google for examples if you want to dig in and figure out how to do some of that stuff. However, the default options are often (but not always) the best, so be careful that your messing around doesn't inadvertently make the graph less clear or less appealing.
+Every part of the graph can be customized, from the color scheme to the tick marks on the axes, to the major and minor grid lines that appear on the background. We won't go into all that, but you can look at the [ggplot2 documentation](http://ggplot2.tidyverse.org/) online and search Google for examples if you want to dig in and figure out how to do some of that stuff. However, the default options are often (but not always) the best, so be careful that your messing around doesn't inadvertently make the graph less clear or less appealing.
 
 
 ## Conclusion
