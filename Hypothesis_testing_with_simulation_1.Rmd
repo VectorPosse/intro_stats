@@ -89,7 +89,7 @@ Most data sets come with some information about the provenance and structure of 
 
 For data that you collect yourself, you'll already know all about it, although should probably write that stuff down in case other people want to use your data (or in case "future you" wants to use the data). For other data sets, you hope that other people have recorded information about how the data was collected and what is described in the data. When working with data sets in R as we do for these modules, we've already seen that there are help files (sometimes more or less helpful).
 
-We can also use commands like `str` to explore the structure of the data (the variables and how they're coded), as well as summary functions (like `summary` or---even better---`favstats`) to get a quick sense of the variables.
+We can also use commands like `View` to see the data in spreadsheet form, `str` to explore the structure of the data (the variables and how they're coded), as well as summary functions (like `summary` or---even better---`favstats`) to get a quick sense of the variables.
 
 Sometimes you have to prepare your data for analysis. A common example that we've seen before is converting categorical variables that should be coded as factor variables, but often are coded numerically (like "1" and "0" instead of "Yes" and "No"). Sometimes missing data is coded unusually (like "999") and that has to be fixed before trying to calculate statistics. "Cleaning" data is often a task that takes more time than analyzing it!
 
@@ -129,7 +129,7 @@ Once we have a test statistic, we can plot it in the same graph as the null mode
 
 Finally, we convert the visual evidence explained in the previous paragraph to a number called a *P-value*. This measures how likely it is to see our observed data---or data even more extreme---under the assumption of the null. A small P-value, then, means that if the null were really true, we wouldn't be very likely at all to see data like ours. That leaves us with little confidence that the null model is really true. (After all, we *did* see the data we gathered!) If the P-value is large---in other words, if the test statistic is closer to the middle of the null distribution---then our data is perfectly consistent with the null hypothesis. That doesn't mean the null is true, but it certainly does not give us evidence against the null.
 
-A one-sided test will give you a P-value that only counts data more extreme than the observed data in the direction that we explicitly hypothesized. For example, if our alternative hypothesis was that low birth weight babies were more likely among smoking mothers, then we would only look at the part of the model that showed differences with as many or more low birth weight babies as our data showed. A two-sided P-value, by contrast, will count data that is extreme in either direction. This will include values on both sides of the distribution, which is why it's called a two-sided test. Computationally, it is usually easiest to calculate the one-sided P-value and just double it.^[This is not technically the most mathematically appropriate thing to do, but it's a reasonable approximation in many common situations.]
+A one-sided test will give us a P-value that only counts data more extreme than the observed data in the direction that we explicitly hypothesized. For example, if our alternative hypothesis was that low birth weight babies were more likely among smoking mothers, then we would only look at the part of the model that showed differences with as many or more low birth weight babies as our data showed. A two-sided P-value, by contrast, will count data that is extreme in either direction. This will include values on both sides of the distribution, which is why it's called a two-sided test. Computationally, it is usually easiest to calculate the one-sided P-value and just double it.^[This is not technically the most mathematically appropriate thing to do, but it's a reasonable approximation in many common situations.]
 
 Remember the statement made earlier that throughout the hypothesis testing process, **we work under the assumption that the null hypothesis is true**. The P-value is no exception. It tells us **under the assumption of the null** how likely we are to to see data at least as extreme (if not even more extreme) as the data we actually saw.
 
@@ -137,9 +137,9 @@ Remember the statement made earlier that throughout the hypothesis testing proce
 
 The P-value we calculate in the Mechanics section allows us to determine what our decision will be relative to the null hypothesis. As explained above, when the P-value is small, that means we had data that would be very unlikely had the null been true. The sensible conclusion is then to "reject the null hypothesis." On the other hand, if the data is consistent with the null hypothesis, then we "fail to reject the null hypothesis."
 
-How small does the P-value need to be before we are willing to reject the null hypothesis? That is a decision we have to make based on how much we are willing to risk an incorrect conclusion. A value that is widely used is 0.05; in other words, if $P < 0.05$ we reject the null, and if $P \geq 0.05$, we fail to reject the null. However, for situations where we want to be conservative, we could choose this threshold to be much smaller. If we insist that the P-value be less than 0.01, for example, then we will only reject the null when we have a lot more evidence. The threshold we choose is called the "significance level", denoted by the Greek letter alpha: $\alpha$. Ideally, $\alpha$ should be chosen long before we compute our P-value so that we're not tempted to cheat and change the value of $\alpha$ to suit our P-value (and by doing so, quite literally, move the goalposts).
+How small does the P-value need to be before we are willing to reject the null hypothesis? That is a decision we have to make based on how much we are willing to risk an incorrect conclusion. A value that is widely used is 0.05; in other words, if $P < 0.05$ we reject the null, and if $P \geq 0.05$, we fail to reject the null. However, for situations where we want to be conservative, we could choose this threshold to be much smaller. If we insist that the P-value be less than 0.01, for example, then we will only reject the null when we have a lot more evidence. The threshold we choose is called the "significance level", denoted by the Greek letter alpha: $\alpha$. The value of $\alpha$ must be chosen long before we compute our P-value so that we're not tempted to cheat and change the value of $\alpha$ to suit our P-value (and by doing so, quite literally, move the goalposts).
 
-Note that we never accept the null hypothesis. The hypothesis testing procedure gives us no evidence in favor of the null. All we can say is that the evidence is either strong enough to warrant rejection of the null, or else it isn't, in which case we can conclude nothing. If we can't prove the null false, we are left not knowing much of anything at all.
+**Note that we never accept the null hypothesis.** The hypothesis testing procedure gives us no evidence in favor of the null. All we can say is that the evidence is either strong enough to warrant rejection of the null, or else it isn't, in which case we can conclude nothing. If we can't prove the null false, we are left not knowing much of anything at all.
 
 The phrases "reject the null" or "fail to reject the null" are very statsy. Your audience may not be statistically trained. Besides, the *real* conclusion you care about concerns the research question of interest you posed at the beginning of this process, and that is built into the alternative hypothesis, not the null. Therefore, we need some statement that addresses the alternative hypothesis in words that a general audience will understand. I recommend the following templates:
 
@@ -163,9 +163,9 @@ Note that there is some mathematical formatting. As mentioned before, this is do
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
 
-[You can look at the help file by typing `?birthwt` at the Console. However, do not put that command here in a code chunk. The R Markdown file has no way of displaying a help file when it's processed.]
+[You can look at the help file by typing `?birthwt` at the Console. However, do not put that command here in a code chunk. The R Markdown file has no way of displaying a help file when it's processed. The same holds for the `View` command. We can, however, include `str` here in the R Markdown document.]
 
 ```{r}
 str(birthwt)
@@ -173,7 +173,7 @@ str(birthwt)
 
 ### Prepare the data for analysis.
 
-We need to convert `low` and `smoke` to factor variables and put them into a separate data frame. Recall from a previous assignment that "Yes" is our "success" condition, so it has to be listed first among the `levels` and `labels` of the `factor` command.
+We need to convert `low` and `smoke` to factor variables and put them into a separate data frame. Recall from a previous assignment that "Yes" is our "success" condition for `low`, so it has to be listed first among the `levels` and `labels` of the `factor` command. (This is particularly important for the response variable `low`. For the explanatory variable `smoke` it's less relevant, although see the section below in which we compute `diffprop`.) We use the `head` command to check that things worked out correctly. (You could also use `View` in the Console on the newly formed `low_smoke` data frame.)
 
 ```{r}
 low <- factor(birthwt$low, levels = c(1, 0), labels = c("Yes", "No"))
@@ -228,10 +228,10 @@ We will simulate the sampling distribution.
 
 ### Check the relevant conditions to ensure that model assumptions are met.
 
-* Random
+* Random (for both groups)
     - We have no evidence that these are random samples of smoking and non-smoking mothers from the the Baystate Medical Center. We hope that they are representative samples. If the populations of interest are all smoking and non-smoking mothers in the U.S., for example, then I have some doubts as to how representative these samples are. (It is possible that the women who go to this hospital may be different from other women in the U.S. Perhaps this hospital serves women from certain backgrounds or socioeconomic statuses.)
 
-* 10%
+* 10% (for both groups)
     - Regardless of the intended populations, 74 smoking mothers and 115 non-smoking mothers are surely less than 10% of all mothers under consideration.
 
 
@@ -244,7 +244,7 @@ obs_diff <- diffprop(low ~ smoke, data = low_smoke)
 obs_diff
 ```
 
-The observed difference in the proportion of low birth weight babies among smoking mothers versus nonsmoking mothers is `r obs_diff` (subtracting smokers *from* nonsmokers). Or, another way to say this: there is a `r 100 * obs_diff`% difference in  the proportion of low birth weight babies among smoking mothers versus nonsmoking mothers.
+The observed difference in the proportion of low birth weight babies among smoking mothers versus nonsmoking mothers is `r obs_diff` (subtracting smokers *from* nonsmokers). Or, another way to say this: there is a `r 100 * obs_diff`% difference in  the proportion of low birth weight babies among smoking mothers versus nonsmoking mothers. [Note that if you factored the `smoke` variable differently, the order of subtraction here would change. Pay close attention to the order of the factors and make sure you're interpreting `diffprop` correctly whether it results in a positive or negative difference.]
 
 ### Plot the null distribution.
 
@@ -271,7 +271,7 @@ The P-value is `r P`.
 
 Some important things here:
 
-1. We use `<=` (less than or equal to) because `obs_diff` is negative. Therefore, results that are more extreme than the data lie to the *left* of `obs_diff`. Had `obs-diff` been positive, we would have needed to use `>=` (greater than or equal to).
+1. We use `<=` (less than or equal to) because `obs_diff` is negative. Therefore, results that are more extreme than the data lie to the *left* of `obs_diff`. Had `obs_diff` been positive, we would have needed to use `>=` (greater than or equal to).
 
 2. We multiply here by two because we are conducting a two-sided test. We would be surprised by values that are unusually positive as well as unusually negative. For a one-sided test, you do *not* multiply by 2.
 
@@ -346,28 +346,34 @@ The template below is exactly the same as in the file `Rubric_for_inference.pdf`
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
 
 \answerbegin
+
 ```{r}
 # Add code here to understand the data.
 ```
+
 \answerend
 
 ### Prepare the data for analysis.
 
 \answerbegin
+
 ```{r}
 # Add code here to prepare the data for analysis.
 ```
+
 \answerend
 
 ### Make tables or plots to explore the data visually.
 
 \answerbegin
+
 ```{r}
 # Add code here to make tables or plots.
 ```
+
 \answerend
 
 
@@ -376,23 +382,29 @@ The template below is exactly the same as in the file `Rubric_for_inference.pdf`
 ### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
 \answerbegin
+
 $H_{0}:$ Null hypothesis goes here.
 
 $H_{A}:$ Alternative hypothesis goes here.
+
 \answerend
 
 ### Express the null and alternative hypotheses in symbols (when possible).
 
 \answerbegin
+
 $H_{0}: math$
 
 $H_{A}: math$
+
 \answerend
 
 
@@ -401,13 +413,17 @@ $H_{A}: math$
 ### Identify the sampling distribution model.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 \answerbegin
+
 Please write up your answer here. (Some conditions may require R code as well.)
+
 \answerend
 
 
@@ -416,29 +432,35 @@ Please write up your answer here. (Some conditions may require R code as well.)
 ### Compute and report the test statistic.
 
 \answerbegin
+
 ```{r}
 # Add code here to compute the test statistic.
 ```
 
 Please write up your answer here.
+
 \answerend
 
 ### Plot the null distribution.
 
 \answerbegin
+
 ```{r}
 # Add code here to plot the null distribution.
 ```
+
 \answerend
 
 ### Calculate and report the P-value.
 
 \answerbegin
+
 ```{r}
 # Add code here to calculate the P-value.
 ```
 
 Please write up your answer here.
+
 \answerend
 
 
@@ -447,19 +469,25 @@ Please write up your answer here.
 ### State the statistical conclusion.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### State (but do not overstate) a contextually meaningful conclusion.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 
