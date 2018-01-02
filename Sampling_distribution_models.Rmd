@@ -65,7 +65,7 @@ Let's explore this idea a little further, this time considering how sample size 
 
 Suppose that a certain candidate in an election actually has 64% of the support of registered voters. We conduct a poll of 10 random people, gathering a representative (though not very large) sample of voters.
 
-We can accomplish this task in R by using the `rflip` command from the `mosaic` package. Remember that the default for a coin flip is a 50% probability of heads, so we have to change that if we want to model a candidate with 64% support.
+We can simulate this task in R by using the `rflip` command from the `mosaic` package. Remember that the default for a coin flip is a 50% probability of heads, so we have to change that if we want to model a candidate with 64% support.
 
 ```{r}
 rflip(10, prob = 0.64)
@@ -73,11 +73,11 @@ rflip(10, prob = 0.64)
 
 You can think of the above command as taking one random sample of size 10 and getting a certain number of "successes", where a "success" is a person who votes for our candidate---here encoded as "heads". In other words, of the 10 people in this particular sample, we surveyed 6 people who said they were voting for our candidate and 4 people who were not.
 
-If we use the `do` command, we can simulate many samples, all of size 10. Let's take 1000 and store them in a variable called `sims_1000_10`.
+If we use the `do` command, we can simulate many samples, all of size 10. Let's take 1000 samples and store them in a variable called `sims_1000_10`.
 
 ```{r}
 sims_1000_10 <- do(1000) * rflip(10, prob = 0.64)
-head(sims_1000_10, 20)
+tail(sims_1000_10, n = 20)
 ```
 
 Note that with 10 people, it is impossible to get a 64% success rate in any given sample. (That would be 6.4 people!) Nevertheless, you can see that many of the samples gave us around 5--8 successes, as we'd expect when the true population rate is 64%. Also, the mean number of successes across all simulations is `r mean(sims_1000_10$heads)`, which is very close to 6.4.
@@ -109,7 +109,9 @@ ggplot(sims_1000_20, aes(x = prop)) +
 Explain how the distribution of simulations has changed going from a sample size of 10 to a sample size of 20.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 *****
@@ -121,11 +123,13 @@ Run the simulation yourself, this time with samples of size 50. Use the same num
 Below the plot, explain how the distribution of simulations has changed going from a sample size of 10 to 20 to 50. 
 
 \answerbegin
+
 ```{r}
 # Add code here to simulate 1000 random samples of size 50 and plot them.
 ```
 
 Please write up your answer here.
+
 \answerend
 
 *****
@@ -146,7 +150,9 @@ But what about the standard deviation? It seems to be changing with each sample 
 Looking at your simulations above, how does the standard deviation appear to change as the sample size increases? Intuitively, why do you think this happens? (Hint: think about the relationship between larger sample sizes and accuracy.)
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 *****
@@ -167,16 +173,22 @@ $$\sqrt{\frac{p(1 - p)}{n}} = \sqrt{\frac{0.64(1 - 0.64)}{10}} = 0.152$$
 
 We can do this easily using inline R code. (Remember that R is nothing more than a glorified calculator.) Observe:
 
-If a candidate has 64% of the vote and we take a sample of size 10, the standard error is `r sqrt(0.64 * (1 - 0.64) / 10)`.
+If a candidate has 64% of the vote and we take a sample of size 10, the standard error is `r sqrt(0.64 * (1 - 0.64) / 10)`. In other words, the sampling distribution model is
 
-For a sample of size 20, the standard error is `r sqrt(0.64 * (1 - 0.64) / 20)`.
+$$N(0.64, 0.152).$$
+
+For a sample of size 20, the standard error is `r sqrt(0.64 * (1 - 0.64) / 20)` and the sampling distribution model is
+
+$$N(0.64, 0.107).$$
 
 ### Exercise
 
 Calculate the standard error for a sample size of 50. Give your answer as a contextually meaningful full sentence using inline R code.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 *****
@@ -196,9 +208,9 @@ These two conditions are always important when sampling. Together, they help ens
 
 For applying normal models, there is one more condition. It is called the "success/failure" condition. We need for the total number of successes to be at least 10 and, similarly, for the total number of failures to be at least 10.
 
-Go back and consider our first simulated sample. The true rate of success in the population was presumed to be 64%. Given that we were sampling only 10 individuals, this implies that, on average, we would expect 6.4 people out of 10 to vote for the candidate. And likewise, that means that we would expect 3.6 people to vote against the candidate. (Clearly, it is impossible in any given sample to get 6.4 votes for, or 3.6 votes against. But *on average*, this is what we expect.) In fact, since the sample size was 10, there was no way that any of the simulated samples could meet the success/failure condition. When we plotted the histogram of simulated proportions, we saw the problem. With such small numbers, the histogram was skewed, and not normal.
+Go back and consider our first simulated sample. The true rate of success in the population was presumed to be 64%. Given that we were sampling only 10 individuals, this implies that, on average, we would expect 6.4 people out of 10 to vote for the candidate. And likewise, that means that we would expect 3.6 people to vote against the candidate. (Clearly, it is impossible in any given sample to get 6.4 votes for, or 3.6 votes against. But *on average*, this is what we expect.) In fact, since the sample size was 10, there was no way that we could meet the success/failure condition. When we plotted the histogram of simulated proportions, we saw the problem: with such small numbers, the histogram was skewed, and not normal.
 
-We check the success/failure condition by calculating $np$ and $n(1 - p)$: $n$ is the sample size and $p$ is the proportion of successes. Therefore, $np$ is the total number of successes. Since $1 - p$ is the proportion of failures, then $n(1 - p)$ is the total number of failures. Each of the numbers $np$ and $n(1 - p)$ needs to be bigger than 10.
+We check the success/failure condition by calculating $np$ and $n(1 - p)$: $n$ is the sample size and $p$ is the proportion of successes. Therefore, $np$ is the total number of successes. Since $1 - p$ is the proportion of failures, $n(1 - p)$ is the total number of failures. Each of the numbers $np$ and $n(1 - p)$ needs to be bigger than 10.
 
 In our example, $n = 10$ (the sample size), and $p = 0.64$ (the probability of success). So
 
@@ -229,7 +241,9 @@ ggplot(sims_1000_100, aes(x = prop)) +
 What's the problem here? Despite having a fairly large sample size, why is this distribution so skewed?
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 *****
@@ -242,10 +256,12 @@ In other words, in a typical sample, we expect 1 success and 99 failures.
 
 ### Exercise
 
-Going back to the election example, check that a sample size of 50 does satisfy the success/failure condition.
+Going back to the election example (in which the candidate has 64% of the vote), check that a sample size of 50 does satisfy the success/failure condition.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 *****
@@ -265,7 +281,7 @@ Let's simulate:
 survey_sim <- do(1000) * rflip(50, prob = 0.64)
 ggplot(survey_sim, aes(x = prop)) +
     geom_histogram(binwidth = 0.01) +
-    geom_vline(xintercept = 0.5,  color = "blue")
+    geom_vline(xintercept = 0.5, color = "blue")
 ```
 
 It looks like there are at least a few simulated samples that could come in less than 50%.
@@ -288,23 +304,29 @@ $$N(0.64, 0.068).$$
 Back to our original question. How likely is it that a random survey of 50 voters predicts defeat for the candidate? Well, any survey that comes in less than 50% will make it look like the candidate is going to lose. So we simply need to figure out how much of the sampling distribution lies below 50%. This is made simple with the `pdist` command. Note that we'll get a more accurate answer if we include the formula for the standard error, rather than rounding it off as 0.068.
 
 ```{r}
-pdist("norm", q = 0.5, mean = 0.64, sd = sqrt(0.64 * (1 - 0.64) / 50), invisible = TRUE)
+pdist("norm", q = 0.5,
+      mean = 0.64, sd = sqrt(0.64 * (1 - 0.64) / 50),
+      invisible = TRUE)
 ```
 
-From the picture, we can see that there is only about a 2% chance that one of our surveys of 50 voters could predict defeat. Using inline code, we calculate it as `r 100 * pdist("norm", q = 0.5, mean = 0.64, sd = sqrt(0.64 * (1 - 0.64) / 50))`%. The vast majority of the time, then, when we go out and take such a survey, the results will show the candidate in the lead. It will likely not say exactly 64%; there is still a relatively wide range of values that seem to be possible outcomes of such surveys. Nevertheless, this range of values is mostly above 50%. Nevertheless, there is a small chance that the survey will give us the "wrong" answer and predict defeat for the candidate.
+(Note that I put the code on multiple lines in the code chunk. A long piece of code on one line runs the risk of running off the page in the knit PDF.)
+
+From the picture, we can see that there is only about a 2% chance that one of our surveys of 50 voters could predict defeat. Using inline code, we calculate it as `r 100 * pdist("norm", q = 0.5, mean = 0.64, sd = sqrt(0.64 * (1 - 0.64) / 50))`%. The vast majority of the time, then, when we go out and take such a survey, the results will show the candidate in the lead. It will likely not say exactly 64%; there is still a relatively wide range of values that seem to be possible outcomes of such surveys. Nevertheless, this range of values is mostly above 50%. Nevertheless, there is a small chance that the survey will give us the "wrong" answer and predict defeat for the candidate.^[Most polls in the 2016 presidential election predicted a win for Hillary Clinton, so they also gave the wrong answer. It's possible that some of them were accidentally wrong due to sampling variability, but a much more likely explanation for their overall failure was bias.]
 
 
 ## Your turn
 
 Suppose we are testing a new drug that is intended to reduce cholesterol levels in patients with high cholesterol. Suppose that the drug works for 83% of such patients. When testing our drug, we use a suitably random sample of 143 individuals with high cholesterol.
 
-First, simulate the sampling distribution using 1000 samples, each of size 143.
+First, simulate the sampling distribution using 1000 samples, each of size 143. Plot the resulting sampling distribution.
 
 \answerbegin
+
 ```{r}
 # Add code here to simulate 1000 samples of size 143
 # and plot the resulting distribution.
 ```
+
 \answerend
 
 Next, check the conditions that would allow you to use a normal model as a sampling distribution model. I've given you an outline below:
@@ -325,15 +347,19 @@ Next, check the conditions that would allow you to use a normal model as a sampl
 If the conditions are met, we can use a normal model as the sampling distribution model. What are the mean and standard error of this model? (You should use inline R code to calculate and report the standard error.)
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 Market analysis shows that unless the drug is effective in more than 85% of patients, doctors won't prescribe it. Secretly, we know that the true rate of effectiveness is 83%, but the manufacturer doesn't know that yet. They only have access to their drug trial data in which they had 143 patients with high cholesterol.
 
-Using the normal model you just developed, determine how likely the drug trial data will be to show the drug as "effective" according to the 85% standard. In other words, how often will our sample give us a result that is 85% or higher (even though secretly we know the true effectiveness is only 83%)?
+Using the normal model you just developed, determine how likely the drug trial data will be to show the drug as "effective" according to the 85% standard. In other words, how often will our sample give us a result that is 85% or higher (even though secretly we know the true effectiveness is only 83%)? (Hint: you'll need to use the `pdist` command.)
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 *****
