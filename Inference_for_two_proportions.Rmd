@@ -96,12 +96,16 @@ The example below will pause frequently for commentary on the steps, especially 
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
 
-[Type `?Melanoma` at the Console to read the help file.]
+[Type `?Melanoma` at the Console to read the help file and use `View` to look at the spreadsheet view of the data.]
 
 ```{r}
 str(Melanoma)
+```
+
+```{r}
+head(Melanoma)
 ```
 
 ### Prepare the data for analysis.
@@ -183,26 +187,29 @@ For a more sophisticated approach, one could also use "pooled proportions". See 
 ### Compute and report the test statistic.
 
 ```{r}
-status_sex_test <- tidy(prop.test(status ~ sex, data = status_sex))
-status_sex_test
+status_sex_test <- prop.test(status ~ sex, data = status_sex)
+status_sex_test_tidy <- tidy(status_sex_test)
+status_sex_test_tidy
 ```
 
 The test statistic is the difference of proportions in the sample, $\hat{p}_{1} - \hat{p}_{2}$:
 
 ```{r}
-status_sex_test$estimate1 - status_sex_test$estimate2
+status_sex_test_tidy$estimate1 - status_sex_test_tidy$estimate2
 ```
 
 We also compute a z-score.
 
 ```{r}
-SE <- sqrt(status_sex_test$estimate1 * (1 - status_sex_test$estimate1)/126 +
-           status_sex_test$estimate2 * (1 - status_sex_test$estimate2)/79)
+SE <- sqrt(status_sex_test_tidy$estimate1 *
+               (1 - status_sex_test_tidy$estimate1)/126 +
+           status_sex_test_tidy$estimate2 * 
+               (1 - status_sex_test_tidy$estimate2)/79)
 SE
 ```
 
 ```{r}
-z <- (status_sex_test$estimate1 - status_sex_test$estimate2)/SE
+z <- (status_sex_test_tidy$estimate1 - status_sex_test_tidy$estimate2)/SE
 z
 ```
 
@@ -262,16 +269,16 @@ None of the conditions have changed, so they don't need to be rechecked.
 ### Calculate the confidence interval.
 
 ```{r}
-status_sex_test$conf.low
+status_sex_test_tidy$conf.low
 ```
 
 ```{r}
-status_sex_test$conf.high
+status_sex_test_tidy$conf.high
 ```
 
 ### State (but do not overstate) a contextually meaningful interpretation.
 
-We are 95% confident that the true difference between the rate at which women and men die from malignant melanoma is captured in the interval (`r 100 * status_sex_test$conf.low`%, `r 100 * status_sex_test$conf.high`%). (This difference is measured by calculating female minus male.)
+We are 95% confident that the true difference between the rate at which women and men die from malignant melanoma is captured in the interval (`r 100 * status_sex_test_tidy$conf.low`%, `r 100 * status_sex_test_tidy$conf.high`%). (This difference is measured by calculating female minus male.)
 
 Commentary: Note the addition of that last sentence. If you are looking at a confidence interval for a difference, you must indicate the direction of the difference. Without that, we would know that there was a difference, but we would have no idea whether women or men die more from malignant melanoma. Once we know that we are subtracting female minus male, then given the values are negative, we can infer that males die from malignant melanoma more often than females---at least according to this confidence interval.
 
@@ -285,23 +292,25 @@ In the previous example, we had access to the actual data frame. In some situati
 You may just have a summary of the total number of successes and failures. In our melanoma example, among the females, 28 died from melanoma and 98 died from other causes, and among the males, 29 died from melanoma and 50 died from other causes. If that's all we know, we can run the `prop.test` command as follows:
 
 ```{r}
-status_sex_test_count <- tidy(prop.test(c(28, 29), n = c(126, 79)))
-status_sex_test_count
+status_sex_test_count <- prop.test(c(28, 29), n = c(126, 79))
+status_sex_test_count_tidy <- tidy(status_sex_test_count)
+status_sex_test_count_tidy
 ```
 
-Once this is done (in the step "Compute the test statistic"), all remaining steps of the rubric stay exactly the same except that you'll use `status_sex_test_count` instead of `status_sex_test`.
+Once this is done (in the step "Compute the test statistic"), all remaining steps of the rubric stay exactly the same except that you'll use `status_sex_test_count_tidy` instead of `status_sex_test_tidy`.
 
 ### Method 2
 
 If you are given the percentages of successes and/or failures in your data, you'll have to convert them to whole number totals. You might be told that of the 126 females, 22.2% died from  melanoma, and of the 79 males, 36.7% died from melanoma. In that case, we can run the `prop.test` command as follows:
 
 ```{r}
-status_sex_test_prop <- tidy(prop.test(round(c(126*0.222, 79*0.367)),
-                                       n = c(126, 79)))
-status_sex_test_prop
+status_sex_test_prop <- prop.test(round(c(126*0.222, 79*0.367)),
+                                       n = c(126, 79))
+status_sex_test_prop_tidy <- tidy(status_sex_test_prop)
+status_sex_test_prop_tidy
 ```
 
-Once this is done (in the step "Compute the test statistic"), all remaining steps of the rubric stay exactly the same except that you'll use `status_sex_test_prop` instead of `status_sex_test`.
+Once this is done (in the step "Compute the test statistic"), all remaining steps of the rubric stay exactly the same except that you'll use `status_sex_test_prop_tidy` instead of `status_sex_test_tidy`.
 
 
 ## Your turn
@@ -315,28 +324,34 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
 
 \answerbegin
+
 ```{r}
 # Add code here to understand the data.
 ```
+
 \answerend
 
 ### Prepare the data for analysis. [Not always necessary.]
 
 \answerbegin
+
 ```{r}
 # Add code here to prepare the data for analysis.
 ```
+
 \answerend
 
 ### Make tables or plots to explore the data visually.
 
 \answerbegin
+
 ```{r}
 # Add code here to make tables or plots.
 ```
+
 \answerend
 
 
@@ -345,23 +360,29 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 ### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
 \answerbegin
+
 $H_{0}:$ Null hypothesis goes here.
 
 $H_{A}:$ Alternative hypothesis goes here.
+
 \answerend
 
 ### Express the null and alternative hypotheses in symbols (when possible).
 
 \answerbegin
+
 $H_{0}: math$
 
 $H_{A}: math$
+
 \answerend
 
 
@@ -370,13 +391,17 @@ $H_{A}: math$
 ### Identify the sampling distribution model.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 \answerbegin
+
 Please write up your answer here. (Some conditions may require R code as well.)
+
 \answerend
 
 
@@ -385,25 +410,35 @@ Please write up your answer here. (Some conditions may require R code as well.)
 ### Compute and report the test statistic.
 
 \answerbegin
+
 ```{r}
 # Add code here to compute the test statistic.
 ```
+
+Please write up your answer here.
+
 \answerend
 
 ### Plot the null distribution.
 
 \answerbegin
+
 ```{r}
 # Add code here to plot the null distribution.
 ```
+
 \answerend
 
 ### Calculate and report the P-value.
 
 \answerbegin
+
 ```{r}
 # Add code here to calculate the P-value.
 ```
+
+Please write up your answer here.
+
 \answerend
 
 
@@ -412,19 +447,25 @@ Please write up your answer here. (Some conditions may require R code as well.)
 ### State the statistical conclusion.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### State (but do not overstate) a contextually meaningful conclusion.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 
@@ -433,21 +474,27 @@ Please write up your answer here.
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 \answerbegin
+
 Please write up your answer here. (Some conditions may require R code as well.)
+
 \answerend
 
 ### Calculate the confidence interval.
 
 \answerbegin
+
 ```{r}
 # Add code here to calculate the confidence interval.
 ```
+
 \answerend
 
 ### State (but do not overstate) a contextually meaningful interpretation.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 
