@@ -106,13 +106,13 @@ For example, what percentage of women ages 30--44 in the U.S. and Canada are exp
 pdist("norm", q = 130, mean = 114, sd = 14, plot = FALSE)
 ```
 
-If you use `invisible = TRUE`, you get a plot instead:
+If you use `invisible = TRUE`, you get a plot instead (and not the number):
 
 ```{r}
 pdist("norm", q = 130, mean = 114, sd = 14, invisible = TRUE)
 ```
 
-The other pieces of the `pdist` function are pretty intuitive: `"norm"` (and it has to be in double quotes) indicates that we want a normal model, `q` is the value of interest to us, and `mean` and `sd` are self-evident. The numerical output gives the area under the curve to the left of our value of interest. In other words, 0.873451, or about 87.3% of women are expected to have SBP less than 130.
+The other pieces of the `pdist` function are pretty intuitive: `"norm"` (and it has to be in double quotes) indicates that we want a normal model, `q` is the value of interest to us, and `mean` and `sd` are self-evident. The numerical output gives the area under the curve to the left of our value of interest. This area is 0.873451; in other words, about 87.3% of women are expected to have SBP less than 130.
 
 If you use this command inline, you don't need to specify `invisible` or `plot`; the pretty picture is not generated, just the value. For example, look at the following sentence (remembering that you can click anywhere inside the inline R code and hit Ctrl-Enter or Cmd-Enter):
 
@@ -128,17 +128,21 @@ Therefore, all we have to do to solve this problem is subtract the number we obt
 
 > The model predicts that `r 100 * (1 - pdist("norm", q = 130, mean = 114, sd = 14))`% of women ages 30--44 in the U.S. and Canada will have systolic blood pressure over 130 mmHg.
 
+Don't forget to include parentheses. We need to multiply 100 by the whole expression `1 - pdist("norm", q = 130, mean = 114, sd = 14))`.
+
 Now, here's a more complicated question: what percentage of women are predicted to have SBP between 110 mmHg and 130 mmHg?
 
 Recall that the proportion of women predicted to have SBP less than 130 mmHg was 0.873. But this is also counting women with SBP under 110 mmHg, whom we now want to exclude. The proportion of women with SBP under 110 is found with the following code:
 
 ```{r}
-pdist("norm", q = 110, mean = 114, sd = 14,  plot = FALSE)
+pdist("norm", q = 110, mean = 114, sd = 14, plot = FALSE)
 ```
 
 Therefore, all we have to do is calculate 0.873 minus 0.388:
 
 > The model predicts that `r 100 * (pdist("norm", q = 130, mean = 114, sd = 14) - pdist("norm", q = 110, mean = 114, sd = 14))`% of women ages 30--44 in the U.S. and Canada will have systolic blood pressure between 110 mmHg and 130 mmHg.
+
+(Again, don't forget the parentheses.)
 
 What about the pretty picture? Unfortunately, this doesn't really work:
 
@@ -158,7 +162,7 @@ Now the picture looks great and you can see the proportion you desire in the are
 This doesn't work so well for the numerical output though. Observe:
 
 ```{r}
-pdist("norm", q = c(110, 130), mean = 114, sd = 14,  plot = FALSE)
+pdist("norm", q = c(110, 130), mean = 114, sd = 14, plot = FALSE)
 ```
 
 There are two numbers shown, but neither is the correct answer. This command shows the percentages below 110 and below 130, respectively, but not the area in between 110 and 130. We still have to subtract. However, R can do this for us easily with the `diff` command that we've seen before:
@@ -181,31 +185,37 @@ For each of the following questions, use the `pdist` command with `invisible = T
 ### What percentage of people would you expect to have IQ scores over 80?
 
 \answerbegin
+
 ```{r}
 # Add code here to draw the model.
 ```
 
 Please write up your answer here.
+
 \answerend
 
 ### What percentage of people would you expect to have IQ scores under 90?
 
 \answerbegin
+
 ```{r}
 # Add code here to draw the model.
 ```
 
 Please write up your answer here.
+
 \answerend
 
 ### What percentage of people would you expect to have IQ scores between 112 and 132?
 
 \answerbegin
+
 ```{r}
 # Add code here to draw the model.
 ```
 
 Please write up your answer here.
+
 \answerend
 
 *****
@@ -220,11 +230,11 @@ Here is an example using systolic blood pressure: what is the cutoff value of SB
 The command we need is `qdist`. It looks a lot like `pdist`. Observe:
 
 ```{r}
-qdist("norm", p = 0.25, mean = 114, sd = 14,  plot = FALSE)
+qdist("norm", p = 0.25, mean = 114, sd = 14, plot = FALSE)
 ```
 
 ```{r}
-qdist("norm", p = 0.25, mean = 114, sd = 14,  invisible = TRUE)
+qdist("norm", p = 0.25, mean = 114, sd = 14, invisible = TRUE)
 ```
 
 The only change here is that one of the arguments is `p` instead of `q`, and the value of `p` is a proportion (between 0 and 1) instead of a value of SBP. The *output* is now an SBP value.
@@ -269,31 +279,37 @@ For each of the following questions, use the `qdist` command to draw the right p
 ### What cutoff value bounds the highest 5% of IQ scores?
 
 \answerbegin
+
 ```{r}
 # Add code here to draw the model.
 ```
 
 Please write up your answer here.
+
 \answerend
 
 ### What cutoff value bounds the lowest 30% of IQ scores?
 
 \answerbegin
+
 ```{r}
 # Add code here to draw the model.
 ```
 
 Please write up your answer here.
+
 \answerend
 
 ### What cutoff values bound the middle 80% of IQ scores?
 
 \answerbegin
+
 ```{r}
 # Add code here to draw the model.
 ```
 
 Please write up your answer here.
+
 \answerend
 
 *****
