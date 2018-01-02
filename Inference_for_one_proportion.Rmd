@@ -61,7 +61,7 @@ library(mosaic)
 
 Instead of running a simulation, we are going to assume that the sampling distribution can be modeled with a normal model as long as the conditions for using a normal model are met.
 
-Although the rubric has not changed, the use of a normal model changes quite a bit about the way we go through the other steps. For example, we won't have simulated values to give us a histogram. Instead, we'll go straight to graphing a normal model. We won't compute the percent of our samples that are at least as extreme as our test statistic to get the P-value. The P-value from a normal model is found directly from the model itself using the `pdist` command.
+Although the rubric has not changed, the use of a normal model changes quite a bit about the way we go through the other steps. For example, we won't have simulated values to give us a histogram of the null model. Instead, we'll go straight to graphing a normal model. We won't compute the percent of our samples that are at least as extreme as our test statistic to get the P-value. The P-value from a normal model is found directly from the model itself using the `pdist` command.
 
 What follows is a fully-worked example of inference for one proportion. After the hypothesis test (sometimes called a one-proportion z-test for reasons that will become clear), we also follow up by computing a confidence interval. **From now on, we will consider inference to consist of a hypothesis test and a confidence interval.** Whenever you're asked a question that requires statistical inference, you should follow both the rubric steps for a hypothesis test and for a confidence interval.
 
@@ -75,19 +75,23 @@ Data from the Stanford University Heart Transplant Study is located in the `open
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
 
-[You should type `?heartTr` at the Console to read the help file.]
+[You should type `?heartTr` at the Console to read the help file and use `View` to look at the spreadsheet view of the data.]
 
 ```{r}
 str(heartTr)
+```
+
+```{r}
+head(heartTr)
 ```
 
 Commentary: The variable of interest is `survived`, which is coded as a factor variable with two categories, "alive" and "dead". Keep in mind that because we are interested in survival rates, the "alive" condition will be considered the "success" condition.^[Finally, a "success" condition that actually sounds successful!]
 
 **Do not under any circumstances attempt to convert `heartTr$survived` to a factor variable using the `factor` command!** It is already a factor variable. Applying the `factor` command the way you have in past assignments will break a variable that is already coded as a factor variable. This is one of the most common mistakes students make when working with factor variables. This is why the `str` command is so important. You always need to check your categorical data to see if it's already a factor variable! (If not, then of course we would recode it the way you've been taught.)
 
-There are 103 patients, but we are not considering all these patients. Our sample should consist of only those patients who actually received the transplant. The following table shows that only 69 patients were in the "treatment" group (meaning that they received a heart transplant.)
+There are 103 patients, but we are not considering all these patients. Our sample should consist of only those patients who actually received the transplant. The following table shows that only 69 patients were in the "treatment" group (meaning that they received a heart transplant).
 
 ```{r}
 tally(~ transplant, data = heartTr, margins = TRUE)
@@ -98,26 +102,25 @@ tally(~ transplant, data = heartTr, margins = TRUE)
 **CAUTION: If you are copying and pasting from this example to use for another research question, the following code chuck is specific to this research question and not applicable in other contexts.**
 
 ```{r}
-heartTr_2 <- filter(heartTr, transplant == "treatment")
+heartTr2 <- filter(heartTr, transplant == "treatment")
 ```
 
-Commentary: Since we only want to look at those who received the transplant, we cannot use the whole data set `heartTr`. The `filter` command is useful for grabbing only certain rows from our data. We filter the data for those who were in the `treatment` group and assign the resulting data frame to a new variable called `heartTr_2`.
+Commentary: Since we only want to look at those who received the transplant, we cannot use the whole data set `heartTr`. The `filter` command is useful for grabbing only certain rows from our data. We filter the data for those who were in the `treatment` group and assign the resulting data frame to a new variable called `heartTr2`.
 
-The only unusual thing you might have spotted is the double equal sign. This is used whenever you want to check that two things are equal. Just to illustrate, go to the Console and type `x = 5`. Then type `x == 5`. The first command assigns the number 5 to the variable $x$ (as you should be able to see in your Global Environment). The second command checks if $x$ is equal to 5. (And since you just assigned $x$ to be 5, it is `TRUE`.)
+The only unusual thing you might have spotted is the double equal sign. This is used whenever you want to check that two things are equal. Just to illustrate, go to the Console and type `x = 5`. Then type `x == 5`. The first command assigns the number 5 to the variable x (as you should be able to see in your Global Environment). The second command checks if x is equal to 5. (And since you just assigned x to be 5, it is `TRUE`.)
 
 Again, this step isn't something you need to do for other research questions. This question is peculiar because it asks only about patients who received a heart transplant, and that only involves a subset of the data we have in the `heartTr` data frame.
 
 ### Make tables or plots to explore the data visually.
 
-Making sure that we refer from now on to the `heartTr_2` data frame and not the original `heartTr` data frame:
-
+Making sure that we refer from now on to the `heartTr2` data frame and not the original `heartTr` data frame:
 
 ```{r}
-tally(~ survived, data = heartTr_2, margins = TRUE)
+tally(~ survived, data = heartTr2, margins = TRUE)
 ```
 
 ```{r}
-tally(~ survived, data = heartTr_2, margins = TRUE, format = "percent")
+tally(~ survived, data = heartTr2, margins = TRUE, format = "percent")
 ```
 
 
@@ -125,7 +128,7 @@ tally(~ survived, data = heartTr_2, margins = TRUE, format = "percent")
 
 ### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
-The sample consists of `r NROW(heartTr_2)` heart transplant recipients in a study at Stanford University. The population of interest is presumably all heart transplants recipients.
+The sample consists of `r NROW(heartTr2)` heart transplant recipients in a study at Stanford University. The population of interest is presumably all heart transplants recipients.
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
@@ -151,10 +154,10 @@ We will use a normal model.
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 * Random
-    - Since the `r NROW(heartTr_2)` patients are from a study at Stanford, we do not have a random sample of all heart transplant recipients. We hope that the patients recruited to this study were physiologically similar to other heart patients so that they are a representative sample. Without more information, we have no real way of knowing.
+    - Since the `r NROW(heartTr2)` patients are from a study at Stanford, we do not have a random sample of all heart transplant recipients. We hope that the patients recruited to this study were physiologically similar to other heart patients so that they are a representative sample. Without more information, we have no real way of knowing.
 
 * 10%
-    - `r NROW(heartTr_2)` patients are definitely less than 10% of all heart transplant recipients.
+    - `r NROW(heartTr2)` patients are definitely less than 10% of all heart transplant recipients.
 
 * Success/failure
 
@@ -176,21 +179,24 @@ That's also why the numbers don't have to be whole numbers. If the null states t
 ### Compute and report the test statistic.
 
 ```{r}
-surv_test <- tidy(binom.test(heartTr_2$survived, p = 0.5, success = "alive"))
-surv_test
+surv_test <- binom.test(heartTr2$survived, p = 0.5, success = "alive")
+surv_test_tidy <- tidy(surv_test)
+surv_test_tidy
 ```
 
-The test statistic is `r surv_test$estimate`, the proportion of successes in the sample.
+The test statistic is `r surv_test_tidy$estimate`, the proportion of successes (i.e., survivors) in the sample.
 
-We'll also compute the corresponding z-score. 
+We'll also compute the corresponding z-score. First, we compute the standard error.
 
 ```{r}
 SE <- sqrt(0.5*(1 - 0.5)/69)
 SE
 ```
 
+Then, using our computation of `SE`, we get the z-score.
+
 ```{r}
-z <- (surv_test$estimate - 0.5)/SE
+z <- (surv_test_tidy$estimate - 0.5)/SE
 z
 ```
 
@@ -210,15 +216,15 @@ We did this in R and stored the result as `SE`.
 
 $$z = \frac{(\hat{p} - p)}{SE} =  \frac{(\hat{p} - p)}{\sqrt{\frac{p (1 - p)}{n}}} = \frac{(0.348 - 0.5)}{\sqrt{\frac{0.5 (1 - 0.5)}{69}}} =  -2.53.$$
 
-Either $\hat{p}$ or $z$ could be considered the test statistic.^[And the tidy output seems to be considering the raw number of successes (24) as the test statistic.] If we use $\hat{p}$ as the test statistic, then we're considering the null model to be
+Either $\hat{p}$ or z could be considered the test statistic.^[And the tidy output seems to be considering the raw number of successes (24) as the test statistic.] If we use $\hat{p}$ as the test statistic, then we're considering the null model to be
 
 $$N\left(0.5, \sqrt{\frac{0.5 (1 - 0.5)}{69}}\right).$$
 
-If we use $z$ as the test statistic, then we're considering the null model to be the *standard normal model*:
+If we use z as the test statistic, then we're considering the null model to be the *standard normal model*:
 
 $$N(0, 1).$$
 
-The standard normal model is more intuitive and easier to work with, both conceptually, and in R. Generally, then, we will consider $z$ as the test statistic so that we can consider our null model to be the standard normal model. For example, knowing that our test statistic is two and a half standard deviations to the left of the null value already tells us a lot. We can anticipate a small P-value leading to rejection of the null.
+The standard normal model is more intuitive and easier to work with, both conceptually, and in R. Generally, then, we will consider z as the test statistic so that we can consider our null model to be the standard normal model. For example, knowing that our test statistic is two and a half standard deviations to the left of the null value already tells us a lot. We can anticipate a small P-value leading to rejection of the null.
 
 ### Plot the null distribution.
 
@@ -226,12 +232,14 @@ The standard normal model is more intuitive and easier to work with, both concep
 pdist("norm", q = z, invisible = TRUE)
 ```
 
-Commentary: Notice how simple this `pdist` command is. One reason is that we're using $z$, which means that we are working with the standard normal model. As this is the default for the `pdist` command, there is no need to specify the `mean` and `sd` in the command.
+Commentary: Notice how simple this `pdist` command is. One reason is that we're using z, which means that we are working with the standard normal model. As this is the default for the `pdist` command, there is no need to specify the `mean` and `sd` in the command.
 
 Contrast this to the command we would need if using $\hat{p}$ as our test statistic:
 
 ```{r}
-pdist("norm", q = surv_test$estimate, mean = 0.5, sd = SE, invisible = TRUE)
+pdist("norm", q = surv_test_tidy$estimate,
+      mean = 0.5, sd = SE,
+      invisible = TRUE)
 ```
 
 This works and gives us the same answer, but it's a bit more complicated.
@@ -256,13 +264,13 @@ Commentary: Since we are running a one-sided test using the left tail (recall th
 The P-value can also be computed as part of the `binom.test` function. The problem here is that this is wrong:
 
 ```{r}
-surv_test$p.value
+surv_test_tidy$p.value
 ```
 
-The `binom.test` function assumes by default that you are performing a two-sided test. Therefore, if we want a one-sided P-value, we have to divide this answer by 2:
+The `binom.test` function assumes by default that we are performing a two-sided test. Therefore, if we want a one-sided P-value, we have to divide this answer by 2:
 
 ```{r}
-surv_test$p.value / 2
+surv_test_tidy$p.value / 2
 ```
 
 Even this is a little different from the P-value we computed directly from the normal model. Under the hood, the `binom.test` command is not quite using the same method we're using. Therefore, the P-value is a little different from the one generated from our normal model. Nevertheless, the two methods are close, so you should come to the same conclusion (i.e., reject the null or fail to reject the null).
@@ -307,18 +315,18 @@ By contrast, a confidence interval is making no assumption about the "true" valu
 ### Calculate the confidence interval.
 
 ```{r}
-surv_test$conf.low
+surv_test_tidy$conf.low
 ```
 
 ```{r}
-surv_test$conf.high
+surv_test_tidy$conf.high
 ```
 
 Commentary: there's not much to do here as the confidence interval was already computed as a byproduct of the `binom.test` command.
 
 ### State (but do not overstate) a contextually meaningful interpretation.
 
-We are 95% confident that the true percentage of heart transplant recipients who survive is captured in the interval (`r 100 * surv_test$conf.low`%, `r 100 * surv_test$conf.high`%).
+We are 95% confident that the true percentage of heart transplant recipients who survive is captured in the interval (`r 100 * surv_test_tidy$conf.low`%, `r 100 * surv_test_tidy$conf.high`%).
 
 Commentary: Note that when we state our contextually meaningful conclusion, we also convert the decimal proportions to percentages. Humans like percentages a lot better.
 
@@ -334,22 +342,24 @@ In the previous example, we had access to the actual data frame. In some situati
 You may just have a summary of the total number of successes and failures. In our heart transplant example, we had 24 patients who survived and 45 who died. If that's all we know, we can run the `binom.test` command as follows:
 
 ```{r}
-surv_test_count <- tidy(binom.test(24, n = 69))
-surv_test_count
+surv_test_count <- binom.test(24, n = 69)
+surv_test_count_tidy <- tidy(surv_test_count)
+surv_test_count_tidy
 ```
 
-Once this is done (in the step "Compute the test statistic"), all remaining steps of the rubric stay exactly the same except that you'll use `surv_test_count` instead of `surv_test`.
+Once this is done (in the step "Compute the test statistic"), all remaining steps of the rubric stay exactly the same except that you'll use `surv_test_count_tidy` instead of `surv_test_tidy`.
 
 ### Method 2
 
 If you are given the percentages of successes and/or failures in your data, you'll have to convert them to whole number totals. You might be told that of 69 patients who received a heart transplant, only 34.8% survived. In that case, we can run the `binom.test` command as follows:
 
 ```{r}
-surv_test_prop <- tidy(binom.test(round(69*0.348), n = 69))
-surv_test_prop
+surv_test_prop <- binom.test(round(69*0.348), n = 69)
+surv_test_prop_tidy <- tidy(surv_test_prop)
+surv_test_prop_tidy
 ```
 
-Once this is done (in the step "Compute the test statistic"), all remaining steps  of the rubric stay exactly the same except that you'll use `surv_test_prop` instead of `surv_test`.
+Once this is done (in the step "Compute the test statistic"), all remaining steps  of the rubric stay exactly the same except that you'll use `surv_test_prop_tidy` instead of `surv_test_tidy`.
 
 If you're paying close attention, you might recognize that we discussed these two methods in a previous module about confidence intervals. (Method 3 in that module was when you had access to the original data.)
 
@@ -358,7 +368,7 @@ If you're paying close attention, you might recognize that we discussed these tw
 
 Follow the rubric to answer the following research question:
 
-Some heart transplant candidates have already had a prior surgery. Use the variable `prior` in the `heartTr` data set to determine if fewer than 50% of patients have had a prior surgery. (To be clear, you are being asked to perform a one-sided test again.) Be sure to use the full `heartTr` data, not the modified `heartTr_2` from the previous example.
+Some heart transplant candidates have already had a prior surgery. Use the variable `prior` in the `heartTr` data set to determine if fewer than 50% of patients have had a prior surgery. (To be clear, you are being asked to perform a one-sided test again.) **Be sure to use the full `heartTr` data, not the modified `heartTr2` from the previous example.**
 
 The rubric outline is reproduced below. You may refer to the worked example above and modify it accordingly. Remember to strip out all the commentary. That is just exposition for your benefit in understanding the steps, but is not meant to form part of the formal inference process.
 
@@ -367,28 +377,34 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
 
 \answerbegin
+
 ```{r}
 # Add code here to understand the data.
 ```
+
 \answerend
 
 ### Prepare the data for analysis. [Not always necessary.]
 
 \answerbegin
+
 ```{r}
 # Add code here to prepare the data for analysis.
 ```
+
 \answerend
 
 ### Make tables or plots to explore the data visually.
 
 \answerbegin
+
 ```{r}
 # Add code here to make tables or plots.
 ```
+
 \answerend
 
 
@@ -397,23 +413,29 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 ### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
 \answerbegin
+
 $H_{0}:$ Null hypothesis goes here.
 
 $H_{A}:$ Alternative hypothesis goes here.
+
 \answerend
 
 ### Express the null and alternative hypotheses in symbols (when possible).
 
 \answerbegin
+
 $H_{0}: math$
 
 $H_{A}: math$
+
 \answerend
 
 
@@ -422,13 +444,17 @@ $H_{A}: math$
 ### Identify the sampling distribution model.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 \answerbegin
+
 Please write up your answer here. (Some conditions may require R code as well.)
+
 \answerend
 
 
@@ -437,25 +463,35 @@ Please write up your answer here. (Some conditions may require R code as well.)
 ### Compute and report the test statistic.
 
 \answerbegin
+
 ```{r}
 # Add code here to compute the test statistic.
 ```
+
+Please write up your answer here.
+
 \answerend
 
 ### Plot the null distribution.
 
 \answerbegin
+
 ```{r}
 # Add code here to plot the null distribution.
 ```
+
 \answerend
 
 ### Calculate and report the P-value.
 
 \answerbegin
+
 ```{r}
 # Add code here to calculate the P-value.
 ```
+
+Please write up your answer here.
+
 \answerend
 
 
@@ -464,19 +500,25 @@ Please write up your answer here. (Some conditions may require R code as well.)
 ### State the statistical conclusion.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### State (but do not overstate) a contextually meaningful conclusion.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 
@@ -485,20 +527,25 @@ Please write up your answer here.
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 \answerbegin
+
 Please write up your answer here. (Some conditions may require R code as well.)
+
 \answerend
 
 ### Calculate the confidence interval.
 
 \answerbegin
+
 ```{r}
 # Add code here to calculate the confidence interval.
 ```
+
 \answerend
 
 ### State (but do not overstate) a contextually meaningful interpretation.
 
 \answerbegin
-Please write up your answer here.
-\answerend
 
+Please write up your answer here.
+
+\answerend

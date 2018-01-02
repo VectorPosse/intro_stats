@@ -47,9 +47,9 @@ When you are finished with the assignment, knit to PDF and proofread the PDF fil
 We load the standard `mosaic` package. We'll also need the `openintro` package later in the assignment for the `hsb2` data set. Finally, we introduce the `broom` package that cleans up the output of a wide variety of R commands.
 
 ```{r, message = FALSE, warning = FALSE}
-library(mosaic)
 library(openintro)
 library(broom)
+library(mosaic)
 ```
 
 As always, we set the seed so that our results are reproducible.
@@ -93,15 +93,17 @@ The quantity $2 SE$ is called the *margin of error*.
 
 ### Exercise
 
-The number 2---derived from the 68-95-99.7 rule---is, in fact, slightly incorrect. Using your knowledge of normal models and the `qdist` command, what is the number of standard errors that would enclose exactly 95% of the middle of the sampling distribution? (Hint: `p = 0.95` is **not** the correct argument in the `qdist` function. The middle 95% does not occur at the 95th percentile. If you're still confused, go on and read the next section and revisit this problem later.)
+The number 2---derived from the 68-95-99.7 rule---is, in fact, slightly incorrect. Using your knowledge of normal models and the `qdist` command, what is the number of standard errors that would enclose *exactly* 95% of the middle of the sampling distribution? (Hint: `p = 0.95` is **not** the correct argument in the `qdist` function. The middle 95% does not occur at the 95th percentile. If you're still confused, go on and read the next section and revisit this problem later.)
 
 \answerbegin
+
 ```{r}
 # Add code here to calculate the exact number of standard errors 
 # from the mean that enclose the middle 95% of a normal distribution.
 ```
 
 Please write up your answer here.
+
 \answerend
 
 *****
@@ -121,12 +123,12 @@ The new symbol $z^{*}$ is called a *critical z-score*. This is the z-score that 
 For example, suppose we wanted a 90% confidence interval. What is the corresponding critical z-score? Well, the middle 90% of a distribution leaves 5% in each tail. Therefore, we need to use `qdist` with the 5th and 95th percentiles.
 
 ```{r}
-qdist("norm", p = c(0.05, 0.95),  invisible = TRUE)
+qdist("norm", p = c(0.05, 0.95), invisible = TRUE)
 ```
 
 
 ```{r}
-qdist("norm", p = c(0.05, 0.95),  plot = FALSE)
+qdist("norm", p = c(0.05, 0.95), plot = FALSE)
 ```
 
 The critical z-score is the positive answer, so we could use `qdist` simply to report `r qdist("norm", p = 0.95)`. **Be careful!** The critical z-score for a 90% confidence interval requires `p = 0.95`. This is because the upper endpoint of a 90% interval is actually located at the 95th percentile.
@@ -138,12 +140,14 @@ The critical z-score is the positive answer, so we could use `qdist` simply to r
 Now do the same thing for a 99% confidence interval. In other words, calculate the critical z-score that encloses the middle 99% of the normal distribution.
 
 \answerbegin
+
 ```{r}
 # Add code here to calculate the exact number of standard errors 
 # from the mean that enclose the middle 99% of a normal distribution.
 ```
 
 Please write up your answer here.
+
 \answerend
 
 *****
@@ -157,7 +161,7 @@ The "Random" and "10%" conditions will always be present. These are both necessa
 
 The success/failure condition is also present, but here it looks a little different. Whereas before we computed $np$ and $n(1 - p)$, that was back when we were assuming we knew the true value of $p$. In reality, this is never the case; if we knew the true value of $p$ already, we wouldn't be gathering a sample to try to infer it! So if we can't compute $np$ and $n(1 - p)$, what can we compute? Since the sample proportion $\hat{p}$ is our best guess for $p$, we will substitute its value everywhere there's a $p$.
 
-So the new success/failure condition says that $n \hat{p}$ and $n(1 - \hat{p})$ must be greater than 10. But, wait a minute, what are we really calculating with $n \hat{p}$ and $n(1 - \hat{p})$? Since $n$ is the sample size, and $\hat{p}$ is the sample proportion of successes, then $n \hat{p}$ is just the number, or raw count, of successes. And similarly, $n(1 - \hat{p})$ is just the number of failures.
+So the new success/failure condition says that $n \hat{p}$ and $n(1 - \hat{p})$ must be greater than 10. But, wait a minute, what are we really calculating with $n \hat{p}$ and $n(1 - \hat{p})$? Since $n$ is the sample size, and $\hat{p}$ is the sample proportion of successes, then $n \hat{p}$ is just the total number, or total raw count, of successes. And similarly, $n(1 - \hat{p})$ is just the total number of failures.
 
 Unlike $np$ that describes the "theoretical" average expected number of successes---and therefore might not be a whole number---$n \hat{p}$ is the actual number of successes in our sample. This will always be a whole number! Same with the failures.
 
@@ -189,16 +193,19 @@ You may just have a summary of the total number of successes and failures. For e
 prop.test(212, n = 326)
 ```
 
-This does give us our confidence interval, but it also gives us a bunch of other stuff we don't need right now. (It's actually doing the "Mechanics" section for a full hypothesis test.) If we want just the confidence interval, the easiest thing to do is use the helpful `broom` package to take all this messy output and tidy it up first. As a matter of fact, the `broom` command that accomplishes this is called `tidy`. We'll assign the output to a variable `test_1` so we can access it.
+This does give us our confidence interval, but it also gives us a bunch of other stuff we don't need right now. (It's actually doing the "Mechanics" section for a full hypothesis test.) If we want just the confidence interval, the easiest thing to do is use the helpful `broom` package to take all this messy output and tidy it up first. As a matter of fact, the `broom` command that accomplishes this is called `tidy`. We'll assign the output of `prop.test` to a variable `test1` so we can access it. Then we'll apply the `tidy` command to `test1`.
 
 ```{r}
-test_1 <- tidy(prop.test(212, n = 326))
-test_1
+test1 <- prop.test(212, n = 326)
+test1_tidy <- tidy(test1)
+test1_tidy
 ```
 
-For now, ignore everything but the two numbers of interest: the low and high endpoints of our confidence interval given in the `conf.low` and the `conf.high` columns. Here is how we report this inline:
+For now, ignore everything but the two numbers of interest: the low and high endpoints of our confidence interval given in the `conf.low` and the `conf.high` columns.  (Depending on your screen size and resolution, you may have to click the right-facing black arrow in the output above to scroll over to where the `conf.low` and `conf.high` are listed.)
 
-We are 95% confident that the true percentage of those who support the new initiative is captured in the interval (`r 100 * test_1$conf.low`%, `r 100 * test_1$conf.high`%).
+Here is how we report this inline:
+
+> We are 95% confident that the true percentage of those who support the new initiative is captured in the interval (`r 100 * test1_tidy$conf.low`%, `r 100 * test1_tidy$conf.high`%).
 
 Notice that when communicating proportions to human beings, it's polite to convert them back to percentages.
 
@@ -207,11 +214,12 @@ Notice that when communicating proportions to human beings, it's polite to conve
 If you are given the percentages of successes and/or failures in your data, you'll have to convert them to whole number totals. For example, if we're told that 326 people were surveyed and 65% of them support the new initiative, then we have to do this:
 
 ```{r}
-test_2 <- tidy(prop.test(round(326*0.65), n = 326))
-test_2
+test2 <- prop.test(round(326*0.65), n = 326)
+test2_tidy <- tidy(test2)
+test2_tidy
 ```
 
-We have to round the number inside this command since 326 times 0.65 is not a whole number. It is the 65% that is, in fact, rounded, but we have no way of knowing what the exact number of successes was if all we're told is the proportion of successes. It is possible that the true number of successes was actually 212, but 211 and 213 also round to 65%.
+We have to round the number inside this command since 326 times 0.65 is not a whole number. It is the 65% that is, in fact, rounded, but we have no way of knowing what the exact number of successes was if all we're told is the proportion of successes. (It is possible that the true number of successes was actually 212, but 211 and 213 also round to 65%.)
 
 The confidence interval is identical to the one from Method 1.
 
@@ -230,8 +238,9 @@ There are more than 10 successes and more than 10 failures (where a success is d
 Now we are ready to compute. If we do the following, though, we get the wrong answer:
 
 ```{r}
-test_3a <- tidy(prop.test(~ schtyp, data = hsb2))
-test_3a
+test3a <- prop.test(~ schtyp, data = hsb2)
+test3a_tidy <- tidy(test3a)
+test3a_tidy
 ```
 
 ### Exercise
@@ -239,7 +248,9 @@ test_3a
 Examine the output above and see if you can spot the problem. (Hint: does 32 students out of 200 fit with the confidence interval produced above?)
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 *****
@@ -247,11 +258,14 @@ Please write up your answer here.
 Try this instead:
 
 ```{r}
-test_3b <- tidy(prop.test(~ schtyp, data = hsb2, success = "private"))
-test_3b
+test3b <- prop.test(~ schtyp, data = hsb2, success = "private")
+test3b_tidy <- tidy(test3b)
+test3b_tidy
 ```
 
-We are 95% confident that the true percentage of U.S. high school seniors who attend private school is captured in the interval (`r 100 * test_3b$conf.low`%, `r 100 * test_3b$conf.high`%).
+We are 95% confident that the true percentage of U.S. high school seniors who attend private school is captured in the interval (`r 100 * test3b_tidy$conf.low`%, `r 100 * test3b_tidy$conf.high`%).
+
+Do you see what we changed in `test3b` that made it work properly?
 
 
 ## Changing the confidence level
@@ -259,10 +273,11 @@ We are 95% confident that the true percentage of U.S. high school seniors who at
 The default confidence level for a confidence interval is almost always 95%. It is possible, however, to use a different level.
 
 ```{r}
-test_3c <- tidy(prop.test(~ schtyp, data = hsb2,
-                          success = "private",
-                          conf.level = 0.9))
-test_3c
+test3c <- prop.test(~ schtyp, data = hsb2,
+                    success = "private",
+                    conf.level = 0.9)
+test3c_tidy <- tidy(test3c)
+test3c_tidy
 ```
 
 ### Exercise
@@ -270,7 +285,9 @@ test_3c
 Is a 90% confidence interval wider or narrower than a 95% confidence interval? Explain why this is so. (In other words, from your understanding of how confidence intervals work, explain why it makes sense that a 90% confidence interval is wider or narrower than a 95% confidence interval.)
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 *****
@@ -304,18 +321,19 @@ Some of the students in the "High School and Beyond" survey attended vocational 
 tally(~ prog, data = hsb2, margins = TRUE)
 ```
 
-The number of "successes" (students in vocational programs) is 50, which is more than 10, and the number of "failures" (all other programs) is 150, also more than 10.
+The number of "successes" (students in vocational programs) is 50, which is more than 10, and the number of "failures" (all other programs) is 150, also more than 10. (In this case, since there are three categories, we have to add up the `general` and `academic` totals to get the number of "failures".)
 
 ### Calculate the confidence interval.
 
 ```{r}
-program <- tidy(prop.test(~ prog, data = hsb2, success = "vocational"))
-program
+program <- prop.test(~ prog, data = hsb2, success = "vocational")
+program_tidy <- tidy(program)
+program_tidy
 ```
 
 ### State (but do not overstate) a contextually meaningful interpretation.
 
-We are 95% confident that the true percentage of U.S. high school seniors who attend a vocational program is captured in the interval (`r 100 * program$conf.low`%, `r 100 * program$conf.high`%).
+We are 95% confident that the true percentage of U.S. high school seniors who attend a vocational program is captured in the interval (`r 100 * program_tidy$conf.low`%, `r 100 * program_tidy$conf.high`%).
 
 
 ## Your turn
@@ -340,15 +358,19 @@ Use the `smoking` data set from the `openintro` package. What percentage of the 
 ### Calculate the confidence interval.
 
 \answerbegin
+
 ```{r}
 # Add code here to calculate the confidence interval.
 ```
+
 \answerend
 
 ###  State (but do not overstate) a contextually meaningful interpretation.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 *****
@@ -366,9 +388,9 @@ Here are several *wrong* interpretations of a 95% confidence interval:
 
 * There is a 95% chance that the population parameter lies in the interval.
 
-Let's see how confidence intervals work using simulation.
+We'll take a closer look at these incorrect claims in a moment. First, let's see how confidence intervals work using simulation.
 
-In order to simulate, though, we'll have to pretend temporarily that we know a true population parameter. Let's use the example of a candidate who has the support of 64% of voters. In other words, $p = 0.64$. We go out and get a sample of voters, let's say 50. From that sample we get a sample proportion $\hat{p}$ and construct a 95% confidence interval by adding and subtracting 1.96 standard errors from the value of $\hat{p}$. Most of the time, 64% (the true value!) should be in our interval. But sometimes it won't be. We can get a "freak" sample that is far away from 64%, just by pure chance alone. (Perhaps we accidentally run into a bunch of people who oppose our candidate.)
+In order to simulate, we'll have to pretend temporarily that we know a true population parameter. Let's use the example of a candidate who has the support of 64% of voters. In other words, $p = 0.64$. We go out and get a sample of voters, let's say 50. From that sample we get a sample proportion $\hat{p}$ and construct a 95% confidence interval by adding and subtracting 1.96 standard errors from the value of $\hat{p}$. Most of the time, 64% (the true value!) should be in our interval. But sometimes it won't be. We can get a "freak" sample that is far away from 64%, just by pure chance alone. (Perhaps we accidentally run into a bunch of people who oppose our candidate.)
 
 Okay, let's do it again. We get a new sample, a new $\hat{p}$, and, therefore, a new confidence interval. We can do this over and over again through the magic of simulation!
 
@@ -376,19 +398,20 @@ Here's what this simulation looks like in R. One minor technical point: we will 
 
 
 ```{r}
-confint_1 <- tidy(prop.test(nflip(50, prob = 0.64), n = 50))
-confint_1
+confint1 <- prop.test(nflip(50, prob = 0.64), n = 50)
+confint1_tidy <- tidy(confint1)
+confint1_tidy
 ```
 
-All we need to do for simulation purposes is to introduce the `do` command to do this a bunch of times:
+All we need to do for simulation purposes is to introduce the `do` command to do this a bunch of times. (We'll consolidate `tidy` and `prop.test` into the same line so that `do` can work its magic.)
 
 ```{r}
-confint_100 <- do(100) * tidy(prop.test(nflip(50, prob = 0.64), n = 50))
-head(confint_100)
+confint100 <- do(100) * tidy(prop.test(nflip(50, prob = 0.64), n = 50))
+tail(confint100)
 ```
 
 
-Each sample gives us a slightly different estimate, and therefore, a different confidence interval as well. (Depending on your screen size and resolution, you may have to click the right-facing black arrow in the output above to scroll over to where the `conf.low` and `conf.high` are listed.)
+Each sample gives us a slightly different estimate, and therefore, a different confidence interval as well.
 
 Let's visualize this in a graph. Don't worry about all the complex code here; just look at the pretty picture that follows.
 
@@ -396,12 +419,12 @@ Let's visualize this in a graph. Don't worry about all the complex code here; ju
 # Don't worry about the syntax here.
 # You won't have to do this on your own.
 true_val <- 0.64
-confint_100 <- confint_100 %>%
+confint100 <- confint100 %>%
     mutate(color = ifelse(conf.low <= true_val & true_val <= conf.high,
                           "black", "red"),
            alpha = ifelse(color == "black", 0.5, 1))
-ggplot(confint_100, aes(x = estimate, y = .index,
-                        color = color, alpha = alpha)) +
+ggplot(confint100, aes(x = estimate, y = .index,
+                       color = color, alpha = alpha)) +
     geom_point() +
     scale_color_manual(values = c("black", "red"), guide = FALSE) +
     geom_segment(aes(x = conf.low, xend = conf.high, yend = .index)) +
