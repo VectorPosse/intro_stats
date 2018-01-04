@@ -91,10 +91,10 @@ $$\hat{y} = b_{0} + b_{1} x.$$
 
 The intercept is $b_{0}$ and the slope is $b_{1}$. We use $\hat{y}$ instead of $y$ because when we plug in values of $x$, we do not get back the exact values of $y$ from the data. The line, after all, does not actually pass through most (if any) actual data points. Instead, this equation gives us "predicted" values of $y$ that lie on the regression line. These predicted $y$ values are called $\hat{y}$.
 
-To run a regression analysis, we use the `lm` command in R. (`lm` stands for "linear model".) We wrap the results in the `tidy` command to make the output a little cleaner. There is one tiny change we'll make to the `tidy` command: unlike previous hypothesis tests we've seen, the `tidy` command for `lm` does not automatically include a confidence interval. So we'll need to add an argument `conf.int = TRUE`.
+To run a regression analysis, we use the `lm` command in R. (`lm` stands for "linear model".) As usual, we then use the `tidy` command to make the output a little cleaner. There is one tiny change we'll make to the `tidy` command: unlike previous hypothesis tests we've seen, the `tidy` command for `lm` does not automatically include a confidence interval. So we'll need to add an argument `conf.int = TRUE`.
 
 ```{r}
-wgt_wrist_lm <- lm(wgt ~ wri.di,  data = bdims)
+wgt_wrist_lm <- lm(wgt ~ wri.di, data = bdims)
 wgt_wrist_tidy <- tidy(wgt_wrist_lm, conf.int = TRUE)
 wgt_wrist_tidy
 ```
@@ -124,7 +124,7 @@ When we report the equation of the regression line, we typically use words inste
 
 $$\widehat{weight} = -44.77 + 10.81 wrist.$$
 
-The slope $b_{1}$ is always interpretable. This model predicts that one unit of increase in the x-axis corresponds to a change of 10.81 units in the y-direction. Let's phrase it this way, using inline code:
+The slope $b_{1}$ is always interpretable. This model predicts that one unit of increase in the x-direction corresponds to a change of 10.81 units in the y-direction. Let's phrase it this way, using inline code:
 
 > The model predicts that an increase of one cm in wrist diamater corresponds to a weight increase of `r wgt_wrist_tidy$estimate[2]` kg.
 
@@ -139,7 +139,7 @@ The rest of the `tidy` output involves inference on the two parameters (intercep
 
 ## Checking conditions
 
-We need to be careful here. We have not checked any conditions; therefore, it is inappropriate to fit a regression line yet. Once the line is seen, it cannot easily be "unseen", and it's crucial that you don't trick your reader into believing there is a linear relationship before checking the conditions that justify that belief. 
+We need to be careful here. We have not checked any conditions; therefore, it is inappropriate to fit a regression line at this point. Once the line is seen, it cannot easily be "unseen", and it's crucial that you don't trick your reader into believing there is a linear relationship before checking the conditions that justify that belief. 
 
 The regression line we saw above makes no sense unless we know that regression is appropriate. The conditions for running a regression analysis include all the conditions you checked for a correlation analysis: "Random" and "10%" to ensure a good sample, "Linear association" to make sure our association follows a linear pattern, and an "Outlier" check because outliers can be bad. Let's check what he have so far:
 
@@ -201,7 +201,7 @@ To check for patterns in the residuals, we'll use several different plots. First
 
 ```{r}
 ggplot(wgt_wrist_aug, aes(x = .std.resid)) +
-    geom_histogram(binwidth = 0.5)
+    geom_histogram(binwidth = 0.5, boundary = 0)
 ```
 
 ```{r}
@@ -227,7 +227,8 @@ As an example of the latter, let's look at the residual plot for the tipping exa
 
 ```{r}
 tips <- reshape2::tips
-tip_bill_aug <- augment(lm(tip ~ total_bill, data = tips))
+tip_bill <- lm(tip ~ total_bill, data = tips)
+tip_bill_aug <- augment(tip_bill)
 ggplot(tip_bill_aug, aes(y = .std.resid, x = total_bill)) +
     geom_point() +
     geom_hline(yintercept = 0)
@@ -277,15 +278,19 @@ Also note that a typical regression analysis will start by checking conditions s
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
 
-[Type `?bdims` at the Console to read the help file.]
+[You should type `?bdims` at the Console to read the help file and use `View` to look at the spreadsheet view of the data.]
 
 ```{r}
 str(bdims)
 ```
 
-We can also look at each numerical variable individually with `favstats`:
+```{r}
+head(bdims)
+```
+
+We can also look at each numerical variable of interest with `favstats`:
 
 ```{r}
 favstats(bdims$wgt)
@@ -360,7 +365,9 @@ Commentary: `wgt_wrist_tidy$statistic` has t scores for both the intercept and t
 ### Plot the null distribution.
 
 ```{r}
-pdist("t", df = wgt_wrist_glance$df.residual, q =  c(-t, t), invisible = TRUE)
+pdist("t", df = wgt_wrist_glance$df.residual,
+      q =  c(-t, t),
+      invisible = TRUE)
 ```
 
 Commentary: The correct degrees of freedom are stored in `wgt_wrist_glance$df.residual`, not `wgt_wrist_glance$df` as you might expect.
@@ -425,45 +432,57 @@ Please perform the steps below, following the code examples from earlier in the 
 * Run the `lm` command and then use `tidy`, `augment`, and `glance` respectively on the output. (It's technically incorrect to run regression before checking conditions, but we need the output of `lm` in order to check those conditions.)
 
 \answerbegin
+
 ```{r}
 # Add code here to generate regression output
 ```
+
 \answerend
 
 * Check conditions for regression.
 
 \answerbegin
+
 ```{r}
 # Add code here to check conditions for regression
 ```
 
 Please write up your answer here.
+
 \answerend
 
 * If the conditions are met, plot the regression line on top of a scatterplot of the data.
 
 \answerbegin
+
 ```{r}
 # Add code here to plot the regression line
 ```
+
 \answerend
 
 * Write the regression equation mathematically (enclosing your answer in double dollar signs as above), using contextually meaningful variable names.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 * Interpret the coefficients: interpret the slope, give a literal interpretation of the intercept, and then comment on the appropriateness of that interpretation.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 * Report and interpret $R^2$.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 * Run the full rubric for inference on the slope parameter.
@@ -471,28 +490,34 @@ Please write up your answer here.
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
 
 \answerbegin
+
 ```{r}
 # Add code here to understand the data.
 ```
+
 \answerend
 
 ### Prepare the data for analysis. [Not always necessary.]
 
 \answerbegin
+
 ```{r}
 # Add code here to prepare the data for analysis.
 ```
+
 \answerend
 
 ### Make tables or plots to explore the data visually.
 
 \answerbegin
+
 ```{r}
 # Add code here to make tables or plots.
 ```
+
 \answerend
 
 
@@ -501,23 +526,29 @@ Please write up your answer here.
 ### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
 \answerbegin
+
 $H_{0}:$ Null hypothesis goes here.
 
 $H_{A}:$ Alternative hypothesis goes here.
+
 \answerend
 
 ### Express the null and alternative hypotheses in symbols (when possible).
 
 \answerbegin
+
 $H_{0}: math$
 
 $H_{A}: math$
+
 \answerend
 
 
@@ -526,13 +557,17 @@ $H_{A}: math$
 ### Identify the sampling distribution model.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 \answerbegin
+
 Please write up your answer here. (Some conditions may require R code as well.)
+
 \answerend
 
 
@@ -541,29 +576,35 @@ Please write up your answer here. (Some conditions may require R code as well.)
 ### Compute and report the test statistic.
 
 \answerbegin
+
 ```{r}
 # Add code here to compute the test statistic.
 ```
 
 Please write up your answer here.
+
 \answerend
 
 ### Plot the null distribution.
 
 \answerbegin
+
 ```{r}
 # Add code here to plot the null distribution.
 ```
+
 \answerend
 
 ### Calculate and report the P-value.
 
 \answerbegin
+
 ```{r}
 # Add code here to calculate the P-value.
 ```
 
 Please write up your answer here.
+
 \answerend
 
 
@@ -572,19 +613,25 @@ Please write up your answer here.
 ### State the statistical conclusion.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### State (but do not overstate) a contextually meaningful conclusion.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 
@@ -593,20 +640,25 @@ Please write up your answer here.
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 \answerbegin
+
 Please write up your answer here. (Some conditions may require R code as well.)
+
 \answerend
 
 ### Calculate the confidence interval.
 
 \answerbegin
+
 ```{r}
 # Add code here to calculate the confidence interval.
 ```
+
 \answerend
 
 ### State (but do not overstate) a contextually meaningful interpretation.
 
 \answerbegin
-Please write up your answer here.
-\answerend
 
+Please write up your answer here.
+
+\answerend
