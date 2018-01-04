@@ -89,7 +89,9 @@ We're interested in depression as measured by the Beck Depression Inventory.
 Google the Beck Depression Inventory. Write a short paragraph about it and how it purports to measure depression.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 *****
@@ -118,7 +120,7 @@ mean(BECK ~ IV, data = BECK_IV)
 
 ## The F distribution
 
-When assessing the difference between groups, there are two numbers that are important.
+When assessing the differences between groups, there are two numbers that are important.
 
 The first is called the "mean square between groups" (MSG). It measures how far away each group mean is away from the overall grand mean for the whole sample. For example, for those who never used IV drugs, their mean Beck score was 15.95. This is 1.42 points below the grand mean of 17.37. On the other hand, recent IV drug users had a mean Beck score of nearly 19. This is 1.63 points above the grand mean. MSG is calculated by taking these differences for each group, squaring them to make them positive, weighting them by the sizes of each group (larger groups should obviously count for more), and dividing by the "group degrees of freedom" $df_{G} = k - 1$ where $k$ is the number of groups. The idea is that MSG is a kind of "average variability" among the groups. In other words, how far away are the groups from the grand mean (and therefore, from each other)?
 
@@ -134,11 +136,13 @@ It's not particularly interesting if F is less than one. That just means that th
 
 $MSG$ and $MSE$ are measures of variability, and that's why this is called "Analysis of Variance".
 
-The F distribution is the correct sampling distribution model. Like a t model, there are infinitely many different F models because degrees of freedom are involved. But unlike a t model, the F model has *two* degrees of freedom, $df_{G}$ and $df_{E}$. Both of these numbers affect the precise shape of the F distribution.
+The F distribution is the correct sampling distribution model. Like a t model, there are infinitely many different F models because degrees of freedom are involved. But unlike a t model, the F model has *two* numbers called degrees of freedom, $df_{G}$ and $df_{E}$. Both of these numbers affect the precise shape of the F distribution.
 
-For example, here is picture of a few different F models. (Don't worry about the syntax here. You won't need to do this on your own.)
+For example, here is picture of a few different F models.
 
 ```{r}
+# Don't worry about the syntax here.
+# You won't need to know how to do this on your own.
 ggplot(data.frame(x = c(0, 5)), aes(x)) +
     stat_function(fun = df, args = list(df1 = 1, df2 = 1),
                   aes(color = "1, 1")) +
@@ -156,19 +160,23 @@ ggplot(data.frame(x = c(0, 5)), aes(x)) +
 
 ## Assumptions
 
-What conditions can we check to justify the use of an F model for our sampling distribution? In addition to the typical "Random" and "10%" conditions that ensure independence, we also need to check the "Nearly normal" condition for each group, just like for the t tests. A new assumption is the "Constant Variance" assumption, which says that each group should have the same variance in the population. This is impossible to check, although we can use our sample as a rough guide. If each group has about the same spread, that is some evidence that such an assumption might hold in the population as well. Also, ANOVA is pretty robust to this assumption, especially when the groups are close to the same size. Even when the group sizes are unequal (sometimes called "unbalanced"), some say the variances can be off by up to a factor of 3 and ANOVA will still work pretty well. So what we're looking for here are gross violations, not minor ones.
+What conditions can we check to justify the use of an F model for our sampling distribution? In addition to the typical "Random" and "10%" conditions that ensure independence, we also need to check the "Nearly normal" condition for each group, just like for the t tests. A new assumption is the "Constant variance" assumption, which says that each group should have the same variance in the population. This is impossible to check, although we can use our sample as a rough guide. If each group has about the same spread, that is some evidence that such an assumption might hold in the population as well. Also, ANOVA is pretty robust to this assumption, especially when the groups are close to the same size. Even when the group sizes are unequal (sometimes called "unbalanced"), some say the variances can be off by up to a factor of 3 and ANOVA will still work pretty well. So what we're looking for here are gross violations, not minor ones.
 
 Let's go through the rubric with commentary.
 
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
 
-[Type `?uis` at the Console to read the help file. You have already Googled the Beck Depression Score.]
+[You should type `?uis` at the Console to read the help file and use `View` to look at the spreadsheet view of the data. You have already Googled the Beck Depression Score.]
 
 ```{r}
 str(uis)
+```
+
+```{r}
+head(uis)
 ```
 
 ### Prepare the data for analysis. [Not always necessary.]
@@ -176,13 +184,13 @@ str(uis)
 We need `IV` to be a factor variable. We put `BECK` and `IV` into a separate data frame.
 
 ```{r}
+# Although we've already done this above, 
+# we include it here again for completeness.
 IV <- factor(uis$IV, levels = c(1, 2, 3),
              labels = c("Never", "Previous", "Recent"))
 BECK_IV <- data.frame(BECK = uis$BECK, IV)
 head(BECK_IV)
 ```
-
-Commentary: we already did this above, but we include it here for completeness.
 
 ### Make tables or plots to explore the data visually.
 
@@ -201,13 +209,13 @@ ggplot(BECK_IV, aes(y = BECK, x = IV)) +
 
 ```{r}
 ggplot(BECK_IV, aes(x = BECK)) +
-    geom_histogram(binwidth = 5) +
+    geom_histogram(binwidth = 5, boundary = 0) +
     facet_grid(IV ~ .)
 ```
 
 Both graphs show that the distribution of depression scores in each group is similar.
 
-The distributions look reasonably normal, but we can also check the QQ plots:
+The distributions look reasonably normal, or perhaps a bit right skewed, but we can also check the QQ plots:
 
 ```{r}
 ggplot(BECK_IV, aes(sample = BECK)) +
@@ -222,8 +230,6 @@ Here are the group means:
 ```{r}
 mean(BECK ~ IV, data = BECK_IV)
 ```
-
-Commentary: We also did most (but not all) of this above. Again, we include everything in the rubric so you'll have a complete and thorough example.
 
 
 ## Hypotheses
@@ -282,12 +288,12 @@ $$df_{E} = n - k = 575 - 3 = 572.$$
 
 ```{r}
 BECK_test <- aov(BECK ~ IV, data = BECK_IV)
-BECK_tidy <- tidy(BECK_test)
-BECK_tidy
+BECK_test_tidy <- tidy(BECK_test)
+BECK_test_tidy
 ```
 
 ```{r}
-F <- BECK_tidy$statistic[1]
+F <- BECK_test_tidy$statistic[1]
 F
 ```
 
@@ -307,40 +313,49 @@ $$F = \frac{MSG}{MSE}.$$
 
 Check for yourself: $574.01934/85.40169 = 6.721405$.
 
-If we need to isolate this number, it no longer works simply to type `BECK_tidy$statistic`:
+If we need to isolate this number, it no longer works simply to type `BECK_test_tidy$statistic`:
 
 ```{r}
-BECK_tidy$statistic
+BECK_test_tidy$statistic
 ```
 
 There are two entries here because the tidy output has two rows, but there is only one F score. (`NA` is the R code for a missing value.) We can grab the first entry like this:
 
 ```{r}
-BECK_tidy$statistic[1]
+BECK_test_tidy$statistic[1]
 ```
 
 
 ### Plot the null distribution.
 
 ```{r}
-pdist("f", df1 = BECK_tidy$df[1], df2 = BECK_tidy$df[2],
-      q = BECK_tidy$statistic[1], invisible = TRUE)
+pdist("f", df1 = BECK_test_tidy$df[1], df2 = BECK_test_tidy$df[2],
+      q = BECK_test_tidy$statistic[1],
+      invisible = TRUE)
 ```
 
-Commentary: As the F distribution has two parameters corresponding to $df_{G}$ and $df_{E}$, we have to feed both of them into the `pdist` command. As before, the tidy output has two numbers in the $df$ column, so we have to use `[1]` and `[2]` to grab them.
+Commentary: As the F distribution has two parameters corresponding to $df_{G}$ and $df_{E}$, we have to feed both of them into the `pdist` command. The `pdist` uses `df1` to refer to $df_{G}$ and `df2` to refer to $df_{E}$.  As before, the tidy output has two numbers in the $df$ column, so we have to use `[1]` and `[2]` to grab them.
 
 ### Calculate and report the P-value.
 
 ```{r}
-P <- BECK_tidy$p.value[1]
+P <- BECK_test_tidy$p.value[1]
 P
 ```
 
 The P-value is `r P`.
 
-Commentary: Same issue here: the P-value is located in the first entry of `BECK_tidy$p.value`.
+Commentary: The issue here is the same as in the last step. The P-value is located in the first entry of `BECK_test_tidy$p.value`, so we need to append `[1]` to the variable to grab only the first value listed.
 
 Note that this is, by definition, a one-sided test. Extreme values of F are the ones that are far away from 1, and only those values in the right tail are far from 1.
+
+We obtain the same answer directly from the F distribution using `pdist`.
+
+```{r}
+1 - pdist("f", df1 = BECK_test_tidy$df[1], df2 = BECK_test_tidy$df[2],
+      q = BECK_test_tidy$statistic[1],
+      plot = FALSE)
+```
 
 
 ## Conclusion
@@ -364,13 +379,17 @@ If we've made a Type I error, that means that there really isn't a difference be
 Everything we saw earlier in the exploratory data analysis pointed toward failing to reject the null. All three groups look very similar in all the plots, and the means are not all that far from each other. So why did we get such a tiny P-value and reject the null? In other words, what is it about our data that allows for small effects to be statistically significant?
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 If you were a psychologist working with drug addicts, would the statistical conclusion (rejecting the null and concluding that there was a difference between groups) be of clinical importance to you? In other words, if there is a difference, is it of practical significance and not just statistical significance?
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 *****
@@ -382,7 +401,7 @@ There is not really a confidence interval for ANOVA. We are not hypothesizing ab
 
 If it has been determined that there is a difference between groups, it's natural to ask which group or groups are most different from the others. For example, we could have ten groups, nine that are identical, and one that is radically different. Rejecting the null means we have evidence of a difference overall, but it doesn't specify where the difference lies. Wouldn't it be nice to know which group or groups were different enough to trigger a statistically significant result?
 
-One easy way to do this is to compute Tukey Honest Significant Differences^[John Tukey was a famous statistician.] with the `TukeyHSD` command.
+One easy way to do this is to compute Tukey Honest Significant Differences  with the `TukeyHSD` command.^[John Tukey was a famous statistician, not to be confused with John Turkey, the Thanksgiving cousin of David S. Pumpkins.]
 
 The `TukeyHSD` command doesn't like the tidy output; it wants the raw output from the `aov` command, stored in `BECK_test`. So let's give Tukey what he wants. We don't want to make Tukey angry.
 
@@ -390,7 +409,7 @@ The `TukeyHSD` command doesn't like the tidy output; it wants the raw output fro
 TukeyHSD(BECK_test)
 ```
 
-This command computes "pairwise differences" which means that it compares every possible pair of groups to each other. For example, the first row indicates that the difference in means between the "Previous" group and the "Never" group is 0.692054. That number is somewhat meaningless by itself, though. Following it is a confidence interval for the "true" difference in means between the "Previous" and "Never" groups. Since this interval contains zero, we don't have any evidence of a difference between "Previous" and "Never". This is also reflected in a large P-value on the right side of the table.
+This command computes "pairwise differences" which means that it compares every possible pair of groups. For example, the first row indicates that the difference in means between the "Previous" group and the "Never" group is 0.692054. That number is somewhat meaningless by itself, though. Following it is a confidence interval for the "true" difference in means between the "Previous" and "Never" groups. Since this interval contains zero, we don't have any evidence of a difference between "Previous" and "Never". This is also reflected in a large P-value on the right side of the table.
 
 Contrast the first row to the second row of the table, the difference between "Recent" and "Never". Here the difference between the means, 3.043674, is much larger. Furthermore, the confidence interval completely misses zero and the P-value is very small. There is a significant difference between the "Recent" and "Never" groups. (As referenced in an exercise above, though, don't confuse statistical significance for practical significance or clinical significance.)
 
@@ -404,12 +423,12 @@ You may have wondered what `p adj` means. These are "adjusted" P-values. Why do 
 
 Now, of course, we're not running 20 tests here; we're running three. Nevertheless, every time we run an additional test on the same data, we increase the likelihood of a Type I error. One way to counteract that is to inflate the P-values a little so that only the really, really significant differences get flagged as significant. And even though it doesn't say it, the confidence intervals are widened a bit as well.
 
-I'm sweeping a lot of details of this under the rug. A more advanced statistics class will deal directly with this issue of "multiple comparisons" and how to adjust for them.
+I'm sweeping a lot of details under the rug. A more advanced statistics class will deal directly with this issue of "multiple comparisons" and how to adjust for them.
 
 
 ## Your turn
 
-Use the same data. This time determine if heroine/cocaine use during the three months prior to admission is associated with depression. Run ANOVA according to the rubric and then perform a post hoc analysis using Tukey Honest Significant Differences.
+Use the same data. This time determine if depression is associated with heroine/cocaine use during the three months prior to admission. Run ANOVA according to the rubric and then perform a post hoc analysis using Tukey Honest Significant Differences.
 
 The rubric outline is reproduced below. You may refer to the worked example above and modify it accordingly. Remember to strip out all the commentary. That is just exposition for your benefit in understanding the steps, but is not meant to form part of the formal inference process.
 
@@ -418,28 +437,34 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
 
 \answerbegin
+
 ```{r}
 # Add code here to understand the data.
 ```
+
 \answerend
 
 ### Prepare the data for analysis. [Not always necessary.]
 
 \answerbegin
+
 ```{r}
 # Add code here to prepare the data for analysis.
 ```
+
 \answerend
 
 ### Make tables or plots to explore the data visually.
 
 \answerbegin
+
 ```{r}
 # Add code here to make tables or plots.
 ```
+
 \answerend
 
 
@@ -448,23 +473,29 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 ### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
 \answerbegin
+
 $H_{0}:$ Null hypothesis goes here.
 
 $H_{A}:$ Alternative hypothesis goes here.
+
 \answerend
 
 ### Express the null and alternative hypotheses in symbols (when possible).
 
 \answerbegin
+
 $H_{0}: math$
 
 $H_{A}: math$
+
 \answerend
 
 
@@ -473,13 +504,17 @@ $H_{A}: math$
 ### Identify the sampling distribution model.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 \answerbegin
+
 Please write up your answer here. (Some conditions may require R code as well.)
+
 \answerend
 
 
@@ -488,30 +523,35 @@ Please write up your answer here. (Some conditions may require R code as well.)
 ### Compute and report the test statistic.
 
 \answerbegin
+
 ```{r}
 # Add code here to compute the test statistic.
 ```
 
-
 Please write up your answer here.
+
 \answerend
 
 ### Plot the null distribution.
 
 \answerbegin
+
 ```{r}
 # Add code here to plot the null distribution.
 ```
+
 \answerend
 
 ### Calculate and report the P-value.
 
 \answerbegin
+
 ```{r}
 # Add code here to calculate the P-value.
 ```
 
 Please write up your answer here.
+
 \answerend
 
 
@@ -520,28 +560,36 @@ Please write up your answer here.
 ### State the statistical conclusion.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### State (but do not overstate) a contextually meaningful conclusion.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 
 ## Post hoc analysis
 
 \answerbegin
+
 ```{r}
 # Add code here to compute Tukey Honest Significant Differences
 ```
 
 Please write up your answer here.
+
 \answerend

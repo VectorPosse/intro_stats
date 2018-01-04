@@ -72,7 +72,7 @@ Consider the cultivar types c39 and c52. If there were truly no difference in we
 
 We can simulate this assumption by shuffling the names of the cultivars. More concretely, we can randomly assign cultivar labels to each head of cabbage and then calculate the average weight in each cultivar groups. Since the cultivar labels are random, there's no reason to expect a difference between the two average weights other than random fluctuations due to sampling variability.
 
-The actual mean weights of the c39 and c52 cultivars can be found using the `mean` command and the tilde notation. The following command should be read aloud as "calculate the mean head weight *by* cultivar type," or "*grouped by* cultivar type."
+The mean weights in each sample (the c39 and c52 cultivars) can be found using the `mean` command and the tilde notation. The following command should be read aloud as "calculate the mean head weight *by* cultivar type," or "*grouped by* cultivar type."
 
 ```{r}
 mean(HeadWt ~ Cult, data = cabbages)
@@ -85,7 +85,7 @@ obs_diff <- diffmean(HeadWt ~ Cult, data = cabbages)
 obs_diff
 ```
 
-(Note that the order of subtraction here is c52 minus c39.)
+(Note that the order of subtraction here is c52 minus c39. This is significant because the `t.test` command we use later will perform this subtraction in the other direction, so pay close attention.)
 
 This is the list of cultivars in the actual data:
 
@@ -112,11 +112,13 @@ We use the `do` command to do this a bunch of times and graph the results along 
 ```{r}
 sims <- do(2000) * diffmean(HeadWt ~ shuffle(Cult), data = cabbages)
 ggplot(sims, aes(x = diffmean)) +
-    geom_histogram(binwidth = 0.1) +
+    geom_histogram(binwidth = 0.1, boundary = 0) +
     geom_vline(xintercept = obs_diff, color = "blue")
 ```
 
-No surprise that this histogram looks nearly normal, centered at zero. Our observed difference is quite far out into the tail of this simulated sampling distribution, so it appears that our actual data would be unlikely due to pure chance alone if the null hypothesis were true.
+No surprise that this histogram looks nearly normal, centered at zero: the simulation is working under the assumption of the null hypothesis of no difference between the groups.
+
+Our observed difference (from the sampled data) is quite far out into the tail of this simulated sampling distribution, so it appears that our actual data would be unlikely due to pure chance alone if the null hypothesis were true.
 
 We can even find a P-value by calculating how many of our sampled values are as extreme or more extreme than the observed data difference. The command below accomplishes this by calculating the percentage of samples in the left tail and then multiplying by 2 to make it a two-sided test. (It's two-sided because we didn't have any preconceptions about which cultivar would be heavier.)
 
@@ -141,7 +143,7 @@ $$SE = \sqrt{\frac{s_{1}^{2}}{n_{1}} + \frac{s_{2}^{2}}{n_{2}}}$$
 
 However, $s_{1}$ and $s_{2}$ are not perfect estimates of $\sigma_{1}$ and $\sigma_{2}$; they are subject to sampling variability too. This extra variability means that a normal model is no longer appropriate as the sampling distribution model.
 
-In the one-sample case, a Student t model with $df = n - 1$ was the right choice. In the two-sample case, we don't know the right answer. And I don't mean that we haven't learned it yet. I mean, statisticians have not found a formula for the correct sampling distribution. It is a famous unsolved problem, called the Behrens-Fisher problem.
+In the one-sample case, a Student t model with $df = n - 1$ was the right choice. In the two-sample case, we don't know the right answer. And I don't mean that we haven't learned it yet in our stats class. I mean, statisticians have not found a formula for the correct sampling distribution. It is a famous unsolved problem, called the Behrens-Fisher problem.
 
 Several researchers have proposed solutions that are "close" though. One compelling one is called "Welch's t-test". Welch showed that even though it's not quite right, a Student t model is very close as long as you pick the degrees of freedom carefully. Unfortunately, the way to compute the right degrees of freedom is crazy complicated. Fortunately, R is good at crazy complicated computations. The `t.test` command uses the Welch's t-test by default when there are two groups.
 
@@ -150,15 +152,19 @@ Let's go through the full rubric using the cabbage example.
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
 
-[Type `?cabbages` to read the help file.]
+[You should type `?cabbages` at the Console to read the help file and use `View` to look at the spreadsheet view of the data.]
 
 ```{r}
 str(cabbages)
 ```
 
-We can also use `favstats` to see summary statistics of head weight for each cultivar.
+```{r}
+head(cabbages)
+```
+
+We can also use `favstats` to see summary statistics of head weight for each cultivar using the tilde notation.
 
 ```{r}
 favstats(HeadWt ~ Cult, data = cabbages)
@@ -185,17 +191,19 @@ ggplot(cabbages, aes(x = Cult, y = HeadWt)) +
 
 ```{r}
 ggplot(cabbages, aes(x = HeadWt)) +
-    geom_histogram(binwidth = 0.25) +
+    geom_histogram(binwidth = 0.5, boundary = 1) +
     facet_grid(Cult ~ .)
 ```
 
-The individual group histograms look reasonably normal, although it's a bit hard to tell with a sample size of 30 in each group. Here are the QQ plots to give us another way to ascertain normality of the data.
+The histogram of the c39 group looks reasonably normal and the c52 group may be somewhat skewed to the right, although it's a bit hard to tell with a sample size of 30 in each group. Here are the QQ plots to give us another way to ascertain normality of the data.
 
 ```{r}
 ggplot(cabbages, aes(sample = HeadWt)) +
     geom_qq() +
     facet_grid(Cult ~ .)
 ```
+
+Any deviation from normality looks minor.
 
 Commentary: The boxplots and histograms show why statistical inference is so important. It's clear that there is some difference between the two groups, but it's not obvious if that difference will turn out to be statistically significant. There appears to be a lot of variability in both groups, and both groups have a fair number of lighter and heavier cabbage heads.
 
@@ -221,8 +229,9 @@ $H_{A}: \mu_{c39} - \mu_{c52} \neq 0$
 Commentary: Pay close attention to the order of subtraction. It's easiest to make your hypotheses match the order of the `t.test` command we use later in the rubric. **It is the oppposite of the `diffmean` command!** How do we know? Let's run the `t.test` command a little early and look at the output.
 
 ```{r}
-cabbage_test <- tidy(t.test(HeadWt ~ Cult, data = cabbages))
-cabbage_test
+cabbage_test <- t.test(HeadWt ~ Cult, data = cabbages)
+cabbage_test_tidy <- tidy(cabbage_test)
+cabbage_test_tidy
 ```
 
 The `estimate` is positive, obtained by subtracting `estimate1` minus `estimate2`. Looking back to the mean of both groups that we calculated with the `mean` command, we can see that `estimate1` corresponds to the c39 group and `estimate2` corresponds to the c52 group.
@@ -235,23 +244,23 @@ The `estimate` is positive, obtained by subtracting `estimate1` minus `estimate2
 We use a t model. Since we ran the `t.test` command already, we can see the degrees of freedom:
 
 ```{r}
-cabbage_test$parameter
+cabbage_test_tidy$parameter
 ```
 
-So we will use a t model with `r cabbage_test$parameter` degrees of freedom.
+So we will use a t model with `r cabbage_test_tidy$parameter` degrees of freedom.
 
 Commentary: For Welch's t test, the degrees of freedom won't usually be a whole number. Be sure you understand that the formula is no longer $df = n - 1$. That doesn't even make any sense as there isn't a single $n$ in a *two*-sample test.
 
 ### Check the relevant conditions to ensure that model assumptions are met.
 
-* Random
+* Random (for both groups)
     - We have no information at all about these cabbages. We hope that the 30 we have of each kind are representative of all cabbages from the two cultivars.
 
-* 10%
+* 10% (for both groups)
     - 30 is less than 10% of all c39 cabbages and 30 is less than 10% of all c52 cabbages.
     
-* Nearly normal
-    - We have to check this for both groups. Since the sample sizes are 30 in each group, though, we meet the condition automatically.
+* Nearly normal (for both groups)
+    - Since the sample sizes are 30 in each group, we meet the condition.
 
 
 ## Mechanics
@@ -259,7 +268,7 @@ Commentary: For Welch's t test, the degrees of freedom won't usually be a whole 
 ### Compute and report the test statistic.
 
 ```{r}
-t <- cabbage_test$statistic
+t <- cabbage_test_tidy$statistic
 t
 ```
 
@@ -268,13 +277,15 @@ The t-score is `r t`.
 ### Plot the null distribution.
 
 ```{r}
-pdist("t", df = cabbage_test$parameter, q = c(-t, t), invisible = TRUE)
+pdist("t", df = cabbage_test_tidy$parameter,
+      q = c(-t, t),
+      invisible = TRUE)
 ```
 
 ### Calculate and report the P-value.
 
 ```{r}
-P <- cabbage_test$p.value
+P <- cabbage_test_tidy$p.value
 P
 ```
 
@@ -305,16 +316,18 @@ There are no additional conditions to check.
 ### Calculate the confidence interval.
 
 ```{r}
-cabbage_test$conf.low
+cabbage_test_tidy$conf.low
 ```
 
 ```{r}
-cabbage_test$conf.high
+cabbage_test_tidy$conf.high
 ```
 
 ### State (but do not overstate) a contextually meaningful interpretation.
 
-We are 95% confident that the true difference in mean head weight between c52 and c39 cabbages is captured in the interval (`r cabbage_test$conf.low` kg, `r cabbage_test$conf.high` kg). We obtained this by subtracting c39 minus c52.
+We are 95% confident that the true difference in mean head weight between c39 and c52 cabbages is captured in the interval (`r cabbage_test_tidy$conf.low` kg, `r cabbage_test_tidy$conf.high` kg). We obtained this by subtracting c39 minus c52.
+
+Commentary: Don't forget that any time we find a number that represents a difference, we have to be clear in the conclusion about the direction of subtraction. Otherwise, we have no idea how to interpret positive and negative values. (Does this interval mean that c39 heads or c52 heads are heavier? Since we calculated c39 minus c52 and these numbers are positive, that means that c39 heads are, on average, heavier.)
 
 
 ## Inference using summary statistics
@@ -334,16 +347,18 @@ t <- (8.8 - 10.4)/sqrt(2.1^2/48 + 3.1^2/54)
 t
 ```
 
-The trouble we face is that the degrees of freedom will be complicated. In the event that the number of degrees of freedom are reported, we're good. For example, suppose we're told that there are 93.7 degrees of freedom. If that's the case, the P-value can be calculated: 
+The trouble we face is that the degrees of freedom will be complicated. In the event that the degrees of freedom are reported, we're good. For example, suppose we're told that there are 93.7 degrees of freedom. If that's the case, the P-value can be calculated: 
 
 ```{r}
-2 * pdist("t", df = 93.7, q = t, plot = FALSE)
+P <- 2 * pdist("t", df = 93.7, q = t, plot = FALSE)
+P
 ```
 
-If you don't have the degrees of freedom, you could google the Welch-Satterthwaite formula and plug in all the necessary values to calculate degrees of freedom for yourself.^[This is painful.] Or, another common recommendation is to use a conservative estimate for the degrees of freedom by choosing the smaller of $n_{1} - 1$ or $n_{2} - 1$. If we didn't know the degrees of freedom for the above example, we could use 47 degrees of freedom (48 - 1) and get the following P-value:
+If you don't have the degrees of freedom, you could google the Welch-Satterthwaite formula and plug in all the necessary values to calculate degrees of freedom for yourself.^[This is painful.] Or, another common recommendation is to use a conservative estimate for the degrees of freedom by choosing the smaller of $n_{1} - 1$ or $n_{2} - 1$. If we didn't know the degrees of freedom for the above example, we could use 47 degrees of freedom ($48 - 1$) and get the following P-value:
 
 ```{r}
-2 * pdist("t", df = 47, q = t,  plot = FALSE)
+P  <- 2 * pdist("t", df = 47, q = t,  plot = FALSE)
+P
 ```
 
 While a bit larger than the "correct" P-value, it's still plenty small. Either way we would reject the null.
@@ -362,28 +377,34 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
 
 \answerbegin
+
 ```{r}
 # Add code here to understand the data.
 ```
+
 \answerend
 
 ### Prepare the data for analysis. [Not always necessary.]
 
 \answerbegin
+
 ```{r}
 # Add code here to prepare the data for analysis.
 ```
+
 \answerend
 
 ### Make tables or plots to explore the data visually.
 
 \answerbegin
+
 ```{r}
 # Add code here to make tables or plots.
 ```
+
 \answerend
 
 
@@ -392,23 +413,29 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 ### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
 \answerbegin
+
 $H_{0}:$ Null hypothesis goes here.
 
 $H_{A}:$ Alternative hypothesis goes here.
+
 \answerend
 
 ### Express the null and alternative hypotheses in symbols (when possible).
 
 \answerbegin
+
 $H_{0}: math$
 
 $H_{A}: math$
+
 \answerend
 
 
@@ -417,13 +444,17 @@ $H_{A}: math$
 ### Identify the sampling distribution model.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 \answerbegin
+
 Please write up your answer here. (Some conditions may require R code as well.)
+
 \answerend
 
 
@@ -432,29 +463,35 @@ Please write up your answer here. (Some conditions may require R code as well.)
 ### Compute and report the test statistic.
 
 \answerbegin
+
 ```{r}
 # Add code here to compute the test statistic.
 ```
 
 Please write up your answer here.
+
 \answerend
 
 ### Plot the null distribution.
 
 \answerbegin
+
 ```{r}
 # Add code here to plot the null distribution.
 ```
+
 \answerend
 
 ### Calculate and report the P-value.
 
 \answerbegin
+
 ```{r}
 # Add code here to calculate the P-value.
 ```
 
 Please write up your answer here.
+
 \answerend
 
 
@@ -463,19 +500,25 @@ Please write up your answer here.
 ### State the statistical conclusion.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### State (but do not overstate) a contextually meaningful conclusion.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 
@@ -484,20 +527,25 @@ Please write up your answer here.
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 \answerbegin
+
 Please write up your answer here. (Some conditions may require R code as well.)
+
 \answerend
 
 ### Calculate the confidence interval.
 
 \answerbegin
+
 ```{r}
 # Add code here to calculate the confidence interval.
 ```
+
 \answerend
 
 ### State (but do not overstate) a contextually meaningful interpretation.
 
 \answerbegin
-Please write up your answer here.
-\answerend
 
+Please write up your answer here.
+
+\answerend
