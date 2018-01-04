@@ -86,6 +86,8 @@ R <- cor(tip ~ total_bill, data = tips)
 R
 ```
 
+Although the `cor` command accepts the "tilde" notation, the order doesn't matter; correlation is symmetric, so the R value is the same independent of the choice of response and explanatory variables.
+
 This sample correlation R is an estimate of the true population correlation, called $\rho$, the Greek letter "rho". A typical null hypothesis is that there is no correlation between the two variables---in other words, $\rho = 0$. Under that assumption, the sampling distribution is somewhat complicated. Although the sample correlations don't follow a simple distribution, if we calculate
 
 $$t = \frac{R - \rho}{\sqrt{\frac{1 - R^{2}}{n - 2}}} = \frac{R}{\sqrt{\frac{1 - R^{2}}{n - 2}}},$$
@@ -110,19 +112,21 @@ We use the `do` command to do this a bunch of times.
 
 ```{r}
 sims <- do(2000) * cor(tip ~ shuffle(total_bill), data = tips)
-head(sims)
+tail(sims)
 ```
 
 The t scores follow a Student t distribution, not the correlations themselves, so we have to calculate the t scores. We use the `mutate` command^[The `mutate` command comes from a package called `dplyr` which is helpfully loaded for you when you load the `mosaic` package.] to compute the t score for each row of `sims`. The number 242 is $n - 2$.
 
 ```{r}
 sims <- mutate(sims, t = cor/(sqrt((1 - cor^2)/242)))
-head(sims)
+tail(sims)
 ```
 
 Now we can graph the simulated values. We superimpose the t distribution with $df = 242$ to show that it's a pretty good fit.
 
 ```{r}
+# Don't worry about the syntax here.
+# You won't need to know how to do this on your own.
 ggplot(sims, aes(x = t)) +
     geom_histogram(aes(y = ..density..), binwidth = 0.4) +
     stat_function(fun = "dt", args = list(df = 242), color = "blue")
@@ -131,19 +135,23 @@ ggplot(sims, aes(x = t)) +
 
 ## Inference for correlation
 
-Calculating a correlation coefficient blindly can be dangerous. Without meeting certain conditions, the value of R could be incredibly misleading. R will gladly compute the correlation coefficient for any data, whether appropriate or not. Therefore, we will follow our inferential rubric to decide if there is a statistically significant relationship between the tip and the corresponding bill. In truth, the entire inferential rubric is probably overkill for such a simple question. Nevertheless, the rubric does ensure that we take care to identify our hypotheses and check conditions.
+Calculating a correlation coefficient blindly can be dangerous. Without meeting certain conditions, the value of R could be incredibly misleading. R (the software) will gladly compute R (the correlation coefficient) for any data, whether appropriate or not. Therefore, we will follow our inferential rubric to decide if there is a statistically significant relationship between the tip and the corresponding bill. In truth, the entire inferential rubric is probably overkill for such a simple question. Nevertheless, the rubric does ensure that we take care to identify our hypotheses and check conditions.
 
 In addition to the standard "Random" and "10%" conditions, we introduce two new conditions. First, we need to know that the association is linear. Nonlinear relationships can exist, but the R value makes no sense for such situations. Finally, we need to check for outliers. These two conditions should be checked by looking at a scatterplot.
 
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
 
-[Type `?tips` at the Console to read the help file.]
+[You should type `?tips` at the Console to read the help file and use `View` to look at the spreadsheet view of the data.]
 
 ```{r}
 str(tips)
+```
+
+```{r}
+head(tips)
 ```
 
 We can also look at each numerical variable individually with `favstats`:
@@ -173,10 +181,12 @@ There does appear to be a moderate, positive association between these variables
 
 ### Exercise
 
-There appears to be a pattern of unusual bunching in the lower left part of the graph. Can you explain this pattern? (Hint: use `View(tips)` at the Console and sort the `tip` variable.)
+There appears to be a pattern of unusual bunching in the lower left part of the graph. Can you explain this pattern? (Hint: in the spreadsheet view produced by `View`, sort the `tip` variable.)
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 *****
@@ -223,7 +233,7 @@ We use a t model with `r NROW(tips) - 2` degrees of freedom.
 * Outliers
     - We don't see any significant outliers in the scatterplot. There are a few dots here and there that are a little far from the main cloud, but nothing that worries us too much, especially given the large sample size.
 
-Commentary: No data will ever line up in a perfect straight line. The "linear association" condition is meant to suggest that the "cloud of dots" should be more or less in a straight pattern moving across the plot. We are most concerned here with checking that the pattern does not curve substantially, and this does not appear to.
+Commentary: No data will ever line up in a perfect straight line. The "linear association" condition is meant to suggest that the "cloud of dots" should be more or less in a straight pattern moving across the plot. We are most concerned here with checking that the pattern does not curve substantially, and this does not appear to. As with any outliers, judge them based on how far away from the data cloud they are, and keep in mind that outliers tend to be more influential when sample sizes are small.
 
 
 ## Mechanics
@@ -231,27 +241,36 @@ Commentary: No data will ever line up in a perfect straight line. The "linear as
 ### Compute and report the test statistic.
 
 ```{r}
-cor_test <- tidy(cor.test(tips$tip, tips$total_bill))
-t <- cor_test$statistic
+tips_test <- cor.test(tip ~ total_bill, data = tips)
+tips_test_tidy <- tidy(tips_test)
+tips_test_tidy
+```
+
+```{r}
+t <- tips_test_tidy$statistic
 t
 ```
 
 The t score is `r t`.
 
-Commentary: Unlike the other hypothesis tests we've done before, `cor.test` doesn't use the "tilde" notation. You just put in both variables separated by a comma. The order doesn't matter; correlation is symmetric, so the R value is the same independent of the choice of response and explanatory variables.
+Commentary: Although `cor.test` accepts the "tilde" notation, the order doesn't matter; correlation is symmetric, so the R value is the same independent of the choice of response and explanatory variables.
+
+The output of the `cor.test` function is very similar to other hypothesis tests in R. The correlation coefficient is the `estimate`. Everything else is straightforward: the t score (`statistic`), P-value (`p.value`), degrees of freedom (`parameter`), and confidence interval (`conf.low` and `conf.high`).
 
 You may have noticed that this is an insanely large t score. This is typical of correlation tests. If there is enough visual evidence of a correlation in the scatterplot, the R value will be pretty far from 0. That's why the full rubric for inference is somewhat overkill for questions about correlation.
 
 ### Plot the null distribution.
 
 ```{r}
-pdist("t", df = cor_test$parameter, q = c(-t, t), invisible = TRUE)
+pdist("t", df = tips_test_tidy$parameter,
+      q = c(-t, t),
+      invisible = TRUE)
 ```
 
 ### Calculate and report the P-value.
 
 ```{r}
-P <- cor_test$p.value
+P <- tips_test_tidy$p.value
 P
 ```
 
@@ -284,16 +303,16 @@ All the conditions have already been checked.
 ### Calculate the confidence interval.
 
 ```{r}
-cor_test$conf.low
+tips_test_tidy$conf.low
 ```
 
 ```{r}
-cor_test$conf.high
+tips_test_tidy$conf.high
 ```
 
 ### State (but do not overstate) a contextually meaningful interpretation.
 
-We are 95% confident that the true correlation between tips and total bill (for this waiter at this restaurant) is captured in the interval (`r cor_test$conf.low`, `r cor_test$conf.high`).
+We are 95% confident that the true correlation between tips and total bill (for this waiter at this restaurant) is captured in the interval (`r tips_test_tidy$conf.low`, `r tips_test_tidy$conf.high`).
 
 
 ## Your turn
@@ -311,28 +330,34 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
 
 \answerbegin
+
 ```{r}
 # Add code here to understand the data.
 ```
+
 \answerend
 
 ### Prepare the data for analysis. [Not always necessary.]
 
 \answerbegin
+
 ```{r}
 # Add code here to prepare the data for analysis.
 ```
+
 \answerend
 
 ### Make tables or plots to explore the data visually.
 
 \answerbegin
+
 ```{r}
 # Add code here to make tables or plots.
 ```
+
 \answerend
 
 
@@ -341,23 +366,29 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 ### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
 \answerbegin
+
 $H_{0}:$ Null hypothesis goes here.
 
 $H_{A}:$ Alternative hypothesis goes here.
+
 \answerend
 
 ### Express the null and alternative hypotheses in symbols (when possible).
 
 \answerbegin
+
 $H_{0}: math$
 
 $H_{A}: math$
+
 \answerend
 
 
@@ -366,13 +397,17 @@ $H_{A}: math$
 ### Identify the sampling distribution model.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 \answerbegin
+
 Please write up your answer here. (Some conditions may require R code as well.)
+
 \answerend
 
 
@@ -381,29 +416,35 @@ Please write up your answer here. (Some conditions may require R code as well.)
 ### Compute and report the test statistic.
 
 \answerbegin
+
 ```{r}
 # Add code here to compute the test statistic.
 ```
 
 Please write up your answer here.
+
 \answerend
 
 ### Plot the null distribution.
 
 \answerbegin
+
 ```{r}
 # Add code here to plot the null distribution.
 ```
+
 \answerend
 
 ### Calculate and report the P-value.
 
 \answerbegin
+
 ```{r}
 # Add code here to calculate the P-value.
 ```
 
 Please write up your answer here.
+
 \answerend
 
 
@@ -412,19 +453,25 @@ Please write up your answer here.
 ### State the statistical conclusion.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### State (but do not overstate) a contextually meaningful conclusion.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 
@@ -433,19 +480,25 @@ Please write up your answer here.
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 \answerbegin
+
 Please write up your answer here. (Some conditions may require R code as well.)
+
 \answerend
 
 ### Calculate the confidence interval.
 
 \answerbegin
+
 ```{r}
 # Add code here to calculate the confidence interval.
 ```
+
 \answerend
 
 ### State (but do not overstate) a contextually meaningful interpretation.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
