@@ -89,7 +89,7 @@ Let's simulate lots of samples of size 4. For each sample, we calculate the samp
 
 ```{r}
 sims <- do(2000) * mean(rnorm(4, mean = 114, sd = 14))
-head(sims)
+tail(sims)
 ```
 
 Again, we see that the sample means are close to 114, but there is some variability. Naturally, not every sample is going to have an average of exactly 114. So how much variability do we expect? Let's graph and find out. I'm going to set the x-axis manually so that we can do some comparisons later.
@@ -112,6 +112,8 @@ This makes sense: as the sample size increases, we expect the sample mean to be 
 Let's re-scale the y-axis to use percentages instead of counts. Then we should be able to superimpose the normal model $N(114, 7)$ to check visually that it's the right fit.
 
 ```{r}
+# Don't worry about the syntax here.
+# You won't need to know how to do this on your own.
 ggplot(sims, aes(x = mean)) +
     geom_histogram(aes(y = ..density..), binwidth = 1) +
     scale_x_continuous(limits = c(86, 142),
@@ -130,6 +132,8 @@ $$\frac{\sigma}{\sqrt{n}} = \frac{1}{\sqrt{4}} = 0.5.$$
 The following code will accomplish all of this. (Don't worry about the messy syntax. All I'm doing here is making sure that this graph looks exactly the same as the previous graph, except now centered at $\mu = 0$ instead of $\mu = 114$.)
 
 ```{r}
+# Don't worry about the syntax here.
+# You won't need to know how to do this on your own.
 sims_z <- data.frame(mean = scale(sims$mean, center = 114, scale = 14))
 ggplot(sims_z, aes(x = mean)) +
     geom_histogram(aes(y = ..density..), binwidth = 1/14) +
@@ -148,13 +152,13 @@ $$H_{0}: \mu = 114$$
 
 Now we gather a sample and compute the sample mean, say `r mean(SBP_sample)`. We would like to be able to compare the sample mean $\bar{y}$ to the hypothesized value 114 using a z-score:
 
-$$z = \frac{(\bar{y} - \mu)}{\sigma/\sqrt{n}} = \frac{(110.20 - 114)}{\sigma/\sqrt{4}}.$$
+$$z = \frac{(\bar{y} - \mu)}{\sigma/\sqrt{n}} = \frac{(110.2 - 114)}{\sigma/\sqrt{4}}.$$
 
 However, we have a problem: we don't know the true value of $\sigma$. (In our SBP example, we do happen to know it's 14, but we won't know this for a general research question.)
 
 The best we can do with a sample is calculate this z-score replacing the unknown $\sigma$ with the sample standard deviation $s$, `r sd(SBP_sample)`. We'll call this a "t-score" instead of a "z-score":
 
-$$t = \frac{(\bar{y} - \mu)}{s/\sqrt{n}} = \frac{(110.20 - 114)}{13.06/\sqrt{4}} = -0.58.$$
+$$t = \frac{(\bar{y} - \mu)}{s/\sqrt{n}} = \frac{(110.2 - 114)}{13.06/\sqrt{4}} = -0.58.$$
 
 The problem is that $s$ is not a perfect estimate of $\sigma$. We saw earlier that $s$ is usually close to $\sigma$, but $s$ has its own sampling variability. That means that our earlier simulation in which we assumed that $\sigma$ was known and equal to 14 was wrong for the type of situation that will arise when we run a hypothesis test. How wrong was it?
 
@@ -166,6 +170,8 @@ Let's run the simulation again, but this time with the added uncertainty of usin
 The first step is to write a little function of our own to compute simulated t-scores. This function will take a sample of size $n$ from the true population $N(\mu, \sigma)$, calculate the sample mean and sample standard deviation, then compute the t-score. Don't worry: you won't be required to do anything like this on your own.
 
 ```{r}
+# Don't worry about the syntax here.
+# You won't need to know how to do this on your own.
 sim_t <- function(n, mu, sigma) {
     sample_values <- rnorm(n, mean = mu, sd = sigma)
     y_bar <- mean(sample_values)
@@ -178,12 +184,14 @@ Now we can simulate doing this 2000 times.
 
 ```{r}
 sims_t <- do(2000) * sim_t(4, mu = 114, sigma = 14) 
-head(sims_t)
+tail(sims_t)
 ```
 
 Let's plot our simulated t-scores alongside a normal distribution.
 
 ```{r}
+# Don't worry about the syntax here.
+# You won't need to know how to do this on your own.
 ggplot(sims_t, aes(x = sim_t)) +
     geom_histogram(aes(y = ..density..), binwidth = 0.25) +
     scale_x_continuous(limits = c(-5, 5),
@@ -207,6 +215,8 @@ $$df = n - 1.$$
 So is the t model correct for our simulated t-scores? Our sample size was 4, so we should use a t model with 3 degrees of freedom. Let's plot it in green on top of our previous graph and see:
 
 ```{r}
+# Don't worry about the syntax here.
+# You won't need to know how to do this on your own.
 ggplot(sims_t, aes(x = sim_t)) +
     geom_histogram(aes(y = ..density..), binwidth = 0.25) +
     scale_x_continuous(limits = c(-5, 5),
@@ -239,24 +249,28 @@ Some outliers are mistakes. Perhaps someone entered data incorrectly into the co
 
 Some outliers are not necessarily mistakes, but should be excluded for other reasons. For example, if we are studying the weight of birds and we have sampled a bunch of hummingbirds and one emu, the emu's weight will appear as an outlier. It's not that its weight is "wrong", but it clearly doesn't belong in the analysis.
 
-In general, though, outliers are "real" data that just happen to be unusual. It's not ethical simply to throw away such data points because they are inconvenient. (We only do so in very narrow and well-justified circumstances like the emu.) The best policy to follow when faced with such outliers is to run inference twice---once with the outlier included, and once with the outlier excluded. If when running a hypothesis test the conclusion is the same either way, then the outlier wasn't all that influential, so we leave it in. If when computing a confidence interval the endpoints don't change a lot either way, then we leave the outlier in. However, when conclusions or intervals are dramatically different depending on whether the outlier was in or out, then we have no choice but to state that honestly.
+In general, though, outliers are "real" data that just happen to be unusual. It's not ethical simply to throw away such data points because they are inconvenient. (We only do so in very narrow and well-justified circumstances like the emu.) The best policy to follow when faced with such outliers is to run inference twice---once with the outlier included, and once with the outlier excluded. If, when running a hypothesis test, the conclusion is the same either way, then the outlier wasn't all that influential, so we leave it in. If, when computing a confidence interval, the endpoints don't change a lot either way, then we leave the outlier in. However, when conclusions or intervals are dramatically different depending on whether the outlier was in or out, then we have no choice but to state that honestly.
 
 
 ## Research question
 
-The `teacher` data from the `OIdata` package contains information on 71 teachers employed by the St. Louis Public School in Michigan. According to Google, the average teacher salary in Michigan was $63,024 in 2010. So does this data suggest that the teachers in this region are paid differently than teachers in other parts of Michigan?
+The `teacher` data from the `OIdata` package contains information on 71 teachers employed by the St. Louis Public School in Michigan. According to Google, the average teacher salary in Michigan was $63,024 in 2010. So does this data suggest that the teachers in the St. Louis region of Michigan are paid differently than teachers in other parts of Michigan?
 
 Let's walk through the rubric.
 
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
 
-[Type `library(OIdata)` then `?teacher` to read the help file.]
+[You should type `?teacher` at the Console to read the help file and use `View` to look at the spreadsheet view of the data.]
 
 ```{r}
 str(teacher)
+```
+
+```{r}
+head(teacher)
 ```
 
 Since `total` is a numerical variable, we can also summarize it using `favstats`:
@@ -275,7 +289,7 @@ Here is a histogram.
 
 ```{r}
 ggplot(teacher, aes(x = total)) +
-    geom_histogram(binwidth = 4000)
+    geom_histogram(binwidth = 5000, boundary = 60000)
 ```
 
 And here is a QQ plot.
@@ -287,28 +301,26 @@ ggplot(teacher, aes(sample = total)) +
 
 This distribution is quite skewed to the left. Of even more concern is the extreme outlier on the left.
 
-With any outlier, we need to investigate. Go to the Console and type
-
-`View(teacher)`
-
-(Be sure to use a capital "V" in `View`).
+With any outlier, we need to investigate.
 
 ### Exercise
 
-In the spreadsheet view, you can use the arrows in the column headers to sort the data. Sort by `total` (ascending) and see if you can figure out how the person with the lowest total salary is different from all the other teachers. (Hint: you may need to Google "fte".)
+In the spreadsheet view from the `View` command, you can use the arrows in the column headers to sort the data. Sort by `total` (ascending) and see if you can figure out how the person with the lowest total salary is different from all the other teachers. (Hint: you may need to Google "fte".)
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 *****
 
-Based on your answer to the above exercise, hopefully it's clear that this is an outlier for which we can easily justify exclusion. We can use the `filter` command to get only the rows we want. There are lots of ways to do this, but it's easy enough to grab only salaries above $40,000. (There's only one salary below $40,000, so that outlier will be excluded.)
+Based on your answer to the above exercise, hopefully it's clear that this is an outlier for which we can easily justify exclusion. We can use the `filter` command to get only the rows we want. There are lots of ways to do this, but it's easy enough to grab only salaries above $30,000. (There's only one salary below $30,000, so that outlier will be excluded.)
 
 **CAUTION: If you are copying and pasting from this example to use for another research question, the following code chuck is specific to this research question and not applicable in other contexts.**
 
 ```{r}
-teacher2 <- filter(teacher, total > 40000)
+teacher2 <- filter(teacher, total > 30000)
 ```
 
 Check to make sure this had the desired effect:
@@ -323,7 +335,7 @@ Here are the new plots:
 
 ```{r}
 ggplot(teacher2, aes(x = total)) +
-    geom_histogram(binwidth = 4000)
+    geom_histogram(binwidth = 5000, boundary = 60000)
 ```
 
 ```{r}
@@ -359,6 +371,8 @@ $H_A: \mu \neq 63024$
 
 We will use a t model with 69 degrees of freedom.
 
+Commentary: The original `teacher` data had 71 observations. The `teacher2` data has only 70 observations because we removed an outlier. Therefore $n = 70$ and thus $df = n - 1 = 69$.
+
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 * Random
@@ -376,31 +390,44 @@ We will use a t model with 69 degrees of freedom.
 ### Compute and report the test statistic.
 
 ```{r}
-total_test <- tidy(t.test(teacher2$total, mu = 63024))
-t <- total_test$statistic
+total_test <- t.test(teacher2$total, mu = 63024)
+total_test_tidy<- tidy(total_test)
+t <- total_test_tidy$statistic
 t
 ```
 
 The t-score is `r t`.
 
+Commentary: the `t.test` command requires the variable of interest as its first argument and the null value as its second argument (`mu`). We then tidy the results as usual. 
+
+The results of the t-test are given below:
+
+```{r}
+total_test_tidy
+```
+
+The tidy output stores the following numbers: the sample mean (`estimate`), the test statistic (`statistic`), the P-value (`p.value`), the degrees of freedom (`parameter`), and limits for the confidence interval (`conf.low` and `conf.high`). The test statistic is the t-score that we stored above as `t`.
+
 ### Plot the null distribution.
 
 ```{r}
-pdist("t", df = total_test$parameter, q = c(-t, t), invisible = TRUE)
+pdist("t", df = total_test_tidy$parameter, 
+      q = c(-t, t), 
+      invisible = TRUE)
 ```
 
-Commentary: The `pdist` command is the same as always except now we use a `"t"` model instead of `"norm"`. We know there are `r NROW(teacher2) - 1` degrees of freedom, but we might as well use the value stored in the `t.test` output to make our code reusable. Finally, note that `q = c(-t, t)` will plot in both tails of the distribution since we're running a two-sided test. Of course, since the t-score is crazy huge, it doesn't actually appear in the resulting graph.
+Commentary: The `pdist` command is the same as always except now we use a `"t"` model. We know there are `r NROW(teacher2) - 1` degrees of freedom, but we might as well use the value stored in the `t.test` output (the `parameter` variable) to make our code reusable. Finally, note that `q = c(-t, t)` will plot in both tails of the distribution since we're running a two-sided test. Of course, since the t-score is crazy huge, it doesn't actually appear in the resulting graph.
 
 ### Calculate and report the P-value.
 
 ```{r}
-P <- total_test$p.value
+P <- total_test_tidy$p.value
 P
 ```
 
 $P < 0.001$
 
-Commentary: When the P-value is this small, it is traditional to report simply $P < 0.001$.
+Commentary: When the P-value is this small, remember that it is traditional to report simply $P < 0.001$.
 
 
 ## Conclusion
@@ -427,16 +454,16 @@ All the conditions have been checked already.
 ### Calculate the confidence interval.
 
 ```{r}
-total_test$conf.low
+total_test_tidy$conf.low
 ```
 
 ```{r}
-total_test$conf.high
+total_test_tidy$conf.high
 ```
 
 ### State (but do not overstate) a contextually meaningful interpretation.
 
-We are 95% confident that the true mean salary for teachers in the St. Louis region is captured in the interval ($`r round(total_test$conf.low, 2)`, $`r round(total_test$conf.high, 2)`).
+We are 95% confident that the true mean salary for teachers in the St. Louis region is captured in the interval ($`r round(total_test_tidy$conf.low, 2)`, $`r round(total_test_tidy$conf.high, 2)`).
 
 Commentary: As these are dollar amounts, it makes sense to round them to two decimal places. Even then, R is finicky and sometimes it will not respect your wishes.)
 
@@ -476,7 +503,8 @@ pdist("t", df = 60, q = c(-t, t), invisible = TRUE)
 The P-value is also found using `pdist`. Since t is negative, we can use the area to its left and multiply by 2:
 
 ```{r}
-2 * pdist("t", df = 60, q = t, plot = FALSE)
+P <- 2 * pdist("t", df = 60, q = t, plot = FALSE)
+P
 ```
 
 Since $P < 0.05$, we reject the null.
@@ -495,28 +523,34 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
 
 \answerbegin
+
 ```{r}
 # Add code here to understand the data.
 ```
+
 \answerend
 
 ### Prepare the data for analysis. [Not always necessary.]
 
 \answerbegin
+
 ```{r}
 # Add code here to prepare the data for analysis.
 ```
+
 \answerend
 
 ### Make tables or plots to explore the data visually.
 
 \answerbegin
+
 ```{r}
 # Add code here to make tables or plots.
 ```
+
 \answerend
 
 
@@ -525,23 +559,29 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 ### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
 \answerbegin
+
 $H_{0}:$ Null hypothesis goes here.
 
 $H_{A}:$ Alternative hypothesis goes here.
+
 \answerend
 
 ### Express the null and alternative hypotheses in symbols (when possible).
 
 \answerbegin
+
 $H_{0}: math$
 
 $H_{A}: math$
+
 \answerend
 
 
@@ -550,13 +590,17 @@ $H_{A}: math$
 ### Identify the sampling distribution model.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 \answerbegin
+
 Please write up your answer here. (Some conditions may require R code as well.)
+
 \answerend
 
 
@@ -565,29 +609,35 @@ Please write up your answer here. (Some conditions may require R code as well.)
 ### Compute and report the test statistic.
 
 \answerbegin
+
 ```{r}
 # Add code here to compute the test statistic.
 ```
 
 Please write up your answer here.
+
 \answerend
 
 ### Plot the null distribution.
 
 \answerbegin
+
 ```{r}
 # Add code here to plot the null distribution.
 ```
+
 \answerend
 
 ### Calculate and report the P-value.
 
 \answerbegin
+
 ```{r}
 # Add code here to calculate the P-value.
 ```
 
 Please write up your answer here.
+
 \answerend
 
 
@@ -596,19 +646,25 @@ Please write up your answer here.
 ### State the statistical conclusion.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### State (but do not overstate) a contextually meaningful conclusion.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 
@@ -617,41 +673,53 @@ Please write up your answer here.
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 \answerbegin
+
 Please write up your answer here. (Some conditions may require R code as well.)
+
 \answerend
 
 ### Calculate the confidence interval.
 
 \answerbegin
+
 ```{r}
 # Add code here to calculate the confidence interval.
 ```
+
 \answerend
 
 ### State (but do not overstate) a contextually meaningful interpretation.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 *****
 
-
-### Exercises
+## Exercises
 
 After running inference above, answer the following questions:
 
-1. Even though the result was *statistically* significant, do you think the result is *practically* significant? By this, I mean, are scores for American students so vastly different than 50? Do we have a lot of reason to brag about American scores based on your analysis?
+### 1.
+
+Even though the result was *statistically* significant, do you think the result is *practically* significant? By this, I mean, are scores for American students so vastly different than 50? Do we have a lot of reason to brag about American scores based on your analysis?
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
+### 2.
 
-2. What makes it possible for a small effect like this to be statistically significant even if it's not practically very different from 50? In other words, what has to be true of data to detect small but statistically significant effects?
+What makes it possible for a small effect like this to be statistically significant even if it's not practically very different from 50? In other words, what has to be true of data to detect small but statistically significant effects?
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 
