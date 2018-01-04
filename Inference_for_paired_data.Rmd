@@ -76,12 +76,16 @@ Let's go through the rubric.
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
 
-[Type `library(MASS)` then `?immer` at the Console to read the help file.]
+[You should type `?immer` at the Console to read the help file and use `View` to look at the spreadsheet view of the data.]
 
 ```{r}
 str(immer)
+```
+
+```{r}
+head(immer)
 ```
 
 ### Prepare the data for analysis.
@@ -103,7 +107,7 @@ favstats(immer_d$d)
 
 ```{r}
 ggplot(immer_d, aes(x = d)) +
-    geom_histogram(binwidth = 10)
+    geom_histogram(binwidth = 10, boundary = 0)
 ```
 
 ```{r}
@@ -113,7 +117,7 @@ ggplot(immer_d, aes(sample = d)) +
 
 This distribution appears to be somewhat bimodal. This is a problem for inference because the mean of a bimodal distribution is not a good measure of center for the distribution. The typical method for dealing with bimodal data is to see if you can determine the reason for the two peaks. If there is a way of separating the data into the two groups, we should do that. Assuming there is enough data in both groups, they should be analyzed separately.
 
-Type `View(immer_d)` at the Console and sort the `d` column in descending order by clicking on the arrow in the column header. (You may have to click twice to get descending order.)
+In the spreadsheet view produced by `View`, sort the `d` column in descending order by clicking on the arrow in the column header. (You may have to click twice to get descending order.)
 
 It appears that location "M" is almost entirely responsible for all positive values of yield (with the exception of one plot). All other values are negative. This suggests that something different is happening at location "M" versus all other locations. We can also verify this by looking at a side-by-side boxplot, grouped by location.
 
@@ -134,7 +138,7 @@ Here are the new histogram and QQ plot:
 
 ```{r}
 ggplot(immer_d_no_M, aes(x = d)) +
-    geom_histogram(binwidth = 10)
+    geom_histogram(binwidth = 10, boundary = 0)
 ```
 
 ```{r}
@@ -189,8 +193,9 @@ We use a t model with 24 degrees of freedom.
 ### Compute and report the test statistic.
 
 ```{r}
-barley_test <- tidy(t.test(immer_d_no_M$Y2, immer_d_no_M$Y1, paired = TRUE))
-t <- barley_test$statistic
+barley_test <- t.test(immer_d_no_M$Y2, immer_d_no_M$Y1, paired = TRUE)
+barley_test_tidy <- tidy(barley_test)
+t <- barley_test_tidy$statistic
 t
 ```
 
@@ -201,14 +206,17 @@ Commentary: The `t.test` command offers an argument `paired = TRUE` that allows 
 Note that we get the exact same answer if we run it as a one-sample t-test with the difference variable `d`:
 
 ```{r}
-barley_test2 <- tidy(t.test(immer_d_no_M$d, mu = 0))
-barley_test2$statistic
+barley_test2 <- t.test(immer_d_no_M$d, mu = 0)
+barley_test2_tidy <- tidy(barley_test2)
+barley_test2_tidy$statistic
 ```
 
 ### Plot the null distribution.
 
 ```{r}
-pdist("t", df = barley_test$parameter, q = c(-t, t), invisible = TRUE)
+pdist("t", df = barley_test_tidy$parameter,
+      q = c(-t, t),
+      invisible = TRUE)
 ```
 
 Commentary: The `parameter` stored in the output of `t.test` is the degrees of freedom. We set `q = c(-t, t)` as this is a two-sided test.
@@ -216,24 +224,32 @@ Commentary: The `parameter` stored in the output of `t.test` is the degrees of f
 ### Calculate and report the P-value.
 
 ```{r}
-P <- barley_test$p.value
+P <- barley_test_tidy$p.value
 P
 ```
 
 $P < 0.001$.
 
-This is also the place to check the effect of excluding the outlier.
+This is also the place to check the effect of excluding the outlier. We use the `filter` command to keep only values of `d` less than 20. (The outlier is the only value larger than 20.)
 
 ```{r}
 immer_d_no_outlier <- filter(immer_d_no_M, d < 20)
-immer_d_no_outlier_test <- tidy(t.test(immer_d_no_outlier$Y2,
-                                       immer_d_no_outlier$Y1,
-                                       paired = TRUE))
-immer_d_no_outlier_test$statistic
 ```
 
+Then we run the t-test as before.
+
 ```{r}
-immer_d_no_outlier_test$p.value
+immer_d_no_outlier_test <- t.test(immer_d_no_outlier$Y2,
+                                  immer_d_no_outlier$Y1,
+                                  paired = TRUE)
+immer_d_no_outlier_test_tidy <- tidy(immer_d_no_outlier_test)
+immer_d_no_outlier_test_tidy$statistic
+```
+
+Look at the resulting P-value.
+
+```{r}
+immer_d_no_outlier_test_tidy$p.value
 ```
 
 The P-value is even smaller when excluding the outlier, so this won't affect the conclusion.
@@ -263,18 +279,20 @@ All necessary conditions have already been checked.
 ### Calculate the confidence interval.
 
 ```{r}
-barley_test$conf.low
+barley_test_tidy$conf.low
 ```
 
 ```{r}
-barley_test$conf.high
+barley_test_tidy$conf.high
 ```
 
 ### State (but do not overstate) a contextually meaningful interpretation.
 
-We are 95% confident that the true change in barley yield from 1931 to 1932 is captured in the interval (`r barley_test$conf.low`, `r barley_test$conf.high`). This was obtained by subtracting 1931 yield from 1932 yield.
+We are 95% confident that the true change in barley yield from 1931 to 1932 is captured in the interval (`r barley_test_tidy$conf.low`, `r barley_test_tidy$conf.high`). This was obtained by subtracting 1931 yield from 1932 yield.
 
-Commentary: it would normally be required that we report these numbers with units of measurement. Unfortunately, the help file does not tell us how the barley yield was measured. Also, don't forget that any time we find a number that represents a difference, we have to be clear in the conclusion about the direction of subtraction. Otherwise, we have no idea how to interpret positive and negative values. (Does this interval mean that yield was larger or smaller in 1932? Since we subtracted `Y2 - Y1` and these numbers are negative, that means yield *decreased* from 1931 to 1932.)
+Commentary: it would normally be required that we report these numbers with units of measurement. Unfortunately, the help file does not tell us how the barley yield was measured.
+
+Also, don't forget that any time we find a number that represents a difference, we have to be clear in the conclusion about the direction of subtraction. Otherwise, we have no idea how to interpret positive and negative values. (Does this interval mean that yield was larger or smaller in 1932? Since we subtracted `Y2 - Y1` and these numbers are negative, that means yield *decreased* from 1931 to 1932.)
 
 
 ## Your turn
@@ -297,28 +315,34 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
 
 \answerbegin
+
 ```{r}
 # Add code here to understand the data.
 ```
+
 \answerend
 
 ### Prepare the data for analysis. [Not always necessary.]
 
 \answerbegin
+
 ```{r}
 # Add code here to prepare the data for analysis.
 ```
+
 \answerend
 
 ### Make tables or plots to explore the data visually.
 
 \answerbegin
+
 ```{r}
 # Add code here to make tables or plots.
 ```
+
 \answerend
 
 
@@ -327,23 +351,29 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 ### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
 \answerbegin
+
 $H_{0}:$ Null hypothesis goes here.
 
 $H_{A}:$ Alternative hypothesis goes here.
+
 \answerend
 
 ### Express the null and alternative hypotheses in symbols (when possible).
 
 \answerbegin
+
 $H_{0}: math$
 
 $H_{A}: math$
+
 \answerend
 
 
@@ -352,13 +382,17 @@ $H_{A}: math$
 ### Identify the sampling distribution model.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 \answerbegin
+
 Please write up your answer here. (Some conditions may require R code as well.)
+
 \answerend
 
 
@@ -367,29 +401,35 @@ Please write up your answer here. (Some conditions may require R code as well.)
 ### Compute and report the test statistic.
 
 \answerbegin
+
 ```{r}
 # Add code here to compute the test statistic.
 ```
 
 Please write up your answer here.
+
 \answerend
 
 ### Plot the null distribution.
 
 \answerbegin
+
 ```{r}
 # Add code here to plot the null distribution.
 ```
+
 \answerend
 
 ### Calculate and report the P-value.
 
 \answerbegin
+
 ```{r}
 # Add code here to calculate the P-value.
 ```
 
 Please write up your answer here.
+
 \answerend
 
 
@@ -398,19 +438,25 @@ Please write up your answer here.
 ### State the statistical conclusion.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### State (but do not overstate) a contextually meaningful conclusion.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 ### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
 
 
@@ -419,19 +465,25 @@ Please write up your answer here.
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 \answerbegin
+
 Please write up your answer here. (Some conditions may require R code as well.)
+
 \answerend
 
 ### Calculate the confidence interval.
 
 \answerbegin
+
 ```{r}
 # Add code here to calculate the confidence interval.
 ```
+
 \answerend
 
 ### State (but do not overstate) a contextually meaningful interpretation.
 
 \answerbegin
+
 Please write up your answer here.
+
 \answerend
