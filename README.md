@@ -1,8 +1,7 @@
-# Intro_Stats_WC
+# Intro_Stats
 
-R materials for DATA 220 (Introduction to Statistics) at Westminster College, Salt Lake City, UT.
+R materials for learning statistics.
 
-For each R Markdown assignment, there is an `.Rmd` file and a corresponding `.pdf` file. The first assignment `Intro_to_R.pdf` should be distributed to students as a PDF file. At the end of that assignment, students are given instructions for downloading their first R Markdown assignment, `Using_R_Markdown.Rmd`. That R Markdown assignment and all subsequent assignments should be given to the students as R Markdown (`.Rmd`) files.
-
+The first assignment `Intro_to_R` should be distributed to students as an HTML file. At the end of that assignment, students are instructed to download their first R Markdown assignment, `Using_R_Markdown.Rmd`. That R Markdown assignment and all subsequent assignments should be completed as R Markdown (`.Rmd`) files.
 
 The file `Concordance_between_OpenIntro_textbook_and_R_modules.pdf` links each of these assignments to the corresponding section of the OpenIntro textbook *Introductory Statistics with Randomization and Simulation*.
