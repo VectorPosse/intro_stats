@@ -1,0 +1,388 @@
+---
+title: "5. Manipulating data"
+author: "Put your name here"
+date: "Put the date here"
+output:
+    html_notebook:
+        toc: yes
+        toc_float: yes
+---
+
+<!-- Please don't mess with the next few lines! -->
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #1E90FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r options(scipen = 999);intToUtf8(c(49,46,48))`</p>
+<!-- Please don't mess with the previous few lines! -->
+
+<div class = "summary">
+### Functions introduced in this module:
+`function1`, `function2`
+</div>
+
+
+## Introduction
+
+This tutorial will explore the amazing `dplyr` package, a package which is quickly becoming the *de facto* standard for manipulating data.
+
+
+## Load packages
+
+We load the `mosiac` package as usual, but this time it is to give us access to the `dplyr` package, which is loaded alongside our other `mosaic` package commands. We also load the `hflights` package to give us access to a data set called `hflights`.
+
+```{r, message = FALSE}
+library(mosaic)
+library(hflights)
+```
+
+
+## Introduction to `dplyr`
+
+The `dplyr` package (pronounced "d-plyer") contains tools for manipulating the rows and columsn of data frames. The key to using `dplyr` is to familiarize yourself with the "key verbs":
+
+*   `select` (and `rename`)
+*   `filter` (and `slice`)
+*   `arrange`
+*   `mutate` (and `transmute`)
+*   `summarise` (with `group_by`)
+
+We'll consider these one by one. We won't have time to cover every aspect of these functions. More information appears in the help files, as well as this very helpful "cheat sheet": https://github.com/rstudio/cheatsheets/raw/master/data-transformation.pdf
+
+
+## `select`
+
+The `select` verb is very easy. It just selects some subset of variables (the columns of your data set). Suppose all we wanted to see was the carrier, origin, and destination. We would type
+
+```{r}
+hf_select <- select(hflights, UniqueCarrier, Origin, Dest)
+hf_select
+```
+
+A brief but important aside here: there is nothing special about the variable name `hf_select`. I could have typed `beef_gravy <- select(hflights, UniqueCarrier, Origin, Dest)` and it would work just as well. Generally speaking, though, you want to give variables a name that reflects the intent of your analysis.
+
+Also, **it is important to assign the result to a new variable**. If I had typed `hflights <- select(hflights, UniqueCarrier, Origin, Dest)`, this would have replaced the original data frame `hflights` with this new version with only three variables. I want to preserve `hflights` because I want to do other things with the entire data set later. The take-home message here is this: **Major modifications to your data should generally be given a new variable name.** There are caveats here, though. Every time you create a new variable, you also fill up more memory with your creation. If you check your Global Environment, you'll see that both `hflights` and `hf_select` are sitting there. These are fairly large data sets already, and imagine you had data frames with millions of rows and/or columns. You might think twice about trying to store multiple similar copies of such data.
+
+Okay, back to the `select` function. The first argument of `select` is the data frame. Then, just list all the names of the variables you want to select.
+
+If you don't like the names of the variables, you can change them as part of the select process.
+
+```{r}
+hf_select <- select(hflights, carrier = UniqueCarrier,
+                    origin = Origin, dest = Dest)
+hf_select
+```
+
+(Note here that I am overwriting `hf_select` which had been defined slightly differently before. However, these two versions of `hf_select` are basically the same object, so no need to keep two copies here.)
+
+There are a few notational shortcuts. For example, see what the following do.
+
+```{r}
+hf_select2 <- select(hflights, DayOfWeek:UniqueCarrier)
+hf_select2
+```
+
+```{r}
+hf_select3 <- select(hflights, starts_with("Taxi"))
+hf_select3
+```
+
+##### Exercise 1
+
+What is contained in the new data frames `hf_select2` and `hf_select3`? In other words, what does the colon (:) do and what does `starts_with` do in the `select` function?
+
+<div class =  "answer">
+
+Please write up your answer here.
+
+</div>
+
+*****
+
+The cheat sheet shows a lot more of these "helper functions" if you're interested.
+
+The other command that's related to `select` is `rename`. The only difference is that `select` will throw away any columns you don't select (which is what you want and expect, typically), whereas `rename` will keep all the columns, but rename those you designate.
+
+
+## `filter`
+
+The `filter` verb works a lot like `select`, but for rows instead of columns.
+
+For example, let's say we only want to see Delta flights. We use `filter`:
+
+```{r}
+hf_filter <- filter(hflights, UniqueCarrier == "DL")
+hf_filter
+```
+
+In the printout of the data frame, click the black arrow on the right to scroll through the columns until you find the `UniqueCarrier` column. Then click "Next" at the bottom to scroll through the rows.
+
+##### Exercise 2
+
+What do you notice about the `UniqueCarrier` of all the flights listed in `hp_filter`?
+
+<div class =  "answer">
+
+Please write up your answer here.
+
+</div>
+
+*****
+
+Just like `select`, the first argument is the data frame. Following that, you must specify some condition. Only rows meeting that condition will be included in the output.
+
+One thing that is unusual here is the double equal sign. This won't be a mystery to people with programming experience, but it tends to be a sticking point for the rest of us. A single equals sign represents assignment. If I type `x = 3`, what I mean is, "Take the letter x and assign it the value 3." In R, we would also write `x <- 3` to mean the same thing. The first line of the code chunk below assigns `x` to be 3. Therefore, the following line that just says `x` creates the output "3".
+
+```{r}
+x = 3
+x
+```
+
+On the other hand, `x == 3` means something completely different. This is a logical statement that is either true or false. Either `x` is 3, in which case we get `TRUE` or `x` is not 3, and we get `FALSE`.
+
+```{r}
+x == 3
+```
+
+(It's true because we just assigned `x` to be 3 in the previous code chunk!)
+
+In the above `filter` command, we are saying, "Give me the rows where the value of `UniqueCarrier` is `"DL"`, or, in other words, where the statement `UniqueCarrier == "DL"` is true.
+
+As another example, suppose we wanted to find out all flights that leave before 6:00 a.m.
+
+```{r}
+hf_filter2 <- filter(hflights, DepTime < 600)
+hf_filter2
+```
+
+##### Exercise 3
+
+Look at the help file for `hflights`. Why do we have to use the number 600 in the command above? (Read the description of the `DepTime` variable.)
+
+<div class =  "answer">
+
+Please write up your answer here.
+
+</div>
+
+*****
+
+If we need two or more conditions, we use `&` for "and" and `|` for "or".
+
+```{r}
+hf_filter3 <- filter(hflights, UniqueCarrier == "DL" & DepTime < 600)
+hf_filter3
+```
+
+Again, check the cheat sheet for more complicated condition-checking.
+
+The `slice` command is related, but fairly useless in practice. It will allow you to extract rows by position. So `slice(hflights, 1:10)` will give you the first 10 rows. As a general rule, the information available in a data frame should never depend on the order in which the rows appear. Therefore, no function you run should make any assumptions about the ordering of your data. The only reason one might want to think about the order of data is for convenience in presenting that data visually for someone to inspect. And that brings us to...
+
+
+## `arrange`
+
+This just re-orders the rows, sorting on the values of one or more specified columns. As I mentioned before, in most data analyses you work with summaries of the data that do not depend on the order of the rows, so this is not quite as interesting as some of the other verbs. Scroll over the the `ActualElapsedTime` variable in the output below to see that these are now sorted in ascending order.
+
+```{r}
+hf_arrange <- arrange(hflights, ActualElapsedTime)
+hf_arrange
+```
+
+If you want descending order, do this:
+
+```{r}
+hf_arrange2 <- arrange(hflights, desc(ActualElapsedTime))
+hf_arrange2
+```
+
+You can sort by multiple columns. The first column listed will be the first in the sort order, and then within each level of that first variable, the next column will be sorted, etc.
+
+
+## `mutate`
+
+Frequently, we want to create new variables that combine information from one or more existing variables. We use `mutate` for this. For example, suppose we wanted to find the total time of the flight. We might do this by adding up the minutes from several variables: `TaxiOut`, `AirTime`, and `TaxiIn` and assigning it to a new variable called `total`. Scroll all the way to the right in the output below to see this new variable created.
+
+```{r}
+hf_mutate <- mutate(hflights, total = TaxiOut + AirTime + TaxiIn)
+hf_mutate
+```
+
+As it turns out, that was wasted effort because that variable already exists in `ActualElapsedTime`:
+
+```{r}
+all.equal(hf_mutate$total, hflights$ActualElapsedTime)
+```
+
+Perhaps we want a variable that just classifies a flight as arriving late or not. Scroll all the way to the right to see the new `late` variable.
+
+```{r}
+hf_mutate2 <- mutate(hflights, late = (ArrDelay > 0))
+hf_mutate2
+```
+
+This one is a little tricky. Keep in mind that `ArrDelay > 0` is a logical condition that is either true or false, so that truth value is what is recorded in the `late` variable.
+
+If we would rather see more descriptive words than `TRUE` or `FALSE`, we have to do something even more tricky. Look at the `late` variable now.
+
+```{r}
+hf_mutate3 <- mutate(hflights,
+                     late = factor(ifelse(ArrDelay > 0, "Late", "On time")))
+hf_mutate3
+```
+
+The `factor` command tells R that this should be a categorical variable. Without it, the variable would be a "character" variable, meaning a list of character strings. It won't matter for us here, but in any future analysis, you want categorical data to be treated as such by R.
+
+The main focus here is on the `ifelse` construction. The `ifelse` function takes a condition as its first argument. If the condition is true, it returns the value in the second slot, and if it's false (the "else" part of if/else), it returns the value in the third slot. In other words, if `ArrDelay > 0`, this means the flight is late, so the new `late` variable should say "Late", whereas, if `ArrDelay` is not greater than zero (so either zero or possibly negative if the flight arrived early), then the new variable should say "On Time".
+
+Having said that, I would generally recommend that you leave these kinds of variables as logical types. It's much easier to summarize such variables in R, namely because R treats `TRUE` as 1 and `FALSE` as 0, allowing us to do things like
+
+```{r}
+mean(hf_mutate2$late, na.rm = TRUE)
+```
+
+to get the percentage of late flights.
+
+##### Exercise 4
+
+Think about this for a moment. Why does taking the mean of a bunch of zeros and ones give us the percentage of ones? (Think about the formula for the mean. What happens when we take the sum of all the zeros and ones, and what happens when we divide by the total?)
+
+<div class =  "answer">
+
+Please write up your answer here.
+
+</div>
+
+*****
+
+A related verb is `transmute`. The only difference between `mutate` and `transmute` is that `mutate` creates the new column(s) and keeps all the old ones too, whereas `transmute` will throw away all the columns except the newly created ones. This is not something that you generally want to do, but there are exceptions. For example, if I was preparing a report and I needed only to talk about flights being late or not, it would do no harm (and would save some memory) to throw away everything except the `late` variable.
+
+
+## `summarise`
+
+First, before you mention that `summarise` is spelled wrong...well, the author of the package, a man named Hadley Wickham, is from New Zealand, and that's the way he spells it. He was nice enough to include the `summarize` function as an alias if you need to use it 'cause this is 'Murica!
+
+The `summarise` function, by itself, is kind of boring, and doesn't do anything that couldn't be done more easily with base R functions.
+
+```{r}
+hf_summ <- summarise(hflights, mean(Distance))
+hf_summ
+```
+
+```{r}
+mean(hflights$Distance)
+```
+
+Where `summarise` shines is in combination with `group_by`. For example, let's suppose that we want to see average flight distances, but broken down by airline.
+
+```{r}
+hf_summ2 <- group_by(hflights, UniqueCarrier)
+hf_summ2 <- summarise(hf_summ2, mean(Distance))
+hf_summ2
+```
+
+This is a good spot to introduce a time-saving and helpful device called "piping", denoted by the symbol `%>%`. Piping always looks more complicated than it really is. The technical definition is that
+
+`x %>% f(y)`
+
+is equivalent to 
+
+`f(x, y)`.
+
+All this is really saying is that the pipe takes the thing on its left, and plugs it into the first slot of the function on its right. So why do we care?
+
+Let's revisit the combination `group_by`/`summarise` example above. There are two ways to do this without pipes, and both are a little ugly. One way is above, where you have to keep reassigning the output to the same variable (in the case above, to `hf_summ2`). The other way is to just nest the functions:
+
+```{r}
+hf_summ2 <- summarise(group_by(hflights, UniqueCarrier), mean(Distance))
+```
+
+This requires a lot of brain power to parse. In part, this is because the function is inside-out: first you group by `UniqueCarrier`, and then the result of that is summarized. Here's how the pipe fixes it:
+
+```{r}
+hf_summ2 <- hflights %>%
+    group_by(UniqueCarrier) %>%
+    summarise(mean(Distance))
+```
+
+Look at the `group_by` line. The `group_by` function should take two arguments, the data frame, and then the grouping variable. It appears to have only one argument. But look at the previous line. The pipe says to insert whatever is on its left (`hflights`) into the first slot of the function on its right (`group_by`). So the net effect is still to evaluate the function `group_by(hflights, UniqueCarrier)`. Now look at the `summarise` line. Again, `summarise` is a function of two inputs, but all we see is the part that finds the mean. The pipe at the end of the previous line tells the `summarise` function to insert the stuff already computed (the grouped data frame returned by `group_by(hflights, UniqueCarrier)`) into the first slot of the `summarise` function.
+
+Piping takes a little getting used to, but once you're good at it, you'll never go back. It's just makes more sense semantically. When I read the above set of commands, I see a set of instructions in chronological order:
+
+> Take the data frame `hflights`. Now group by the carrier. Next summarize each group using the mean distance.
+
+Some people even take this one step further. The result of all the above is assigned to a new variable `hf_summ2`. That currently appears as the first command (`hf_summ2 <- ...`) But you could write this as
+
+```{r}
+hflights %>%
+    group_by(UniqueCarrier) %>%
+    summarise(mean(Distance)) -> hf_summ2
+```
+
+Now it says
+
+> Take the data frame `hf`. Now group by the carrier. Next summarize each group using the mean distance. *Finally, assign all that to a new variable called `hf_summ2`*.
+
+Let's try some counting using `summmarise`. What if we wanted to know how many flights correspond to each carrier?
+
+```{r}
+hf_summ3 <- hflights %>%
+    group_by(UniqueCarrier) %>%
+    summarize(Total_count = n())
+hf_summ3
+```
+
+You can see the `n()` function at work. It simply counts the observations in each group. Also note that we can give the summary column a new name if we wish. In `hf_summ2`, we didn't give the new column an explicit name, so it showed up in our data frame as a column called `mean(Distance)`. If we hadn't included the word "Total_count" in our definition of `hf_summ3`, the new column would simply be called `n()`. That's okay, but not anywhere near as user-friendly as "Total_count".
+
+
+## Putting it all together
+
+Rarely do we need just one of these verbs. In many data analyses, we need to do a sequence of operations to get at the answer we seek.
+
+Here's a complicated example. Let's say that we only care about Delta flights, and even then, we only want to know about the month of the flight and the departure delay. From there, we wish to group by months so we can find the maximum departure delay by month. Here is a solution, piping hot and ready to go. [groan]
+
+```{r}
+hf_grand_finale <- hflights %>%
+    filter(UniqueCarrier == "DL") %>%
+    select(Month, DepDelay) %>%
+    group_by(Month) %>%
+    summarise(max_delay = max(DepDelay, na.rm = TRUE))
+hf_grand_finale
+```
+
+One note of explanation in the `max` command: there is an argument `na.rm`. This stands for "NA remove", which refers to R's convention of using `NA` to refer to missing values. Since there is not always a "Departure Delay", the `DepDelay` variable doesn't always have a value. Therefore we have to remove the `NA`s in order to properly calculate the maximum value.
+
+Notice in the `summarise` line, we again took advantage of `dplyr`'s ability to rename any variable along the way, assigning our computation to the new variable `max_delay`.
+
+A minor simplification results from the realization that `summarise` must throw away any variables it doesn't need. (Think about why for a second: what would `summarise` do with, say, `ArrTime` if we've only asked it to calculate the maximum value of `DepDelay` for each month?) So you could write this instead, removing the `select` clause:
+
+```{r}
+hf_grand_finale <- hflights %>%
+    filter(UniqueCarrier == "DL") %>%
+    group_by(Month) %>%
+    summarise(max_delay = max(DepDelay, na.rm = TRUE))
+hf_grand_finale
+```
+
+Check to see you get the same result. With _massive_ data sets, it's possible that the selection and sequence of these verbs matter, but you don't see an appreciable difference here, even with `r nrow(hflights)` rows. (There are ways of benchmarking in R, but that is a more advanced topic.)
+
+##### Exercise 5
+
+Count the flights to LAX that were canceled, grouping by day of the week. (Hint: you need to `filter` to get both flights to LAX and flights that are canceled. Then you'll need to group by the day of the week in preparation for summarizing the number of cancelations.)
+
+<div class =  "answer">
+
+```{r}
+# Add code here to count the flights to LAX that were canceled,
+# grouping by day of the week
+```
+
+</div>
+
+##### Exercise 6
+
+[Challenge exercise!] For each airline, find the median distance flight in kilometers. Sort the resulting table from highest distance to lowest. (Hint: to get from miles to kilometers, use `mutate`to multiply the distance by 1.60934. Then group by carrier and summarize using the `median` function. Finally, you'll need to `arrange` the result according to the median distance variable that you just created.)
+
+<div class =  "answer">
+
+```{r}
+# Add code here to count the flights to LAX that were canceled,
+# grouping by day of the week
+```
+
+</div>
