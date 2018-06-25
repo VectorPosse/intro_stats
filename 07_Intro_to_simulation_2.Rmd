@@ -2,51 +2,32 @@
 title: "Introduction to simulation, Part 2"
 author: "Put your name here"
 date: "Put the date here"
-output: pdf_document
+output:
+    html_notebook:
+        toc: yes
+        toc_float: yes
 ---
+
 <!-- Please don't mess with the next few lines! -->
-\def\hrulefill{\leavevmode\leaders\hrule height 2pt\hfill\kern 0pt}
-\newcommand{\answerbegin}{\par\textcolor{blue}{\hrulefill\quad ANSWER\quad\hrulefill\newline}}
-\newcommand{\answerend}{\par\textcolor{blue}{\hrulefill}\newline}
-`r options(scipen = 999)`
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #1E90FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r options(scipen = 999);intToUtf8(c(49,46,48))`</p>
 <!-- Please don't mess with the previous few lines! -->
+
+<div class = "summary">
+### Functions introduced in this module:
+`prop`, `diffprop`
+</div>
 
 
 ## Introduction
 
-In this module, we'll learn more about simulation and randomization. Instead of flipping coins, in this assignment we'll randomly shuffle our data around in order to explore the effects of randomizing an explanatory variable.
+In this module, we'll learn more about simulation and randomization. Instead of flipping coins, though, we'll randomly shuffle our data around in order to explore the effects of randomizing an explanatory variable.
 
 
-## Instructions
-
-Presumably, you have already created a new project and downloaded this file into it. From the `Run` menu above, select `Run All` to run all existing code chunks.
-
-When prompted to complete an exercise or demonstrate skills, you will see the following lines in the document:
-
-\answerbegin
-
-\answerend
-
-These lines demarcate the region of the R Markdown document in which you are to show your work.
-
-Sometimes you will be asked to add your own R code. That will appear in this document as a code chunk with a request for you to add your own code, like so:
-
-```{r}
-# Add code here
-```
-
-Be sure to remove the line `# Add code here` when you have added your own code. You should run each new code chunk you create by clicking on the dark green arrow in the upper-right corner of the code chunk.
-
-Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
-
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
-
-
-## Load Packages
+## Load packages
 
 We load the `MASS` package to access the `birthwt` data on risk factors associated with low birth weight. We also load the `mosaic` package for simulation tools.
 
-```{r, warning = FALSE, message = FALSE}
+```{r, message = FALSE}
 library(MASS)
 library(mosaic)
 ```
@@ -56,6 +37,8 @@ As explained in an earlier module, we will set the seed so that our results are 
 ```{r}
 set.seed(3141593)
 ```
+
+As before, if for some reason you're getting results that are different from the ones reported in the text, the easiest thing to do is "Restart R and Run All Chunks" from the "Run" menu.
 
 
 ## Our research question
@@ -83,23 +66,18 @@ In the `factor` command in R, be sure to list the success category first in both
 low <- factor(birthwt$low, levels = c(1, 0), labels = c("Yes", "No"))
 smoke <- factor(birthwt$smoke, levels = c(1, 0), labels = c("Yes", "No"))
 low_smoke <- data.frame(low, smoke)
+low_smoke
 ```
-
-Use `View` at the Console to look at a spreadsheet view of `low_smoke` and make sure that everything looks okay. We'll also use `str` and `head`.
 
 ```{r}
 str(low_smoke)
 ```
 
-```{r}
-head(low_smoke)
-```
+##### Exercise 1
 
-### Exercise
+Create two contingency tables with `low` as the row variable and `smoke` as the column variable, one with counts and one with percentages displayed. Be sure to include the marginal distribution (the column sums) as well. Go back to the module `04_Categorical_data.Rmd` if you need to review the `tally` command.
 
-Create two contingency tables with `low` as the row variable and `smoke` as the column variable, one with counts and one with percentages displayed. Be sure to include the marginal distribution (the column sums) as well. Go back to the R module `Tables.Rmd` if you need to review the `tally` command.
-
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to create a contingency tables of counts with 
@@ -111,19 +89,19 @@ Create two contingency tables with `low` as the row variable and `smoke` as the 
 # low as the row variable and smoke as the column variable.
 ```
 
-\answerend
+</div>
 
 By placing `low` as the row variable and `smoke` as the column variable, and then looking at percentages, we are implying that one variable is response and one is explanatory. Which variable are we treating as response and which are we treating as explanatory? Do you agree with that choice? Why or why not?
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
 *****
 
-Although we can read off the percentages in the contingency table, we need a command to extract the proportions for use in further calculations. One way is via the `prop` command. This command uses the "tilde" notation. The variable on the left of the tilde (`low`) is the variable of interest (the response variable), and we're dividing up the data into groups based on the variable on the right of the tilde (`smoke`). You can remember this by thinking, "Calculate low birth weight **by** smoking status."
+Although we can read off the percentages in the contingency table, we need a command to extract the proportions for use in further calculations. One way is via the `prop` command. This command uses the "tilde" notation just like the `tally` command. The variable on the left of the tilde (`low`) is the variable of interest (the response variable), and we're dividing up the data into groups based on the variable on the right of the tilde (`smoke`). You can remember this by thinking, "Calculate low birth weight **by** smoking status."
 
 ```{r}
 prop(low ~ smoke, data = low_smoke)
@@ -131,15 +109,15 @@ prop(low ~ smoke, data = low_smoke)
 
 The column headers in the resulting output are a bit opaque. What we have here are the two percentages of interest that we're trying to compare.
 
-### Exercise
+##### Exercise 2
 
 Interpret these percentages in the context of the data. In other words, what do these percentages say about the women who smoke during pregnancy versus the women who do not? (Hint: look back at the contingency table you made earlier. Where do these percentages come from?)
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
 *****
 
@@ -156,15 +134,15 @@ obs_diff <- diffprop(low ~ smoke, data = low_smoke)
 obs_diff
 ```
 
-### Exercise
+##### Exercise 3
 
 In which order are the groups being subtracted? In other words, why is the observed difference negative?
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
 *****
 
@@ -187,7 +165,7 @@ Now, we saw a difference of -15.3% between the two groups in the data. Then agai
 
 So how do we test the range of values that could arise from just chance alone? In other words, how do we explore sampling variability?
 
-One way to force the variables to  be independent is to "shuffle" the values of `smoke`. If instead of measuring whether women actually smoke or not, we just randomly and arbitrarily label them as "smokers" or "nonsmokers" (independent of their *actual* smoking status), we know for sure that such an assignment is random and not due to any actual evidence of smoking. In that case, low birth weight babies are equally likely to occur in both groups.
+One way to force the variables to be independent is to "shuffle" the values of `smoke`. If instead of measuring whether women actually smoke or not, we just randomly and arbitrarily label them as "smokers" or "nonsmokers" (independent of their *actual* smoking status), we know for sure that such an assignment is random and not due to any actual evidence of smoking. In that case, low birth weight babies are equally likely to occur in both groups.
 
 Let's see how shuffling works in R. To begin with, look at the first 20 actual values of `smoke` in our data:
 
@@ -232,7 +210,7 @@ The `do` command from the `mosaic` package allows us to repeat this simulation p
 
 ```{r}
 sims <- do(5000) * diffprop(low ~ shuffle(smoke), data = low_smoke)
-head(sims, n = 20)
+sims
 ```
 
 Think carefully about what this pile of numbers means. Each row of the `sims` data frame represents a simulated difference in the proportion of low birth weight babies between groups of women who smoke or who don't smoke. The `shuffle` part of the simulation ensures that there is no actual relationship between smoking and low birth weight among these simulated values. We expect each simulated difference to be close to zero, but we also expect deviations from zero due to randomness and chance.
@@ -248,15 +226,15 @@ ggplot(sims, aes(x = diffprop)) +
     geom_vline(xintercept = obs_diff, color = "blue")
 ```
 
-### Exercise
+##### Exercise 4
 
 Why is the mode of the graph above at 0? This has been explained several different times in this module, but put it into your own words to make sure you understand the logic behind the shuffling.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
 *****
 
@@ -293,40 +271,42 @@ Because the probability above is so small, it seems unlikely that our variables 
 
 Keep in mind that this data is from an observational study, so we cannot conclude that smoking *causes* low birth weight. All we can say is that a difference of -15.3% is evidence that mothers who smoke are more likely to have babies with low birth weight for *some* reason (maybe because they smoke, but maybe for some other reason).
 
-### Exercise
+##### Exercise 5
 
 When we see an association between two variables, it may be that both factors are related to some third variable that we haven't measured. When that happens, that third variable is called a *lurking variable*. Get creative for a minute and see if you can come up with a reasonably plausible lurking variable for the scenario above. In other words, if smoking itself doesn't cause low birth weight babies, can you imagine another factor that would cause low birth weight babies and also be associated with mothers smoking?
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
 *****
 
 The point of the above exercise is not to convince people that smoking during pregnancy is not actually the cause of low birth weight babies. In fact, there is quite a bit of evidence that smoking during pregnancy causes all sorts of problems, including low birth weight.^[See this for example: http://www.ncbi.nlm.nih.gov/pubmed/16323070] However, **association is not causation**. From observational data like this, it is generally impossible to prove a causal relationship. I'm not saying there is never a causal relationship, only that you can't *prove* it from the analysis we did. Nevertheless, there is a clear association between low birth weight and smoking during pregnancy. Make sure you understand the difference.
 
-### Your turn
-
 Walk through the following sequence of steps to explore whether low birth weight is associated with the presence of uterine irritability. You should carefully copy and paste commands from earlier in the module, making the necessary changes to the variable names.
 
 Uterine irritability is recorded in the variable `ui` in the `birthwt` data set.
 
-1. Convert `ui` to a factor variable. Then create a new data frame from the factor variables `low` and `ui`. (As `low` is already a factor variable, you don't need to re-do the work for that one.) Call this data frame `low_ui`.
+##### Exercise 6(a)
 
-\answerbegin
+Convert `ui` to a factor variable. Then create a new data frame from the factor variables `low` and `ui`. (As `low` is already a factor variable, you don't need to re-do the work for that one.) Call this data frame `low_ui`.
+
+<div class = "answer">
 
 ```{r}
 # Add code here to convert ui to a factor variable.
 # Combine low and ui into a single data frame called low_ui.
 ```
 
-\answerend
+</div>
 
-2. Exploratory data analysis: make two contingency tables with `low` as the response variable and `ui` as the explanatory variable. One table should have counts and the other table should have percentages. (Both tables should include the marginal distribution.)
+##### Exercise 6(b)
 
-\answerbegin
+Exploratory data analysis: make two contingency tables with `low` as the response variable and `ui` as the explanatory variable. One table should have counts and the other table should have percentages. (Both tables should include the marginal distribution.)
+
+<div class = "answer">
 
 ```{r}
 # Add code here to make a contingency table with counts.
@@ -336,43 +316,51 @@ Uterine irritability is recorded in the variable `ui` in the `birthwt` data set.
 # Add code here to make a contingency table with percentages.
 ```
 
-\answerend
+</div>
 
-3. Use the `diffprop` function to calculate and store the observed difference in the proportion of low birth weight babies between women with and without uterine irritability. Call this `obs_diff2` so that it doesn't conflict with the earlier `obs_diff`.
+##### Exercise 6(c)
 
-\answerbegin
+Use the `diffprop` function to calculate and store the observed difference in the proportion of low birth weight babies between women with and without uterine irritability. Call this `obs_diff2` so that it doesn't conflict with the earlier `obs_diff`.
+
+<div class = "answer">
 
 ```{r}
 # Add code here to calculate the observed difference.
 # Store this as obs_diff2.
 ```
 
-\answerend
+</div>
 
-4. Simulate 2000 outcomes under the assumption that low birth weight is independent of uterine irritability. Use the `do` command in conjunction with `diffprop` and `shuffle` in a single line of code. Call the simulated data frame `sims2` so that it doesn't conflict with the earlier `sims`.
+##### Exercise 6(d)
 
-\answerbegin
+Simulate 2000 outcomes under the assumption that low birth weight is independent of uterine irritability. Use the `do` command in conjunction with `diffprop` and `shuffle` in a single line of code. Call the simulated data frame `sims2` so that it doesn't conflict with the earlier `sims`.
+
+<div class = "answer">
 
 ```{r}
 # Add code here to simulate 2000 outcomes under the independence assumption
 # and store the simulations in a data frame called sims2.
 ```
 
-\answerend
+</div>
 
-5. Plot the simulated values in a histogram. Be sure to include a vertical line at the value of the observed difference.
+##### Exercise 6(e)
 
-\answerbegin
+Plot the simulated values in a histogram. Be sure to include a vertical line at the value of the observed difference.
+
+<div class = "answer">
 
 ```{r}
 # Add code here to plot the results.
 ```
 
-\answerend
+</div>
 
-6. Calculate how likely it is to see our observed difference or something even more extreme among the randomly simulated values. Pay close attention to whether the observed difference is positive or negative and choose `>=` or `<=` accordingly.
+##### Exercise 6(f)
 
-\answerbegin
+Calculate how likely it is to see our observed difference or something even more extreme among the randomly simulated values. Pay close attention to whether the observed difference is positive or negative and choose `>=` or `<=` accordingly.
+
+<div class = "answer">
 
 ```{r}
 # Add code here to calculate how likely it is to see 
@@ -380,17 +368,17 @@ Uterine irritability is recorded in the variable `ui` in the `birthwt` data set.
 # among the randomly simulated values.
 ```
 
-\answerend
+</div>
 
-Finally, comment on what you see. Based on the number you get in step 6 above, is the observed difference rare? In other words, under the assumption that low birth weight and uterine irritability are independent, are we likely to see an observed difference as far away from zero as we actually see in the data? So what is your conclusion then? Do you believe there is an association between low birth weight and uterine irritability?
+##### Exercise 6(g)
 
-\answerbegin
+Finally, comment on what you see. Based on the number you got in Exercise 6(f) above, is the observed difference rare? In other words, under the assumption that low birth weight and uterine irritability are independent, are we likely to see an observed difference as far away from zero as we actually see in the data? So what is your conclusion then? Do you believe there is an association between low birth weight and uterine irritability?
+
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
-
-*****
+</div>
 
 
 ## Conclusion
