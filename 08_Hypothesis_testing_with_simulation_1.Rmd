@@ -142,9 +142,9 @@ Below, I'll model the process of walking through a complete hypothesis test, sho
 Note that there is some mathematical formatting. As mentioned before, this is done by enclosing such math in dollar signs. Don't worry too much about the syntax; just mimic what you see in the example.
 
 
-##### Exploratory data analysis
+## Exploratory data analysis
 
-###### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
 
 You can look at the help file by typing `?birthwt` at the Console. However, do not put that command here in a code chunk. The R Notebook has no way of displaying a help file when it's processed. We can, however, look at a few rows of the data frame.
 
@@ -158,7 +158,7 @@ We can also include `str` here.
 str(birthwt)
 ```
 
-###### Prepare the data for analysis.
+### Prepare the data for analysis.
 
 We need to convert `low` and `smoke` to factor variables and put them into a separate data frame. Recall from a previous module that "Yes" is our "success" condition for `low`, so it has to be listed first among the `levels` and `labels` of the `factor` command. (This is particularly important for the response variable `low`. For the explanatory variable `smoke` it's less relevant, although see the section below in which we compute `diffprop`.) We print the new data frame and use `str` to check that things worked out correctly.
 
@@ -173,7 +173,7 @@ low_smoke
 str(low_smoke)
 ```
 
-###### Make tables or plots to explore the data visually.
+### Make tables or plots to explore the data visually.
 
 As we have two categorical variables, a contingency table is a good way of visualizing the distribution of both variables together. (Don't forget to include the marginal distribution and create two tables: one with counts and one with percentages!)
 
@@ -186,9 +186,9 @@ tally(low ~ smoke, data = low_smoke, margins = TRUE, format = "percent")
 ```
 
 
-##### Hypotheses
+## Hypotheses
 
-###### Identify the sample (or samples) and a reasonable population (or populations) of interest.
+### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
 There are technically two samples of interest here. All the data comes from mothers who gave birth at the Baystate Medical Center, Springfield, Massachusetts, during 1986, but one group of interest are mothers who smoked during pregnancy, and the other group of interest are mothers who did not smoke during pregnancy.
 
@@ -196,7 +196,7 @@ One of the contingency tables above shows the sample sizes for each group in the
 
 The populations of interest are probably all mothers who smoke and all mothers who don't smoke, maybe in the U.S., although we are only really safe coming to conclusions about the births at this particular hospital.
 
-###### Express the null and alternative hypotheses as contextually meaningful full sentences.
+### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
 [The null hypothesis is indicated by the symbol $H_{0}$, often pronounced "H naught" or "H sub zero." The alternative hypothesis is indicated by $H_{A}$, pronounced "H sub A."]
 
@@ -204,7 +204,7 @@ $H_{0}:$ There is no association between low birth weight and smoking status dur
 
 $H_{A}:$ There is an association between low birth weight and smoking status during pregnancy.
 
-###### Express the null and alternative hypotheses in symbols (when possible).
+### Express the null and alternative hypotheses in symbols (when possible).
 
 $H_{0}: p_{nonsmoker} - p_{smoker} = 0$
 
@@ -213,13 +213,13 @@ $H_{A}: p_{nonsmoker} - p_{smoker} \neq 0$
 Note: pay close attention here to the order of the subtraction. While it doesn't matter conceptually, the `diffprop` command later on will do the subtraction a certain way. You need to make sure the order listed here in the hypotheses is consistent with the way `diffprop` works. Remember that `diffprop` subtracts the first factor *from* the second. When we defined `smoke` above, the factors were listed---in order---"Yes" then "No". Therefore, `diffprop` will subtract smokers *from* nonsmokers. You'll be able to tell if you did it right based on whether `diffprop` gives you a negative number or a positive number.
 
 
-##### Model
+## Model
 
-###### Identify the sampling distribution model.
+### Identify the sampling distribution model.
 
 We will simulate the sampling distribution.
 
-###### Check the relevant conditions to ensure that model assumptions are met.
+### Check the relevant conditions to ensure that model assumptions are met.
 
 * Random (for both groups)
     - We have no evidence that these are random samples of smoking and non-smoking mothers from the the Baystate Medical Center. We hope that they are representative samples. If the populations of interest are all smoking and non-smoking mothers in the U.S., for example, then I have some doubts as to how representative these samples are. (It is possible that the women who go to this hospital may be different from other women in the U.S. Perhaps this hospital serves women from certain backgrounds or socioeconomic statuses.)
@@ -228,9 +228,9 @@ We will simulate the sampling distribution.
     - Regardless of the intended populations, 74 smoking mothers and 115 non-smoking mothers are surely less than 10% of all mothers under consideration.
 
 
-##### Mechanics
+## Mechanics
 
-###### Compute and report the test statistic.
+### Compute and report the test statistic.
 
 ```{r}
 obs_diff <- diffprop(low ~ smoke, data = low_smoke)
@@ -239,7 +239,7 @@ obs_diff
 
 The observed difference in the proportion of low birth weight babies among smoking mothers versus nonsmoking mothers is `r obs_diff` (subtracting smokers *from* nonsmokers). Or, another way to say this: there is a `r 100 * obs_diff`% difference in the proportion of low birth weight babies among smoking mothers versus nonsmoking mothers. [Note that if you factored the `smoke` variable differently, the order of subtraction here would change. Pay close attention to the order of the factors and make sure you're interpreting `diffprop` correctly whether it results in a positive or negative difference.]
 
-###### Plot the null distribution.
+### Plot the null distribution.
 
 (Note: we have to run the simulation before we can plot the possible values that can occur by chance, so we'll do that in this step as well.)
 
@@ -253,7 +253,7 @@ ggplot(sims, aes(x = diffprop)) +
 
 (You'll note that we added two blue vertical lines here. This is because we are conducting a two-sided test, which means that we're interested in values that are more extreme than our observed difference in *both* directions.)
 
-###### Calculate and interpret the P-value.
+### Calculate and interpret the P-value.
 
 ```{r}
 P <- 2 * prop(sims$diffprop <= obs_diff)
@@ -279,17 +279,17 @@ unname(2 * prop(sims$diffprop <= obs_diff))
 5. The P-value is less than 0.05. Remember that as we talk about the conclusion in the next section of the rubric.
 
 
-##### Conclusion
+## Conclusion
 
-###### State the statistical conclusion.
+### State the statistical conclusion.
 
 We reject the null hypothesis.
 
-###### State (but do not overstate) a contextually meaningful conclusion.
+### State (but do not overstate) a contextually meaningful conclusion.
 
 There is sufficient evidence to suggest that there is an association between low birth weight and smoking during pregnancy.
 
-###### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
 As we rejected the null, we run the risk of committing a Type I error. It is possible that there is no association between low birth weight and smoking during pregnancy, but that we've come across a sample in which smoking mothers had an unusually large number of babies with low birth weight.
 
