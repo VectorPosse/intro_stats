@@ -1,61 +1,42 @@
 ---
-title: "Normal models"
+title: "10. Normal models"
 author: "Put your name here"
 date: "Put the date here"
-output: pdf_document
+output:
+    html_notebook:
+        toc: yes
+        toc_float: yes
 ---
+
 <!-- Please don't mess with the next few lines! -->
-\def\hrulefill{\leavevmode\leaders\hrule height 2pt\hfill\kern 0pt}
-\newcommand{\answerbegin}{\par\textcolor{blue}{\hrulefill\quad ANSWER\quad\hrulefill\newline}}
-\newcommand{\answerend}{\par\textcolor{blue}{\hrulefill}\newline}
-`r options(scipen = 999)`
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #1E90FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r options(scipen = 999);intToUtf8(c(49,46,48))`</p>
 <!-- Please don't mess with the previous few lines! -->
+
+<div class = "summary">
+### Functions introduced in this module:
+`pdist`, `qdist`, `scale`, `geom_qq`
+</div>
 
 
 ## Introduction
 
-In this assignment we will learn how to work with normal models.
+In this module we will learn how to work with normal models. In addition to learning about theoretical normal distributions, we will also develop QQ plots to assess the normality of data.
 
 
-## Instructions
-
-Presumably, you have already created a new project and downloaded this file into it. From the `Run` menu above, select `Run All` to run all existing code chunks.
-
-When prompted to complete an exercise or demonstrate skills, you will see the following lines in the document:
-
-\answerbegin
-
-\answerend
-
-These lines demarcate the region of the R Markdown document in which you are to show your work.
-
-Sometimes you will be asked to add your own R code. That will appear in this document as a code chunk with a request for you to add your own code, like so:
-
-```{r}
-# Add code here
-```
-
-Be sure to remove the line `# Add code here` when you have added your own code. You should run each new code chunk you create by clicking on the dark green arrow in the upper-right corner of the code chunk.
-
-Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
-
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
-
-
-## Load Packages
+## Load packages
 
 We load the standard `mosaic` package.
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE}
 library(mosaic)
 ```
 
 
 ## The Central Limit Theorem
 
-An important aspect of all the simulations that we've done so far---assuming that we've run a large enough number of them---is that their histograms all look like bell curves. This fact is known as the "Central Limit Theorem". Under some basic assumptions that we'll discuss in a later assignment, this will be typical of many of our simulated null distributions. 
+An important aspect of all the simulations that we've done so far---assuming that we've run a large enough number of them---is that their histograms all look like bell curves. This fact is known as the "Central Limit Theorem". Under some basic assumptions that we'll discuss in a later module, this will be typical of many of our simulated null distributions. 
 
-So rather than running a simulation each time we want to conduct a hypothesis test, we could also assume that the null distribution *is* a bell curve. The rest of this assignment will teach you how to work with the "normal distribution," which is just the mathematically correct term for a bell curve.
+So rather than running a simulation each time we want to conduct a hypothesis test, we could also assume that the null distribution *is* a bell curve. The rest of this module will teach you how to work with the "normal distribution," which is just the mathematically correct term for a bell curve.
 
 
 ## Normal models
@@ -70,11 +51,11 @@ ggplot(data.frame(x = c(-4, 4)), aes(x)) +
     scale_x_continuous(breaks = -3:3)
 ```
 
-The curve pictured above is called the *standard normal distribution*. It has a mean of 0 and a standard deviation of 1. Mathematically, this is often written as
+The curve pictured above is called the *standard normal distribution*. It has a mean of 0 and a standard deviation of 1. Mathematically, this is written as
 
 $$N(\mu = 0, \sigma = 1),$$
 
-or sometimes just
+or usually just
 
 $$N(0, 1).$$
 
@@ -84,7 +65,12 @@ As an example of this, systolic blood pressure (SBP, measured in millimeters of 
 
 If we were to plot a histogram with the SBP of every woman between the ages of 30 and 44 in the U.S. and Canada, it would have the shape of a normal distribution, but instead of being centered at 0 like the graph above, this one would be centered at 114. Mathematically, we write
 
-$$N(\mu = 114, \sigma = 14).$$
+$$N(\mu = 114, \sigma = 14),$$
+
+or
+
+$$N(114, 14).$$
+
 
 The graph now looks like this:
 
@@ -100,25 +86,25 @@ ggplot(data.frame(x = c(58, 170)), aes(x)) +
 
 Using this information, we can estimate the percentage of such women who are expected to have any range of SBP without having access to all such data.
 
-For example, what percentage of women ages 30--44 in the U.S. and Canada are expected to have SBP under 130 mmHg? The `pdist` command from the `mosaic` package will not only help you with this calculation, but it also offers a nice visual representation depending on the arguments you supply to the function. If you use `plot =  FALSE`, all you get is the number:
+For example, what percentage of women ages 30--44 in the U.S. and Canada are expected to have SBP under 130 mmHg? The `pdist` command from the `mosaic` package will not only help us with this calculation, but it also offers a nice visual representation depending on the arguments we supply to the function. If we use `plot =  FALSE`, all we get is the number:
 
 ```{r}
 pdist("norm", q = 130, mean = 114, sd = 14, plot = FALSE)
 ```
 
-If you use `invisible = TRUE`, you get a plot instead (and not the number):
+If we use `invisible = TRUE`, we get a plot instead (and not the number):
 
 ```{r}
 pdist("norm", q = 130, mean = 114, sd = 14, invisible = TRUE)
 ```
 
-The other pieces of the `pdist` function are pretty intuitive: `"norm"` (and it has to be in double quotes) indicates that we want a normal model, `q` is the value of interest to us, and `mean` and `sd` are self-evident. The numerical output gives the area under the curve to the left of our value of interest. This area is 0.873451; in other words, about 87.3% of women are expected to have SBP less than 130.
+The other pieces of the `pdist` function are pretty intuitive: `"norm"` (and it has to be in quotes) indicates that we want a normal model, `q` is the value of interest to us, and `mean` and `sd` are self-evident. The numerical output gives the area under the curve to the left of our value of interest. This area is 0.873451; in other words, about 87.3% of women are expected to have SBP less than 130.
 
 If you use this command inline, you don't need to specify `invisible` or `plot`; the pretty picture is not generated, just the value. For example, look at the following sentence (remembering that you can click anywhere inside the inline R code and hit Ctrl-Enter or Cmd-Enter):
 
 > The model predicts that `r 100 * pdist("norm", q = 130, mean = 114, sd = 14)`% of women ages 30--44 in the U.S. and Canada will have systolic blood pressure under 130 mmHg.
 
-Note that the above code multiplied the result of the `pdist` command by 100. This is important because the full sentence interpretation is meant to be read by human beings, and human beings tend to report these kinds of numbers as percentages and not decimals.^[When you eventually knit this to PDF, you'll see a ridiculous number of decimal places that R reports. It's a bit of a hassle to try to change it, so we'll just ignore the issue.]
+Note that the above code multiplied the result of the `pdist` command by 100. This is important because the full sentence interpretation is meant to be read by human beings, and human beings tend to report these kinds of numbers as percentages and not decimals.^[When you preview this in HTML, you'll see a ridiculous number of decimal places that R reports. It's a bit of a hassle to try to change it, so we'll just ignore the issue.]
 
 It's also important that you include the phrase, "The model predicts..." or something like that. Without that part, the claim is likely false. It would be too definitive. Remember that a model is just an approximation or simplification of reality. We're not claiming we've found the "True" number. All we know is that if the model is roughly correct, we can predict the true value.
 
@@ -128,7 +114,7 @@ Therefore, all we have to do to solve this problem is subtract the number we obt
 
 > The model predicts that `r 100 * (1 - pdist("norm", q = 130, mean = 114, sd = 14))`% of women ages 30--44 in the U.S. and Canada will have systolic blood pressure over 130 mmHg.
 
-Don't forget to include parentheses. We need to multiply 100 by the whole expression `1 - pdist("norm", q = 130, mean = 114, sd = 14))`.
+Don't forget to include parentheses. We need to multiply the whole expression by 100.
 
 Now, here's a more complicated question: what percentage of women are predicted to have SBP between 110 mmHg and 130 mmHg?
 
@@ -144,14 +130,16 @@ Therefore, all we have to do is calculate 0.873 minus 0.388:
 
 (Again, don't forget the parentheses.)
 
-What about the pretty picture? Unfortunately, this doesn't really work:
+What about the pretty picture? Unfortunately, this doesn't work so well:
 
 ```{r}
 pdist("norm", q = 130, mean = 114, sd = 14, invisible = TRUE) - 
     pdist("norm", q = 110, mean = 114, sd = 14, invisible = TRUE)
 ```
 
-Conceptually, this makes sense, but the R code is getting a little bulky, and it also prints both plots separately, making the output messy. Instead, let's observe that the `pdist` command can include both values (110 and 130) using the vector notation `c`:
+The code is bulky and it prints both the number and two pictures.
+
+Instead, let's observe that the `pdist` command can include both values (110 and 130) using the vector notation `c`:
 
 ```{r}
 pdist("norm", q = c(110, 130), mean = 114, sd = 14, invisible = TRUE)
@@ -175,16 +163,13 @@ Again, for inline R code, you don't need to specify `plot = FALSE`:
 
 > The model predicts that `r 100 * diff(pdist("norm", q = c(110, 130), mean = 114, sd = 14))`% of women ages 30--44 in the U.S. and Canada will have systolic blood pressure between 110 mmHg and 130 mmHg.
 
+For the following exercises, we'll use a running example of IQ scores. IQ scores are standardized so that they have a mean of 100 and a standard deviation of 16. For each exercise, use the `pdist` command with `invisible = TRUE` to draw the right picture and then state your answer in a contextually meaningful full sentence using inline R code. Don't forget to use the phrase "The model predicts..." and report numbers as percentages, not decimals.
 
-## Exercises
+##### Exercise 1(a)
 
-IQ scores are standardized so that they have a mean of 100 and a standard deviation of 16.
+What percentage of people would you expect to have IQ scores over 80?
 
-For each of the following questions, use the `pdist` command with `invisible = TRUE` to draw the right picture and then state your answer in a contextually meaningful full sentence using inline R code. Don't forget to use the phrase "The model predicts..." and report numbers as percentages, not decimals.
-
-### What percentage of people would you expect to have IQ scores over 80?
-
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to draw the model.
@@ -192,23 +177,13 @@ For each of the following questions, use the `pdist` command with `invisible = T
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### What percentage of people would you expect to have IQ scores under 90?
+##### Exercise 1(b)
 
-\answerbegin
+What percentage of people would you expect to have IQ scores under 90?
 
-```{r}
-# Add code here to draw the model.
-```
-
-Please write up your answer here.
-
-\answerend
-
-### What percentage of people would you expect to have IQ scores between 112 and 132?
-
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to draw the model.
@@ -216,9 +191,21 @@ Please write up your answer here.
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-*****
+##### Exercise 1(c)
+
+What percentage of people would you expect to have IQ scores between 112 and 132?
+
+<div class = "answer">
+
+```{r}
+# Add code here to draw the model.
+```
+
+Please write up your answer here.
+
+</div>
 
 
 ## Percentiles
@@ -269,16 +256,13 @@ qdist("norm", p = c(0.25, 0.75), mean = 114, sd = 14, invisible = TRUE)
 
 We did something tricky in the inline code above. Because the `qdist` command produces two values (one at the 25th percentile and one at the 75th percentile), we can grab each value separately by appending `[1]` or `[2]` to the end of the command.
 
+For the exercises below, we'll continue to use IQ scores (mean of 100 and standard deviation of 16). Use the `qdist` command to draw the right picture and then state your answer in a contextually meaningful full sentence. Don't forget to use the phrase "The model predicts..."
 
-## Exercises
+##### Exercise 2(a)
 
-We'll continue to use IQ scores (mean of 100 and standard deviation of 16).
+What cutoff value bounds the highest 5% of IQ scores?
 
-For each of the following questions, use the `qdist` command to draw the right picture and then state your answer in a contextually meaningful full sentence. Don't forget to use the phrase "The model predicts..."
-
-### What cutoff value bounds the highest 5% of IQ scores?
-
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to draw the model.
@@ -286,23 +270,13 @@ For each of the following questions, use the `qdist` command to draw the right p
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### What cutoff value bounds the lowest 30% of IQ scores?
+##### Exercise 2(b)
 
-\answerbegin
+What cutoff value bounds the lowest 30% of IQ scores?
 
-```{r}
-# Add code here to draw the model.
-```
-
-Please write up your answer here.
-
-\answerend
-
-### What cutoff values bound the middle 80% of IQ scores?
-
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to draw the model.
@@ -310,11 +284,188 @@ Please write up your answer here.
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-*****
+##### Exercise 2(c)
+
+What cutoff values bound the middle 80% of IQ scores?
+
+<div class = "answer">
+
+```{r}
+# Add code here to draw the model.
+```
+
+Please write up your answer here.
+
+</div>
+
+
+## Z-scores
+
+Sometimes it is easier to refer to a value in terms of how many standard deviations it lies from the mean. For example, a systolic blood pressure of 100 is 14 mmHg below the mean, but since the standard deviation is 14 mmHg, this means that 100 is one standard deviation below the mean. This distance from the mean in terms of standard deviations is called a *z-score*.
+
+We calculate z-scores using the following formula:
+
+$$z = \frac{y - \mu}{\sigma}.$$
+
+In our example, if we wanted to know the z-score for an SBP of 100, we just plug all the numbers into the formula above:
+
+$$z = \frac{100 - 114}{14} = -1.$$
+
+What is the z-score for an SBP of 132? Look at the graph of the normal model $N(114, 14)$:
+
+```{r}
+# Don't worry about the syntax here.
+# You won't need to know how to do this on your own.
+ggplot(data.frame(x = c(58, 170)), aes(x)) +
+    stat_function(fun = dnorm, args = list(mean = 114, sd = 14)) +
+    scale_x_continuous(breaks = c(72, 86, 100, 114, 128, 142, 156)) +
+    geom_vline(xintercept = 132, color = "blue")
+```
+
+We can see that 132 lies between 128 and 142, which are 1 and 2 standard deviations above the mean, respectively. The exact z-score is 
+
+$$z = \frac{132 - 114}{14} = 1.285714.$$
+
+The `scale` function from R also computes z-scores. Just note that the function takes arguments `center` and `scale`, not `mean` and `sd`.
+
+```{r}
+scale(x = 100, center = 114, scale = 14)
+```
+
+```{r}
+scale(x = 132, center = 114, scale = 14)
+```
+
+Also note that the function spits about a bunch of extra crap we don't care about. This goes away for inline code. Go ahead and preview the HTML file now so you can see the effect in the following sentence:
+
+> The z-score for 100 is `r scale(x = 100, center = 114, scale = 14)` and the z-score for 132 is `r scale(x = 132, center = 114, scale = 14)`.
+
+##### Exercise 3
+
+If IQ scores have a mean of 100 and a standard deviation of 16, what are the z-scores for the following IQ scores? Write up your answers as full sentences using inline R code.
+
+* 80
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
+
+* 102
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
+
+* 130
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
+
+***** 
+
+Working with z-scores also makes it easier to work with normal models. The default settings for `pdist` and `qdist` are `mean = 0` and `sd = 1`. That saves you some typing. So, for example, we calculated above that an SBP of 100 has a z-score of -1. What percentage of women are expected to have SBP lower than 100?
+
+```{r}
+pdist("norm", q = -1, invisible = TRUE)
+```
+
+> The model predicts that `r 100 * pdist("norm", q = -1)`% of women ages 30--44 in the U.S. and Canada will have SBP less than 100.
+
+##### Exercise 4
+
+Albert Einstein supposedly had an IQ of 160. Calculate the z-score for his IQ and then use that z-score to figure out what percentage of the population is smarter than Einstein. Use full sentences and inline R code to express your answer.
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
+
+
+## QQ plots
+
+All of the work we do with normal models assumes that a normal model is appropriate. When we want to summarize data using a normal model, this means that the data distribution should be reasonably unimodal, symmetric, and with no serious outliers.
+
+We can, of course, use a histogram to check this. But a histogram can be highly sensitive to the choice of bins. Furthermore, for small sample sizes, histograms look "chunky", making it hard to test this assumption.
+
+An easier way to check normality is to use a *quantile-quantile plot*, typically called a *QQ plot* or sometimes a *normal probability plot*. We won't get into the technicalities of how this plot works. Suffice it to say that if data is normally distributed, the points of a QQ plot should lie along a diagonal line.
+
+Here is an example. The total snowfall in Grand Rapids, Michigan has been recorded every year since 1893. This data is included with the `mosaic` package in the data frame `SnowGR`. A histogram (with reasonable binning) shows that the data is nearly normal.
+
+```{r}
+ggplot(SnowGR, aes(x = Total)) +
+    geom_histogram(binwidth = 10, boundary = 50)
+```
+
+Here is the QQ plot for the same data. Notice that the aesthetics are a little different; instead of `x`, we have to use `sample`.
+
+```{r}
+ggplot(SnowGR, aes(sample = Total)) +
+    geom_qq()
+```
+
+(The warning is because there is one missing value in the data.)
+
+Other than a few points here and there, the bulk of the data is lined up nicely. There's a minor outlier, and that can be seen in both the histogram and the QQ plot.
+
+Contrast that with skewed data. For example, the `Alcohol` dataset contains per capita consumption (in liters) of alcohol for various countries over several years. The alcohol consumption variable is highly skewed, as one can see in the histogram.
+
+```{r}
+ggplot(Alcohol, aes(x = alcohol)) +
+    geom_histogram(binwidth = 2, boundary = 0)
+```
+
+It is also apparent in the QQ plot that the data is not normally distributed.
+
+```{r}
+ggplot(Alcohol, aes(sample = alcohol)) +
+    geom_qq()
+```
+
+The path of dots is sharply curved, indicating a lack of normality.
+
+##### Exercise 6(a)
+
+Find a data set with a numerical variable that is nearly normal in its distribution. (It can be something we've already seen in a past module, or if you're really ambitious, you're welcome to find a new data set.) Plot both a histogram and a QQ plot to demonstrate that the data is nearly normal. No need for a written response. Just plot the graphs.
+
+<div class = "answer">
+
+```{r}
+# Add code here to plot a histogram.
+```
+
+```{r}
+# Add code here to plot a QQ plot.
+```
+
+</div>
+
+##### Exercise 6(b)
+
+Now find a data set with a numerical variable that is skewed in its distribution. Plot both a histogram and a QQ plot to demonstrate that the data is not normal. Again, no need for a written response. Just plot the graphs.
+
+<div class = "answer">
+
+```{r}
+# Add code here to plot a histogram.
+```
+
+```{r}
+# Add code here to plot a QQ plot.
+```
+
+</div>
 
 
 ## Conclusion
 
-The normal model is ubiquitous in statistics, so understanding how to use it to make predictions is critical. When certain assumptions are met (that will be discussed in a future assignment), we can use the normal model to make predictions. Sometimes we have a value and we're interested in calculating a percentage of the population above or below that value. Other times, we want to calculate the value corresponding to a certain percentile. The `pdist` and `qdist` functions are very simple ways of visualizing and calculating using normal models.
+The normal model is ubiquitous in statistics, so understanding how to use it to make predictions is critical. When certain assumptions are met (that will be discussed in a future module), we can use the normal model to make predictions. The use of z-scores allows us to measure distances from the mean in terms of standard deviations, giving us a scale in which data from different contexts are comparable as long as such measurements are normally distributed. A QQ plot helps us check that assumption.
