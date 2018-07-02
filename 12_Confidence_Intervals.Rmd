@@ -1,15 +1,21 @@
 ---
-title: "Confidence intervals"
+title: "12. Confidence intervals"
 author: "Put your name here"
 date: "Put the date here"
-output: pdf_document
+output:
+    html_notebook:
+        toc: yes
+        toc_float: yes
 ---
+
 <!-- Please don't mess with the next few lines! -->
-\def\hrulefill{\leavevmode\leaders\hrule height 2pt\hfill\kern 0pt}
-\newcommand{\answerbegin}{\par\textcolor{blue}{\hrulefill\quad ANSWER\quad\hrulefill\newline}}
-\newcommand{\answerend}{\par\textcolor{blue}{\hrulefill}\newline}
-`r options(scipen = 999)`
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #1E90FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r options(scipen = 999);intToUtf8(c(49,46,48))`</p>
 <!-- Please don't mess with the previous few lines! -->
+
+<div class = "summary">
+### Functions introduced in this module:
+`prop.test`, `tidy`
+</div>
 
 
 ## Introduction
@@ -17,36 +23,11 @@ output: pdf_document
 Sampling variability means that we can never trust a single sample to identify a population parameter exactly. Instead of simply trusting a point estimate, we can look at the entire sampling distribution to create an interval of plausible values called a confidence interval. Our understanding of standard errors will help us determine how wide we need to make our confidence intervals in order to have some chance of capturing the true population value. Like hypothesis tests, confidence intervals are a form of inference because they use a sample to deduce something about the population.
 
 
-## Instructions
+## Load packages
 
-Presumably, you have already created a new project and downloaded this file into it. From the `Run` menu above, select `Run All` to run all existing code chunks.
+We load the standard `mosaic` package. We'll also need the `openintro` package later in the module for the `hsb2` data set. Finally, we introduce the `broom` package that cleans up the output of a wide variety of R commands.
 
-When prompted to complete an exercise or demonstrate skills, you will see the following lines in the document:
-
-\answerbegin
-
-\answerend
-
-These lines demarcate the region of the R Markdown document in which you are to show your work.
-
-Sometimes you will be asked to add your own R code. That will appear in this document as a code chunk with a request for you to add your own code, like so:
-
-```{r}
-# Add code here
-```
-
-Be sure to remove the line `# Add code here` when you have added your own code. You should run each new code chunk you create by clicking on the dark green arrow in the upper-right corner of the code chunk.
-
-Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
-
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
-
-
-## Load Packages
-
-We load the standard `mosaic` package. We'll also need the `openintro` package later in the assignment for the `hsb2` data set. Finally, we introduce the `broom` package that cleans up the output of a wide variety of R commands.
-
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE}
 library(openintro)
 library(broom)
 library(mosaic)
@@ -70,7 +51,7 @@ Because of sampling variability, $\hat{p}$ will almost never be exactly the same
 
 ## Estimating the standard error
 
-We do need to make one adjustment to our standard error. The formula we gave in a previous assignment was
+We do need to make one adjustment to our standard error. The formula we gave in a previous module was
 
 $$\sqrt{\frac{p(1 - p)}{n}}.$$
 
@@ -91,11 +72,11 @@ $$ = \left(\hat{p} -  2 \sqrt{\frac{\hat{p}(1 - \hat{p})}{n}}, \hat{p} + 2 \sqrt
 
 The quantity $2 SE$ is called the *margin of error*.
 
-### Exercise
+##### Exercise 1
 
 The number 2---derived from the 68-95-99.7 rule---is, in fact, slightly incorrect. Using your knowledge of normal models and the `qdist` command, what is the number of standard errors that would enclose *exactly* 95% of the middle of the sampling distribution? (Hint: `p = 0.95` is **not** the correct argument in the `qdist` function. The middle 95% does not occur at the 95th percentile. If you're still confused, go on and read the next section and revisit this problem later.)
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to calculate the exact number of standard errors 
@@ -104,7 +85,7 @@ The number 2---derived from the 68-95-99.7 rule---is, in fact, slightly incorrec
 
 Please write up your answer here.
 
-\answerend
+</div>
 
 *****
 
@@ -135,11 +116,11 @@ The critical z-score is the positive answer, so we could use `qdist` simply to r
 
 (Also, if you had trouble with the question above that asked about the exact critical z-score for a 95% confidence interval, go back and try again now that you've seen another worked example.)
 
-### Exercise
+##### Exercise 2
 
 Now do the same thing for a 99% confidence interval. In other words, calculate the critical z-score that encloses the middle 99% of the normal distribution.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to calculate the exact number of standard errors 
@@ -148,9 +129,7 @@ Now do the same thing for a 99% confidence interval. In other words, calculate t
 
 Please write up your answer here.
 
-\answerend
-
-*****
+</div>
 
 
 ## Checking conditions
@@ -243,15 +222,15 @@ test3a_tidy <- tidy(test3a)
 test3a_tidy
 ```
 
-### Exercise
+##### Exercise 3
 
 Examine the output above and see if you can spot the problem. (Hint: does 32 students out of 200 fit with the confidence interval produced above?)
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
 *****
 
@@ -280,17 +259,15 @@ test3c_tidy <- tidy(test3c)
 test3c_tidy
 ```
 
-### Exercise
+##### Exercise 4
 
 Is a 90% confidence interval wider or narrower than a 95% confidence interval? Explain why this is so. (In other words, from your understanding of how confidence intervals work, explain why it makes sense that a 90% confidence interval is wider or narrower than a 95% confidence interval.)
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
-
-*****
+</div>
 
 
 ## Rubric for confidence intervals
@@ -302,6 +279,7 @@ As such, there is a section in the "Rubric for Inference" that shows the steps o
 1. Check the relevant conditions to ensure that model assumptions are met.
 2. Calculate the confidence interval.
 3. State (but do not overstate) a contextually meaningful interpretation.
+4. If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.
 
 Here is a worked example. Unless otherwise stated, we always use a 95% confidence level.
 
@@ -331,18 +309,30 @@ program_tidy <- tidy(program)
 program_tidy
 ```
 
+```{r}
+program_tidy$conf.low
+```
+
+```{r}
+program_tidy$conf.high
+```
+
 ### State (but do not overstate) a contextually meaningful interpretation.
 
 We are 95% confident that the true percentage of U.S. high school seniors who attend a vocational program is captured in the interval (`r 100 * program_tidy$conf.low`%, `r 100 * program_tidy$conf.high`%).
+
+### If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.
+
+In this module, we haven't run a hypothesis test, so this step is irrelevant for us here. However, in future modules, we will incorporate this step into the rubric and see how the confidence interval relates to the conclusion of a hypothesis test. (Don't be misled by the P-value in the results stored in `program_tidy`. This P-value corresponds to a null hypothesis of 0%, but we would never posit a null hypothesis that 0% of students attend vocational programs.)
 
 
 ## Your turn
 
 Use the `smoking` data set from the `openintro` package. What percentage of the population of the U.K. smokes tobacco? (The information you need is in the `smoke` variable.)
 
-### Check the relevant conditions to ensure that model assumptions are met.
+###### Check the relevant conditions to ensure that model assumptions are met.
 
-\answerbegin
+<div class = "answer">
 
 * Random
     - [Check condition here.]
@@ -353,27 +343,29 @@ Use the `smoking` data set from the `openintro` package. What percentage of the 
 * Success/failure
     - [Check condition here.]
     
-\answerend
+</div>
 
-### Calculate the confidence interval.
+###### Calculate the confidence interval.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to calculate the confidence interval.
 ```
 
-\answerend
+</div>
 
-###  State (but do not overstate) a contextually meaningful interpretation.
+######  State (but do not overstate) a contextually meaningful interpretation.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
 *****
+
+(We will again ignore the very last step in the rubric since we haven't run a hypothesis test.)
 
 
 ## Interpreting confidence intervals
@@ -394,7 +386,7 @@ In order to simulate, we'll have to pretend temporarily that we know a true popu
 
 Okay, let's do it again. We get a new sample, a new $\hat{p}$, and, therefore, a new confidence interval. We can do this over and over again through the magic of simulation!
 
-Here's what this simulation looks like in R. One minor technical point: we will use the `mosaic` command `nflip` instead of `rflip` because its output is just a number (instead of all the extra stuff about heads and tails and all that). The following line of code looks complicated, but break it down from inside out. First, we use `nflip(50, prob = 0.64)` to flip a "weighted coin" 50 times as a proxy for surveying 50 voters about the candidate. The result of this (the number of successes) is then fed into the `prop.test` function that creates a confidence interval for a sample size of `n = 50`. Finally, `tidy` cleans up the output the same way we've seen all along in this assignment.
+Here's what this simulation looks like in R. One minor technical point: we will use the `mosaic` command `nflip` instead of `rflip` because its output is just a number (instead of all the extra stuff about heads and tails and all that). The following line of code looks complicated, but break it down from inside out. First, we use `nflip(50, prob = 0.64)` to flip a "weighted coin" 50 times as a proxy for surveying 50 voters about the candidate. The result of this (the number of successes) is then fed into the `prop.test` function that creates a confidence interval for a sample size of `n = 50`. Finally, `tidy` cleans up the output the same way we've seen all along in this module.
 
 
 ```{r}
@@ -407,7 +399,7 @@ All we need to do for simulation purposes is to introduce the `do` command to do
 
 ```{r}
 confint100 <- do(100) * tidy(prop.test(nflip(50, prob = 0.64), n = 50))
-tail(confint100)
+confint100
 ```
 
 
