@@ -1,56 +1,37 @@
 ---
-title: "Inference for one proportion"
+title: "13. Inference for one proportion"
 author: "Put your name here"
 date: "Put the date here"
-output: pdf_document
+output:
+    html_notebook:
+        toc: yes
+        toc_float: yes
 ---
+
 <!-- Please don't mess with the next few lines! -->
-\def\hrulefill{\leavevmode\leaders\hrule height 2pt\hfill\kern 0pt}
-\newcommand{\answerbegin}{\par\textcolor{blue}{\hrulefill\quad ANSWER\quad\hrulefill\newline}}
-\newcommand{\answerend}{\par\textcolor{blue}{\hrulefill}\newline}
-`r options(scipen = 999)`
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #1E90FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r options(scipen = 999);intToUtf8(c(49,46,48))`</p>
 <!-- Please don't mess with the previous few lines! -->
+
+<div class = "summary">
+### Functions introduced in this module:
+`binom.test`
+</div>
 
 
 ## Introduction
 
 Our earlier work with simulations showed us that when the number of successes and failures is large enough, we can use a normal model as our sampling distribution model.
 
-We revisit hypothesis tests for a single proportion, but now, instead of running a simulation to compute a P-value, we take the shortcut of computing the P-value directly from a normal model.
+We revisit hypothesis tests for a single proportion, but now, instead of running a simulation to compute the P-value, we take the shortcut of computing the P-value directly from a normal model.
 
 There are no new concepts here. All we are doing is revisiting the rubric for inference and making the necessary changes.
 
 
-## Instructions
-
-Presumably, you have already created a new project and downloaded this file into it. From the `Run` menu above, select `Run All` to run all existing code chunks.
-
-When prompted to complete an exercise or demonstrate skills, you will see the following lines in the document:
-
-\answerbegin
-
-\answerend
-
-These lines demarcate the region of the R Markdown document in which you are to show your work.
-
-Sometimes you will be asked to add your own R code. That will appear in this document as a code chunk with a request for you to add your own code, like so:
-
-```{r}
-# Add code here
-```
-
-Be sure to remove the line `# Add code here` when you have added your own code. You should run each new code chunk you create by clicking on the dark green arrow in the upper-right corner of the code chunk.
-
-Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
-
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
-
-
-## Load Packages
+## Load packages
 
 We load the standard `mosaic` package as well as the `broom` package for tidy output and the `openintro` package to access data on heart transplant candidates.
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE}
 library(openintro)
 library(broom)
 library(mosaic)
@@ -61,7 +42,7 @@ library(mosaic)
 
 Instead of running a simulation, we are going to assume that the sampling distribution can be modeled with a normal model as long as the conditions for using a normal model are met.
 
-Although the rubric has not changed, the use of a normal model changes quite a bit about the way we go through the other steps. For example, we won't have simulated values to give us a histogram of the null model. Instead, we'll go straight to graphing a normal model. We won't compute the percent of our samples that are at least as extreme as our test statistic to get the P-value. The P-value from a normal model is found directly from the model itself using the `pdist` command.
+Although the rubric has not changed, the use of a normal model changes quite a bit about the way we go through the other steps. For example, we won't have simulated values to give us a histogram of the null model. Instead, we'll go straight to graphing a normal model. We won't compute the percent of our simulated samples that are at least as extreme as our test statistic to get the P-value. The P-value from a normal model is found directly from the model itself using the `pdist` command.
 
 What follows is a fully-worked example of inference for one proportion. After the hypothesis test (sometimes called a one-proportion z-test for reasons that will become clear), we also follow up by computing a confidence interval. **From now on, we will consider inference to consist of a hypothesis test and a confidence interval.** Whenever you're asked a question that requires statistical inference, you should follow both the rubric steps for a hypothesis test and for a confidence interval.
 
@@ -75,21 +56,21 @@ Data from the Stanford University Heart Transplant Study is located in the `open
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
 
-[You should type `?heartTr` at the Console to read the help file and use `View` to look at the spreadsheet view of the data.]
+[You should type `?heartTr` at the Console to read the help file.]
+
+```{r}
+heartTr
+```
 
 ```{r}
 str(heartTr)
 ```
 
-```{r}
-head(heartTr)
-```
-
 Commentary: The variable of interest is `survived`, which is coded as a factor variable with two categories, "alive" and "dead". Keep in mind that because we are interested in survival rates, the "alive" condition will be considered the "success" condition.^[Finally, a "success" condition that actually sounds successful!]
 
-**Do not under any circumstances attempt to convert `heartTr$survived` to a factor variable using the `factor` command!** It is already a factor variable. Applying the `factor` command the way you have in past assignments will break a variable that is already coded as a factor variable. This is one of the most common mistakes students make when working with factor variables. This is why the `str` command is so important. You always need to check your categorical data to see if it's already a factor variable! (If not, then of course we would recode it the way you've been taught.)
+**Do not under any circumstances attempt to convert `heartTr$survived` to a factor variable using the `factor` command!** It is already a factor variable. Applying the `factor` command the way you have in past modules will break a variable that is already coded as a factor variable. This is one of the most common mistakes students make when working with factor variables. This is why the `str` command is so important. You always need to check your categorical data to see if it's already a factor variable! (If not, then of course we would recode it the way you've been taught.)
 
 There are 103 patients, but we are not considering all these patients. Our sample should consist of only those patients who actually received the transplant. The following table shows that only 69 patients were in the "treatment" group (meaning that they received a heart transplant).
 
@@ -101,13 +82,13 @@ tally(~ transplant, data = heartTr, margins = TRUE)
 
 **CAUTION: If you are copying and pasting from this example to use for another research question, the following code chuck is specific to this research question and not applicable in other contexts.**
 
+We need to use `filter` so we get only the patients who actually received the heart transplant.
+
 ```{r}
 heartTr2 <- filter(heartTr, transplant == "treatment")
 ```
 
-Commentary: Since we only want to look at those who received the transplant, we cannot use the whole data set `heartTr`. The `filter` command is useful for grabbing only certain rows from our data. We filter the data for those who were in the `treatment` group and assign the resulting data frame to a new variable called `heartTr2`.
-
-The only unusual thing you might have spotted is the double equal sign. This is used whenever you want to check that two things are equal. Just to illustrate, go to the Console and type `x = 5`. Then type `x == 5`. The first command assigns the number 5 to the variable x (as you should be able to see in your Global Environment). The second command checks if x is equal to 5. (And since you just assigned x to be 5, it is `TRUE`.)
+Commentary: don't forget the double equal sign (`==`) that checks whether the `treatment` variable is equal to the value "treatment". (See the module `05_Manipulating_data` if you've forgotten how to use `filter`.)
 
 Again, this step isn't something you need to do for other research questions. This question is peculiar because it asks only about patients who received a heart transplant, and that only involves a subset of the data we have in the `heartTr` data frame.
 
@@ -186,21 +167,21 @@ surv_test_tidy
 
 The test statistic is `r surv_test_tidy$estimate`, the proportion of successes (i.e., survivors) in the sample.
 
-We'll also compute the corresponding z-score. First, we compute the standard error.
+We'll also compute the corresponding z-score. First, we compute the standard error:
 
 ```{r}
-SE <- sqrt(0.5*(1 - 0.5)/69)
-SE
+SE1 <- sqrt(0.5*(1 - 0.5)/69)
+SE1
 ```
 
-Then, using our computation of `SE`, we get the z-score.
+Then, using our computation of `SE1`, we get the z-score.
 
 ```{r}
-z <- (surv_test_tidy$estimate - 0.5)/SE
-z
+z1 <- (surv_test_tidy$estimate - 0.5)/SE1
+z1
 ```
 
-The z-score is `r z`.
+The z-score is `r z1`.
 
 Commentary: We run the `binom.test` command to give us almost everything we need. The argument `p = 0.5` is the null value, and this might be different for a different research question. Also note that the `binom.test` command allows us to specify the "success" condition (here, "alive").
 
@@ -210,7 +191,7 @@ To compute the z-score, it's easiest to compute the standard error first. The fo
 
 $$SE = \sqrt{\frac{p(1 - p)}{n}}.$$
 
-We did this in R and stored the result as `SE`.
+We did this in R and stored the result as `SE1`.
 
 **Remember that are working under the assumption of the null hypothesis.** This means that we use $p = 0.5$ everywhere in the formula for the standard error. Then our z-score is
 
@@ -229,16 +210,16 @@ The standard normal model is more intuitive and easier to work with, both concep
 ### Plot the null distribution.
 
 ```{r}
-pdist("norm", q = z, invisible = TRUE)
+pdist("norm", q = z1, invisible = TRUE)
 ```
 
-Commentary: Notice how simple this `pdist` command is. One reason is that we're using z, which means that we are working with the standard normal model. As this is the default for the `pdist` command, there is no need to specify the `mean` and `sd` in the command.
+Commentary: Notice how simple this `pdist` command is. One reason is that we're using a z-score, which means that we are working with the standard normal model. As this is the default for the `pdist` command, there is no need to specify the `mean` and `sd` in the command.
 
 Contrast this to the command we would need if using $\hat{p}$ as our test statistic:
 
 ```{r}
 pdist("norm", q = surv_test_tidy$estimate,
-      mean = 0.5, sd = SE,
+      mean = 0.5, sd = SE1,
       invisible = TRUE)
 ```
 
@@ -247,17 +228,17 @@ This works and gives us the same answer, but it's a bit more complicated.
 The other thing that makes this relatively simple is that we're running a one-sided test corresponding to the alternative hypothesis $p < 0.5$. Keep in mind that if we were running a two-sided test, we would need this instead:
 
 ```{r}
-pdist("norm", q = c(-z, z), invisible = TRUE)
+pdist("norm", q = c(-z1, z1), invisible = TRUE)
 ```
 
-### Calculate and report the P-value.
+### Calculate and interpret the P-value.
 
 ```{r}
-P <- pdist("norm", q = z, plot = FALSE)
-P
+P1 <- pdist("norm", q = z1, plot = FALSE)
+P1
 ```
 
-The P-value is `r P`.
+The P-value is `r P1`. If there were truly a 50% chance of survival among heart transplant patients, there would only be a `r 100 * P1`% chance of seeing data at least as extreme as we saw.
 
 Commentary: Since we are running a one-sided test using the left tail (recall the alternative hypothesis was $p < 0.5$), the result of the `pdist` command is already the correct P-value. We don't need the plot again, so we can put `plot = FALSE` into the command.
 
@@ -330,7 +311,9 @@ We are 95% confident that the true percentage of heart transplant recipients who
 
 Commentary: Note that when we state our contextually meaningful conclusion, we also convert the decimal proportions to percentages. Humans like percentages a lot better.
 
-*****
+### If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.
+
+We are not running a two-sided test, so this step is not applicable.
 
 
 ## Inference using summary statistics
@@ -374,95 +357,96 @@ The rubric outline is reproduced below. You may refer to the worked example abov
 
 Another word of warning: the copy/paste process is not a substitute for your brain. You will often need to modify more than just the names of the data frames and variables to adapt the worked examples to your own work. For example, if you run a two-sided test instead of a one-sided test, there are three or four steps that all have to be adjusted accordingly. Understanding the sampling distribution model and the computation of the P-value goes a long way toward understanding the changes that must be made. Do not blindly copy and paste code without understanding what it does. And you should **never** copy and paste text. All the sentences and paragraphs you write are expressions of your own analysis. They must reflect your own understanding of the inferential process.
 
+**Also, so that your answers here don't mess up the code chunks above, use new variable names everywhere. In particular, you should use `prior_test` and `prior_test_tidy` (instead of `surv_test` and `surv_test_tidy`) to store the results of your hypothesis test. Use the following names for your standard error, z-score, and P-value: `SE2`, `z2`, and `P2`.**
 
-## Exploratory data analysis
+##### Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
+###### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to understand the data.
 ```
 
-\answerend
+</div>
 
-### Prepare the data for analysis. [Not always necessary.]
+###### Prepare the data for analysis. [Not always necessary.]
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to prepare the data for analysis.
 ```
 
-\answerend
+</div>
 
-### Make tables or plots to explore the data visually.
+###### Make tables or plots to explore the data visually.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to make tables or plots.
 ```
 
-\answerend
+</div>
 
 
-## Hypotheses
+##### Hypotheses
 
-### Identify the sample (or samples) and a reasonable population (or populations) of interest.
+###### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Express the null and alternative hypotheses as contextually meaningful full sentences.
+###### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
-\answerbegin
+<div class = "answer">
 
 $H_{0}:$ Null hypothesis goes here.
 
 $H_{A}:$ Alternative hypothesis goes here.
 
-\answerend
+</div>
 
-### Express the null and alternative hypotheses in symbols (when possible).
+###### Express the null and alternative hypotheses in symbols (when possible).
 
-\answerbegin
+<div class = "answer">
 
 $H_{0}: math$
 
 $H_{A}: math$
 
-\answerend
+</div>
 
 
-## Model
+##### Model
 
-### Identify the sampling distribution model.
+###### Identify the sampling distribution model.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Check the relevant conditions to ensure that model assumptions are met.
+###### Check the relevant conditions to ensure that model assumptions are met.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here. (Some conditions may require R code as well.)
 
-\answerend
+</div>
 
 
-## Mechanics
+##### Mechanics
 
-### Compute and report the test statistic.
+###### Compute and report the test statistic.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to compute the test statistic.
@@ -470,21 +454,21 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Plot the null distribution.
+###### Plot the null distribution.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to plot the null distribution.
 ```
 
-\answerend
+</div>
 
-### Calculate and report the P-value.
+###### Calculate and interpret the P-value.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to calculate the P-value.
@@ -492,60 +476,68 @@ Please write up your answer here.
 
 Please write up your answer here.
 
-\answerend
+</div>
 
 
-## Conclusion
+##### Conclusion
 
-### State the statistical conclusion.
+###### State the statistical conclusion.
 
-\answerbegin
-
-Please write up your answer here.
-
-\answerend
-
-### State (but do not overstate) a contextually meaningful conclusion.
-
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+###### State (but do not overstate) a contextually meaningful conclusion.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
+
+###### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
 
 
-## Confidence interval
+##### Confidence interval
 
-### Check the relevant conditions to ensure that model assumptions are met.
+###### Check the relevant conditions to ensure that model assumptions are met.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here. (Some conditions may require R code as well.)
 
-\answerend
+</div>
 
-### Calculate the confidence interval.
+###### Calculate the confidence interval.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to calculate the confidence interval.
 ```
 
-\answerend
+</div>
 
-### State (but do not overstate) a contextually meaningful interpretation.
+###### State (but do not overstate) a contextually meaningful interpretation.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
+
+###### If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
