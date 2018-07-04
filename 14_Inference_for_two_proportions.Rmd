@@ -1,52 +1,33 @@
 ---
-title: "Inference for two proportions"
+title: "14. Inference for two proportions"
 author: "Put your name here"
 date: "Put the date here"
-output: pdf_document
+output:
+    html_notebook:
+        toc: yes
+        toc_float: yes
 ---
+
 <!-- Please don't mess with the next few lines! -->
-\def\hrulefill{\leavevmode\leaders\hrule height 2pt\hfill\kern 0pt}
-\newcommand{\answerbegin}{\par\textcolor{blue}{\hrulefill\quad ANSWER\quad\hrulefill\newline}}
-\newcommand{\answerend}{\par\textcolor{blue}{\hrulefill}\newline}
-`r options(scipen = 999)`
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #1E90FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r options(scipen = 999);intToUtf8(c(49,46,48))`</p>
 <!-- Please don't mess with the previous few lines! -->
+
+<div class = "summary">
+### Functions introduced in this module:
+No new R functions are introduced here.
+</div>
 
 
 ## Introduction
 
-In this assignment, we revisit the idea of inference for two proportions, but this time using a normal model as the sampling distribution model.
+In this module, we revisit the idea of inference for two proportions, but this time using a normal model as the sampling distribution model.
 
 
-## Instructions
-
-Presumably, you have already created a new project and downloaded this file into it. From the `Run` menu above, select `Run All` to run all existing code chunks.
-
-When prompted to complete an exercise or demonstrate skills, you will see the following lines in the document:
-
-\answerbegin
-
-\answerend
-
-These lines demarcate the region of the R Markdown document in which you are to show your work.
-
-Sometimes you will be asked to add your own R code. That will appear in this document as a code chunk with a request for you to add your own code, like so:
-
-```{r}
-# Add code here
-```
-
-Be sure to remove the line `# Add code here` when you have added your own code. You should run each new code chunk you create by clicking on the dark green arrow in the upper-right corner of the code chunk.
-
-Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
-
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
-
-
-## Load Packages
+## Load packages
 
 We load the standard `mosaic` package as well as the `MASS` package for the `Melanoma` data. The `broom` package gives us tidy output.
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE}
 library(MASS)
 library(broom)
 library(mosaic)
@@ -66,7 +47,7 @@ The question is, "Which normal model?" In other words, what is the mean and stan
 
 Since we have two groups, let's call the true proportion of success $p_{1}$ for group 1 and $p_{2}$ for group 2. Therefore, the true difference between groups 1 and 2 in the population is $p_{1} - p_{2}$. If we sample repeatedly from groups 1 and 2 and form many sample differences $\hat{p}_{1} - \hat{p}_{2}$, we should expect most of the values $\hat{p}_{1} - \hat{p}_{2}$ to be close to the true difference $p_{1} - p_{2}$. In other words, the sampling distribution is centered at a mean of $p_{1} - p_{2}$.
 
-What about the standard deviation? This is much more technical and complicated. Here is the formula that you'll have to take on faith:
+What about the standard error? This is much more technical and complicated. Here is the formula that you'll have to take on faith:
 
 $$\sqrt{\frac{p_{1} (1 - p_{1})}{n_{1}} + \frac{p_{2} (1 - p_{2})}{n_{2}}}.$$
 
@@ -96,32 +77,32 @@ The example below will pause frequently for commentary on the steps, especially 
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
 
-[Type `?Melanoma` at the Console to read the help file and use `View` to look at the spreadsheet view of the data.]
+[Type `?Melanoma` at the Console to read the help file.]
+
+```{r}
+Melanoma
+```
+
 
 ```{r}
 str(Melanoma)
-```
-
-```{r}
-head(Melanoma)
 ```
 
 ### Prepare the data for analysis.
 
 The two variables of interest are `status` and `sex`. We are considering them as categorical variables, but they are recorded numerically in the data frame. We convert them to proper factor variables and put them in their own data frame using the help file to identify the levels and labels we need.
 
-There is a hitch with `status`. The help file shows three categories: 1. died from melanoma, 2. alive, 3. dead from other causes. For two-proportion inference, it would be better to have two categories only, a success category and a failure category. Since our research question asks about deaths due to melanoma, the "success" condition is the one numbered 1 in the help file, "died from melanoma". That means we need to combine the other two categories into a single failure category. Perhaps we should call it "other". The `factor` command is not quite capable of doing this, so we'll need one more line of code to set it up manually.
-
-**CAUTION: If you are copying and pasting from this example to use for another research question, some of the following code chuck is specific to this research question and not applicable in other contexts.**
+There is a minor hitch with `status`. The help file shows three categories: 1. died from melanoma, 2. alive, 3. dead from other causes. For two-proportion inference, it would be better to have two categories only, a success category and a failure category. Since our research question asks about deaths due to melanoma, the "success" condition is the one numbered 1 in the help file, "died from melanoma". That means we need to combine the other two categories into a single failure category. Perhaps we should call it "other". You can accomplish this by simply repeating the "other" label more than once.
 
 ```{r}
-status <- factor(Melanoma$status, levels = c(1, 2, 3))
-levels(status) <- c("died from melanoma", "other", "other")
+status <- factor(Melanoma$status,
+                 levels = c(1, 2, 3),
+                 labels = c("died from melanoma", "other", "other"))
 sex <- factor(Melanoma$sex, levels = c(0, 1), labels = c("female", "male"))
 status_sex <- data.frame(status, sex)
-head(status_sex)
+status_sex
 ```
 
 ### Make tables or plots to explore the data visually.
@@ -201,19 +182,19 @@ status_sex_test_tidy$estimate1 - status_sex_test_tidy$estimate2
 We also compute a z-score.
 
 ```{r}
-SE <- sqrt(status_sex_test_tidy$estimate1 *
+SE1 <- sqrt(status_sex_test_tidy$estimate1 *
                (1 - status_sex_test_tidy$estimate1)/126 +
            status_sex_test_tidy$estimate2 * 
                (1 - status_sex_test_tidy$estimate2)/79)
-SE
+SE1
 ```
 
 ```{r}
-z <- (status_sex_test_tidy$estimate1 - status_sex_test_tidy$estimate2)/SE
-z
+z1 <- (status_sex_test_tidy$estimate1 - status_sex_test_tidy$estimate2)/SE1
+z1
 ```
 
-The test statistic has a z-score of `r z`.
+The test statistic has a z-score of `r z1`.
 
 Commentary: We use the `prop.test` command for this. Now that we are working with two variables, we can use the "formula" notation with the tilde that we have seen before. The only tricky thing to remember is the order of the variables. Remember that the tilde is pronounced "by", so we want to measure "status by sex" or "status grouped by sex".
 
@@ -222,19 +203,19 @@ As with the single proportion test, the z-score is not part of the output, so we
 ### Plot the null distribution.
 
 ```{r}
-pdist("norm", q = c(-z, z), invisible = TRUE)
+pdist("norm", q = c(-z1, z1), invisible = TRUE)
 ```
 
 Commentary: Remember that this is a two-sided test.
 
-### Calculate and report the P-value.
+### Calculate and interpret the P-value.
 
 ```{r}
-P <- 2 * pdist("norm", q = z, plot = FALSE)
-P
+P1 <- 2 * pdist("norm", q = z1, plot = FALSE)
+P1
 ```
 
-The P-value is `r P`.
+The P-value is `r P1`. If there were truly no difference between the rate at which women and men in Denmark die from malignant melanoma, there is only a `r 100 * P1`% chance of seeing a difference in our data at least as extreme as what we saw.
 
 Commentary: As in the one-proportion test, a two-sided P-value is stored in the output of the `prop.test` function:
 
@@ -282,6 +263,10 @@ We are 95% confident that the true difference between the rate at which women an
 
 Commentary: Note the addition of that last sentence. If you are looking at a confidence interval for a difference, you must indicate the direction of the difference. Without that, we would know that there was a difference, but we would have no idea whether women or men die more from malignant melanoma. Once we know that we are subtracting female minus male, then given the values are negative, we can infer that males die from malignant melanoma more often than females---at least according to this confidence interval.
 
+### If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.
+
+The confidence interval does not contain the null value of zero. Since zero is not a plausible value for the true difference between the rate at which women and men die from malignant melanoma, it makes sense that we rejected the null hypothesis.
+
 
 ## Inference using summary statistics
 
@@ -315,101 +300,102 @@ Once this is done (in the step "Compute the test statistic"), all remaining step
 
 ## Your turn
 
-Go through the rubric to determine if females and males in Denmark who are diagnosed with malignant melanoma suffer from ulcers at different rates.
+Go through the rubric to determine if females and males in Denmark who are diagnosed with malignant melanoma suffer from ulcerated tumors at different rates.
 
 The rubric outline is reproduced below. You may refer to the worked example above and modify it accordingly. Remember to strip out all the commentary. That is just exposition for your benefit in understanding the steps, but is not meant to form part of the formal inference process.
 
 Another word of warning: the copy/paste process is not a substitute for your brain. You will often need to modify more than just the names of the data frames and variables to adapt the worked examples to your own work. Do not blindly copy and paste code without understanding what it does. And you should **never** copy and paste text. All the sentences and paragraphs you write are expressions of your own analysis. They must reflect your own understanding of the inferential process.
 
+**Also, so that your answers here don't mess up the code chunks above, use new variable names everywhere. In particular, you should use `ulcer_sex` (instead of `status_sex`) as your data frame and `ulcer_sex_test` and `ulcer_sex_test_tidy` (instead of `status_sex_test` and `status_sex_test_tidy`) to store the results of your hypothesis test. Use the following names for your standard error, z-score, and P-value: `SE2`, `z2`, and `P2`.**
 
-## Exploratory data analysis
+##### Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
+###### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to understand the data.
 ```
 
-\answerend
+</div>
 
-### Prepare the data for analysis. [Not always necessary.]
+###### Prepare the data for analysis. [Not always necessary.]
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to prepare the data for analysis.
 ```
 
-\answerend
+</div>
 
-### Make tables or plots to explore the data visually.
+###### Make tables or plots to explore the data visually.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to make tables or plots.
 ```
 
-\answerend
+</div>
 
 
-## Hypotheses
+##### Hypotheses
 
-### Identify the sample (or samples) and a reasonable population (or populations) of interest.
+###### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Express the null and alternative hypotheses as contextually meaningful full sentences.
+###### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
-\answerbegin
+<div class = "answer">
 
 $H_{0}:$ Null hypothesis goes here.
 
 $H_{A}:$ Alternative hypothesis goes here.
 
-\answerend
+</div>
 
-### Express the null and alternative hypotheses in symbols (when possible).
+###### Express the null and alternative hypotheses in symbols (when possible).
 
-\answerbegin
+<div class = "answer">
 
 $H_{0}: math$
 
 $H_{A}: math$
 
-\answerend
+</div>
 
 
-## Model
+##### Model
 
-### Identify the sampling distribution model.
+###### Identify the sampling distribution model.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Check the relevant conditions to ensure that model assumptions are met.
+###### Check the relevant conditions to ensure that model assumptions are met.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here. (Some conditions may require R code as well.)
 
-\answerend
+</div>
 
 
-## Mechanics
+##### Mechanics
 
-### Compute and report the test statistic.
+###### Compute and report the test statistic.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to compute the test statistic.
@@ -417,21 +403,21 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Plot the null distribution.
+###### Plot the null distribution.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to plot the null distribution.
 ```
 
-\answerend
+</div>
 
-### Calculate and report the P-value.
+###### Calculate and interpret the P-value.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to calculate the P-value.
@@ -439,63 +425,71 @@ Please write up your answer here.
 
 Please write up your answer here.
 
-\answerend
+</div>
 
 
-## Conclusion
+##### Conclusion
 
-### State the statistical conclusion.
+###### State the statistical conclusion.
 
-\answerbegin
-
-Please write up your answer here.
-
-\answerend
-
-### State (but do not overstate) a contextually meaningful conclusion.
-
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+###### State (but do not overstate) a contextually meaningful conclusion.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
+
+###### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
 
 
-## Confidence interval
+##### Confidence interval
 
-### Check the relevant conditions to ensure that model assumptions are met.
+###### Check the relevant conditions to ensure that model assumptions are met.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here. (Some conditions may require R code as well.)
 
-\answerend
+</div>
 
-### Calculate the confidence interval.
+###### Calculate the confidence interval.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to calculate the confidence interval.
 ```
 
-\answerend
+</div>
 
-### State (but do not overstate) a contextually meaningful interpretation.
+###### State (but do not overstate) a contextually meaningful interpretation.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
+
+###### If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
 
 
 ## Optional appendix: Pooling {#pooling}
