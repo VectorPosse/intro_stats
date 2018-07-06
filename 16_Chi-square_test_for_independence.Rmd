@@ -1,15 +1,21 @@
 ---
-title: "Chi-square test for independence"
+title: "16. Chi-square test for independence"
 author: "Put your name here"
 date: "Put the date here"
-output: pdf_document
+output:
+    html_notebook:
+        toc: yes
+        toc_float: yes
 ---
+
 <!-- Please don't mess with the next few lines! -->
-\def\hrulefill{\leavevmode\leaders\hrule height 2pt\hfill\kern 0pt}
-\newcommand{\answerbegin}{\par\textcolor{blue}{\hrulefill\quad ANSWER\quad\hrulefill\newline}}
-\newcommand{\answerend}{\par\textcolor{blue}{\hrulefill}\newline}
-`r options(scipen = 999)`
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #1E90FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r options(scipen = 999);intToUtf8(c(49,46,48))`</p>
 <!-- Please don't mess with the previous few lines! -->
+
+<div class = "summary">
+### Functions introduced in this module:
+`rbind`
+</div>
 
 
 ## Introduction
@@ -19,36 +25,11 @@ In this assignment we will learn how to run the chi-square test for independence
 A chi-square test for independence tests the relationship between two categorical variables. This is an extension of the test for two proportions, except now applied in situations where either the explanatory or response variables (or both) have three or more categories.
 
 
-## Instructions
-
-Presumably, you have already created a new project and downloaded this file into it. From the `Run` menu above, select `Run All` to run all existing code chunks.
-
-When prompted to complete an exercise or demonstrate skills, you will see the following lines in the document:
-
-\answerbegin
-
-\answerend
-
-These lines demarcate the region of the R Markdown document in which you are to show your work.
-
-Sometimes you will be asked to add your own R code. That will appear in this document as a code chunk with a request for you to add your own code, like so:
-
-```{r}
-# Add code here
-```
-
-Be sure to remove the line `# Add code here` when you have added your own code. You should run each new code chunk you create by clicking on the dark green arrow in the upper-right corner of the code chunk.
-
-Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
-
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
-
-
-## Load Packages
+## Load packages
 
 We load the standard `mosaic` package. We also use the `MASS` package for the `birthwt` data, and the `openintro` package for the `smoking` data. The `broom` package will give us tidy output.
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE}
 library(MASS)
 library(openintro)
 library(broom)
@@ -76,7 +57,7 @@ low <- factor(birthwt$low, levels = c(1, 0), labels = c("Yes", "No"))
 race <- factor(birthwt$race, level = c(1, 2, 3),
                labels = c("White", "Black", "Other"))
 low_race <- data.frame(low, race)
-head(low_race)
+low_race
 ```
 
 First, let's create a contingency table for the relationship between `low` and `race` and assign it to a variable for future use.
@@ -110,7 +91,7 @@ $$E = \frac{R C}{n}.$$
 
 This is equivalent to the explanation in the previous paragraph. Using low birth weight babies among white mothers as an example, $R/n$ is $59/189$ which is 0.31217. Then we multiply this by the column total $C = 96$ to get
 
-$$ \left(\frac{R}{n}\right) C = \frac{R C}{n} = \frac{59 \times 96}{189} =  29.96825.$$
+$$\left(\frac{R}{n}\right) C = \frac{R C}{n} = \frac{59 \times 96}{189} =  29.96825.$$
 
 Everything else works almost the same as it did for a chi-square goodness-of-fit test. We still compute $\chi^{2}$ by adding up deviations across all cells:
 
@@ -131,16 +112,16 @@ Let's run through the rubric in its entirety.
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
 
-[You should type `?birthwt` at the Console to read the help file and use `View` to look at the spreadsheet view of the data.]
+[You should type `?birthwt` at the Console to read the help file.]
 
 ```{r}
-str(birthwt)
+birthwt
 ```
 
 ```{r}
-head(birthwt)
+str(birthwt)
 ```
 
 ### Prepare the data for analysis.
@@ -152,7 +133,7 @@ low <- factor(birthwt$low, levels = c(1, 0), labels = c("Yes", "No"))
 race <- factor(birthwt$race, level = c(1, 2, 3),
                labels = c("White", "Black", "Other"))
 low_race <- data.frame(low, race)
-head(low_race)
+low_race
 ```
 
 ### Make tables or plots to explore the data visually.
@@ -232,18 +213,18 @@ pdist("chisq", df = low_race_test_tidy$parameter,
       invisible = TRUE)
 ```
 
-Commentary: We use `pdist`, but now we need to use "chisq" instead of "norm". Also, since the chi-square distribution requires the specification of degrees of freedom, there is a new argument to `pdist` called `df`. We could type `df = 2` since we know there are 2 degrees of freedom; however, the degrees of freedom are also stored in the output `low_race_test_tidy` in the `parameter` variable. 
+Commentary: We use `pdist`, but now we need to use "chisq" instead of "norm". Also, since the chi-square distribution requires the specification of degrees of freedom, there is an argument to `pdist` called `df`. We could type `df = 2` since we know there are 2 degrees of freedom; however, the degrees of freedom are also stored in the output `low_race_test_tidy` in the `parameter` variable. 
 
-### Calculate and report the P-value.
+### Calculate and interpret the P-value.
 
 ```{r}
-P <- 1 - pdist("chisq", df = low_race_test_tidy$parameter,
+P1 <- 1 - pdist("chisq", df = low_race_test_tidy$parameter,
                q = low_race_test_tidy$statistic,
                plot = FALSE)
-P
+P1
 ```
 
-The P-value is `r P`.
+The P-value is `r P1`. If low birth weight and race were independent, there would be a `r 100 * P1`% chance of seeing results at least as extreme as we saw in the data.
 
 Commentary: Values that are as extreme or even more extreme than the test statistic are in the right tail. If we use `pdist`, remember that it always shades to the left by default, so we have to subtract the output from 1 to get the correct P-value. Also remember to add `plot = FALSE` as we don't really need to look at the same picture again.
 
@@ -314,7 +295,7 @@ low_race_test_manual_tidy <- tidy(low_race_test_manual)
 low_race_test_manual_tidy
 ```
 
-Once this is done (in the step "Compute and report the test statistic"), all remaining steps of the rubric stay exactly the same except that you'll use `low_race_test_manual_tidy` instead of `low_race_test_manual_tidy`.
+Once this is done (in the step "Compute and report the test statistic"), all remaining steps of the rubric stay exactly the same except that you'll use `low_race_test_manual_tidy` instead of `low_race_test_tidy`.
 
 
 ## Your turn
@@ -325,97 +306,99 @@ The rubric outline is reproduced below. You may refer to the worked example abov
 
 Another word of warning: the copy/paste process is not a substitute for your brain. You will often need to modify more than just the names of the data frames and variables to adapt the worked examples to your own work. Do not blindly copy and paste code without understanding what it does. And you should **never** copy and paste text. All the sentences and paragraphs you write are expressions of your own analysis. They must reflect your own understanding of the inferential process.
 
+**Also, so that your answers here don't mess up the code chunks above, use new variable names everywhere.**
+
 If you reject the null, run a post hoc analysis and comment on the cells that seem to be contributing the most to the discrepancy between observed and expected counts.
 
 
-## Exploratory data analysis
+##### Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
+###### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to understand the data.
 ```
 
-\answerend
+</div>
 
-### Prepare the data for analysis. [Not always necessary.]
+###### Prepare the data for analysis. [Not always necessary.]
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to prepare the data for analysis.
 ```
 
-\answerend
+</div>
 
-### Make tables or plots to explore the data visually.
+###### Make tables or plots to explore the data visually.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to make tables or plots.
 ```
 
-\answerend
+</div>
 
 
-## Hypotheses
+##### Hypotheses
 
-### Identify the sample (or samples) and a reasonable population (or populations) of interest.
+###### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Express the null and alternative hypotheses as contextually meaningful full sentences.
+###### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
-\answerbegin
+<div class = "answer">
 
 $H_{0}:$ Null hypothesis goes here.
 
 $H_{A}:$ Alternative hypothesis goes here.
 
-\answerend
+</div>
 
-### Express the null and alternative hypotheses in symbols (when possible).
+###### Express the null and alternative hypotheses in symbols (when possible).
 
-\answerbegin
+<div class = "answer">
 
 $H_{0}: math$
 
 $H_{A}: math$
 
-\answerend
+</div>
 
 
-## Model
+##### Model
 
-### Identify the sampling distribution model.
+###### Identify the sampling distribution model.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Check the relevant conditions to ensure that model assumptions are met.
+###### Check the relevant conditions to ensure that model assumptions are met.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here. (Some conditions may require R code as well.)
 
-\answerend
+</div>
 
 
-## Mechanics
+##### Mechanics
 
-### Compute and report the test statistic.
+###### Compute and report the test statistic.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to compute the test statistic.
@@ -423,21 +406,21 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Plot the null distribution.
+###### Plot the null distribution.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to plot the null distribution.
 ```
 
-\answerend
+</div>
 
-### Calculate and report the P-value.
+###### Calculate and interpret the P-value.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to calculate the P-value.
@@ -445,41 +428,41 @@ Please write up your answer here.
 
 Please write up your answer here.
 
-\answerend
+</div>
 
 
-## Conclusion
+##### Conclusion
 
-### State the statistical conclusion.
+###### State the statistical conclusion.
 
-\answerbegin
-
-Please write up your answer here.
-
-\answerend
-
-### State (but do not overstate) a contextually meaningful conclusion.
-
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+###### State (but do not overstate) a contextually meaningful conclusion.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
+
+###### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
 
 
-## Post-hoc analysis (if null was rejected)
+##### Post-hoc analysis (if null was rejected)
 
 You only need to complete the following section if the null was rejected above.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to calculate the residuals
@@ -487,4 +470,4 @@ You only need to complete the following section if the null was rejected above.
 
 Please write up your answer here.
 
-\answerend
+</div>
