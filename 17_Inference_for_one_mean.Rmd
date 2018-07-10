@@ -1,15 +1,21 @@
 ---
-title: "Inference for one mean"
+title: "17. Inference for one mean"
 author: "Put your name here"
 date: "Put the date here"
-output: pdf_document
+output:
+    html_notebook:
+        toc: yes
+        toc_float: yes
 ---
+
 <!-- Please don't mess with the next few lines! -->
-\def\hrulefill{\leavevmode\leaders\hrule height 2pt\hfill\kern 0pt}
-\newcommand{\answerbegin}{\par\textcolor{blue}{\hrulefill\quad ANSWER\quad\hrulefill\newline}}
-\newcommand{\answerend}{\par\textcolor{blue}{\hrulefill}\newline}
-`r options(scipen = 999)`
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #1E90FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r options(scipen = 999);intToUtf8(c(49,46,48))`</p>
 <!-- Please don't mess with the previous few lines! -->
+
+<div class = "summary">
+### Functions introduced in this module:
+`rnorm`, `t.test`
+</div>
 
 
 ## Introduction
@@ -17,32 +23,7 @@ output: pdf_document
 In this module, we'll learn about the Student t distribution and use it to perform a t-test for a single mean.
 
 
-## Instructions
-
-Presumably, you have already created a new project and downloaded this file into it. From the `Run` menu above, select `Run All` to run all existing code chunks.
-
-When prompted to complete an exercise or demonstrate skills, you will see the following lines in the document:
-
-\answerbegin
-
-\answerend
-
-These lines demarcate the region of the R Markdown document in which you are to show your work.
-
-Sometimes you will be asked to add your own R code. That will appear in this document as a code chunk with a request for you to add your own code, like so:
-
-```{r}
-# Add code here
-```
-
-Be sure to remove the line `# Add code here` when you have added your own code. You should run each new code chunk you create by clicking on the dark green arrow in the upper-right corner of the code chunk.
-
-Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
-
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
-
-
-## Load Packages
+## Load packages
 
 We load the standard `mosaic` package as well as the `OIdata` package to get the `teacher` data and the `openintro` package for the `hsb2` data. The `broom` package will give us tidy output.
 
@@ -89,7 +70,7 @@ Let's simulate lots of samples of size 4. For each sample, we calculate the samp
 
 ```{r}
 sims <- do(2000) * mean(rnorm(4, mean = 114, sd = 14))
-tail(sims)
+sims
 ```
 
 Again, we see that the sample means are close to 114, but there is some variability. Naturally, not every sample is going to have an average of exactly 114. So how much variability do we expect? Let's graph and find out. I'm going to set the x-axis manually so that we can do some comparisons later.
@@ -127,7 +108,6 @@ Looks pretty good!
 All we do now is convert everything to z-scores. In other words, suppose we sample 4 individuals from a population distributed according to the normal model $N(0, 1)$. Now the standard error of the sampling distribution is
 
 $$\frac{\sigma}{\sqrt{n}} = \frac{1}{\sqrt{4}} = 0.5.$$
-
 
 The following code will accomplish all of this. (Don't worry about the messy syntax. All I'm doing here is making sure that this graph looks exactly the same as the previous graph, except now centered at $\mu = 0$ instead of $\mu = 114$.)
 
@@ -184,7 +164,7 @@ Now we can simulate doing this 2000 times.
 
 ```{r}
 sims_t <- do(2000) * sim_t(4, mu = 114, sigma = 14) 
-tail(sims_t)
+sims_t
 ```
 
 Let's plot our simulated t-scores alongside a normal distribution.
@@ -196,7 +176,7 @@ ggplot(sims_t, aes(x = sim_t)) +
     geom_histogram(aes(y = ..density..), binwidth = 0.25) +
     scale_x_continuous(limits = c(-5, 5),
                        breaks = c(-4, -3, -2, -1, 0, 1, 2, 3, 4)) +
-    stat_function(fun = dnorm,  args = list(mean = 0, sd = 1),
+    stat_function(fun = dnorm, args = list(mean = 0, sd = 1),
                   color = "red")
 ```
 
@@ -221,9 +201,9 @@ ggplot(sims_t, aes(x = sim_t)) +
     geom_histogram(aes(y = ..density..), binwidth = 0.25) +
     scale_x_continuous(limits = c(-5, 5),
                        breaks = c(-4, -3, -2, -1, 0, 1, 2, 3, 4)) +
-    stat_function(fun = dnorm,  args = list(mean = 0, sd = 1),
+    stat_function(fun = dnorm, args = list(mean = 0, sd = 1),
                   color = "red") +
-    stat_function(fun = dt,  args = list(df = 3),
+    stat_function(fun = dt, args = list(df = 3),
                   color = "green")
 ```
 
@@ -261,16 +241,16 @@ Let's walk through the rubric.
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
 
-[You should type `?teacher` at the Console to read the help file and use `View` to look at the spreadsheet view of the data.]
+[You should type `?teacher` at the Console to read the help file.]
 
 ```{r}
-str(teacher)
+teacher
 ```
 
 ```{r}
-head(teacher)
+str(teacher)
 ```
 
 Since `total` is a numerical variable, we can also summarize it using `favstats`:
@@ -303,15 +283,22 @@ This distribution is quite skewed to the left. Of even more concern is the extre
 
 With any outlier, we need to investigate.
 
-### Exercise
+##### Exercise 1
 
-In the spreadsheet view from the `View` command, you can use the arrows in the column headers to sort the data. Sort by `total` (ascending) and see if you can figure out how the person with the lowest total salary is different from all the other teachers. (Hint: you may need to Google "fte".)
+Let's sort the data by `total` (ascending) using the `arrange` command.
 
-\answerbegin
+```{r}
+teacher %>%
+    arrange(total)
+```
+
+Can you figure out why the person with the lowest total salary is different from all the other teachers?
+
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
 *****
 
@@ -320,7 +307,8 @@ Based on your answer to the above exercise, hopefully it's clear that this is an
 **CAUTION: If you are copying and pasting from this example to use for another research question, the following code chuck is specific to this research question and not applicable in other contexts.**
 
 ```{r}
-teacher2 <- filter(teacher, total > 30000)
+teacher2 <- teacher %>%
+    filter(total > 30000)
 ```
 
 Check to make sure this had the desired effect:
@@ -391,41 +379,39 @@ Commentary: The original `teacher` data had 71 observations. The `teacher2` data
 
 ```{r}
 total_test <- t.test(teacher2$total, mu = 63024)
-total_test_tidy<- tidy(total_test)
-t <- total_test_tidy$statistic
-t
-```
-
-The t-score is `r t`.
-
-Commentary: the `t.test` command requires the variable of interest as its first argument and the null value as its second argument (`mu`). We then tidy the results as usual. 
-
-The results of the t-test are given below:
-
-```{r}
+total_test_tidy <- tidy(total_test)
 total_test_tidy
 ```
 
-The tidy output stores the following numbers: the sample mean (`estimate`), the test statistic (`statistic`), the P-value (`p.value`), the degrees of freedom (`parameter`), and limits for the confidence interval (`conf.low` and `conf.high`). The test statistic is the t-score that we stored above as `t`.
+```{r}
+t1 <- total_test_tidy$statistic
+t1
+```
+
+The t-score is `r t1`.
+
+Commentary: the `t.test` command requires the variable of interest as its first argument and the null value as its second argument (`mu`). We then tidy the results as usual. 
+
+The tidy output stores the following numbers: the sample mean (`estimate`), the test statistic (`statistic`), the P-value (`p.value`), the degrees of freedom (`parameter`), and limits for the confidence interval (`conf.low` and `conf.high`). The test statistic is the t-score that we stored above as `t1`.
 
 ### Plot the null distribution.
 
 ```{r}
 pdist("t", df = total_test_tidy$parameter, 
-      q = c(-t, t), 
+      q = c(-t1, t1), 
       invisible = TRUE)
 ```
 
-Commentary: The `pdist` command is the same as always except now we use a `"t"` model. We know there are `r NROW(teacher2) - 1` degrees of freedom, but we might as well use the value stored in the `t.test` output (the `parameter` variable) to make our code reusable. Finally, note that `q = c(-t, t)` will plot in both tails of the distribution since we're running a two-sided test. Of course, since the t-score is crazy huge, it doesn't actually appear in the resulting graph.
+Commentary: The `pdist` command is the same as always except now we use a `"t"` model. We know there are `r NROW(teacher2) - 1` degrees of freedom, but we might as well use the value stored in the `t.test` output (the `parameter` variable) to make our code reusable. Finally, note that `q = c(-t1, t1)` will plot in both tails of the distribution since we're running a two-sided test. Of course, since the t-score is crazy huge, it doesn't actually appear in the resulting graph.
 
-### Calculate and report the P-value.
+### Calculate and interpret the P-value.
 
 ```{r}
-P <- total_test_tidy$p.value
-P
+P1 <- total_test_tidy$p.value
+P1
 ```
 
-$P < 0.001$
+$P < 0.001$. If teachers in the St. Louis region truly earned $63,024 on average, there would be a `r 100 * P1`% chance of seeing data at least as extreme as what we saw.
 
 Commentary: When the P-value is this small, remember that it is traditional to report simply $P < 0.001$.
 
@@ -467,44 +453,49 @@ We are 95% confident that the true mean salary for teachers in the St. Louis reg
 
 Commentary: As these are dollar amounts, it makes sense to round them to two decimal places. Even then, R is finicky and sometimes it will not respect your wishes.)
 
+### If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.
+
+Since $63,024 is not contained in the confidence interval, it is not a plausible value for the mean teacher salary in the St Louis region of Michigan.
+
 
 ## Inference using summary statistics
 
 In the previous example, we had access to the actual data frame. In some situations, you are not given the data; rather, all you have are summary statistics about the data. This certainly happens with homework problems from a textbook, but it can happen in "real life" too. If you're reading a research article, you will rarely have access to the original data used in the analysis. All you can see is what the researchers report in their paper.
 
-For a t-test, often you have nothing but a sample size $n$, the sample mean $\bar{y}$, and the sample standard deviation $s$.
+For a t-test, often we have nothing but a sample size $n$, the sample mean $\bar{y}$, and the sample standard deviation $s$.
 
-Unlike the `binom.test` or `prop.test` commands that allow you to use either the raw data or summary statistics, the `t.test` command does not allow this. Instead, you have to calculate the t-score directly and use `pdist` to get the P-value.
+Unlike the `binom.test` or `prop.test` commands that allow you to use either the raw data or summary statistics, the `t.test` command does not allow this. Instead, we have to calculate the t-score directly and use `pdist` to get the P-value.
 
-For example, suppose you are told only that $n = 61$,  $\bar{y} = 4.35$, and $s = 1.8$. Also suppose our hypotheses are
+For example, suppose we are told only that $n = 61$,  $\bar{y} = 4.35$, and $s = 1.8$. Also suppose our hypotheses are
 
-$H_0: \mu = 5$
+$$H_0: \mu = 5$$
 
-$H_A: \mu \neq 5$
+$$H_A: \mu \neq 5$$
 
 The t-score is then
 
 $$t = \frac{(4.35 - 5)}{\left(1.8/\sqrt{61}\right)}.$$
+
 In R:
 
 ```{r}
-t <- (4.35 - 5)/(1.8/sqrt(61))
-t
+t2 <- (4.35 - 5)/(1.8/sqrt(61))
+t2
 ```
 
-The t-score is `r t`.
+The t-score is `r t2`.
 
 The model is a t model with 60 degrees of freedom:
 
 ```{r}
-pdist("t", df = 60, q = c(-t, t), invisible = TRUE)
+pdist("t", df = 60, q = c(-t2, t2), invisible = TRUE)
 ```
 
 The P-value is also found using `pdist`. Since t is negative, we can use the area to its left and multiply by 2:
 
 ```{r}
-P <- 2 * pdist("t", df = 60, q = t, plot = FALSE)
-P
+P2 <- 2 * pdist("t", df = 60, q = t2, plot = FALSE)
+P2
 ```
 
 Since $P < 0.05$, we reject the null.
@@ -520,95 +511,97 @@ The rubric outline is reproduced below. You may refer to the worked example abov
 
 Another word of warning: the copy/paste process is not a substitute for your brain. You will often need to modify more than just the names of the data frames and variables to adapt the worked examples to your own work. Do not blindly copy and paste code without understanding what it does. And you should **never** copy and paste text. All the sentences and paragraphs you write are expressions of your own analysis. They must reflect your own understanding of the inferential process.
 
+**Also, so that your answers here don't mess up the code chunks above, use new variable names everywhere.**
 
-## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
+##### Exploratory data analysis
 
-\answerbegin
+###### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
+
+<div class = "answer">
 
 ```{r}
 # Add code here to understand the data.
 ```
 
-\answerend
+</div>
 
-### Prepare the data for analysis. [Not always necessary.]
+###### Prepare the data for analysis. [Not always necessary.]
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to prepare the data for analysis.
 ```
 
-\answerend
+</div>
 
-### Make tables or plots to explore the data visually.
+###### Make tables or plots to explore the data visually.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to make tables or plots.
 ```
 
-\answerend
+</div>
 
 
-## Hypotheses
+##### Hypotheses
 
-### Identify the sample (or samples) and a reasonable population (or populations) of interest.
+###### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Express the null and alternative hypotheses as contextually meaningful full sentences.
+###### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
-\answerbegin
+<div class = "answer">
 
 $H_{0}:$ Null hypothesis goes here.
 
 $H_{A}:$ Alternative hypothesis goes here.
 
-\answerend
+</div>
 
-### Express the null and alternative hypotheses in symbols (when possible).
+###### Express the null and alternative hypotheses in symbols (when possible).
 
-\answerbegin
+<div class = "answer">
 
 $H_{0}: math$
 
 $H_{A}: math$
 
-\answerend
+</div>
 
 
-## Model
+##### Model
 
-### Identify the sampling distribution model.
+###### Identify the sampling distribution model.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Check the relevant conditions to ensure that model assumptions are met.
+###### Check the relevant conditions to ensure that model assumptions are met.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here. (Some conditions may require R code as well.)
 
-\answerend
+</div>
 
 
-## Mechanics
+##### Mechanics
 
-### Compute and report the test statistic.
+###### Compute and report the test statistic.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to compute the test statistic.
@@ -616,21 +609,21 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Plot the null distribution.
+###### Plot the null distribution.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to plot the null distribution.
 ```
 
-\answerend
+</div>
 
-### Calculate and report the P-value.
+###### Calculate and interpret the P-value.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to calculate the P-value.
@@ -638,89 +631,93 @@ Please write up your answer here.
 
 Please write up your answer here.
 
-\answerend
+</div>
 
 
-## Conclusion
+##### Conclusion
 
-### State the statistical conclusion.
+###### State the statistical conclusion.
 
-\answerbegin
-
-Please write up your answer here.
-
-\answerend
-
-### State (but do not overstate) a contextually meaningful conclusion.
-
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+###### State (but do not overstate) a contextually meaningful conclusion.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
+
+###### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
 
 
-## Confidence interval
+##### Confidence interval
 
-### Check the relevant conditions to ensure that model assumptions are met.
+###### Check the relevant conditions to ensure that model assumptions are met.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here. (Some conditions may require R code as well.)
 
-\answerend
+</div>
 
-### Calculate the confidence interval.
+###### Calculate the confidence interval.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to calculate the confidence interval.
 ```
 
-\answerend
+</div>
 
-### State (but do not overstate) a contextually meaningful interpretation.
+###### State (but do not overstate) a contextually meaningful interpretation.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-*****
+###### If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.
 
-## Exercises
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
+
+
+## Additional exercises
 
 After running inference above, answer the following questions:
 
-### 1.
+##### Exercise 2
 
 Even though the result was *statistically* significant, do you think the result is *practically* significant? By this, I mean, are scores for American students so vastly different than 50? Do we have a lot of reason to brag about American scores based on your analysis?
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### 2.
+##### Exercise 3
 
 What makes it possible for a small effect like this to be statistically significant even if it's not practically very different from 50? In other words, what has to be true of data to detect small but statistically significant effects?
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
-
-
-*****
+</div>
