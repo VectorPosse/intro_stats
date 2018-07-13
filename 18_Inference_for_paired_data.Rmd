@@ -1,52 +1,33 @@
 ---
-title: "Inference for paired data"
+title: "18. Inference for paired data"
 author: "Put your name here"
 date: "Put the date here"
-output: pdf_document
+output:
+    html_notebook:
+        toc: yes
+        toc_float: yes
 ---
+
 <!-- Please don't mess with the next few lines! -->
-\def\hrulefill{\leavevmode\leaders\hrule height 2pt\hfill\kern 0pt}
-\newcommand{\answerbegin}{\par\textcolor{blue}{\hrulefill\quad ANSWER\quad\hrulefill\newline}}
-\newcommand{\answerend}{\par\textcolor{blue}{\hrulefill}\newline}
-`r options(scipen = 999)`
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #1E90FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r options(scipen = 999);intToUtf8(c(49,46,48))`</p>
 <!-- Please don't mess with the previous few lines! -->
+
+<div class = "summary">
+### Functions introduced in this module:
+No new R functions are introduced here.
+</div>
 
 
 ## Introduction
 
-In this assignment we will learn how to run inference for two paired numerical variables.
+In this module we will learn how to run inference for two paired numerical variables.
 
 
-## Instructions
-
-Presumably, you have already created a new project and downloaded this file into it. From the `Run` menu above, select `Run All` to run all existing code chunks.
-
-When prompted to complete an exercise or demonstrate skills, you will see the following lines in the document:
-
-\answerbegin
-
-\answerend
-
-These lines demarcate the region of the R Markdown document in which you are to show your work.
-
-Sometimes you will be asked to add your own R code. That will appear in this document as a code chunk with a request for you to add your own code, like so:
-
-```{r}
-# Add code here
-```
-
-Be sure to remove the line `# Add code here` when you have added your own code. You should run each new code chunk you create by clicking on the dark green arrow in the upper-right corner of the code chunk.
-
-Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
-
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
-
-
-## Load Packages
+## Load packages
 
 We load the standard `mosaic` package as well as the `MASS` package for the `immer` data and the `broom` package for tidy output. 
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE}
 library(MASS)
 library(broom)
 library(mosaic)
@@ -69,23 +50,23 @@ The `immer` data frame (from the `MASS` package) has data on five varieties of b
 
 The key idea is that we don't actually care about the yields themselves. All we care about is if there is a difference between the years. These are not two independent variables because each row represents a single combination of location and variety. Therefore, the two measurements are "paired" and should be treated as a single numerical variable of interest, representing the difference between `Y1` and `Y2`.
 
-Since we're only interesting in analyzing the one numerical variable `d`, this process is nothing more than a one-sample t-test. Therefore, there is really nothing new in this assignment.
+Since we're only interesting in analyzing the one numerical variable `d`, this process is nothing more than a one-sample t test. Therefore, there is really nothing new in this module.
 
 Let's go through the rubric.
 
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
 
-[You should type `?immer` at the Console to read the help file and use `View` to look at the spreadsheet view of the data.]
+[You should type `?immer` at the Console to read the help file.]
 
 ```{r}
-str(immer)
+immer
 ```
 
 ```{r}
-head(immer)
+str(immer)
 ```
 
 ### Prepare the data for analysis.
@@ -93,8 +74,9 @@ head(immer)
 We create a new variable `d` that represents the difference between the yields `Y1` from 1931 and `Y2` from 1932. This uses the `mutate` command that adds an extra column to our data frame. Because we are subtracting `Y2 - Y1`, positive values of `d` mean the yield *increased* from 1931 to 1932 and negative values of `d` mean the yield *decreased* from 1931 to 1932.
 
 ```{r}
-immer_d <- mutate(immer, d = Y2 - Y1)
-head(immer_d)
+immer_d <- immer %>%
+    mutate(d = Y2 - Y1)
+immer_d
 ```
 
 ### Make tables or plots to explore the data visually.
@@ -117,21 +99,27 @@ ggplot(immer_d, aes(sample = d)) +
 
 This distribution appears to be somewhat bimodal. This is a problem for inference because the mean of a bimodal distribution is not a good measure of center for the distribution. The typical method for dealing with bimodal data is to see if you can determine the reason for the two peaks. If there is a way of separating the data into the two groups, we should do that. Assuming there is enough data in both groups, they should be analyzed separately.
 
-In the spreadsheet view produced by `View`, sort the `d` column in descending order by clicking on the arrow in the column header. (You may have to click twice to get descending order.)
+Here is the data again, but this time sorted by the `d` column in descending order.
 
-It appears that location "M" is almost entirely responsible for all positive values of yield (with the exception of one plot). All other values are negative. This suggests that something different is happening at location "M" versus all other locations. We can also verify this by looking at a side-by-side boxplot, grouped by location.
+```{r}
+immer_d %>%
+    arrange(desc(d))
+```
+
+It appears that location "M" is almost entirely responsible for all positive values of yield (with the exception of one plot). All other values are negative. This suggests that something different is happening at location "M" versus all other locations.^[One guess might be that the years were recorded backwards for site M. If we knew for sure this were the case, we could do some data manipulation to switch the entries `Y1` and `Y2` for site M.] We can also verify this by looking at a side-by-side boxplot, grouped by location.
 
 ```{r}
 ggplot(immer_d, aes(y = d, x = Loc)) +
     geom_boxplot()
 ```
 
-If we separate the data into two groups ("M" and all other locations), there is not enough data from location "M" to analyze this separately. Therefore, we will just remove group "M" from the analysis and note this in our conclusion.
-
-We accomplish this in R by filtering the rows that are not at location "M". The symbol `!=` means "not equal to."
+If we separate the data into two groups ("M" and all other locations), there is not enough data from location "M" to analyze this separately. Therefore, we will just remove group "M" from the analysis and note this in our conclusion. We accomplish this in R by filtering the rows that are not at location "M". The symbol `!=` means "not equal to."
 
 ```{r}
-immer_d_no_M <- filter(immer_d, Loc != "M")
+immer_d_no_M <- immer_d %>%
+    filter(Loc != "M")
+immer_d_no_M %>%
+    arrange(desc(d))
 ```
 
 Here are the new histogram and QQ plot:
@@ -167,7 +155,7 @@ $H_{0}: \mu_{d} = 0$
 
 $H_{A}: \mu_{d} \neq 0$
 
-Commentary: Since we're really just doing a one-sample t-test, we could just call this parameter $\mu$, but the subscript $d$ is a good reminder that it's the mean of the difference variable we care about (as opposed to the mean yield in either 1931 or 1932).
+Commentary: Since we're really just doing a one-sample t test, we could just call this parameter $\mu$, but the subscript $d$ is a good reminder that it's the mean of the difference variable we care about (as opposed to the mean yield in either 1931 or 1932).
 
 
 ## Model
@@ -195,15 +183,19 @@ We use a t model with 24 degrees of freedom.
 ```{r}
 barley_test <- t.test(immer_d_no_M$Y2, immer_d_no_M$Y1, paired = TRUE)
 barley_test_tidy <- tidy(barley_test)
-t <- barley_test_tidy$statistic
-t
+barley_test_tidy
 ```
 
-The value of t is `r t`.
+```{r}
+t1 <- barley_test_tidy$statistic
+t1
+```
 
-Commentary: The `t.test` command offers an argument `paired = TRUE` that allows you to run a paired t-test from the original data. The order of the variables needs to be consistent with the order of subtraction used to produce `d` (in this case, `Y2 - Y1`).
+The value of t is `r t1`.
 
-Note that we get the exact same answer if we run it as a one-sample t-test with the difference variable `d`:
+Commentary: The `t.test` command offers an argument `paired = TRUE` that allows you to run a paired t test from the original data. The order of the variables needs to be consistent with the order of subtraction used to produce `d` (in this case, `Y2 - Y1`).
+
+Note that we get the exact same answer if we run it as a one-sample t test with the difference variable `d`:
 
 ```{r}
 barley_test2 <- t.test(immer_d_no_M$d, mu = 0)
@@ -215,28 +207,29 @@ barley_test2_tidy$statistic
 
 ```{r}
 pdist("t", df = barley_test_tidy$parameter,
-      q = c(-t, t),
+      q = c(-t1, t1),
       invisible = TRUE)
 ```
 
-Commentary: The `parameter` stored in the output of `t.test` is the degrees of freedom. We set `q = c(-t, t)` as this is a two-sided test.
+Commentary: The `parameter` stored in the output of `t.test` is the degrees of freedom. We set `q = c(-t1, t1)` as this is a two-sided test.
 
-### Calculate and report the P-value.
+### Calculate and interpret the P-value.
 
 ```{r}
-P <- barley_test_tidy$p.value
-P
+P1 <- barley_test_tidy$p.value
+P1
 ```
 
-$P < 0.001$.
+$P < 0.001$. If there were no difference in barley yield between 1931 and 1932, there is a `r 100 * P1`% chance of seeing data at least as extreme as what we saw.
 
 This is also the place to check the effect of excluding the outlier. We use the `filter` command to keep only values of `d` less than 20. (The outlier is the only value larger than 20.)
 
 ```{r}
-immer_d_no_outlier <- filter(immer_d_no_M, d < 20)
+immer_d_no_outlier <- immer_d_no_M %>%
+    filter(d < 20)
 ```
 
-Then we run the t-test as before.
+Then we run the t test as before.
 
 ```{r}
 immer_d_no_outlier_test <- t.test(immer_d_no_outlier$Y2,
@@ -294,6 +287,10 @@ Commentary: it would normally be required that we report these numbers with unit
 
 Also, don't forget that any time we find a number that represents a difference, we have to be clear in the conclusion about the direction of subtraction. Otherwise, we have no idea how to interpret positive and negative values. (Does this interval mean that yield was larger or smaller in 1932? Since we subtracted `Y2 - Y1` and these numbers are negative, that means yield *decreased* from 1931 to 1932.)
 
+### If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.
+
+The confidence interval does not contain zero, which means that zero is not a plausible value for the difference in yield from 1931 to 1932.
+
 
 ## Your turn
 
@@ -302,8 +299,9 @@ A famous early pioneer of statistics, Francis Galton, collected data on the heig
 Since this data set includes data for both sons and daughters, let's filter it so we are only looking at daughters.
 
 ```{r}
-Galton_F <- filter(Galton, sex == "F")
-head(Galton_F)
+Galton_F <- Galton %>%
+    filter(sex == "F")
+Galton_F
 ```
 
 Run inference to determine if there is a difference between the heights of mothers and their daughters.
@@ -312,95 +310,97 @@ The rubric outline is reproduced below. You may refer to the worked example abov
 
 Another word of warning: the copy/paste process is not a substitute for your brain. You will often need to modify more than just the names of the data frames and variables to adapt the worked examples to your own work. Do not blindly copy and paste code without understanding what it does. And you should **never** copy and paste text. All the sentences and paragraphs you write are expressions of your own analysis. They must reflect your own understanding of the inferential process.
 
+**Also, so that your answers here don't mess up the code chunks above, use new variable names everywhere.**
 
-## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
+##### Exploratory data analysis
 
-\answerbegin
+###### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
+
+<div class = "answer">
 
 ```{r}
 # Add code here to understand the data.
 ```
 
-\answerend
+</div>
 
-### Prepare the data for analysis. [Not always necessary.]
+###### Prepare the data for analysis. [Not always necessary.]
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to prepare the data for analysis.
 ```
 
-\answerend
+</div>
 
-### Make tables or plots to explore the data visually.
+###### Make tables or plots to explore the data visually.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to make tables or plots.
 ```
 
-\answerend
+</div>
 
 
-## Hypotheses
+##### Hypotheses
 
-### Identify the sample (or samples) and a reasonable population (or populations) of interest.
+###### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Express the null and alternative hypotheses as contextually meaningful full sentences.
+###### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
-\answerbegin
+<div class = "answer">
 
 $H_{0}:$ Null hypothesis goes here.
 
 $H_{A}:$ Alternative hypothesis goes here.
 
-\answerend
+</div>
 
-### Express the null and alternative hypotheses in symbols (when possible).
+###### Express the null and alternative hypotheses in symbols (when possible).
 
-\answerbegin
+<div class = "answer">
 
 $H_{0}: math$
 
 $H_{A}: math$
 
-\answerend
+</div>
 
 
-## Model
+##### Model
 
-### Identify the sampling distribution model.
+###### Identify the sampling distribution model.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Check the relevant conditions to ensure that model assumptions are met.
+###### Check the relevant conditions to ensure that model assumptions are met.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here. (Some conditions may require R code as well.)
 
-\answerend
+</div>
 
 
-## Mechanics
+##### Mechanics
 
-### Compute and report the test statistic.
+###### Compute and report the test statistic.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to compute the test statistic.
@@ -408,21 +408,21 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Plot the null distribution.
+###### Plot the null distribution.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to plot the null distribution.
 ```
 
-\answerend
+</div>
 
-### Calculate and report the P-value.
+###### Calculate and interpret the P-value.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to calculate the P-value.
@@ -430,60 +430,68 @@ Please write up your answer here.
 
 Please write up your answer here.
 
-\answerend
+</div>
 
 
-## Conclusion
+##### Conclusion
 
-### State the statistical conclusion.
+###### State the statistical conclusion.
 
-\answerbegin
-
-Please write up your answer here.
-
-\answerend
-
-### State (but do not overstate) a contextually meaningful conclusion.
-
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+###### State (but do not overstate) a contextually meaningful conclusion.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
+
+###### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
 
 
-## Confidence interval
+##### Confidence interval
 
-### Check the relevant conditions to ensure that model assumptions are met.
+###### Check the relevant conditions to ensure that model assumptions are met.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here. (Some conditions may require R code as well.)
 
-\answerend
+</div>
 
-### Calculate the confidence interval.
+###### Calculate the confidence interval.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to calculate the confidence interval.
 ```
 
-\answerend
+</div>
 
-### State (but do not overstate) a contextually meaningful interpretation.
+###### State (but do not overstate) a contextually meaningful interpretation.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
+
+###### If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
