@@ -1,48 +1,29 @@
 ---
-title: "Inference for two independent means"
+title: "19. Inference for two independent means"
 author: "Put your name here"
 date: "Put the date here"
-output: pdf_document
+output:
+    html_notebook:
+        toc: yes
+        toc_float: yes
 ---
+
 <!-- Please don't mess with the next few lines! -->
-\def\hrulefill{\leavevmode\leaders\hrule height 2pt\hfill\kern 0pt}
-\newcommand{\answerbegin}{\par\textcolor{blue}{\hrulefill\quad ANSWER\quad\hrulefill\newline}}
-\newcommand{\answerend}{\par\textcolor{blue}{\hrulefill}\newline}
-`r options(scipen = 999)`
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #1E90FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r options(scipen = 999);intToUtf8(c(49,46,48))`</p>
 <!-- Please don't mess with the previous few lines! -->
+
+<div class = "summary">
+### Functions introduced in this module:
+`diffmean`
+</div>
 
 
 ## Introduction
 
-If we have a numerical variable and a categorical variable with two categories, we can think of the numerical variable as response and the categorical variable as explanatory. The idea is that the two categories sort your numerical data into two groups which can be compared. Assuming the two groups are independent of each other, we can use them as samples of two larger populations. This leads to inference to decide if the difference between the two groups is statistically significant and then estimate the difference between the two populations represented. The relevant hypothesis test is called a two-sample t-test (or Welch's t-test, to be specific).
+If we have a numerical variable and a categorical variable with two categories, we can think of the numerical variable as response and the categorical variable as explanatory. The idea is that the two categories sort your numerical data into two groups which can be compared. Assuming the two groups are independent of each other, we can use them as samples of two larger populations. This leads to inference to decide if the difference between the means of the two groups is statistically significant and then estimate the difference between the means of the two populations represented. The relevant hypothesis test is called a two-sample t test (or Welch's t test, to be specific).
 
 
-## Instructions
-
-Presumably, you have already created a new project and downloaded this file into it. From the `Run` menu above, select `Run All` to run all existing code chunks.
-
-When prompted to complete an exercise or demonstrate skills, you will see the following lines in the document:
-
-\answerbegin
-
-\answerend
-
-These lines demarcate the region of the R Markdown document in which you are to show your work.
-
-Sometimes you will be asked to add your own R code. That will appear in this document as a code chunk with a request for you to add your own code, like so:
-
-```{r}
-# Add code here
-```
-
-Be sure to remove the line `# Add code here` when you have added your own code. You should run each new code chunk you create by clicking on the dark green arrow in the upper-right corner of the code chunk.
-
-Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
-
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
-
-
-## Load Packages
+## Load packages
 
 We load the standard `mosaic` package as well as the `MASS` for the `cabbages` data. The `broom` package gives us tidy output.
 
@@ -70,7 +51,7 @@ Whenever there are two groups, the obvious null hypothesis is that there is no d
 
 Consider the cultivar types c39 and c52. If there were truly no difference in weight between these cultivars, then it shouldn't matter if we know the cultivar or not. It becomes irrelevant under the assumption of the null.
 
-We can simulate this assumption by shuffling the names of the cultivars. More concretely, we can randomly assign cultivar labels to each head of cabbage and then calculate the average weight in each cultivar groups. Since the cultivar labels are random, there's no reason to expect a difference between the two average weights other than random fluctuations due to sampling variability.
+We can simulate this assumption by shuffling the names of the cultivars. More concretely, we can randomly assign cultivar labels to each head of cabbage and then calculate the average weight in each cultivar group. Since the cultivar labels are random, there's no reason to expect a difference between the two average weights other than random fluctuations due to sampling variability.
 
 The mean weights in each sample (the c39 and c52 cultivars) can be found using the `mean` command and the tilde notation. The following command should be read aloud as "calculate the mean head weight *by* cultivar type," or "*grouped by* cultivar type."
 
@@ -139,29 +120,29 @@ $$N\left(\mu_{1} - \mu_{2}, \sqrt{\frac{\sigma_{1}^{2}}{n_{1}} + \frac{\sigma_{2
 
 Under the assumption of the null, the difference of the means is zero ($\mu_{1} - \mu_{2} =  0$). Unfortunately, though, we make no assumption on the standard deviations. It should be clear that the only solution is to substitute the sample standard deviations $s_{1}$ and $s_{2}$ for the population standard deviations $\sigma_{1}$ and $\sigma_{2}$.^[When we were testing two proportions with categorical data, one option (described in an optional appendix in that module) was to pool the data. With numerical data, we can calculate a pooled mean, but that doesn't help with the unknown standard deviations. Nothing in the null hypothesis suggests that the standard deviations of the two groups should be the same. In the extremely rare situation in which one can assume equal standard deviations in the two groups, then there is a way to run a pooled t test. But this "extra" assumption of equal standard deviations is typically questionable.]
 
-$$SE = \sqrt{\frac{s_{1}^{2}}{n_{1}} + \frac{s_{2}^{2}}{n_{2}}}$$
+$$SE = \sqrt{\frac{s_{1}^{2}}{n_{1}} + \frac{s_{2}^{2}}{n_{2}}}.$$
 
 However, $s_{1}$ and $s_{2}$ are not perfect estimates of $\sigma_{1}$ and $\sigma_{2}$; they are subject to sampling variability too. This extra variability means that a normal model is no longer appropriate as the sampling distribution model.
 
 In the one-sample case, a Student t model with $df = n - 1$ was the right choice. In the two-sample case, we don't know the right answer. And I don't mean that we haven't learned it yet in our stats class. I mean, statisticians have not found a formula for the correct sampling distribution. It is a famous unsolved problem, called the Behrens-Fisher problem.
 
-Several researchers have proposed solutions that are "close" though. One compelling one is called "Welch's t-test". Welch showed that even though it's not quite right, a Student t model is very close as long as you pick the degrees of freedom carefully. Unfortunately, the way to compute the right degrees of freedom is crazy complicated. Fortunately, R is good at crazy complicated computations. The `t.test` command uses the Welch's t-test by default when there are two groups.
+Several researchers have proposed solutions that are "close" though. One compelling one is called "Welch's t test". Welch showed that even though it's not quite right, a Student t model is very close as long as you pick the degrees of freedom carefully. Unfortunately, the way to compute the right degrees of freedom is crazy complicated. Fortunately, R is good at crazy complicated computations. The `t.test` command uses the Welch's t test by default when there are two groups.
 
 Let's go through the full rubric using the cabbage example.
 
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
 
-[You should type `?cabbages` at the Console to read the help file and use `View` to look at the spreadsheet view of the data.]
+[You should type `?cabbages` at the Console to read the help file.]
 
 ```{r}
-str(cabbages)
+cabbages
 ```
 
 ```{r}
-head(cabbages)
+str(cabbages)
 ```
 
 We can also use `favstats` to see summary statistics of head weight for each cultivar using the tilde notation.
@@ -185,7 +166,7 @@ tally(~ Cult, data = cabbages)
 With a numerical response variable and a categorical explanatory variable, there are two useful plots: a side-by-side boxplot and a stacked histogram.
 
 ```{r}
-ggplot(cabbages, aes(x = Cult, y = HeadWt)) +
+ggplot(cabbages, aes(y = HeadWt, x = Cult)) +
     geom_boxplot()
 ```
 
@@ -268,28 +249,28 @@ Commentary: For Welch's t test, the degrees of freedom won't usually be a whole 
 ### Compute and report the test statistic.
 
 ```{r}
-t <- cabbage_test_tidy$statistic
-t
+t1 <- cabbage_test_tidy$statistic
+t1
 ```
 
-The t-score is `r t`.
+The t score is `r t1`.
 
 ### Plot the null distribution.
 
 ```{r}
 pdist("t", df = cabbage_test_tidy$parameter,
-      q = c(-t, t),
+      q = c(-t1, t1),
       invisible = TRUE)
 ```
 
-### Calculate and report the P-value.
+### Calculate and interpret the P-value.
 
 ```{r}
-P <- cabbage_test_tidy$p.value
-P
+P1 <- cabbage_test_tidy$p.value
+P1
 ```
 
-The P-value is `r P`.
+The P-value is `r P1`. If there were no difference in the mean head weights of the two cultivars, there would be a `r 100 * P1`% chance of seeing data at least as extreme as what we saw.
 
 
 ## Conclusion
@@ -329,36 +310,40 @@ We are 95% confident that the true difference in mean head weight between c39 an
 
 Commentary: Don't forget that any time we find a number that represents a difference, we have to be clear in the conclusion about the direction of subtraction. Otherwise, we have no idea how to interpret positive and negative values. (Does this interval mean that c39 heads or c52 heads are heavier? Since we calculated c39 minus c52 and these numbers are positive, that means that c39 heads are, on average, heavier.)
 
+### If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.
+
+Since zero is not contained in the confidence interval, zero is not a plausible value for the true difference in head weights between the two cultivars.
+
 
 ## Inference using summary statistics
 
 In the previous example, we had access to the actual data frame. In some situations, you are not given the data; rather, all you have are summary statistics about the data. This certainly happens with homework problems from a textbook, but it can happen in "real life" too. If you're reading a research article, you will rarely have access to the original data used in the analysis. All you can see is what the researchers report in their paper.
 
-For a two-sample t-test, often you have nothing but the sample sizes $n_{1}$ and $n_{2}$, the sample means $\bar{y}_{1}$ and $\bar{y}_{2}$, and the sample standard deviations $s_{1}$ and $s_{2}$.
+For a two-sample t test, often you have nothing but the sample sizes $n_{1}$ and $n_{2}$, the sample means $\bar{y}_{1}$ and $\bar{y}_{2}$, and the sample standard deviations $s_{1}$ and $s_{2}$.
 
-Unlike the `binom.test` or `prop.test` commands that allow you to use either the raw data or summary statistics, the `t.test` command does not allow this. Instead, you have to calculate the t-score directly and use `pdist` to get the P-value.
+Unlike the `binom.test` or `prop.test` commands that allow you to use either the raw data or summary statistics, the `t.test` command does not allow this. Instead, you have to calculate the t score directly and use `pdist` to get the P-value.
 
 For example, suppose you are told only that for the first group $n_{1} = 48$, $\bar{y}_{1} = 8.8$, and $s_{1} = 2.1$; and for the second group $n_{2} = 54$, $\bar{y}_{2} = 10.4$, and $s_{2} = 3.1$.
 
 Using the formula for the standard error that appeared earlier in the module, here's the t score:
 
 ```{r}
-t <- (8.8 - 10.4)/sqrt(2.1^2/48 + 3.1^2/54)
-t
+t2 <- (8.8 - 10.4)/sqrt(2.1^2/48 + 3.1^2/54)
+t2
 ```
 
 The trouble we face is that the degrees of freedom will be complicated. In the event that the degrees of freedom are reported, we're good. For example, suppose we're told that there are 93.7 degrees of freedom. If that's the case, the P-value can be calculated: 
 
 ```{r}
-P <- 2 * pdist("t", df = 93.7, q = t, plot = FALSE)
-P
+P2a <- 2 * pdist("t", df = 93.7, q = t2, plot = FALSE)
+P2a
 ```
 
-If you don't have the degrees of freedom, you could google the Welch-Satterthwaite formula and plug in all the necessary values to calculate degrees of freedom for yourself.^[This is painful.] Or, another common recommendation is to use a conservative estimate for the degrees of freedom by choosing the smaller of $n_{1} - 1$ or $n_{2} - 1$. If we didn't know the degrees of freedom for the above example, we could use 47 degrees of freedom ($48 - 1$) and get the following P-value:
+If you don't have the degrees of freedom, you could google the Welch-Satterthwaite formula and plug in all the necessary values to calculate degrees of freedom for yourself.^[This is painful.] Or, another common recommendation is to use a conservative estimate for the degrees of freedom by choosing the *smaller* of $n_{1} - 1$ or $n_{2} - 1$. If we didn't know the degrees of freedom for the above example, we could use 47 degrees of freedom ($48 - 1$) and get the following P-value:
 
 ```{r}
-P  <- 2 * pdist("t", df = 47, q = t,  plot = FALSE)
-P
+P2b  <- 2 * pdist("t", df = 47, q = t2,  plot = FALSE)
+P2b
 ```
 
 While a bit larger than the "correct" P-value, it's still plenty small. Either way we would reject the null.
@@ -374,95 +359,98 @@ The rubric outline is reproduced below. You may refer to the worked example abov
 
 Another word of warning: the copy/paste process is not a substitute for your brain. You will often need to modify more than just the names of the data frames and variables to adapt the worked examples to your own work. Do not blindly copy and paste code without understanding what it does. And you should **never** copy and paste text. All the sentences and paragraphs you write are expressions of your own analysis. They must reflect your own understanding of the inferential process.
 
+**Also, so that your answers here don't mess up the code chunks above, use new variable names everywhere.**
 
-## Exploratory data analysis
+You should run the t test earlier than the Mechanics section where you would normally run it. Instead, run that code in the "Identify the sampling distribution model" section so that you can report the degrees of freedom for the t model.
 
-### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
+##### Exploratory data analysis
 
-\answerbegin
+###### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
+
+<div class = "answer">
 
 ```{r}
 # Add code here to understand the data.
 ```
 
-\answerend
+</div>
 
-### Prepare the data for analysis. [Not always necessary.]
+###### Prepare the data for analysis. [Not always necessary.]
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to prepare the data for analysis.
 ```
 
-\answerend
+</div>
 
-### Make tables or plots to explore the data visually.
+###### Make tables or plots to explore the data visually.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to make tables or plots.
 ```
 
-\answerend
+</div>
 
 
-## Hypotheses
+##### Hypotheses
 
-### Identify the sample (or samples) and a reasonable population (or populations) of interest.
+###### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Express the null and alternative hypotheses as contextually meaningful full sentences.
+###### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
-\answerbegin
+<div class = "answer">
 
 $H_{0}:$ Null hypothesis goes here.
 
 $H_{A}:$ Alternative hypothesis goes here.
 
-\answerend
+</div>
 
-### Express the null and alternative hypotheses in symbols (when possible).
+###### Express the null and alternative hypotheses in symbols (when possible).
 
-\answerbegin
+<div class = "answer">
 
 $H_{0}: math$
 
 $H_{A}: math$
 
-\answerend
+</div>
 
 
-## Model
+##### Model
 
-### Identify the sampling distribution model.
+###### Identify the sampling distribution model.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Check the relevant conditions to ensure that model assumptions are met.
+###### Check the relevant conditions to ensure that model assumptions are met.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here. (Some conditions may require R code as well.)
 
-\answerend
+</div>
 
 
-## Mechanics
+##### Mechanics
 
-### Compute and report the test statistic.
+###### Compute and report the test statistic.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to compute the test statistic.
@@ -470,21 +458,21 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Plot the null distribution.
+###### Plot the null distribution.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to plot the null distribution.
 ```
 
-\answerend
+</div>
 
-### Calculate and report the P-value.
+###### Calculate and interpret the P-value.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to calculate the P-value.
@@ -492,60 +480,68 @@ Please write up your answer here.
 
 Please write up your answer here.
 
-\answerend
+</div>
 
 
-## Conclusion
+##### Conclusion
 
-### State the statistical conclusion.
+###### State the statistical conclusion.
 
-\answerbegin
-
-Please write up your answer here.
-
-\answerend
-
-### State (but do not overstate) a contextually meaningful conclusion.
-
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+###### State (but do not overstate) a contextually meaningful conclusion.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
+
+###### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
 
 
-## Confidence interval
+##### Confidence interval
 
-### Check the relevant conditions to ensure that model assumptions are met.
+###### Check the relevant conditions to ensure that model assumptions are met.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here. (Some conditions may require R code as well.)
 
-\answerend
+</div>
 
-### Calculate the confidence interval.
+###### Calculate the confidence interval.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to calculate the confidence interval.
 ```
 
-\answerend
+</div>
 
-### State (but do not overstate) a contextually meaningful interpretation.
+###### State (but do not overstate) a contextually meaningful interpretation.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
+
+###### If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
