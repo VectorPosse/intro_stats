@@ -301,19 +301,19 @@ Please write up your answer here.
 </div>
 
 
-## Z-scores
+## Z scores
 
-Sometimes it is easier to refer to a value in terms of how many standard deviations it lies from the mean. For example, a systolic blood pressure of 100 is 14 mmHg below the mean, but since the standard deviation is 14 mmHg, this means that 100 is one standard deviation below the mean. This distance from the mean in terms of standard deviations is called a *z-score*.
+Sometimes it is easier to refer to a value in terms of how many standard deviations it lies from the mean. For example, a systolic blood pressure of 100 is 14 mmHg below the mean, but since the standard deviation is 14 mmHg, this means that 100 is one standard deviation below the mean. This distance from the mean in terms of standard deviations is called a *z score*.
 
-We calculate z-scores using the following formula:
+We calculate z scores using the following formula:
 
 $$z = \frac{y - \mu}{\sigma}.$$
 
-In our example, if we wanted to know the z-score for an SBP of 100, we just plug all the numbers into the formula above:
+In our example, if we wanted to know the z score for an SBP of 100, we just plug all the numbers into the formula above:
 
 $$z = \frac{100 - 114}{14} = -1.$$
 
-What is the z-score for an SBP of 132? Look at the graph of the normal model $N(114, 14)$:
+What is the z score for an SBP of 132? Look at the graph of the normal model $N(114, 14)$:
 
 ```{r}
 # Don't worry about the syntax here.
@@ -324,11 +324,11 @@ ggplot(data.frame(x = c(58, 170)), aes(x)) +
     geom_vline(xintercept = 132, color = "blue")
 ```
 
-We can see that 132 lies between 128 and 142, which are 1 and 2 standard deviations above the mean, respectively. The exact z-score is 
+We can see that 132 lies between 128 and 142, which are 1 and 2 standard deviations above the mean, respectively. The exact z score is 
 
 $$z = \frac{132 - 114}{14} = 1.285714.$$
 
-The `scale` function from R also computes z-scores. Just note that the function takes arguments `center` and `scale`, not `mean` and `sd`.
+The `scale` function from R also computes z scores. Just note that the function takes arguments `center` and `scale`, not `mean` and `sd`.
 
 ```{r}
 scale(x = 100, center = 114, scale = 14)
@@ -340,11 +340,11 @@ scale(x = 132, center = 114, scale = 14)
 
 Also note that the function spits about a bunch of extra crap we don't care about. This goes away for inline code. Go ahead and preview the HTML file now so you can see the effect in the following sentence:
 
-> The z-score for 100 is `r scale(x = 100, center = 114, scale = 14)` and the z-score for 132 is `r scale(x = 132, center = 114, scale = 14)`.
+> The z score for 100 is `r scale(x = 100, center = 114, scale = 14)` and the z score for 132 is `r scale(x = 132, center = 114, scale = 14)`.
 
 ##### Exercise 3
 
-If IQ scores have a mean of 100 and a standard deviation of 16, what are the z-scores for the following IQ scores? Write up your answers as full sentences using inline R code.
+If IQ scores have a mean of 100 and a standard deviation of 16, what are the z scores for the following IQ scores? Write up your answers as full sentences using inline R code.
 
 * 80
 
@@ -372,7 +372,7 @@ Please write up your answer here.
 
 ***** 
 
-Working with z-scores also makes it easier to work with normal models. The default settings for `pdist` and `qdist` are `mean = 0` and `sd = 1`. That saves you some typing. So, for example, we calculated above that an SBP of 100 has a z-score of -1. What percentage of women are expected to have SBP lower than 100?
+Working with z scores also makes it easier to work with normal models. The default settings for `pdist` and `qdist` are `mean = 0` and `sd = 1`. That saves you some typing. So, for example, we calculated above that an SBP of 100 has a z score of -1. What percentage of women are expected to have SBP lower than 100?
 
 ```{r}
 pdist("norm", q = -1, invisible = TRUE)
@@ -382,7 +382,7 @@ pdist("norm", q = -1, invisible = TRUE)
 
 ##### Exercise 4
 
-Albert Einstein supposedly had an IQ of 160. Calculate the z-score for his IQ and then use that z-score to figure out what percentage of the population is smarter than Einstein. Use full sentences and inline R code to express your answer.
+Albert Einstein supposedly had an IQ of 160. Calculate the z score for his IQ and then use that z score to figure out what percentage of the population is smarter than Einstein. Use full sentences and inline R code to express your answer.
 
 <div class = "answer">
 
@@ -468,4 +468,4 @@ Now find a data set with a numerical variable that is skewed in its distribution
 
 ## Conclusion
 
-The normal model is ubiquitous in statistics, so understanding how to use it to make predictions is critical. When certain assumptions are met (that will be discussed in a future module), we can use the normal model to make predictions. The use of z-scores allows us to measure distances from the mean in terms of standard deviations, giving us a scale in which data from different contexts are comparable as long as such measurements are normally distributed. A QQ plot helps us check that assumption.
+The normal model is ubiquitous in statistics, so understanding how to use it to make predictions is critical. When certain assumptions are met (that will be discussed in a future module), we can use the normal model to make predictions. The use of z scores allows us to measure distances from the mean in terms of standard deviations, giving us a scale in which data from different contexts are comparable as long as such measurements are normally distributed. A QQ plot helps us check that assumption.

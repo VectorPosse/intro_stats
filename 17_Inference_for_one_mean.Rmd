@@ -20,7 +20,7 @@ output:
 
 ## Introduction
 
-In this module, we'll learn about the Student t distribution and use it to perform a t-test for a single mean.
+In this module, we'll learn about the Student t distribution and use it to perform a t test for a single mean.
 
 
 ## Load packages
@@ -105,7 +105,7 @@ ggplot(sims, aes(x = mean)) +
 
 Looks pretty good!
 
-All we do now is convert everything to z-scores. In other words, suppose we sample 4 individuals from a population distributed according to the normal model $N(0, 1)$. Now the standard error of the sampling distribution is
+All we do now is convert everything to z scores. In other words, suppose we sample 4 individuals from a population distributed according to the normal model $N(0, 1)$. Now the standard error of the sampling distribution is
 
 $$\frac{\sigma}{\sqrt{n}} = \frac{1}{\sqrt{4}} = 0.5.$$
 
@@ -130,24 +130,24 @@ If we want to run a hypothesis test, we will have a null hypothesis about the tr
 
 $$H_{0}: \mu = 114$$
 
-Now we gather a sample and compute the sample mean, say `r mean(SBP_sample)`. We would like to be able to compare the sample mean $\bar{y}$ to the hypothesized value 114 using a z-score:
+Now we gather a sample and compute the sample mean, say `r mean(SBP_sample)`. We would like to be able to compare the sample mean $\bar{y}$ to the hypothesized value 114 using a z score:
 
 $$z = \frac{(\bar{y} - \mu)}{\sigma/\sqrt{n}} = \frac{(110.2 - 114)}{\sigma/\sqrt{4}}.$$
 
 However, we have a problem: we don't know the true value of $\sigma$. (In our SBP example, we do happen to know it's 14, but we won't know this for a general research question.)
 
-The best we can do with a sample is calculate this z-score replacing the unknown $\sigma$ with the sample standard deviation $s$, `r sd(SBP_sample)`. We'll call this a "t-score" instead of a "z-score":
+The best we can do with a sample is calculate this z score replacing the unknown $\sigma$ with the sample standard deviation $s$, `r sd(SBP_sample)`. We'll call this a "t score" instead of a "z score":
 
 $$t = \frac{(\bar{y} - \mu)}{s/\sqrt{n}} = \frac{(110.2 - 114)}{13.06/\sqrt{4}} = -0.58.$$
 
 The problem is that $s$ is not a perfect estimate of $\sigma$. We saw earlier that $s$ is usually close to $\sigma$, but $s$ has its own sampling variability. That means that our earlier simulation in which we assumed that $\sigma$ was known and equal to 14 was wrong for the type of situation that will arise when we run a hypothesis test. How wrong was it?
 
 
-## Simulating t-scores
+## Simulating t scores
 
 Let's run the simulation again, but this time with the added uncertainty of using $s$ to estimate $\sigma$.
 
-The first step is to write a little function of our own to compute simulated t-scores. This function will take a sample of size $n$ from the true population $N(\mu, \sigma)$, calculate the sample mean and sample standard deviation, then compute the t-score. Don't worry: you won't be required to do anything like this on your own.
+The first step is to write a little function of our own to compute simulated t scores. This function will take a sample of size $n$ from the true population $N(\mu, \sigma)$, calculate the sample mean and sample standard deviation, then compute the t score. Don't worry: you won't be required to do anything like this on your own.
 
 ```{r}
 # Don't worry about the syntax here.
@@ -167,7 +167,7 @@ sims_t <- do(2000) * sim_t(4, mu = 114, sigma = 14)
 sims_t
 ```
 
-Let's plot our simulated t-scores alongside a normal distribution.
+Let's plot our simulated t scores alongside a normal distribution.
 
 ```{r}
 # Don't worry about the syntax here.
@@ -180,7 +180,7 @@ ggplot(sims_t, aes(x = sim_t)) +
                   color = "red")
 ```
 
-These t-scores are somewhat close to the normal model we had when we knew $\sigma$, but the fit doesn't look quite right. The peak of the simulated values isn't quite high enough, and the tails seem to spill out over the much thinner tails of the normal model.
+These t scores are somewhat close to the normal model we had when we knew $\sigma$, but the fit doesn't look quite right. The peak of the simulated values isn't quite high enough, and the tails seem to spill out over the much thinner tails of the normal model.
 
 William Gosset figured this all out in the early 20th century. He found a new function that is similar to a normal distribution, but is more spread out. This new function accounts for the extra variability one gets when using the sample standard deviation $s$ as an estimate for the true population standard deviation $\sigma$.
 
@@ -192,7 +192,7 @@ Gosset used the term *degrees of freedom* to describe how the sample size influe
 
 $$df = n - 1.$$
 
-So is the t model correct for our simulated t-scores? Our sample size was 4, so we should use a t model with 3 degrees of freedom. Let's plot it in green on top of our previous graph and see:
+So is the t model correct for our simulated t scores? Our sample size was 4, so we should use a t model with 3 degrees of freedom. Let's plot it in green on top of our previous graph and see:
 
 ```{r}
 # Don't worry about the syntax here.
@@ -207,7 +207,7 @@ ggplot(sims_t, aes(x = sim_t)) +
                   color = "green")
 ```
 
-The green curve seems to fit the simulated values much better.
+The green curve fits the simulated values much better.
 
 
 ## Inference for one mean
@@ -388,11 +388,11 @@ t1 <- total_test_tidy$statistic
 t1
 ```
 
-The t-score is `r t1`.
+The t score is `r t1`.
 
 Commentary: the `t.test` command requires the variable of interest as its first argument and the null value as its second argument (`mu`). We then tidy the results as usual. 
 
-The tidy output stores the following numbers: the sample mean (`estimate`), the test statistic (`statistic`), the P-value (`p.value`), the degrees of freedom (`parameter`), and limits for the confidence interval (`conf.low` and `conf.high`). The test statistic is the t-score that we stored above as `t1`.
+The tidy output stores the following numbers: the sample mean (`estimate`), the test statistic (`statistic`), the P-value (`p.value`), the degrees of freedom (`parameter`), and limits for the confidence interval (`conf.low` and `conf.high`). The test statistic is the t score that we stored above as `t1`.
 
 ### Plot the null distribution.
 
@@ -402,7 +402,7 @@ pdist("t", df = total_test_tidy$parameter,
       invisible = TRUE)
 ```
 
-Commentary: The `pdist` command is the same as always except now we use a `"t"` model. We know there are `r NROW(teacher2) - 1` degrees of freedom, but we might as well use the value stored in the `t.test` output (the `parameter` variable) to make our code reusable. Finally, note that `q = c(-t1, t1)` will plot in both tails of the distribution since we're running a two-sided test. Of course, since the t-score is crazy huge, it doesn't actually appear in the resulting graph.
+Commentary: The `pdist` command is the same as always except now we use a `"t"` model. We know there are `r NROW(teacher2) - 1` degrees of freedom, but we might as well use the value stored in the `t.test` output (the `parameter` variable) to make our code reusable. Finally, note that `q = c(-t1, t1)` will plot in both tails of the distribution since we're running a two-sided test. Of course, since the t score is crazy huge, it doesn't actually appear in the resulting graph.
 
 ### Calculate and interpret the P-value.
 
@@ -462,9 +462,9 @@ Since $63,024 is not contained in the confidence interval, it is not a plausible
 
 In the previous example, we had access to the actual data frame. In some situations, you are not given the data; rather, all you have are summary statistics about the data. This certainly happens with homework problems from a textbook, but it can happen in "real life" too. If you're reading a research article, you will rarely have access to the original data used in the analysis. All you can see is what the researchers report in their paper.
 
-For a t-test, often we have nothing but a sample size $n$, the sample mean $\bar{y}$, and the sample standard deviation $s$.
+For a t test, often we have nothing but a sample size $n$, the sample mean $\bar{y}$, and the sample standard deviation $s$.
 
-Unlike the `binom.test` or `prop.test` commands that allow you to use either the raw data or summary statistics, the `t.test` command does not allow this. Instead, we have to calculate the t-score directly and use `pdist` to get the P-value.
+Unlike the `binom.test` or `prop.test` commands that allow you to use either the raw data or summary statistics, the `t.test` command does not allow this. Instead, we have to calculate the t score directly and use `pdist` to get the P-value.
 
 For example, suppose we are told only that $n = 61$,  $\bar{y} = 4.35$, and $s = 1.8$. Also suppose our hypotheses are
 
@@ -472,7 +472,7 @@ $$H_0: \mu = 5$$
 
 $$H_A: \mu \neq 5$$
 
-The t-score is then
+The t score is then
 
 $$t = \frac{(4.35 - 5)}{\left(1.8/\sqrt{61}\right)}.$$
 
@@ -483,7 +483,7 @@ t2 <- (4.35 - 5)/(1.8/sqrt(61))
 t2
 ```
 
-The t-score is `r t2`.
+The t score is `r t2`.
 
 The model is a t model with 60 degrees of freedom:
 

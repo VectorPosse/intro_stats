@@ -167,33 +167,33 @@ surv_test_tidy
 
 The test statistic is `r surv_test_tidy$estimate`, the proportion of successes (i.e., survivors) in the sample.
 
-We'll also compute the corresponding z-score. First, we compute the standard error:
+We'll also compute the corresponding z score. First, we compute the standard error:
 
 ```{r}
 SE1 <- sqrt(0.5*(1 - 0.5)/69)
 SE1
 ```
 
-Then, using our computation of `SE1`, we get the z-score.
+Then, using our computation of `SE1`, we get the z score.
 
 ```{r}
 z1 <- (surv_test_tidy$estimate - 0.5)/SE1
 z1
 ```
 
-The z-score is `r z1`.
+The z score is `r z1`.
 
 Commentary: We run the `binom.test` command to give us almost everything we need. The argument `p = 0.5` is the null value, and this might be different for a different research question. Also note that the `binom.test` command allows us to specify the "success" condition (here, "alive").
 
-As seen before, the `tidy` command from the `broom` package makes everything neat and gives us easy access to the various pieces of the output. What this command does not give us is a z-score. So while we can report the `estimate` ($\hat{p}$) as the test statistic, we should also compute a z-score. The `statistic` reported in the output is the raw number of successes, but this number is less useful to us. (See the normal models in the next section.)
+As seen before, the `tidy` command from the `broom` package makes everything neat and gives us easy access to the various pieces of the output. What this command does not give us is a z score. So while we can report the `estimate` ($\hat{p}$) as the test statistic, we should also compute a z score. The `statistic` reported in the output is the raw number of successes, but this number is less useful to us. (See the normal models in the next section.)
 
-To compute the z-score, it's easiest to compute the standard error first. The formula is
+To compute the z score, it's easiest to compute the standard error first. The formula is
 
 $$SE = \sqrt{\frac{p(1 - p)}{n}}.$$
 
 We did this in R and stored the result as `SE1`.
 
-**Remember that are working under the assumption of the null hypothesis.** This means that we use $p = 0.5$ everywhere in the formula for the standard error. Then our z-score is
+**Remember that are working under the assumption of the null hypothesis.** This means that we use $p = 0.5$ everywhere in the formula for the standard error. Then our z score is
 
 $$z = \frac{(\hat{p} - p)}{SE} =  \frac{(\hat{p} - p)}{\sqrt{\frac{p (1 - p)}{n}}} = \frac{(0.348 - 0.5)}{\sqrt{\frac{0.5 (1 - 0.5)}{69}}} =  -2.53.$$
 
@@ -213,7 +213,7 @@ The standard normal model is more intuitive and easier to work with, both concep
 pdist("norm", q = z1, invisible = TRUE)
 ```
 
-Commentary: Notice how simple this `pdist` command is. One reason is that we're using a z-score, which means that we are working with the standard normal model. As this is the default for the `pdist` command, there is no need to specify the `mean` and `sd` in the command.
+Commentary: Notice how simple this `pdist` command is. One reason is that we're using a z score, which means that we are working with the standard normal model. As this is the default for the `pdist` command, there is no need to specify the `mean` and `sd` in the command.
 
 Contrast this to the command we would need if using $\hat{p}$ as our test statistic:
 
@@ -357,7 +357,7 @@ The rubric outline is reproduced below. You may refer to the worked example abov
 
 Another word of warning: the copy/paste process is not a substitute for your brain. You will often need to modify more than just the names of the data frames and variables to adapt the worked examples to your own work. For example, if you run a two-sided test instead of a one-sided test, there are three or four steps that all have to be adjusted accordingly. Understanding the sampling distribution model and the computation of the P-value goes a long way toward understanding the changes that must be made. Do not blindly copy and paste code without understanding what it does. And you should **never** copy and paste text. All the sentences and paragraphs you write are expressions of your own analysis. They must reflect your own understanding of the inferential process.
 
-**Also, so that your answers here don't mess up the code chunks above, use new variable names everywhere. In particular, you should use `prior_test` and `prior_test_tidy` (instead of `surv_test` and `surv_test_tidy`) to store the results of your hypothesis test. Use the following names for your standard error, z-score, and P-value: `SE2`, `z2`, and `P2`.**
+**Also, so that your answers here don't mess up the code chunks above, use new variable names everywhere. In particular, you should use `prior_test` and `prior_test_tidy` (instead of `surv_test` and `surv_test_tidy`) to store the results of your hypothesis test. Use the following names for your standard error, z score, and P-value: `SE2`, `z2`, and `P2`.**
 
 ##### Exploratory data analysis
 
