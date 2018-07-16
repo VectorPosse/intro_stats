@@ -1,52 +1,33 @@
 ---
-title: "Correlation"
+title: "21. Correlation"
 author: "Put your name here"
 date: "Put the date here"
-output: pdf_document
+output:
+    html_notebook:
+        toc: yes
+        toc_float: yes
 ---
+
 <!-- Please don't mess with the next few lines! -->
-\def\hrulefill{\leavevmode\leaders\hrule height 2pt\hfill\kern 0pt}
-\newcommand{\answerbegin}{\par\textcolor{blue}{\hrulefill\quad ANSWER\quad\hrulefill\newline}}
-\newcommand{\answerend}{\par\textcolor{blue}{\hrulefill}\newline}
-`r options(scipen = 999)`
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #1E90FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r options(scipen = 999);intToUtf8(c(49,46,48))`</p>
 <!-- Please don't mess with the previous few lines! -->
+
+<div class = "summary">
+### Functions introduced in this module:
+`cor`, `cor.test`
+</div>
 
 
 ## Introduction
 
-In this assignment we will learn how to run a correlation analysis. Correlation measures the strength of the linear relationship between two numerical variables.
+In this module we will learn how to run a correlation analysis. Correlation measures the strength of the linear relationship between two numerical variables.
 
 
-## Instructions
-
-Presumably, you have already created a new project and downloaded this file into it. From the `Run` menu above, select `Run All` to run all existing code chunks.
-
-When prompted to complete an exercise or demonstrate skills, you will see the following lines in the document:
-
-\answerbegin
-
-\answerend
-
-These lines demarcate the region of the R Markdown document in which you are to show your work.
-
-Sometimes you will be asked to add your own R code. That will appear in this document as a code chunk with a request for you to add your own code, like so:
-
-```{r}
-# Add code here
-```
-
-Be sure to remove the line `# Add code here` when you have added your own code. You should run each new code chunk you create by clicking on the dark green arrow in the upper-right corner of the code chunk.
-
-Sometimes you will be asked to type up your thoughts. That will appear in the document with the words, "Please write up your answer here." Be sure to remove the line "Please write up your answer here" when you have written up your answer. In these areas of the assignment, please use contextually meaningful full sentences/paragraphs (unless otherwise indicated) and proper spelling, grammar, punctuation, etc. This is not R code, but rather a free response section where you talk about your analysis and conclusions. You may need to use inline R code in these sections.
-
-When you are finished with the assignment, knit to PDF and proofread the PDF file **carefully**. Do not download the PDF file from the PDF viewer; rather, you should export the PDF file to your computer by selecting the check box next to the PDF file in the Files pane, clicking the `More` menu, and then clicking `Export`. Submit your assignment according to your professor's instructions.
-
-
-## Load Packages
+## Load packages
 
 We load the standard `mosaic` package as well as the `reshape2` package for the `tips` data and the `OIdata` package for the `state` data. The `broom` package gives us tidy output.
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE}
 library(reshape2)
 library(OIdata)
 data(state)
@@ -112,14 +93,15 @@ We use the `do` command to do this a bunch of times.
 
 ```{r}
 sims <- do(2000) * cor(tip ~ shuffle(total_bill), data = tips)
-tail(sims)
+sims
 ```
 
-The t scores follow a Student t distribution, not the correlations themselves, so we have to calculate the t scores. We use the `mutate` command^[The `mutate` command comes from a package called `dplyr` which is helpfully loaded for you when you load the `mosaic` package.] to compute the t score for each row of `sims`. The number 242 is $n - 2$.
+The t scores follow a Student t distribution, not the correlations themselves, so we have to calculate the t scores. We use the `mutate` command to compute the t score for each row of `sims`. The number 242 is $n - 2$.
 
 ```{r}
-sims <- mutate(sims, t = cor/(sqrt((1 - cor^2)/242)))
-tail(sims)
+sims <- sims %>%
+    mutate(t = cor/(sqrt((1 - cor^2)/242)))
+sims
 ```
 
 Now we can graph the simulated values. We superimpose the t distribution with $df = 242$ to show that it's a pretty good fit.
@@ -142,16 +124,16 @@ In addition to the standard "Random" and "10%" conditions, we introduce two new 
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
 
-[You should type `?tips` at the Console to read the help file and use `View` to look at the spreadsheet view of the data.]
+[You should type `?tips` at the Console to read the help file.]
 
 ```{r}
-str(tips)
+tips
 ```
 
 ```{r}
-head(tips)
+str(tips)
 ```
 
 We can also look at each numerical variable individually with `favstats`:
@@ -179,17 +161,19 @@ ggplot(tips, aes(y = tip, x = total_bill)) +
 
 There does appear to be a moderate, positive association between these variables.
 
-### Exercise
+##### Exercise 1
 
-There appears to be a pattern of unusual bunching in the lower left part of the graph. Can you explain this pattern? (Hint: in the spreadsheet view produced by `View`, sort the `tip` variable.)
+There appears to be a pattern of unusual bunching into horizontal lines in the lower left part of the graph. Can you explain this pattern? (Hint: use `arrange` to sort the `tip` variable. We've used the `arrange` command several times in the modules before, but if you need a reminder, you can go back to the module "5. Manipulating data".)
 
-\answerbegin
+<div class = "answer">
+
+```{r}
+# Add code here to sort the tip variable.
+```
 
 Please write up your answer here.
 
-\answerend
-
-*****
+</div>
 
 
 ## Hypotheses
@@ -247,11 +231,11 @@ tips_test_tidy
 ```
 
 ```{r}
-t <- tips_test_tidy$statistic
-t
+t1 <- tips_test_tidy$statistic
+t1
 ```
 
-The t score is `r t`.
+The t score is `r t1`.
 
 Commentary: Although `cor.test` accepts the "tilde" notation, the order doesn't matter; correlation is symmetric, so the R value is the same independent of the choice of response and explanatory variables.
 
@@ -263,20 +247,20 @@ You may have noticed that this is an insanely large t score. This is typical of 
 
 ```{r}
 pdist("t", df = tips_test_tidy$parameter,
-      q = c(-t, t),
+      q = c(-t1, t1),
       invisible = TRUE)
 ```
 
 ### Calculate and report the P-value.
 
 ```{r}
-P <- tips_test_tidy$p.value
-P
+P1 <- tips_test_tidy$p.value
+P1
 ```
 
-$P < 0.001$
+$P < 0.001$. If there were truly no correlation between tips and the total bill, there would be less than a 0.1% chance of seeing results at least as extreme as we saw in the data.
 
-Commentary: $P < 0.001$ is quite the understatement. The P-value has 33 zeros after the decimal point!
+Commentary: $P < 0.001$ is quite the understatement. The P-value has 33 zeros after the decimal point! In fact, notice in the interpretation of the P-value, we don't even use inline R code because R would try to round it down to zero. Observe: `r 100 * P1`%. See? And we never want to say that the P-value is zero because it literally cannot be zero, even though it's very close.
 
 
 ## Conclusion
@@ -321,101 +305,103 @@ The `state` data from the `OIdata` package has a number of variables collected f
 
 There is something unusual about this example that you will need to consider in your answer. The sample is 50 states and the District of Columbia. The population is tricky though because these states don't represent some larger groups of states; we already have all the states in our data. One can think of this data, though, as a snapshot of what was true in each state at one point in time. Therefore, the population can be thought of as similar measurements taken at other times.
 
-This also makes it difficult to check conditions. We do not have a random sample of states (as we have all of them), but remember that we're thinking of this as a random sample across a number of years in which we might have gathered this data. Having said that, I imagine that median income goes up every year with inflation, so it may or may not be representative of other years. The 10% condition also requires some thought.
+This also makes it difficult to check conditions. We do not have a random sample of states (as we have all of them), but remember that we're thinking of this as a sample across a number of years in which we might have gathered this data. Having said that, I imagine that median income goes up every year with inflation, so it may or may not be representative of other years. The 10% condition also requires some thought.
 
 The rubric outline is reproduced below. You may refer to the worked example above and modify it accordingly. Remember to strip out all the commentary. That is just exposition for your benefit in understanding the steps, but is not meant to form part of the formal inference process.
 
 Another word of warning: the copy/paste process is not a substitute for your brain. You will often need to modify more than just the names of the data frames and variables to adapt the worked examples to your own work. Do not blindly copy and paste code without understanding what it does. And you should **never** copy and paste text. All the sentences and paragraphs you write are expressions of your own analysis. They must reflect your own understanding of the inferential process.
 
+**Also, so that your answers here don't mess up the code chunks above, use new variable names everywhere.**
 
-## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the View command, the str command, and other summary functions to understand the data.
+##### Exploratory data analysis
 
-\answerbegin
+###### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
+
+<div class = "answer">
 
 ```{r}
 # Add code here to understand the data.
 ```
 
-\answerend
+</div>
 
-### Prepare the data for analysis. [Not always necessary.]
+###### Prepare the data for analysis. [Not always necessary.]
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to prepare the data for analysis.
 ```
 
-\answerend
+</div>
 
-### Make tables or plots to explore the data visually.
+###### Make tables or plots to explore the data visually.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to make tables or plots.
 ```
 
-\answerend
+</div>
 
 
-## Hypotheses
+##### Hypotheses
 
-### Identify the sample (or samples) and a reasonable population (or populations) of interest.
+###### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Express the null and alternative hypotheses as contextually meaningful full sentences.
+###### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
-\answerbegin
+<div class = "answer">
 
 $H_{0}:$ Null hypothesis goes here.
 
 $H_{A}:$ Alternative hypothesis goes here.
 
-\answerend
+</div>
 
-### Express the null and alternative hypotheses in symbols (when possible).
+###### Express the null and alternative hypotheses in symbols (when possible).
 
-\answerbegin
+<div class = "answer">
 
 $H_{0}: math$
 
 $H_{A}: math$
 
-\answerend
+</div>
 
 
-## Model
+##### Model
 
-### Identify the sampling distribution model.
+###### Identify the sampling distribution model.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Check the relevant conditions to ensure that model assumptions are met.
+###### Check the relevant conditions to ensure that model assumptions are met.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here. (Some conditions may require R code as well.)
 
-\answerend
+</div>
 
 
-## Mechanics
+##### Mechanics
 
-### Compute and report the test statistic.
+###### Compute and report the test statistic.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to compute the test statistic.
@@ -423,21 +409,21 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Plot the null distribution.
+###### Plot the null distribution.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to plot the null distribution.
 ```
 
-\answerend
+</div>
 
-### Calculate and report the P-value.
+###### Calculate and interpret the P-value.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to calculate the P-value.
@@ -445,60 +431,68 @@ Please write up your answer here.
 
 Please write up your answer here.
 
-\answerend
+</div>
 
 
-## Conclusion
+##### Conclusion
 
-### State the statistical conclusion.
+###### State the statistical conclusion.
 
-\answerbegin
-
-Please write up your answer here.
-
-\answerend
-
-### State (but do not overstate) a contextually meaningful conclusion.
-
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
 
-### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+###### State (but do not overstate) a contextually meaningful conclusion.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
+
+###### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
 
 
-## Confidence interval
+##### Confidence interval
 
-### Check the relevant conditions to ensure that model assumptions are met.
+###### Check the relevant conditions to ensure that model assumptions are met.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here. (Some conditions may require R code as well.)
 
-\answerend
+</div>
 
-### Calculate the confidence interval.
+###### Calculate the confidence interval.
 
-\answerbegin
+<div class = "answer">
 
 ```{r}
 # Add code here to calculate the confidence interval.
 ```
 
-\answerend
+</div>
 
-### State (but do not overstate) a contextually meaningful interpretation.
+###### State (but do not overstate) a contextually meaningful interpretation.
 
-\answerbegin
+<div class = "answer">
 
 Please write up your answer here.
 
-\answerend
+</div>
+
+###### If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
