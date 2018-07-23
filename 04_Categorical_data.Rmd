@@ -165,6 +165,8 @@ Seriously. Pie charts suck.^[https://medium.com/the-mission/to-pie-charts-3b1f57
 
 A table summarizing two categorical variables is called a contingency table (or pivot chart, or cross-tabulation, or probably several other terms as well).
 
+For example, we might pose the following research question: is smoking during pregnancy associated with a woman's race? 
+
 First things first, though. We need to create one more factor variable. We'll use the `smoke` variable about whether the mothers smoked during pregnancy.
 
 ```{r}
@@ -200,13 +202,13 @@ instead of like this:
 
 `smoke <- factor(birthwt$smoke, levels = c(0, 1), labels = c("No", "Yes"))`.
 
-For most response variables, we often designate one category as a category of interest in our study. This category is often called the "Success" condition. For example, the question we're asking about this data is, "Within each racial category, what percentage of mothers smoked?" Therefore, the "Yes" condition in the `smoke` variable is considered the "Success" category (even though there's obviously nothing "successful" about smoking while pregnant!). When we list that success category first in the factor command, R will treat it a little differently than other categories. It's not so important to us here, but it will be very important in the future. This typically only matters for the response variable. (The explanatory variable is `race` and our research question does not single out one racial category as being of more interest to us than any other.)
+For most response variables, we often designate one category as a category of interest in our study. This category is often called the "Success" condition. For example, the question we're asking about this data is, "Within each racial category, what percentage of mothers smoked?" Therefore, the "Yes" condition in the `smoke` variable is considered the "Success" category (even though there's obviously nothing "successful" about smoking while pregnant!). When we list that success category first in the factor command, R will treat it a little differently than other categories. It's not so important to us here, but it will be very important in the future. This typically only matters for the response variable. (The explanatory variable is `race` and we're not singling out one racial category as being of more interest to us than any other.)
 
 The `tally` command uses R's "formula" notation to indicate which variable is response and which value is explanatory. The response variable goes first, followed by a tilde (~), followed by the explanatory variable:
 
 `response ~ explanatory`
 
-For example, I might be interested in knowing if smoking during pregnancy is associated with a woman's race. In other words, we are using knowledge of a woman's race to *predict* if she is a smoker. Therefore, `smoke` is response and `race` is explanatory. In the `tally` command, we'll need to use the formula
+In other words, we are using knowledge of a woman's race to *predict* if she is a smoker. Therefore, `smoke` is response and `race` is explanatory. In the `tally` command, we'll need to use the formula
 
 `smoke ~ race`.
 
@@ -439,7 +441,7 @@ Here's the side-by-side boxplot from earlier in the module, but this time with t
 ```{r}
 ggplot(lwt_race, aes(y =lwt, x = race)) +
     geom_boxplot() +
-    labs(title = "Mother's weight at last menstual period by race",
+    labs(title = "Mother's weight at last menstrual period by race",
          y = "Weight (in pounds)",
          x = "Race")
 ```
