@@ -6,4 +6,3 @@ The first assignment `Intro_to_R` should be distributed to students as an HTML f
 
 The file `Concordance_between_OpenIntro_textbook_and_R_modules.pdf` links each of these assignments to the corresponding section of the OpenIntro textbook *Introductory Statistics with Randomization and Simulation*.
 
-[Test link](Intro_to_R.Rmd)
