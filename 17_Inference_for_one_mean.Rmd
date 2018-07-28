@@ -378,7 +378,7 @@ Commentary: The original `teacher` data had 71 observations. The `teacher2` data
 ### Compute and report the test statistic.
 
 ```{r}
-total_test <- t.test(teacher2$total, mu = 63024)
+total_test <- t.test(~ total, data = teacher2, mu = 63024)
 total_test_tidy <- tidy(total_test)
 total_test_tidy
 ```
@@ -390,7 +390,7 @@ t1
 
 The t score is `r t1`.
 
-Commentary: the `t.test` command requires the variable of interest as its first argument and the null value as its second argument (`mu`). We then tidy the results as usual. 
+Commentary: In addition to identifying the variable of interest (using the tilde) and the data frame, the `t.test` command requires the null value with the argument `mu`. We then tidy the results as usual. 
 
 The tidy output stores the following numbers: the sample mean (`estimate`), the test statistic (`statistic`), the P-value (`p.value`), the degrees of freedom (`parameter`), and limits for the confidence interval (`conf.low` and `conf.high`). The test statistic is the t score that we stored above as `t1`.
 
@@ -402,7 +402,7 @@ pdist("t", df = total_test_tidy$parameter,
       invisible = TRUE)
 ```
 
-Commentary: The `pdist` command is the same as always except now we use a `"t"` model. We know there are `r NROW(teacher2) - 1` degrees of freedom, but we might as well use the value stored in the `t.test` output (the `parameter` variable) to make our code reusable. Finally, note that `q = c(-t1, t1)` will plot in both tails of the distribution since we're running a two-sided test. Of course, since the t score is crazy huge, it doesn't actually appear in the resulting graph.
+Commentary: The `pdist` command is the same as always except now we use a `"t"` model. We know there are `r NROW(teacher2) - 1` degrees of freedom, but we might as well use the value stored in the tidy output (the `parameter` variable) to make our code reusable. Finally, note that `q = c(-t1, t1)` will plot in both tails of the distribution since we're running a two-sided test. Of course, since the t score is crazy huge, it doesn't actually appear in the resulting graph.
 
 ### Calculate and interpret the P-value.
 
