@@ -6,3 +6,4 @@ The first module `1. Introduction to R` should be distributed to students as an 
 
 The file `Concordance.Rmd` (or the HTML version `Concordance.html`) links each of these assignments to the corresponding section of the OpenIntro textbook [Introductory Statistics with Randomization and Simulation](https://www.openintro.org/stat/textbook.php?stat_book=isrs).
 
+This project is licensed under the [MIT license](https://opensource.org/licenses/MIT).
