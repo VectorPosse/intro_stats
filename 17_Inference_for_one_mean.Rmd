@@ -9,7 +9,7 @@ output:
 ---
 
 <!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #1E90FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r options(scipen = 999);intToUtf8(c(49,46,48))`</p>
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r intToUtf8(c(49,46,49))`</p>
 <!-- Please don't mess with the previous few lines! -->
 
 <div class = "summary">
@@ -35,12 +35,6 @@ library(broom)
 library(mosaic)
 ```
 
-We'll set the seed for our simulations.
-
-```{r}
-set.seed(5151977)
-```
-
 
 ## Simulating means
 
@@ -49,6 +43,7 @@ Systolic blood pressure (SBP) for women in the U.S. and Canada follows a normal 
 Suppose we gather a random sample of 4 women and measure their SBP. We can simulate doing that with the `rnorm` command:
 
 ```{r}
+set.seed(5151977)
 SBP_sample <- rnorm(4, mean = 114, sd = 14)
 SBP_sample
 ```
@@ -69,6 +64,7 @@ $s$ = `r sd(SBP_sample)` is somewhat close to the true population standard devia
 Let's simulate lots of samples of size 4. For each sample, we calculate the sample mean.
 
 ```{r}
+set.seed(5151977)
 sims <- do(2000) * mean(rnorm(4, mean = 114, sd = 14))
 sims
 ```
@@ -100,7 +96,7 @@ ggplot(sims, aes(x = mean)) +
     scale_x_continuous(limits = c(86, 142),
                        breaks = c(93, 100, 107, 114, 121, 128, 135)) +
     stat_function(fun = dnorm, args = list(mean = 114, sd = 7),
-                  color = "red")
+                  color = "red", size = 1.5)
 ```
 
 Looks pretty good!
@@ -120,7 +116,7 @@ ggplot(sims_z, aes(x = mean)) +
     scale_x_continuous(limits = c(-2, 2),
                        breaks = c(-1.5, -1, -0.5, 0, 0.5, 1, 1.5)) +
     stat_function(fun = dnorm, args = list(mean = 0, sd = 0.5),
-                  color = "red")
+                  color = "red",  size = 1.5)
 ```
 
 
@@ -163,6 +159,7 @@ sim_t <- function(n, mu, sigma) {
 Now we can simulate doing this 2000 times.
 
 ```{r}
+set.seed(5151977)
 sims_t <- do(2000) * sim_t(4, mu = 114, sigma = 14) 
 sims_t
 ```
@@ -177,7 +174,7 @@ ggplot(sims_t, aes(x = sim_t)) +
     scale_x_continuous(limits = c(-5, 5),
                        breaks = c(-4, -3, -2, -1, 0, 1, 2, 3, 4)) +
     stat_function(fun = dnorm, args = list(mean = 0, sd = 1),
-                  color = "red")
+                  color = "red", size = 1.5)
 ```
 
 These t scores are somewhat close to the normal model we had when we knew $\sigma$, but the fit doesn't look quite right. The peak of the simulated values isn't quite high enough, and the tails seem to spill out over the much thinner tails of the normal model.
@@ -202,9 +199,9 @@ ggplot(sims_t, aes(x = sim_t)) +
     scale_x_continuous(limits = c(-5, 5),
                        breaks = c(-4, -3, -2, -1, 0, 1, 2, 3, 4)) +
     stat_function(fun = dnorm, args = list(mean = 0, sd = 1),
-                  color = "red") +
+                  color = "red", size = 1.5) +
     stat_function(fun = dt, args = list(df = 3),
-                  color = "green")
+                  color = "green", size = 1.5)
 ```
 
 The green curve fits the simulated values much better.
