@@ -34,12 +34,6 @@ library(MASS)
 library(mosaic)
 ```
 
-As explained in earlier modules, we will set the seed so that our results are reproducible.
-
-```{r}
-set.seed(9999)
-```
-
 
 ## Our research question
 
@@ -206,9 +200,9 @@ $H_{A}:$ There is an association between low birth weight and smoking status dur
 
 ### Express the null and alternative hypotheses in symbols (when possible).
 
-$H_{0}: p_{nonsmoker} - p_{smoker} = 0$
+$H_{0}: p_{low, nonsmoker} - p_{low, smoker} = 0$
 
-$H_{A}: p_{nonsmoker} - p_{smoker} \neq 0$
+$H_{A}: p_{low, nonsmoker} - p_{low, smoker} \neq 0$
 
 Note: pay close attention here to the order of the subtraction. While it doesn't matter conceptually, the `diffprop` command later on will do the subtraction a certain way. You need to make sure the order listed here in the hypotheses is consistent with the way `diffprop` works. Remember that `diffprop` subtracts the first factor *from* the second. When we defined `smoke` above, the factors were listed---in order---"Yes" then "No". Therefore, `diffprop` will subtract smokers *from* nonsmokers. You'll be able to tell if you did it right based on whether `diffprop` gives you a negative number or a positive number.
 
@@ -244,7 +238,11 @@ The observed difference in the proportion of low birth weight babies among smoki
 (Note: we have to run the simulation before we can plot the possible values that can occur by chance, so we'll do that in this step as well.)
 
 ```{r}
+set.seed(9999)
 sims <- do(5000) * diffprop(low ~ shuffle(smoke), data = low_smoke)
+```
+
+```{r}
 ggplot(sims, aes(x = diffprop)) +
     geom_histogram(binwidth = 0.05) +
     geom_vline(xintercept = obs_diff, color = "blue") +
@@ -268,7 +266,7 @@ Some important things here:
 
 2. We multiply here by two because we are conducting a two-sided test. We would be surprised by values that are unusually positive as well as unusually negative. For a one-sided test, you do *not* multiply by 2.
 
-3. You can safely ignore the word `TRUE` in the output. That's just R being weird. We could get rid of it using the `unname` command if we wanted to:
+3. You can safely ignore the word `prop_TRUE` in the output. That's just R being weird. We could get rid of it using the `unname` command if we wanted to:
 
 ```{r}
 unname(2 * prop(sims$diffprop <= obs_diff))
@@ -439,6 +437,13 @@ Please write up your answer here.
 ###### Plot the null distribution.
 
 <div class = "answer">
+
+(The actual value of the seed doesn't matter, but I'll select one for you so that this always results in the same answer.)
+
+```{r}
+set.seed(9999)
+# Add code here to simulate the null distribution.
+```
 
 ```{r}
 # Add code here to plot the null distribution.
