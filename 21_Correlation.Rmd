@@ -9,7 +9,7 @@ output:
 ---
 
 <!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #1E90FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r options(scipen = 999);intToUtf8(c(49,46,48))`</p>
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r intToUtf8(c(49,46,49))`</p>
 <!-- Please don't mess with the previous few lines! -->
 
 <div class = "summary">
@@ -33,12 +33,6 @@ library(OIdata)
 data(state)
 library(broom)
 library(mosaic)
-```
-
-We set the seed to make our results reproducible.
-
-```{r}
-set.seed(11)
 ```
 
 
@@ -78,6 +72,7 @@ then the values of $t$ follow a Student t distribution with $n - 2$ degrees of f
 We can verify this with a basic simulation. First, we shuffle the values of `total_bill` to remove any association with tips to simulate the assumption of the null hypothesis. Here are a few examples:
 
 ```{r}
+set.seed(11)
 cor(tip ~ shuffle(total_bill), data = tips)
 ```
 
@@ -92,6 +87,7 @@ cor(tip ~ shuffle(total_bill), data = tips)
 We use the `do` command to do this a bunch of times.
 
 ```{r}
+set.seed(11)
 sims <- do(2000) * cor(tip ~ shuffle(total_bill), data = tips)
 sims
 ```
@@ -111,7 +107,8 @@ Now we can graph the simulated values. We superimpose the t distribution with $d
 # You won't need to know how to do this on your own.
 ggplot(sims, aes(x = t)) +
     geom_histogram(aes(y = ..density..), binwidth = 0.4) +
-    stat_function(fun = "dt", args = list(df = 242), color = "blue")
+    stat_function(fun = "dt", args = list(df = 242),
+                  color = "blue", size = 1.5)
 ```
 
 
