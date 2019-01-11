@@ -9,7 +9,7 @@ output:
 ---
 
 <!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #1E90FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r options(scipen = 999);intToUtf8(c(49,46,48))`</p>
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r intToUtf8(c(49,46,49))`</p>
 <!-- Please don't mess with the previous few lines! -->
 
 <div class = "summary">
@@ -31,12 +31,6 @@ We load the standard `mosaic` package as well as the `MASS` for the `cabbages` d
 library(MASS)
 library(broom)
 library(mosaic)
-```
-
-We set the seed to make our simulations reproducible.
-
-```{r}
-set.seed(1729)
 ```
 
 
@@ -77,12 +71,14 @@ cabbages$Cult
 This is what happens when we `shuffle` them.
 
 ```{r}
+set.seed(1729)
 shuffle(cabbages$Cult)
 ```
 
 Now we can calculate the group means and their difference for shuffled data. Let's do it few times.
 
 ```{r}
+set.seed(1729)
 diffmean(HeadWt ~ shuffle(Cult), data = cabbages)
 diffmean(HeadWt ~ shuffle(Cult), data = cabbages)
 diffmean(HeadWt ~ shuffle(Cult), data = cabbages)
@@ -91,6 +87,7 @@ diffmean(HeadWt ~ shuffle(Cult), data = cabbages)
 We use the `do` command to do this a bunch of times and graph the results along with our observed difference.
 
 ```{r}
+set.seed(1729)
 sims <- do(2000) * diffmean(HeadWt ~ shuffle(Cult), data = cabbages)
 ggplot(sims, aes(x = diffmean)) +
     geom_histogram(binwidth = 0.1, boundary = 0) +
