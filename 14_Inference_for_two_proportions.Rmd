@@ -9,7 +9,7 @@ output:
 ---
 
 <!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #1E90FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r options(scipen = 999);intToUtf8(c(49,46,48))`</p>
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r intToUtf8(c(49,46,49))`</p>
 <!-- Please don't mess with the previous few lines! -->
 
 <div class = "summary">
@@ -47,7 +47,7 @@ The question is, "Which normal model?" In other words, what is the mean and stan
 
 Since we have two groups, let's call the true proportion of success $p_{1}$ for group 1 and $p_{2}$ for group 2. Therefore, the true difference between groups 1 and 2 in the population is $p_{1} - p_{2}$. If we sample repeatedly from groups 1 and 2 and form many sample differences $\hat{p}_{1} - \hat{p}_{2}$, we should expect most of the values $\hat{p}_{1} - \hat{p}_{2}$ to be close to the true difference $p_{1} - p_{2}$. In other words, the sampling distribution is centered at a mean of $p_{1} - p_{2}$.
 
-What about the standard error? This is much more technical and complicated. Here is the formula that you'll have to take on faith:
+What about the standard error? This is much more technical and complicated. Here is the formula, whose derivation is outside the scope of the course:
 
 $$\sqrt{\frac{p_{1} (1 - p_{1})}{n_{1}} + \frac{p_{2} (1 - p_{2})}{n_{2}}}.$$
 
@@ -61,7 +61,7 @@ We also have a null hypothesis for two proportions. When comparing two groups, t
 
 But there is a problem here. Although we are assuming something about the difference $p_{1} - p_{2}$, we are not assuming anything about the actual values of $p_{1}$ and $p_{2}$. For example, both groups could be 0.3, or 0.6, or 0.92, or whatever, and the difference between the groups would still be zero.
 
-Without values of $p_{1}$ and $p_{2}$, we cannot plug anything into the ugly standard error formula above. One easy "cheat" is to just use the sample values $\hat{p}_{1}$ and $\hat{p}_{2}$:
+Without values of $p_{1}$ and $p_{2}$, we cannot plug anything into the standard error formula above. One easy "cheat" is to just use the sample values $\hat{p}_{1}$ and $\hat{p}_{2}$:
 
 $$SE = \sqrt{\frac{\hat{p}_{1} (1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2} (1 - \hat{p}_{2})}{n_{2}}}.$$
 
@@ -134,11 +134,11 @@ $H_{A}:$ There is a difference between the rate at which women and men in Denmar
 
 ### Express the null and alternative hypotheses in symbols (when possible).
 
-$H_{0}: p_{F} - p_{M} = 0$
+$H_{0}: p_{died, F} - p_{died, M} = 0$
 
-$H_{A}: p_{F} - p_{M} \neq 0$
+$H_{A}: p_{died, F} - p_{died, M} \neq 0$
 
-Commentary: The order in which you subtract is irrelevant to the inferential process. However, you should be sure that any future steps respect the order you choose here. A good bet is to look back to when you made the factor variables. The first condition listed in the labels of your explanatory variable is going to be the one that gets processed first by the `prop.test` function. In the variable `sex`, we listed "female" first. Therefore, it's safest to subtract $p_{F} - p_{M}$.
+Commentary: The order in which you subtract is irrelevant to the inferential process. However, you should be sure that any future steps respect the order you choose here. A good bet is to look back to when you made the factor variables. The first condition listed in the labels of your explanatory variable is going to be the one that gets processed first by the `prop.test` function. In the variable `sex`, we listed "female" first. Therefore, it's safest to subtract $p_{died, F} - p_{died, M}$.
 
 
 ## Model
@@ -179,7 +179,7 @@ The test statistic is the difference of proportions in the sample, $\hat{p}_{1} 
 status_sex_test_tidy$estimate1 - status_sex_test_tidy$estimate2
 ```
 
-We also compute a z score.
+Now let's compute a z-score. We first need to compute the standard error using the formula from earlier:
 
 ```{r}
 SE1 <- sqrt(status_sex_test_tidy$estimate1 *
@@ -188,6 +188,8 @@ SE1 <- sqrt(status_sex_test_tidy$estimate1 *
                (1 - status_sex_test_tidy$estimate2)/79)
 SE1
 ```
+
+Now that we know the SE, we can compute the z-score in the usual way:
 
 ```{r}
 z1 <- (status_sex_test_tidy$estimate1 - status_sex_test_tidy$estimate2)/SE1
@@ -198,7 +200,7 @@ The test statistic has a z score of `r z1`.
 
 Commentary: We use the `prop.test` command for this. Now that we are working with two variables, we can use the "formula" notation with the tilde that we have seen before. The only tricky thing to remember is the order of the variables. Remember that the tilde is pronounced "by", so we want to measure "status by sex" or "status grouped by sex".
 
-As with the single proportion test, the z score is not part of the output, so we have to compute it directly.^[Ignore the test statistic from the tidy output. Under the hood, the prop.test command is doing something quite different, so this test statistic doesn't make sense in the context of a normal model.] Unfortunately, this is a much uglier formula than it was for a test for one proportion.
+As with the single proportion test, the z score is not part of the output, so we have to compute it directly.^[Ignore the test statistic from the tidy output. Under the hood, the prop.test command is doing something quite different, so this test statistic doesn't make sense in the context of a normal model.] It works the same way as the z score did for the single proportion test, but the standard error is a more complicated formula that requires a bit more typing and a bit more care.
 
 ### Plot the null distribution.
 
@@ -494,7 +496,7 @@ Please write up your answer here.
 
 ## Optional appendix: Pooling {#pooling}
 
-Earlier, we mentioned that that we cannot calculate the standard error directly because the null hypothesis does not give us $p_{1}$ and $p_{2}$. (The null only addresses the value of the difference $p_{1} - p_{2}$.) We dealt with this by simply substituting $\hat{p}_{1}$ for $p_{1}$ and $\hat{p}_{2}$ for $p_{2}$.
+Earlier, we mentioned that that we cannot calculate the "true" standard error directly because the null hypothesis does not give us $p_{1}$ and $p_{2}$. (The null only addresses the value of the difference $p_{1} - p_{2}$.) We dealt with this by simply substituting $\hat{p}_{1}$ for $p_{1}$ and $\hat{p}_{2}$ for $p_{2}$.
 
 There is, however, one assumption from the null we can still salvage that will improve our test. Since the null hypothesis assumes that the two groups are the same, let's compute a single overall success rate for both samples together. In other words, if the two groups aren't different, let's just pool them into one single group and calculate the successes for the whole group.
 
