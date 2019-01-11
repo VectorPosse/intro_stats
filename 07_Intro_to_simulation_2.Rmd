@@ -9,7 +9,7 @@ output:
 ---
 
 <!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #1E90FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r options(scipen = 999);intToUtf8(c(49,46,48))`</p>
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r intToUtf8(c(49,46,49))`</p>
 <!-- Please don't mess with the previous few lines! -->
 
 <div class = "summary">
@@ -31,14 +31,6 @@ We load the `MASS` package to access the `birthwt` data on risk factors associat
 library(MASS)
 library(mosaic)
 ```
-
-As explained in an earlier module, we will set the seed so that our results are reproducible.
-
-```{r}
-set.seed(3141593)
-```
-
-As before, if for some reason you're getting results that are different from the ones reported in the text, the easiest thing to do is "Restart R and Run All Chunks" from the "Run" menu.
 
 
 ## Our research question
@@ -173,9 +165,10 @@ Let's see how shuffling works in R. To begin with, look at the first 20 actual v
 head(low_smoke$smoke, n = 20)
 ```
 
-Now we "shuffle" all the values around and look at the first 20 again:
+Now we "shuffle" all the values around and look at the first 20 again. As explained in an earlier module, we will set the seed so that our results are reproducible.
 
 ```{r}
+set.seed(3141593)
 head(shuffle(low_smoke$smoke), n = 20)
 ```
 
@@ -192,7 +185,7 @@ The idea here is to keep the low birth weight status the same for each woman, bu
 
 A more precise way of saying this is that the expected difference under the assumption of independent variables is 0%. If there were truly no association, then the percentage of women having low birth weight babies would be independent of smoking. However, sampling variability means that we are not likely to see an exact difference of 0%. In fact, due to the sample sizes in each group, it is impossible to get a difference of exactly 0%. The real question, then, is how different could the difference be from 0% and still be reasonably possible due to random chance.
 
-Here are a few random simulations. (The randomness is built into the `shuffle` command.)
+Here are a few random simulations. (The randomness is built into the `shuffle` command. We won't bother to set the seed here because the results don't really matter. It's just to show you that `shuffle` generates randomness.)
 
 ```{r}
 diffprop(low ~ shuffle(smoke), data = low_smoke)
@@ -209,6 +202,7 @@ diffprop(low ~ shuffle(smoke), data = low_smoke)
 The `do` command from the `mosaic` package allows us to repeat this simulation process any number of times. From an earlier module, we learned that the number of simulations needs to be sufficiently high to make sure we have a good representative set of outcomes. Here, we'll use 5000 simulations. The results will be gathered together in a data frame that we will call `sims`.
 
 ```{r}
+set.seed(3141593)
 sims <- do(5000) * diffprop(low ~ shuffle(smoke), data = low_smoke)
 sims
 ```
@@ -338,6 +332,7 @@ Simulate 2000 outcomes under the assumption that low birth weight is independent
 <div class = "answer">
 
 ```{r}
+set.seed(3141593)
 # Add code here to simulate 2000 outcomes under the independence assumption
 # and store the simulations in a data frame called sims2.
 ```
