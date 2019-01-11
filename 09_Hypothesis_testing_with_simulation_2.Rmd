@@ -9,7 +9,7 @@ output:
 ---
 
 <!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #1E90FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r options(scipen = 999);intToUtf8(c(49,46,48))`</p>
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r intToUtf8(c(49,46,49))`</p>
 <!-- Please don't mess with the previous few lines! -->
 
 <div class = "summary">
@@ -30,12 +30,6 @@ We load the `MASS` package to access the `Melanoma` data on patients in Denmark 
 ```{r, message = FALSE}
 library(MASS)
 library(mosaic)
-```
-
-As explained in an earlier module, we will set the seed so that our results are reproducible.
-
-```{r}
-set.seed(42)
 ```
 
 
@@ -130,9 +124,9 @@ $H_{A}:$ There is a sex bias among patients with malignant melanoma (meaning tha
 
 ### Express the null and alternative hypotheses in symbols (when possible).
 
-$H_{0}: p = 0.5$
+$H_{0}: p_{female} = 0.5$
 
-$H_{A}: p \neq 0.5$
+$H_{A}: p_{female} \neq 0.5$
 
 
 ## Model
@@ -163,14 +157,18 @@ The observed percentage of females with melanoma in our sample is `r 100 * femal
 
 ### Plot the null distribution.
 
-Since this is the first step for which we need the simulated values, it will be convenient to run the simulation here.
+Since this is the first step for which we need the simulated values, it will be convenient to run the simulation here. We'll need to set the seed as well.
 
 ```{r}
+set.seed(42)
 sims <- do(1000) * rflip(205, prob = 0.5)
 # Strictly speaking, you don't need prob = 0.5 because
 # that's the default for rflip. However, I'm showing you
 # the syntax because your null hypothesis won't always
 # be p = 0.5.
+```
+
+```{r}
 ggplot(sims, aes(x = prop)) +
     geom_histogram(binwidth = 0.01) +
     geom_vline(xintercept = female_prop, color = "blue") +
@@ -324,6 +322,11 @@ Please write up your answer here.
 ###### Plot the null distribution.
 
 <div class = "answer">
+
+```{r}
+set.seed(42)
+# Add code here to simulate the null distribution.
+```
 
 ```{r}
 # Add code here to plot the null distribution.
