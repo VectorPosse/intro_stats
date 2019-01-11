@@ -9,12 +9,12 @@ output:
 ---
 
 <!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #1E90FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r options(scipen = 999);intToUtf8(c(49,46,48))`</p>
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r intToUtf8(c(49,46,49))`</p>
 <!-- Please don't mess with the previous few lines! -->
 
 <div class = "summary">
 ### Functions introduced in this module:
-`rflip`, `do`
+`set.seed`, `rflip`, `do`
 </div>
 
 
@@ -31,36 +31,39 @@ We load the `mosaic` package.
 library(mosaic)
 ```
 
-One more bit of technical detail. Since there will be some randomness involved here, we will need to include an R command to ensure that we all get the same results every time this code runs. This is called "setting the seed". Don't worry too much about what this is doing under the hood. The basic idea is that two people who start with the same seed will generate the same sequence of "random" numbers.
-
-The seed `1234` in the command below is totally arbitrary. It could have been any number at all. If you change the seed, you will get different output in later code, so we all need to use the same seed. But the actual common value we all use for the seed is irrelevant.
-
-```{r}
-set.seed(1234)
-```
-
-If, for some reason, you're getting results that are different from the ones reported in the text, the easiest thing to do is "Restart R and Run All Chunks" from the "Run" menu. That will "reset" the seed so that the following code chunks all run the same way, even though there is randomness involved.
-
 
 ## Flipping a coin
 
 One of the simplest acts to simulate is flipping a coin. We could get an actual coin and physically flip it over and over again, but that is time-consuming and annoying. It is much easier to flip a "virtual" coin inside the computer. One way to accomplish this in R is to use the `rflip` command from the `mosaic` package.
 
+One more bit of technical detail. Since there will be some randomness involved here, we will need to include an R command to ensure that we all get the same results every time this code runs. This is called "setting the seed". Don't worry too much about what this is doing under the hood. The basic idea is that two people who start with the same seed will generate the same sequence of "random" numbers.
+
+The seed `1234` in the chunk below is totally arbitrary. It could have been any number at all. (And, in fact, we'll use different numbers just for fun.) If you change the seed, you will get different output, so we all need to use the same seed. But the actual common value we all use for the seed is irrelevant.
+
 Here is one coin flip:
 
 ```{r}
+set.seed(1234)
 rflip(1)
 ```
 
 Here are ten coin flips:
 
 ```{r}
+set.seed(1234)
 rflip(10)
 ```
 
-Just to confirm that this is a random process, let's flip ten coins again:
+Just to confirm that this is a random process, let's flip ten coins again (but without setting the seed again):
 
 ```{r}
+rflip(10)
+```
+
+And just to see the effect of setting a different seed:
+
+```{r}
+set.seed(9999)
 rflip(10)
 ```
 
@@ -74,8 +77,6 @@ Please write up your answer here.
 
 </div>
 
-*****
-
 
 ## Multiple simulations
 
@@ -86,22 +87,21 @@ You might observe three heads in ten flips. Fine, but what about everyone else i
 The `do` command is a way of doing something multiple times. Imagine there are twenty people in the room, each flipping a coin ten times. Observe:
 
 ```{r}
+set.seed(12345)
 do(20) * rflip(10)
 ```
 
 The syntax could not be any simpler: `do(20) *` means, literally, "do twenty times." In other words, this command is telling R to repeat an action twenty times, where the action is flipping a single coin ten times.
-
 
 You'll notice that in place of a list of outcomes (H or T) of all the individual flips, we have instead a summary of the number of heads and tails each person sees. Each row represents a person, and the columns give information about each person's flips. (There are `n = 10` flips for each person, but then the number of heads/tails---and the corresponding "proportion" of heads---changes from person to person.)
 
 Looking at the above rows and columns, we see that the output of our little coin-flipping experiment is actually stored in a data frame! Let's give it a name and work with it.
 
 ```{r}
+set.seed(12345)
 coin_flips_20_10 <- do(20) * rflip(10)
 coin_flips_20_10
 ```
-
-(Note: the results stored in `coin_flips_20_10` are not the same as the results generated the last time we ran the `do(20) * rflip(10)` command. Remember that these are randomized simulations. The randomness means that the outcome will be different each time we run the command.)
 
 It is significant that we can store our outcomes this way. Because we have a data frame, we can apply all our data analysis tools (graphs, charts, tables, summary statistics, etc.) to the "data" generated from our set of simulations.
 
@@ -135,7 +135,7 @@ ggplot(coin_flips_20_10, aes(x = heads)) +
     scale_x_continuous(limits = c(-1, 11), breaks = seq(0, 10, 1))
 ```
 
-Let's do the same thing, but now let's consider the *proportion* or percentage of heads.
+Let's do the same thing, but now let's consider the *proportion* of heads.
 
 ```{r}
 ggplot(coin_flips_20_10, aes(x = prop)) +
@@ -146,11 +146,12 @@ ggplot(coin_flips_20_10, aes(x = prop)) +
 
 ## Bigger and better!
 
-With only twenty people, it was possible that, for example, nobody would get all heads or all tails. Indeed, in `coin_flips_20_10` there were no people who got all heads or all tails. Also, there were more people with four heads and seven heads than with five heads, even though we "expected" the average to be five heads. There is nothing particularly significant about that; it happened by pure chance alone. Another run through the above commands would generate a somewhat different outcome. That's what happens when things are random.
+With only twenty people, it was possible that, for example, nobody would get all heads or all tails. Indeed, in `coin_flips_20_10` there were no people who got all heads or all tails. Also, there were more people with six and seven heads than with five heads, even though we "expected" the average to be five heads. There is nothing particularly significant about that; it happened by pure chance alone. Another run through the above commands would generate a somewhat different outcome. That's what happens when things are random.
 
 Instead, let's imagine that we recruited way more people to flip coins with us. Let's try it again with 2000 people:
 
 ```{r}
+set.seed(1234)
 coin_flips_2000_10 <- do(2000) * rflip(10)
 coin_flips_2000_10
 ```
@@ -194,9 +195,10 @@ From now on, we will insist on using at least a thousand simulations---if not mo
 
 ## More flips
 
-Now let's increase the number of coin flips each person performs. We'll still use 2000 simulations (imagine 2000 people all flipping coins), but this time, each person will flip the coin 1000 times instead of only 10 times. The first code chunk below accounts for a substantial amount of the time it takes to run this document.
+Now let's increase the number of coin flips each person performs. We'll still use 2000 simulations (imagine 2000 people all flipping coins), but this time, each person will flip the coin 1000 times instead of only 10 times. The first code chunk below accounts for a substantial amount of the time it takes to run the code in this document.
 
 ```{r}
+set.seed(1234)
 coin_flips_2000_1000 <- do(2000) * rflip(1000)
 coin_flips_2000_1000
 ```
@@ -252,26 +254,29 @@ Let's simulate. Imagine flipping a coin, but instead of coming up heads 50% of t
 We can make a "virtual" weird coin with the `rflip` command by specifying how often we want heads to come up.
 
 ```{r}
+set.seed(1234)
 rflip(1, prob = 0.85)
 ```
 
 If we flip our weird coin a bunch of times, we can see that our coin is not fair. Indeed, it appears to come up heads way more often than not:
 
 ```{r}
+set.seed(1234)
 rflip(100, prob = 0.85)
 ```
 
 The results from the above code can be thought of as a survey of 100 random U.S. adults about their support for background checks for purchasing guns. "Heads" means "supports" and "tails" means "opposes." If the majority of Americans support background checks, then we will come across more people in our survey who tell us they support background checks. This shows up in our simulation as the appearance of more heads than tails.
 
-Note that there is no guarantee that our sample will have exactly 85% heads. In fact, it doesn't; it has 86% heads.
+Note that there is no guarantee that our sample will have exactly 85% heads. In fact, it doesn't; it has 90% heads.
 
-Again, keep in mind that we're simulating the act of obtaining a random sample of 100 U.S. adults. If we get a different sample, we'll get different results:
+Again, keep in mind that we're simulating the act of obtaining a random sample of 100 U.S. adults. If we get a different sample, we'll get different results. (We set a different seed here. That ensures that this code chunk is randomly different from the one above.)
 
 ```{r}
+set.seed(123456)
 rflip(100, prob = 0.85)
 ```
 
-See, this time, only 73% came up heads, even though we expected 85%. That's how randomness works.
+See, this time, only 81% came up heads, even though we expected 85%. That's how randomness works.
 
 ##### Exercise 6(a)
 
@@ -280,6 +285,7 @@ Now imagine that 2000 people all go out and conduct surveys of 100 random U.S. a
 <div class = "answer">
 
 ```{r}
+set.seed(1234)
 # Add code here to simulate 2000 surveys of 100 U.S. adults.
 ```
 
@@ -296,6 +302,7 @@ Run another simulation, but this time, have each person survey 1000 adults and n
 <div class = "answer">
 
 ```{r}
+set.seed(1234)
 # Add code here to simulate 2000 surveys of 1000 U.S. adults.
 ```
 
