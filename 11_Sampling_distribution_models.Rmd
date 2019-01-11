@@ -9,7 +9,7 @@ output:
 ---
 
 <!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #1E90FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r options(scipen = 999);intToUtf8(c(49,46,48))`</p>
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r intToUtf8(c(49,46,49))`</p>
 <!-- Please don't mess with the previous few lines! -->
 
 <div class = "summary">
@@ -31,12 +31,6 @@ We load the standard `mosaic` package.
 library(mosaic)
 ```
 
-As explained in an earlier module, we will set the seed so that our results are reproducible.
-
-```{r}
-set.seed(13579)
-```
-
 
 ## Sampling variability and sample size
 
@@ -49,6 +43,7 @@ Suppose that a certain candidate in an election actually has 64% of the support 
 We can simulate this task in R by using the `rflip` command from the `mosaic` package. Remember that the default for a coin flip is a 50% probability of heads, so we have to change that if we want to model a candidate with 64% support.
 
 ```{r}
+set.seed(13579)
 rflip(10, prob = 0.64)
 ```
 
@@ -57,6 +52,7 @@ You can think of the above command as taking one random sample of size 10 and ge
 Using the `do` command, we can simulate many samples, all of size 10. Let's take 1000 samples and store them in a variable called `sims_1000_10`.
 
 ```{r}
+set.seed(13579)
 sims_1000_10 <- do(1000) * rflip(10, prob = 0.64)
 sims_1000_10
 ```
@@ -77,7 +73,11 @@ Because each sample has size 10, the proportion of successes can only be multipl
 What happens if we increase the sample size to 20? (The binwidth has to change to see the discrete bars.)
 
 ```{r}
+set.seed(13579)
 sims_1000_20 <- do(1000) * rflip(20, prob = 0.64)
+```
+
+```{r}
 ggplot(sims_1000_20, aes(x = prop)) +
     geom_histogram(binwidth = 0.025) +
     scale_x_continuous(limits = c(0, 1.1),
@@ -102,6 +102,7 @@ Run a set of simulations yourself, this time with samples of size 50. Use the sa
 <div class = "answer">
 
 ```{r}
+set.seed(13579)
 # Add code here to simulate 1000 random samples of size 50 and plot them.
 ```
 
@@ -206,7 +207,11 @@ Notice that when $n$ is large, the quantities $np$ and $n(1 - p)$ will also tend
 There is something else going on too. Suppose that $n = 100$ but $p = 0.01$. The sample seems quite large, but let's look at the sampling distribution through a simulation.
 
 ```{r}
+set.seed(13579)
 sims_1000_100 <- do(1000) * rflip(100, prob = 0.01)
+```
+
+```{r}
 ggplot(sims_1000_100, aes(x = prop)) +
     geom_histogram(binwidth = 0.005) +
     scale_x_continuous(limits = c(-0.01, 0.1),
@@ -255,7 +260,11 @@ Could a survey of 50 random voters accidentally predict defeat for the candidate
 Let's simulate:
 
 ```{r}
+set.seed(13579)
 survey_sim <- do(1000) * rflip(50, prob = 0.64)
+```
+
+```{r}
 ggplot(survey_sim, aes(x = prop)) +
     geom_histogram(binwidth = 0.01) +
     geom_vline(xintercept = 0.5, color = "blue")
@@ -297,6 +306,7 @@ First, simulate the sampling distribution using 1000 samples, each of size 143. 
 <div class = "answer">
 
 ```{r}
+set.seed(13579)
 # Add code here to simulate 1000 samples of size 143
 # and plot the resulting distribution.
 ```
