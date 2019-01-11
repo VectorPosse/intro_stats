@@ -9,7 +9,7 @@ output:
 ---
 
 <!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #1E90FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r options(scipen = 999);intToUtf8(c(49,46,48))`</p>
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r intToUtf8(c(49,46,49))`</p>
 <!-- Please don't mess with the previous few lines! -->
 
 <div class = "summary">
@@ -31,12 +31,6 @@ We load the standard `mosaic` package and the `openintro` package for the `hsb2`
 library(openintro)
 library(broom)
 library(mosaic)
-```
-
-We'll be doing some simulation, so let's set the seed.
-
-```{r}
-set.seed(9090)
 ```
 
 
@@ -89,7 +83,7 @@ A $\chi^{2}$ value of zero would indicate perfect agreement between observed and
 
 As an example, for our data, we calculate chi-squared as follows:
 
-$$\chi^{2} = \frac{(11 - 10.67)^{2}}{10.67} + \frac{(7 - 10.67)^{2}}{10.67} + \frac{(14 - 10.67)^{2}}{10.67} = 2.3.$$
+$$\chi^{2} = \frac{(11 - 10.67)^{2}}{10.67} + \frac{(7 - 10.67)^{2}}{10.67} + \frac{(14 - 10.67)^{2}}{10.67} \approx 2.31.$$
 
 In general, the expected counts do not all have to be the same, as they are here. This is a function of the null hypothesis which, for us, is that all cylinders are represented equally in the population.
 
@@ -116,6 +110,7 @@ tally(~ cyl, data = cyl_df)
 Under the assumption of the null, there should be an equal chance of seeing 4, 6, or 8 cylinders. The `resample` command below takes the values "4", "6", or "8" and grabs them at random until it has 32 values.
 
 ```{r}
+set.seed(9090)
 tally(resample(c(4, 6, 8), size = 32))
 ```
 
@@ -140,6 +135,7 @@ chisq(tally(resample(c(4, 6, 8), size = 32)))
 As before, we can use the `do` command to do this a bunch of times and save the results in a data frame.
 
 ```{r}
+set.seed(9090)
 sims <- do(5000) * chisq(tally(resample(c(4, 6, 8), size = 32)))
 sims
 ```
