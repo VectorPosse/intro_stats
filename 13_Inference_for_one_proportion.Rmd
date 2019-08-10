@@ -157,7 +157,7 @@ That's also why the numbers don't have to be whole numbers. If the null states t
 
 ## Mechanics
 
-### Compute and report the test statistic.
+### Compute the test statistic.
 
 ```{r}
 surv_test <- binom.test(heartTr2$survived, p = 0.5, success = "alive")
@@ -165,7 +165,9 @@ surv_test_tidy <- tidy(surv_test)
 surv_test_tidy
 ```
 
-The test statistic is `r surv_test_tidy$estimate`, the proportion of successes (i.e., survivors) in the sample.
+```{r}
+surv_test_tidy$estimate
+```
 
 We'll also compute the corresponding z score. First, we compute the standard error:
 
@@ -180,8 +182,6 @@ Then, using our computation of `SE1`, we get the z score.
 z1 <- (surv_test_tidy$estimate - 0.5)/SE1
 z1
 ```
-
-The z score is `r z1`.
 
 Commentary: We run the `binom.test` command to give us almost everything we need. The argument `p = 0.5` is the null value, and this might be different for a different research question. Also note that the `binom.test` command allows us to specify the "success" condition (here, "alive").
 
@@ -205,7 +205,14 @@ If we use z as the test statistic, then we're considering the null model to be t
 
 $$N(0, 1).$$
 
-The standard normal model is more intuitive and easier to work with, both conceptually, and in R. Generally, then, we will consider z as the test statistic so that we can consider our null model to be the standard normal model. For example, knowing that our test statistic is two and a half standard deviations to the left of the null value already tells us a lot. We can anticipate a small P-value leading to rejection of the null.
+The standard normal model is more intuitive and easier to work with, both conceptually and in R. Generally, then, we will consider z as the test statistic so that we can consider our null model to be the standard normal model. For example, knowing that our test statistic is two and a half standard deviations to the left of the null value already tells us a lot. We can anticipate a small P-value leading to rejection of the null.
+
+### Report the test statistic in context.
+
+The test statistic is `r surv_test_tidy$estimate`. In other words, `r 100 * surv_test_tidy$estimate`% of heart transplant recipients were alive at the end of the study.
+
+The z score is `r z1`. The proportion of survivors is about 2.5 standard errors below the null value.
+
 
 ### Plot the null distribution.
 
@@ -231,14 +238,12 @@ The other thing that makes this relatively simple is that we're running a one-si
 pdist("norm", q = c(-z1, z1), invisible = TRUE)
 ```
 
-### Calculate and interpret the P-value.
+### Calculate the P-value.
 
 ```{r}
 P1 <- pdist("norm", q = z1, plot = FALSE)
 P1
 ```
-
-The P-value is `r P1`. If there were truly a 50% chance of survival among heart transplant patients, there would only be a `r 100 * P1`% chance of seeing data at least as extreme as we saw.
 
 Commentary: Since we are running a one-sided test using the left tail (recall the alternative hypothesis was $p < 0.5$), the result of the `pdist` command is already the correct P-value. We don't need the plot again, so we can put `plot = FALSE` into the command.
 
@@ -257,6 +262,10 @@ surv_test_tidy$p.value / 2
 Even this is a little different from the P-value we computed directly from the normal model. Under the hood, the `binom.test` command is not quite using the same method we're using. Therefore, the P-value is a little different from the one generated from our normal model. Nevertheless, the two methods are close, so you should come to the same conclusion (i.e., reject the null or fail to reject the null).
 
 If you look more deeply into the `binom.test` function, you might discover that there is a way to get it to run a one-sided test. However, doing so messes up the confidence interval that we'll need later in the rubric. Most of the time, it's a moot point because we will often want to run two-sided test anyway.
+
+### Interpret the P-value as a probability given the null.
+
+The P-value is `r P1`. If there were truly a 50% chance of survival among heart transplant patients, there would only be a `r 100 * P1`% chance of seeing data at least as extreme as we saw.
 
 
 ## Conclusion
@@ -396,6 +405,8 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 
 ###### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
+[Remember that you are using the full `heartTr` data, so your sample size should be larger here than in the example above.]
+
 <div class = "answer">
 
 Please write up your answer here.
@@ -435,6 +446,8 @@ Please write up your answer here.
 
 ###### Check the relevant conditions to ensure that model assumptions are met.
 
+[Remember that you are using the full `heartTr` data, so the number of successes and failures will be different here than in the example above.]
+
 <div class = "answer">
 
 Please write up your answer here. (Some conditions may require R code as well.)
@@ -444,13 +457,21 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 ##### Mechanics
 
-###### Compute and report the test statistic.
+[Be sure to use `heartTr` everywhere and not `heartTr2`!]
+
+###### Compute the test statistic.
 
 <div class = "answer">
 
 ```{r}
 # Add code here to compute the test statistic.
 ```
+
+</div>
+
+###### Report the test statistic in context.
+
+<div class = "answer">
 
 Please write up your answer here.
 
@@ -466,13 +487,19 @@ Please write up your answer here.
 
 </div>
 
-###### Calculate and interpret the P-value.
+###### Calculate the P-value.
 
 <div class = "answer">
 
 ```{r}
 # Add code here to calculate the P-value.
 ```
+
+</div>
+
+###### Interpret the P-value as a probability given the null.
+
+<div class = "answer">
 
 Please write up your answer here.
 
