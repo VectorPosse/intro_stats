@@ -9,7 +9,7 @@ output:
 ---
 
 <!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r intToUtf8(c(49,46,49))`</p>
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(49,46,50))`</p>
 <!-- Please don't mess with the previous few lines! -->
 
 <div class = "summary">
@@ -62,7 +62,7 @@ low_race
 
 First, let's create a contingency table for the relationship between `low` and `race` and assign it to a variable for future use.
 
-**Very important**: You must *not* include `margins = TRUE` in the `tally` command before running a chi-square test. R is not quite smart enough to figure out that the "Total" isn't really part of the data.
+**Very important**: You must *not* include `margins = TRUE` in the `tally` command before running a chi-square test. R is not quite smart enough to figure out that the "Total" isn't really part of the data. You should also not use `format = "percent"` because chi-square tests need the raw counts.
 
 ```{r}
 low_race_tally <- tally(low ~ race, data = low_race)
@@ -196,14 +196,19 @@ will not work.
 
 ## Mechanics
 
-### Compute and report the test statistic.
+### Compute the test statistic.
 
 ```{r}
 low_race_test_tidy <- tidy(low_race_test)
 low_race_test_tidy$statistic
 ```
 
+### Report the test statistic in context.
+
 The value of $\chi^{2}$ is `r low_race_test_tidy$statistic`.
+
+Commentary: As in the last module, there's not much context to report with a value of $\chi^{2}$, so the most we can do here is just report it in a full sentence.
+
 
 ### Plot the null distribution.
 
@@ -215,7 +220,7 @@ pdist("chisq", df = low_race_test_tidy$parameter,
 
 Commentary: We use `pdist`, but now we need to use "chisq" instead of "norm". Also, since the chi-square distribution requires the specification of degrees of freedom, there is an argument to `pdist` called `df`. We could type `df = 2` since we know there are 2 degrees of freedom; however, the degrees of freedom are also stored in the output `low_race_test_tidy` in the `parameter` variable. 
 
-### Calculate and interpret the P-value.
+### Calculate the P-value.
 
 ```{r}
 P1 <- 1 - pdist("chisq", df = low_race_test_tidy$parameter,
@@ -224,8 +229,6 @@ P1 <- 1 - pdist("chisq", df = low_race_test_tidy$parameter,
 P1
 ```
 
-The P-value is `r P1`. If low birth weight and race were independent, there would be a `r 100 * P1`% chance of seeing results at least as extreme as we saw in the data.
-
 Commentary: Values that are as extreme or even more extreme than the test statistic are in the right tail. If we use `pdist`, remember that it always shades to the left by default, so we have to subtract the output from 1 to get the correct P-value. Also remember to add `plot = FALSE` as we don't really need to look at the same picture again.
 
 The same P-value is also stored in the tidy output:
@@ -233,6 +236,11 @@ The same P-value is also stored in the tidy output:
 ```{r}
 low_race_test_tidy$p.value
 ```
+
+
+### Interpret the P-value as a probability given the null.
+
+The P-value is `r P1`. If low birth weight and race were independent, there would be a `r 100 * P1`% chance of seeing results at least as extreme as we saw in the data.
 
 
 ## Conclusion
@@ -396,13 +404,19 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 ##### Mechanics
 
-###### Compute and report the test statistic.
+###### Compute the test statistic.
 
 <div class = "answer">
 
 ```{r}
 # Add code here to compute the test statistic.
 ```
+
+</div>
+
+###### Report the test statistic in context.
+
+<div class = "answer">
 
 Please write up your answer here.
 
@@ -418,13 +432,19 @@ Please write up your answer here.
 
 </div>
 
-###### Calculate and interpret the P-value.
+###### Calculate the P-value.
 
 <div class = "answer">
 
 ```{r}
 # Add code here to calculate the P-value.
 ```
+
+</div>
+
+###### Interpret the P-value as a probability given the null.
+
+<div class = "answer">
 
 Please write up your answer here.
 

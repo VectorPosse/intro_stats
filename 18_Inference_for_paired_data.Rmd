@@ -9,7 +9,7 @@ output:
 ---
 
 <!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r intToUtf8(c(49,46,49))`</p>
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(49,46,50))`</p>
 <!-- Please don't mess with the previous few lines! -->
 
 <div class = "summary">
@@ -178,7 +178,7 @@ We use a t model with 24 degrees of freedom.
 
 ## Mechanics
 
-### Compute and report the test statistic.
+### Compute the test statistic.
 
 ```{r}
 barley_test <- t.test(immer_d_no_M$Y2, immer_d_no_M$Y1, paired = TRUE)
@@ -191,8 +191,6 @@ t1 <- barley_test_tidy$statistic
 t1
 ```
 
-The value of t is `r t1`.
-
 Commentary: The `t.test` command offers an argument `paired = TRUE` that allows you to run a paired t test from the original data. The order of the variables needs to be consistent with the order of subtraction used to produce `d` (in this case, `Y2 - Y1`).
 
 Note that we get the exact same answer if we run it as a one-sample t test with the difference variable `d`:
@@ -202,6 +200,11 @@ barley_test2 <- t.test(immer_d_no_M$d, mu = 0)
 barley_test2_tidy <- tidy(barley_test2)
 barley_test2_tidy$statistic
 ```
+
+### Report the test statistic in context.
+
+The value of t is `r t1`. The sample difference in mean barley yield is more than six standard errors less than the null value of zero.
+
 
 ### Plot the null distribution.
 
@@ -213,12 +216,14 @@ pdist("t", df = barley_test_tidy$parameter,
 
 Commentary: The `parameter` stored in the output of `t.test` is the degrees of freedom. We set `q = c(-t1, t1)` as this is a two-sided test.
 
-### Calculate and interpret the P-value.
+### Calculate the P-value.
 
 ```{r}
 P1 <- barley_test_tidy$p.value
 P1
 ```
+
+### Interpret the P-value as a probability given the null.
 
 $P < 0.001$. If there were no difference in barley yield between 1931 and 1932, there is a `r 100 * P1`% chance of seeing data at least as extreme as what we saw.
 
@@ -398,13 +403,19 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 ##### Mechanics
 
-###### Compute and report the test statistic.
+###### Compute the test statistic.
 
 <div class = "answer">
 
 ```{r}
 # Add code here to compute the test statistic.
 ```
+
+</div>
+
+###### Report the test statistic in context.
+
+<div class = "answer">
 
 Please write up your answer here.
 
@@ -420,13 +431,19 @@ Please write up your answer here.
 
 </div>
 
-###### Calculate and interpret the P-value.
+###### Calculate the P-value.
 
 <div class = "answer">
 
 ```{r}
 # Add code here to calculate the P-value.
 ```
+
+</div>
+
+###### Interpret the P-value as a probability given the null.
+
+<div class = "answer">
 
 Please write up your answer here.
 

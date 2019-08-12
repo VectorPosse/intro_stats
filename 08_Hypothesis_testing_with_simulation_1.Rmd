@@ -9,7 +9,7 @@ output:
 ---
 
 <!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #1E90FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r options(scipen = 999);intToUtf8(c(49,46,48))`</p>
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(49,46,50))`</p>
 <!-- Please don't mess with the previous few lines! -->
 
 <div class = "summary">
@@ -100,7 +100,7 @@ Those are just two examples. For the simulation tests we are running, those are 
 
 This is the nitty-gritty, nuts-and-bolts part of a hypothesis test. Once we have a model that tells us how data should behave under the assumption of the null hypothesis, we need to check how our data actually behaved. The measure of where our data is relative to the null model is called the *test statistic*. For example, if the null hypothesis states that there should be a difference of zero between mothers who smoke and mothers who don't smoke, then the test statistic would be the actual observed difference in our data between smokers and non-smokers.
 
-Once we have a test statistic, we can plot it in the same graph as the null model. This gives us a visual sense of how rare or unusual our observed data is. The further our test statistic is from the center of the null model, the more evidence we have that our data would be very unusual if the null model were true. And that, in turn, gives us a reason not to believe the null model. When conducting a two-sided test, we will actually graph the test statistic and the negative of the test statistic to acknowledge that we're interested in evidence of an effect in either direction. 
+Once we have a test statistic, we can plot it in the same graph as the null model. This gives us a visual sense of how rare or unusual our observed data is. The further our test statistic is from the center of the null model, the more evidence we have that our data would be very unusual if the null model were true. And that, in turn, gives us a reason not to believe the null model. When conducting a two-sided test, we will actually graph locations on both side of the null value: the test statistic on one side of the null value and a point the same distance on the other side of the null value. This will acknowledge that we're interested in evidence of an effect in either direction. 
 
 Finally, we convert the visual evidence explained in the previous paragraph to a number called a *P-value*. This measures how likely it is to see our observed data---or data even more extreme---under the assumption of the null. A small P-value, then, means that if the null were really true, we wouldn't be very likely at all to see data like ours. That leaves us with little confidence that the null model is really true. (After all, we *did* see the data we gathered!) If the P-value is large---in other words, if the test statistic is closer to the middle of the null distribution---then our data is perfectly consistent with the null hypothesis. That doesn't mean the null is true, but it certainly does not give us evidence against the null.
 
@@ -124,9 +124,9 @@ The phrases "reject the null" or "fail to reject the null" are very statsy. Your
 
 The last part of your conclusion should be an acknowledgement of the uncertainty in this process. Statistics tries to tame randomness, but in the end, randomness is always somewhat unpredictable. It is possible that we came to the wrong conclusion, not because we made mistakes in our computation, but because statistics just can't be right 100% of the time when randomness is involved. Therefore, we need to explain to our audience that we may have made an error.
 
-A *Type I* error is what happens when the null hypothesis is actually true, but our procedure rejects it anyway. This happens when we get a "freak" sample. For example, perhaps there really is no association between low birth weight and smoking. Even if that were true, we could accidentally survey a group of women who smoked and also---by pure chance alone---happen to have more babies with low birth weight. Our test statistic will be "accidentally" far from the null value, and we will mistakenly reject the null. Whenever we reject the null, we are at risk of making a Type I error. Given that we are conclusively stating a statistically significant finding, if that finding is wrong, this is a *false positive*, a term that is synonymous with a Type I error. The significance level $\alpha$ discussed above is, in fact, the probability of making a Type I error. (If the null is true, we will still reject the null if our P-value happens to be less than $\alpha$.)
+A *Type I* error is what happens when the null hypothesis is actually true, but our procedure rejects it anyway. This happens when we get an unrepresentative extreme sample for some reason. For example, perhaps there really is no association between low birth weight and smoking. Even if that were true, we could accidentally survey a group of women who smoked and also---by pure chance alone---happen to have more babies with low birth weight. Our test statistic will be "accidentally" far from the null value, and we will mistakenly reject the null. Whenever we reject the null, we are at risk of making a Type I error. Given that we are conclusively stating a statistically significant finding, if that finding is wrong, this is a *false positive*, a term that is synonymous with a Type I error. The significance level $\alpha$ discussed above is, in fact, the probability of making a Type I error. (If the null is true, we will still reject the null if our P-value happens to be less than $\alpha$.)
 
-On the other hand, the null may actually be false, and yet, we may not manage to gather enough evidence to disprove it. This can also happen due to a "freak sample"---a sample that doesn't conform to the "truth". But there are other ways this can happen as well, most commonly when you have a small sample size (which doesn't allow you to prove much of anything at all) or when the effect you're trying to measure exists, but is so small that it is hard to distinguish from no effect at all (which is what the null postulates). In these cases, we are at risk of making a *Type II* error. Anytime we say that we fail to reject the null, we have to worry about the possibility of making a Type II error, also called a *false negative*.
+On the other hand, the null may actually be false, and yet, we may not manage to gather enough evidence to disprove it. This can also happen due to an unusual sample---a sample that doesn't conform to the "truth". But there are other ways this can happen as well, most commonly when you have a small sample size (which doesn't allow you to prove much of anything at all) or when the effect you're trying to measure exists, but is so small that it is hard to distinguish from no effect at all (which is what the null postulates). In these cases, we are at risk of making a *Type II* error. Anytime we say that we fail to reject the null, we have to worry about the possibility of making a Type II error, also called a *false negative*.
 
 
 ## Example
@@ -224,12 +224,16 @@ We will simulate the sampling distribution.
 
 ## Mechanics
 
-### Compute and report the test statistic.
+### Compute the test statistic.
+
+We let R do the work here:
 
 ```{r}
 obs_diff <- diffprop(low ~ smoke, data = low_smoke)
 obs_diff
 ```
+
+### Report the test statistic in context.
 
 The observed difference in the proportion of low birth weight babies among smoking mothers versus nonsmoking mothers is `r obs_diff` (subtracting smokers *from* nonsmokers). Or, another way to say this: there is a `r 100 * obs_diff`% difference in the proportion of low birth weight babies among smoking mothers versus nonsmoking mothers. [Note that if you factored the `smoke` variable differently, the order of subtraction here would change. Pay close attention to the order of the factors and make sure you're interpreting `diffprop` correctly whether it results in a positive or negative difference.]
 
@@ -251,14 +255,12 @@ ggplot(sims, aes(x = diffprop)) +
 
 (You'll note that we added two blue vertical lines here. This is because we are conducting a two-sided test, which means that we're interested in values that are more extreme than our observed difference in *both* directions.)
 
-### Calculate and interpret the P-value.
+### Calculate the P-value.
 
 ```{r}
 P <- 2 * prop(sims$diffprop <= obs_diff)
 P
 ```
-
-The P-value is `r P`. If there were no association between low birth weight and smoking, there would be a `r 100 * P`% chance of seeing data at least as extreme as we saw.
 
 Some important things here:
 
@@ -272,9 +274,15 @@ Some important things here:
 unname(2 * prop(sims$diffprop <= obs_diff))
 ```
 
-4. We include an interpretation for our P-value. Remember that the P-value is the probability---**under the assumption of the null hypothesis**---of seeing results as extreme or even more extreme than the data we saw.
+### Interpret the P-value as a probability given the null.
 
-5. The P-value is less than 0.05. Remember that as we talk about the conclusion in the next section of the rubric.
+The P-value is `r P`. If there were no association between low birth weight and smoking, there would be a `r 100 * P`% chance of seeing data at least as extreme as we saw.
+
+Some important things here:
+
+1. We include an interpretation for our P-value. Remember that the P-value is the probability---**under the assumption of the null hypothesis**---of seeing results as extreme or even more extreme than the data we saw.
+
+2. The P-value is less than 0.05. Remember that as we talk about the conclusion in the next section of the rubric.
 
 
 ## Conclusion
@@ -422,13 +430,19 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 ##### Mechanics
 
-###### Compute and report the test statistic.
+###### Compute the test statistic.
 
 <div class = "answer">
 
 ```{r}
 # Add code here to compute the test statistic.
 ```
+
+</div>
+
+###### Report the test statistic in context.
+
+<div class = "answer">
 
 Please write up your answer here.
 
@@ -437,8 +451,6 @@ Please write up your answer here.
 ###### Plot the null distribution.
 
 <div class = "answer">
-
-(The actual value of the seed doesn't matter, but I'll select one for you so that this always results in the same answer.)
 
 ```{r}
 set.seed(9999)
@@ -451,13 +463,19 @@ set.seed(9999)
 
 </div>
 
-###### Calculate and interpret the P-value.
+###### Calculate the P-value.
 
 <div class = "answer">
 
 ```{r}
 # Add code here to calculate the P-value.
 ```
+
+</div>
+
+###### Interpret the P-value as a probability given the null.
+
+<div class = "answer">
 
 Please write up your answer here.
 

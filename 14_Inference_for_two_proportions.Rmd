@@ -9,7 +9,7 @@ output:
 ---
 
 <!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r intToUtf8(c(49,46,49))`</p>
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(49,46,50))`</p>
 <!-- Please don't mess with the previous few lines! -->
 
 <div class = "summary">
@@ -99,8 +99,10 @@ There is a minor hitch with `status`. The help file shows three categories: 1. d
 ```{r}
 status <- factor(Melanoma$status,
                  levels = c(1, 2, 3),
-                 labels = c("died from melanoma", "other", "other"))
-sex <- factor(Melanoma$sex, levels = c(0, 1), labels = c("female", "male"))
+                 labels = c("died from melanoma",
+                            "other", "other"))
+sex <- factor(Melanoma$sex, levels = c(0, 1),
+              labels = c("female", "male"))
 status_sex <- data.frame(status, sex)
 status_sex
 ```
@@ -114,7 +116,8 @@ tally(status ~ sex, data = status_sex, margins = TRUE)
 ```
 
 ```{r}
-tally(status ~ sex, data = status_sex, margins = TRUE, format = "percent")
+tally(status ~ sex, data = status_sex,
+      margins = TRUE, format = "percent")
 ```
 
 Commentary: You can see why column percentages are necessary in a contingency table. There are 28 females and 29 males who died from melanoma, almost a tie. However, there are more females (126) than there are males (79) who have melanoma in this data set. So the *proportion* of males who died from melanoma is quite a bit larger.
@@ -165,7 +168,7 @@ For a more sophisticated approach, one could also use "pooled proportions". See 
 
 ## Mechanics
 
-### Compute and report the test statistic.
+### Compute the test statistic.
 
 ```{r}
 status_sex_test <- prop.test(status ~ sex, data = status_sex)
@@ -196,11 +199,16 @@ z1 <- (status_sex_test_tidy$estimate1 - status_sex_test_tidy$estimate2)/SE1
 z1
 ```
 
-The test statistic has a z score of `r z1`.
-
 Commentary: We use the `prop.test` command for this. Now that we are working with two variables, we can use the "formula" notation with the tilde that we have seen before. The only tricky thing to remember is the order of the variables. Remember that the tilde is pronounced "by", so we want to measure "status by sex" or "status grouped by sex".
 
 As with the single proportion test, the z score is not part of the output, so we have to compute it directly.^[Ignore the test statistic from the tidy output. Under the hood, the prop.test command is doing something quite different, so this test statistic doesn't make sense in the context of a normal model.] It works the same way as the z score did for the single proportion test, but the standard error is a more complicated formula that requires a bit more typing and a bit more care.
+
+### Report the test statistic in context.
+
+In our sample, there is a `r 100 * (status_sex_test_tidy$estimate1 - status_sex_test_tidy$estimate2)`% difference between the rate at which women and men in Denmark die from malignant melanoma (meaning that males died at a higher rate).
+
+The test statistic has a z score of `r z1`. The difference in proportions between the rate at which women and men in Denmark die from malignant melanoma lies 2.2 standard errors to the left of the null value.
+
 
 ### Plot the null distribution.
 
@@ -210,14 +218,12 @@ pdist("norm", q = c(-z1, z1), invisible = TRUE)
 
 Commentary: Remember that this is a two-sided test.
 
-### Calculate and interpret the P-value.
+### Calculate the P-value.
 
 ```{r}
 P1 <- 2 * pdist("norm", q = z1, plot = FALSE)
 P1
 ```
-
-The P-value is `r P1`. If there were truly no difference between the rate at which women and men in Denmark die from malignant melanoma, there is only a `r 100 * P1`% chance of seeing a difference in our data at least as extreme as what we saw.
 
 Commentary: As in the one-proportion test, a two-sided P-value is stored in the output of the `prop.test` function:
 
@@ -226,6 +232,10 @@ status_sex_test$p.value
 ```
 
 Because the `prop.test` function is using a slightly different method under the hood, this P-value will not agree exactly with the one we computed. Nevertheless, they should be somewhat close and lead to the same conclusion.
+
+### Interpret the P-value as a probability given the null.
+
+The P-value is `r P1`. If there were truly no difference between the rate at which women and men in Denmark die from malignant melanoma, there is only a `r 100 * P1`% chance of seeing a difference in our data at least as extreme as what we saw.
 
 
 ## Conclusion
@@ -395,13 +405,19 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 ##### Mechanics
 
-###### Compute and report the test statistic.
+###### Compute the test statistic.
 
 <div class = "answer">
 
 ```{r}
 # Add code here to compute the test statistic.
 ```
+
+</div>
+
+###### Report the test statistic in context.
+
+<div class = "answer">
 
 Please write up your answer here.
 
@@ -417,13 +433,19 @@ Please write up your answer here.
 
 </div>
 
-###### Calculate and interpret the P-value.
+###### Calculate the P-value.
 
 <div class = "answer">
 
 ```{r}
 # Add code here to calculate the P-value.
 ```
+
+</div>
+
+###### Interpret the P-value as a probability given the null.
+
+<div class = "answer">
 
 Please write up your answer here.
 

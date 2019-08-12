@@ -9,7 +9,7 @@ output:
 ---
 
 <!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r intToUtf8(c(49,46,49))`</p>
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(49,46,50))`</p>
 <!-- Please don't mess with the previous few lines! -->
 
 <div class = "summary">
@@ -332,16 +332,18 @@ The conditions have already been checked.
 
 ## Mechanics
 
-### Compute and report the test statistic.
+### Compute the test statistic.
 
 ```{r}
 t1 <- wgt_wrist_tidy$statistic[2]
 t1
 ```
 
-The sample slope estimate has a t score of `r t1`.
-
 Commentary: `wgt_wrist_tidy$statistic` has t scores for both the intercept and the slope. Be sure to grab the 2nd entry to get the slope test statistic.
+
+### Report the test statistic in context.
+
+The sample slope estimate has a t score of `r t1`. The slope of the regression line predicting weight from wrist diameter is more than 26 standard errors (!) from the null slope of zero.
 
 ### Plot the null distribution.
 
@@ -353,15 +355,17 @@ pdist("t", df = wgt_wrist_glance$df.residual,
 
 Commentary: The correct degrees of freedom are stored in `wgt_wrist_glance$df.residual`, not `wgt_wrist_glance$df` as you might expect.
 
-### Calculate and report the P-value.
+### Calculate the P-value.
 
 ```{r}
 wgt_wrist_tidy$p.value[2]
 ```
 
-$P < 0.001$. If there were truly no relationship between weight and wrist diameter, there would be less than a 0.1% chance of seeing data at least as extreme as we saw.
-
 Commentary: Not only are there two P-values in `wgt_wrist_tidy$p.value` (one for the intercept and one for the slope), but there's one in `wgt_wrist_glance` too. The one in the `glance` output, though, is the same as the P-value for the slope, so either `wgt_wrist_tidy$p.value[2]` or `wgt_wrist_glance$p.value` will give the right answer.
+
+### Interpret the P-value as a probability given the null.
+
+$P < 0.001$. If there were truly no relationship between weight and wrist diameter, there would be less than a 0.1% chance of seeing data at least as extreme as we saw.
 
 
 ## Conclusion
@@ -584,13 +588,19 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 ##### Mechanics
 
-###### Compute and report the test statistic.
+###### Compute the test statistic.
 
 <div class = "answer">
 
 ```{r}
 # Add code here to compute the test statistic.
 ```
+
+</div>
+
+###### Report the test statistic in context.
+
+<div class = "answer">
 
 Please write up your answer here.
 
@@ -606,13 +616,19 @@ Please write up your answer here.
 
 </div>
 
-###### Calculate and interpret the P-value.
+###### Calculate the P-value.
 
 <div class = "answer">
 
 ```{r}
 # Add code here to calculate the P-value.
 ```
+
+</div>
+
+###### Interpret the P-value as a probability given the null.
+
+<div class = "answer">
 
 Please write up your answer here.
 
