@@ -55,8 +55,10 @@ In a categorical variable, the order of the categories usually does not matter. 
 In the `factor` command in R, be sure to list the success category first in both the `levels` and `labels` parts of the command. We are interested in whether mothers have babies with low birth weight, so (unfortunately) having low birth weight is considered the "success" condition. The order of the categories of `smoke` is less important because that is the explanatory variable. Observe the ordering of the levels and labels in the following:
 
 ```{r}
-low <- factor(birthwt$low, levels = c(1, 0), labels = c("Yes", "No"))
-smoke <- factor(birthwt$smoke, levels = c(1, 0), labels = c("Yes", "No"))
+low <- factor(birthwt$low, levels = c(1, 0),
+              labels = c("Yes", "No"))
+smoke <- factor(birthwt$smoke, levels = c(1, 0),
+                labels = c("Yes", "No"))
 low_smoke <- data.frame(low, smoke)
 low_smoke
 ```
@@ -77,7 +79,7 @@ Create two contingency tables with `low` as the row variable and `smoke` as the 
 ```
 
 ```{r}
-# Add code here to create a contingency tables of percents with 
+# Add code here to create a contingency table of percents with 
 # low as the row variable and smoke as the column variable.
 ```
 
@@ -237,15 +239,15 @@ Please write up your answer here.
 
 How likely is it that the observed difference (or a difference even more extreme) could have resulted from chance alone? Because `sims` contains simulated results after shuffling, the variable `diffprop` contains values that assume that smoking is independent of birth weight. In order to assess how plausible our observed difference is under that assumption, we want to find out how many of the simulated values are at least as small, if not smaller, than the observed difference, -0.1532315.
 
-Look at the 100 smallest entries of the values of `diffprop`:
+Look at the 120 smallest entries of the values of `diffprop`:
 
 ```{r}
-head(sort(sims$diffprop), n = 100)
+head(sort(sims$diffprop), n = 120)
 ```
 
-Of the 5000 simulations, the most extreme difference of about 24% occurred once, just by chance. That seems like a pretty extreme value when expecting a value of 0%, but the laws of probability tell us that extreme values will be observed from time to time, even if rarely. Also recall that the observed difference in the actual data was -0.1532315. This specific value came up quite a bit in our simulated data. In fact, the 98th entry of the sorted data above is the last occurrence of the value -0.1532315. After that, the next higher value is -0.1310223.
+Of the 5000 simulations, the most extreme difference of about 24% occurred four times, just by chance. That seems like a pretty extreme value when expecting a value of 0%, but the laws of probability tell us that extreme values will be observed from time to time, even if rarely. Also recall that the observed difference in the actual data was -0.1532315. This specific value came up quite a bit in our simulated data. In fact, the 109th entry of the sorted data above is the last occurrence of the value -0.1532315. After that, the next higher value is -0.1310223.
 
-So let's return to the original question. How many simulated values are as small---if not smaller---than the observed difference? Apparently, 98 out of 5000, which is `r 98/5000`. In other words `r 100 * 98/5000`% of the simulated data is as extreme or more extreme than the actual difference in low birth weight prevalence between smoking and nonsmoking women in the real data. That's not very large. In other words, a difference like -0.1532315 could occur just by chance---like flipping 10 out of 10 heads or something like that. But it doesn't happen very often.
+So let's return to the original question. How many simulated values are as small---if not smaller---than the observed difference? Apparently, 109 out of 5000, which is `r 109/5000`. In other words `r 100 * 109/5000`% of the simulated data is as extreme or more extreme than the actual difference in low birth weight prevalence between smoking and nonsmoking women in the real data. That's not very large. In other words, a difference like -0.1532315 could occur just by chance---like flipping 10 out of 10 heads or something like that. But it doesn't happen very often.
 
 We can automate this using the same `prop` command we saw before, but used in a slightly different way. In the command below, we use the condition
 
@@ -259,7 +261,7 @@ prop(sims$diffprop <= obs_diff)
 
 **COPY/PASTE WARNING**: If the observed difference were positive, then extreme values of interest would be *greater* than 0.1532315, not less than -0.1532315. You must note if the observed difference is positive or negative and then use `<=` or `>=` as appropriate!
 
-Again, 0.0196 is a small number. This shows us that if there were truly no association between low birth weight and smoking, then our data is a rare event. (An observed difference this extreme or more extreme would only occur about 2% of the time by chance.)
+Again, 0.0218 is a small number. This shows us that if there were truly no association between low birth weight and smoking, then our data is a rare event. (An observed difference this extreme or more extreme would only occur about 2% of the time by chance.)
 
 Because the probability above is so small, it seems unlikely that our variables are independent. Therefore, it seems more likely that there is an association between low birth weight and smoking. We have evidence of a statistically significant difference between the chance of having a baby with low birth weight among women who smoke versus women who don't smoke.
 
@@ -333,7 +335,8 @@ Simulate 2000 outcomes under the assumption that low birth weight is independent
 
 ```{r}
 set.seed(3141593)
-# Add code here to simulate 2000 outcomes under the independence assumption
+# Add code here to simulate 2000 outcomes
+# under the independence assumption
 # and store the simulations in a data frame called sims2.
 ```
 
