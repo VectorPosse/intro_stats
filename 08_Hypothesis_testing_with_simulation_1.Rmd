@@ -157,8 +157,10 @@ str(birthwt)
 We need to convert `low` and `smoke` to factor variables and put them into a separate data frame. Recall from a previous module that "Yes" is our "success" condition for `low`, so it has to be listed first among the `levels` and `labels` of the `factor` command. (This is particularly important for the response variable `low`. For the explanatory variable `smoke` it's less relevant, although see the section below in which we compute `diffprop`.) We print the new data frame and use `str` to check that things worked out correctly.
 
 ```{r}
-low <- factor(birthwt$low, levels = c(1, 0), labels = c("Yes", "No"))
-smoke <- factor(birthwt$smoke, levels = c(1, 0), labels = c("Yes", "No"))
+low <- factor(birthwt$low, levels = c(1, 0),
+              labels = c("Yes", "No"))
+smoke <- factor(birthwt$smoke, levels = c(1, 0),
+                labels = c("Yes", "No"))
 low_smoke <- data.frame(low, smoke)
 low_smoke
 ```
@@ -176,7 +178,8 @@ tally(low ~ smoke, data = low_smoke, margins = TRUE)
 ```
 
 ```{r}
-tally(low ~ smoke, data = low_smoke, margins = TRUE, format = "percent")
+tally(low ~ smoke, data = low_smoke, margins = TRUE,
+      format = "percent")
 ```
 
 
@@ -243,7 +246,8 @@ The observed difference in the proportion of low birth weight babies among smoki
 
 ```{r}
 set.seed(9999)
-sims <- do(5000) * diffprop(low ~ shuffle(smoke), data = low_smoke)
+sims <- do(5000) * diffprop(low ~ shuffle(smoke),
+                            data = low_smoke)
 ```
 
 ```{r}
@@ -455,6 +459,7 @@ Please write up your answer here.
 ```{r}
 set.seed(9999)
 # Add code here to simulate the null distribution.
+# Run 5000 simulations like in the earlier example.
 ```
 
 ```{r}
