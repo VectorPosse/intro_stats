@@ -88,7 +88,11 @@ We use the `do` command to do this a bunch of times and graph the results along 
 
 ```{r}
 set.seed(1729)
-sims <- do(2000) * diffmean(HeadWt ~ shuffle(Cult), data = cabbages)
+sims <- do(2000) * diffmean(HeadWt ~ shuffle(Cult),
+                            data = cabbages)
+```
+
+```{r}
 ggplot(sims, aes(x = diffmean)) +
     geom_histogram(binwidth = 0.1, boundary = 0) +
     geom_vline(xintercept = obs_diff, color = "blue")
