@@ -9,7 +9,7 @@ output:
 ---
 
 <!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r intToUtf8(c(49,46,49))`</p>
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(49,46,51))`</p>
 <!-- Please don't mess with the previous few lines! -->
 
 <div class = "summary">
@@ -27,7 +27,7 @@ In this assignment we will learn how to run the chi-square goodness-of-fit test.
 
 We load the standard `mosaic` package and the `openintro` package for the `hsb2` data. The `broom` package will give us tidy output.
 
-```{r, message = FALSE}
+```{r, warning = FALSE, message = FALSE}
 library(openintro)
 library(broom)
 library(mosaic)
@@ -36,7 +36,9 @@ library(mosaic)
 
 ## Research question
 
-We use a classic data set `mtcars` from a 1974 Motor Trend magazine to examine the distribution of the number of engine cylinders (with values 4, 6, or 8). Assuming that this data set is representative of all cars from 1974, were there an equal number of cars with 4, 6, and 8 cylinders?
+We use a classic data set `mtcars` from a 1974 Motor Trend magazine to examine the distribution of the number of engine cylinders (with values 4, 6, or 8). We'll assume that this data set is representative of all cars from 1974.
+
+In recent years, 4-cylinder vehicles and 6-cylinder vehicles have comprised about 38% of the market each, with nearly all the rest (24%) being 8-cylinder cars. (This ignores a very small number of cars manufactured with 3- or 5-cylinder engines.) Were car engines in 1974 manufactured according to the same distribution?
 
 Here is the structure of the data:
 
@@ -55,19 +57,31 @@ cyl_df
 
 ## Chi-squared
 
-When we have three or more categories in a categorical variable, it is natural to ask how the observed counts in each category compare to the counts that we expected to see under the assumption of some null hypothesis. In other words, we're assuming that there is some "default" distribution to which we are going to compare our data. Sometimes, this default null comes from substantive expert knowledge. (For example, we might compare the 1974 distribution to a known distribution from another year.) Sometimes we're interested to see if our data deviates from a null distribution that predicts an equal number of observations in each category, which is the research question in this module.
+When we have three or more categories in a categorical variable, it is natural to ask how the observed counts in each category compare to the counts that we expect to see under the assumption of some null hypothesis. In other words, we're assuming that there is some "true" distribution to which we are going to compare our data. Sometimes, this null comes from substantive expert knowledge. (For example, we will be comparing the 1974 distribution to a known distribution from recent years.) Sometimes we're interested to see if our data deviates from a null distribution that predicts an equal number of observations in each category.
 
-First of all, what is the actual distribution of cylinders in our data? 
+First of all, what is the actual distribution of cylinders in our data? Here's a frequency table.
  
 ```{r}
 tally(~ cyl, data = cyl_df)
 ```
 
-The numbers in these three cells are the "observed" values (usually denoted by the letter $O$). What are the expected counts? Well, since there are 32 cars and there are 3 categories, we would expect there to be $32/3 = 10.67$ cars at each level. This is the "expected" count (usually denoted by the letter $E$).
+**Very important**: For this module, you must *not* include `margins = TRUE` in the `tally` command. R is not quite smart enough to figure out that the "Total" isn't really part of the data. We also don't want to use `format = "percent"` because the statistical test we will use relies on having the raw counts, not percentages or proportions.
 
-Why isn't the expected count a whole number? In any given data set, of course, we will see a whole number of cars with 4, 6, or 8 cylinders. However, since this is just the expected count, it's the average over lots of possible sets of 32 cars under the assumption of the null. We don't need for this average to be a whole number.
+The numbers in the three cells of our frequency table are the "observed" values, usually denoted by the letter $O$.
 
-How should the deviation between the data and the null distribution be measured? We could simply look at the difference between the observed counts and the expected counts $O - E$. However, there will be some positive values (cells where we have more than 10.67 cars) and some negative values (cells where we have fewer than 10.67 cars). These will all cancel out.
+Since we'll need this table later, we'll go ahead and store it:
+
+```{r}
+cyl_tally <- tally(~ cyl, data = cyl_df)
+cyl_tally
+```
+
+
+What are the expected counts? Well, since there are 32 cars, we need to multiply 32 by the percentages listed in the research question. For 4-cylinder and 6-cylinder cars, if the distribution of engines in 1974 were the same as today, there would be $32 * 0.38$ or about 12.2 cars we would expect to see in our sample that have 4-cylinder engines, and the same for 6-cylinder cars. For 8-cylinder cars, we expect $32 * 0.24$ or about 7.7 cars in our sample to have 8-cylinder engines. These "expected" counts are usually denoted by the letter $E$.
+
+Why aren't the expected counts whole numbers? In any given data set, of course, we will see a whole number of cars with 4, 6, or 8 cylinders. However, since we're looking only at expected counts, they are the average over lots of possible sets of 32 cars under the assumption of the null. We don't need for these averages to be whole numbers.
+
+How should the deviation between the data and the null distribution be measured? We could simply look at the difference between the observed counts and the expected counts $O - E$. However, there will be some positive values (cells where we have more than the expected number of cars) and some negative values (cells where we have fewer than the expected number of cars). These will all cancel out.
 
 If this sounds vaguely familiar, it is because we encountered the same problem with the formula for the standard deviation. The differences $y - \bar{y}$ had the same issue. Do you recall the solution in that case? It was to square these values, making them all positive.
 
@@ -83,21 +97,19 @@ A $\chi^{2}$ value of zero would indicate perfect agreement between observed and
 
 As an example, for our data, we calculate chi-squared as follows:
 
-$$\chi^{2} = \frac{(11 - 10.67)^{2}}{10.67} + \frac{(7 - 10.67)^{2}}{10.67} + \frac{(14 - 10.67)^{2}}{10.67} \approx 2.31.$$
+$$\chi^{2} = \frac{(11 - 12.2)^{2}}{12.2} + \frac{(7 - 12.2)^{2}}{12.2} + \frac{(14 - 7.7)^{2}}{7.7} \approx 7.5.$$
 
-In general, the expected counts do not all have to be the same, as they are here. This is a function of the null hypothesis which, for us, is that all cylinders are represented equally in the population.
-
-Or we could just do it in R with the `chisq` command. We will store this value for later.
+Or we could just do it in R with the `chisq` command. This command does not follow the "formula" notation with the tilde as other commands we've seen. Instead, we have to give it the frequency table that results from applying the `tally` command. (We called this `cyl_tally` above.) In addition, we have to tell `chisq` the proportions that correspond to the null hypothesis. In this case, since the order of entries in the frequency table is 4-cylinder, 6-cylinder, then 8-cylinder, we need to give `chisq` a vector of entries `c(0.38, 0.38, 0.24)` that represents the 38%, 38%, and 24% expected for 4, 6, and 8 cylinders respectively.
 
 ```{r}
-obs_chisq <- chisq(~ cyl, data = cyl_df)
+obs_chisq <- chisq(cyl_tally, p = c(0.38, 0.38, 0.24))
 obs_chisq
 ```
 
 
 ## The chi-square distribution
 
-We know that even if the true distribution were 10.67 in each cell, we would not see those exact numbers if we collect a sample of 32 cars. (In fact, the "true" distribution is physically impossible because 10.67 is not a whole number!) So what kinds of numbers could we get?
+We know that even if the true distribution were 38%, 38%, 24%, we would not see exactly 12.2, 12.2, 7.7 in a sample of 32 cars. (In fact, the "true" distribution is physically impossible because these are not whole numbers!) So what kinds of numbers could we get?
 
 Let's do a quick simulation to find out. We will use the `resample` command from the `mosaic` package.
 
@@ -107,36 +119,51 @@ First of all, recall the actual distribution of cylinders:
 tally(~ cyl, data = cyl_df)
 ```
 
-Under the assumption of the null, there should be an equal chance of seeing 4, 6, or 8 cylinders. The `resample` command below takes the values "4", "6", or "8" and grabs them at random until it has 32 values.
+Under the assumption of the null, there should be a 38%, 38%, and 24% chance of seeing 4, 6, or 8 cylinders, respectively. The `resample` command below takes the values "4", "6", or "8" and grabs them at random according to the probabilities specified until it has 32 values. In other words, it will randomly select "4" about 38% of the time, "6" about 38% of the time, and "8" about 24% of the time, until it gets a list of 32 total cars. But because randomness is involved, the simulated samples are subject to sampling variability.
+
+Here is one simulated data set:
 
 ```{r}
 set.seed(9090)
-tally(resample(c(4, 6, 8), size = 32))
+tally(resample(c(4, 6, 8), size = 32,
+               prob = c(0.38, 0.38, 0.24)))
 ```
 
-Let's do this a couple more times to see some possibilities.
+Let's do this a couple more times to see some other possibilities.
 
 ```{r}
-tally(resample(c(4, 6, 8), size = 32))
-tally(resample(c(4, 6, 8), size = 32))
-tally(resample(c(4, 6, 8), size = 32))
+tally(resample(c(4, 6, 8), size = 32,
+               prob = c(0.38, 0.38, 0.24)))
+tally(resample(c(4, 6, 8), size = 32,
+               prob = c(0.38, 0.38, 0.24)))
+tally(resample(c(4, 6, 8), size = 32,
+               prob = c(0.38, 0.38, 0.24)))
 ```
 
-Each table represents 32 randomly sampled cars from a population in which we're assuming that there are an equal number of 4, 6, and 8 cylinder cars.
+Each table represents 32 randomly sampled cars from a population in which we're assuming a distribution of 38% 4-cylinder cars, 38% 6-cylinder cars, and 24% 8-cylinder cars.
 
 Next, we need to calculate the $\chi^{2}$ value for each sample. This is a simple matter of applying the `chisq` function to each random sample.
 
 ```{r}
-chisq(tally(resample(c(4, 6, 8), size = 32)))
-chisq(tally(resample(c(4, 6, 8), size = 32)))
-chisq(tally(resample(c(4, 6, 8), size = 32)))
+chisq(tally(resample(c(4, 6, 8), size = 32,
+                     prob = c(0.38, 0.38, 0.24))),
+      p = c(0.38, 0.38, 0.24))
+chisq(tally(resample(c(4, 6, 8), size = 32,
+                     prob = c(0.38, 0.38, 0.24))),
+      p = c(0.38, 0.38, 0.24))
+chisq(tally(resample(c(4, 6, 8), size = 32,
+                     prob = c(0.38, 0.38, 0.24))),
+      p = c(0.38, 0.38, 0.24))
 ```
 
 As before, we can use the `do` command to do this a bunch of times and save the results in a data frame.
 
 ```{r}
 set.seed(9090)
-sims <- do(5000) * chisq(tally(resample(c(4, 6, 8), size = 32)))
+sims <- do(5000) * 
+  chisq(tally(resample(c(4, 6, 8), size = 32,
+                       prob = c(0.38, 0.38, 0.24))),
+        p = c(0.38, 0.38, 0.24))
 sims
 ```
 
@@ -144,7 +171,7 @@ Let's graph the resulting random values of $\chi^{2}$ and include the chi-square
 
 ```{r}
 ggplot(sims, aes(x = X.squared)) +
-    geom_histogram(binwidth = 2, boundary =  0) +
+    geom_histogram(binwidth = 1, boundary =  0) +
     geom_vline(xintercept = obs_chisq, color = "blue")
 ```
 
@@ -152,9 +179,15 @@ A few things are apparent:
 
 1. The values are all positive. This makes sense when you remember that each piece of the $\chi^{2}$ calculation was positive. This is different from our earlier simulations that looked like normal models. (Z scores can be positive or negative, but not $\chi^{2}$.)
 
-2. This is a severely right-skewed graph. Although most values are near zero, the occasional freak sample can have a large value of $\chi^{2}$.
+2. This is a severely right-skewed graph. Although most values are near zero, the occasional unusual sample can have a large value of $\chi^{2}$.
 
-3. You can see that our sample (the blue line) does not seem that unusual. It's not way out into the right tail. Another way of saying this is that our data does not seem out of the ordinary for data sampled under the assumption of the null hypothesis. 
+3. You can see that our sample (the blue line) is pretty far to the right. It is an unusual value given the assumption of the null hypothesis. In fact, we can count the proportion of sampled values that are to the right of the blue line:
+
+```{r}
+prop(sims$X.squared >= obs_chisq)
+```
+
+This is the simulated P-value. Keep this number in mind when we calculate the P-value using a sampling distribution model later.
 
 
 ## Chi-square as a sampling distribution model
@@ -171,9 +204,12 @@ Look at the graph below that shows the theoretical chi-square models for varying
 # Don't worry about the syntax here.
 # You won't need to know how to do this on your own.
 ggplot(data.frame(x = c(0, 20)), aes(x)) +
-    stat_function(fun = dchisq, args = list(df = 2), aes(color = "2")) +
-    stat_function(fun = dchisq, args = list(df = 5), aes(color = "5" )) +
-    stat_function(fun = dchisq, args = list(df = 10), aes(color = "10")) +
+    stat_function(fun = dchisq, args = list(df = 2),
+                  aes(color = "2")) +
+    stat_function(fun = dchisq, args = list(df = 5),
+                  aes(color = "5" )) +
+    stat_function(fun = dchisq, args = list(df = 10),
+                  aes(color = "10")) +
     scale_color_manual(name = "df",
                        values = c("2" = "red",
                                   "5" = "blue",
@@ -190,19 +226,10 @@ The formal inferential procedure for examining whether data from a categorical v
 
 We can use the chi-square model as the sampling distribution as long as the sample size is large enough. This is checked by calculating that the expected cell counts (not the observed cell counts!) are at least 5 in each cell.
 
-We use the `chisq.test` command to run the hypothesis test in R. The `chisq.test` command is a little unusual in that you have to run the test on the frequency table and not the raw data. So let's save the results of the `tally` command so that we can feed the resulting table directly into the `chisq.test` command.
-
-**Very important**: You must *not* include `margins = TRUE` in the `tally` command before running a chi-square test. R is not quite smart enough to figure out that the "Total" isn't really part of the data.
+We use the `chisq.test` command to run the hypothesis test in R. The `chisq.test` command is like the `chisq` command in that you have to run the test on the frequency table and not the raw data. As usual, we also apply `tidy` to store the output in a tidy fashion.
 
 ```{r}
-cyl_tally <- tally(~ cyl, data = cyl_df)
-cyl_tally
-```
-
-In the `chisq.test` command, instead of an argument `data = cyl_df`, we use `cyl_tally` directly in the input. As usual, we also apply `tidy` to store the output in a tidy fashion.
-
-```{r}
-cyl_test <- chisq.test(cyl_tally)
+cyl_test <- chisq.test(cyl_tally, p = c(0.38, 0.38, 0.24))
 cyl_test_tidy <- tidy(cyl_test)
 cyl_test_tidy
 ```
@@ -243,26 +270,26 @@ cyl_tally <- tally(~ cyl, data = cyl_df)
 cyl_tally
 ```
 
-Commentary: Again, be sure to save the results of the `tally` command to feed into the `chisq.test` command later. Also be sure *not* to use `margins = TRUE`.
+Commentary: Again, be sure to save the results of the `tally` command to feed into the `chisq.test` command later. Also be sure *not* to use `margins = TRUE` or `format = "percent"`.
 
 
 ## Hypotheses
 
 ### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
-The sample is a set of `r NROW(cyl_df)` cars from a 1974 Motor Trends magazine. The population is all cars from 1974. (We would not want to assume that the number of cylinders in cars today would be similar to the distribution in 1974!)
+The sample is a set of `r NROW(cyl_df)` cars from a 1974 Motor Trends magazine. The population is all cars from 1974.
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
-$H_{0}:$ In 1974, there were the same number of cars with 4, 6, and 8 cylinders.
+$H_{0}:$ In 1974, the proportion of cars with 4, 6, and 8 cylinders was 38%, 38%, and 24%, respectively.
 
-$H_{A}:$ In 1974, there weren't the same number of cars with 4, 6, and 8 cylinders.
+$H_{A}:$ In 1974, the proportion of cars with 4, 6, and 8 cylinders was not 38%, 38%, and 24%.
 
 ### Express the null and alternative hypotheses in symbols (when possible).
 
-$H_{0}: p_{4} = p_{6} = p_{8}$
+$H_{0}: p_{4} = 0.38, p_{6} = 0.38, p_{8} = 0.24$
 
-There is no easy way to express the alternate hypothesis in symbols because any deviation in any of the categories can lead to rejection of the null. You can't just say $p_{4} \neq p_{6} \neq p_{8}$ because two of these categories might be the same and the third different and that would still be consistent with the alternative hypothesis.
+There is no easy way to express the alternate hypothesis in symbols because any deviation in any of the categories can lead to rejection of the null. You can't just say $p_{4} \neq 0.38, p_{6} \neq 0.38, p_{8} \neq 0.24$ because one of these categories might have the correct proportion with the other two different and that would still be consistent with the alternative hypothesis.
 
 So the only requirement here is to express the null in symbols.
 
@@ -284,22 +311,28 @@ Commentary: Unlike the normal model, there are infinitely many different $\chi^{
     - As long as there are at least 320 different car models, we are okay. This sounds like a lot, so this condition might not quite be met. Again, we need to be careful. (Also note that the population is not all automobiles manufactured in 1974. It is all *types* of automobile manufactured in 1974. There's a big difference.)
 
 * Expected cell counts
-    - This condition says that under the null, we should see at least 5 cars in each category. We expect `r NROW(cyl_df)/3` in each cell, so this condition is met.
+    - This condition says that under the null, we should see at least 5 cars in each category. The expected counts are $32(0.38) = 12.2$, $32(0.38) = 12.2$, and $32(0.24) = 7.7$. So this condition is met.
 
 
 ## Mechanics
 
-### Compute and report the test statistic.
+### Compute the test statistic.
 
 ```{r}
-cyl_test <- chisq.test(cyl_tally)
+cyl_test <- chisq.test(cyl_tally, p = c(0.38, 0.38, 0.24))
 cyl_test_tidy <- tidy(cyl_test)
+cyl_test_tidy
+```
+
+```{r}
 cyl_test_tidy$statistic
 ```
 
+### Report the test statistic in context.
+
 The value of $\chi^{2}$ is `r cyl_test_tidy$statistic`.
 
-Commentary: The $\chi^{2}$ test statistic is, of course, the same value we computed manually by hand earlier.
+Commentary: The $\chi^{2}$ test statistic is, of course, the same value we computed manually by hand earlier. Also, the formula for $\chi^{2}$ is a complicated function of observed and expected values, making it difficult to say anything about this number in the context of cars and engine cylinders. So even though the requirement is to "report the test statistic in context," there's not much one can say here other than just to report the test statistic.
 
 ### Plot the null distribution.
 
@@ -309,9 +342,9 @@ pdist("chisq", df = cyl_test_tidy$parameter,
       invisible = TRUE)
 ```
 
-Commentary: We use `pdist`, but now we need to use "chisq" instead of "norm". Also, since the chi-square distribution requires the specification of degrees of freedom, there is a new argument to `pdist` called `df`. We could type `df = 2` since we know there are 2 degrees of freedom; however, the degrees of freedom are also stored in the output `cyl_test_tidy` in the `parameter` variable. 
+Commentary: We use `pdist`, but now we need to use `"chisq"` instead of `"norm"`. Also, since the chi-square distribution requires the specification of degrees of freedom, there is a new argument to `pdist` called `df`. We could type `df = 2` since we know there are 2 degrees of freedom; however, the degrees of freedom are also stored in the output `cyl_test_tidy` in the `parameter` variable. 
 
-### Calculate and interpret the P-value.
+### Calculate the P-value.
 
 ```{r}
 P1 <- 1 - pdist("chisq", df = cyl_test_tidy$parameter,
@@ -320,30 +353,33 @@ P1 <- 1 - pdist("chisq", df = cyl_test_tidy$parameter,
 P1
 ```
 
-The P-value is `r P1`. If there were the same number of cars with 4, 6, and 8 cylinders, there is a `r 100 * P1`% chance of seeing data at least as extreme as what we saw.
-
-Commentary: Values that are as extreme or even more extreme than the test statistic are in the right tail. If we use `pdist`, remember that it always shades to the left by default, so we have to subtract the output from 1 to get the correct P-value. Also remember to add `plot = FALSE` as we don't really need to look at the same picture again.
-
 The P-value is also stored in the tidy output:
 
 ```{r}
 cyl_test_tidy$p.value
 ```
 
+Commentary: Values that are as extreme or even more extreme than the test statistic are in the right tail. If we use `pdist`, remember that it always shades to the left by default, so we have to subtract the output from 1 to get the correct P-value. Also remember to add `plot = FALSE` as we don't really need to look at the same picture again.
+
+
+### Interpret the P-value as a probability given the null.
+
+The P-value is `r P1`. If the true distribution of cars in 1974 were 38% 4-cylinder, 38% 6-cylinder, and 24% 8-cylinder, there would be a `r 100 * P1`% chance of seeing data at least as extreme as what we saw.
+
 
 ## Conclusion
 
 ### State the statistical conclusion.
 
-We fail to reject the null.
+We reject the null.
 
 ### State (but do not overstate) a contextually meaningful conclusion.
 
-There is insufficient evidence that in 1974, there weren't the same number of cars with 4, 6, and 8 cylinders.
+There is sufficient evidence that in 1974, the distribution of cars was not 38% 4-cylinder, 38% 6-cylinder, and 24% 8-cylinder.
 
 ### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
-If we made a Type II error, that would mean that there really was a difference in the number of 4, 6, or 8 cylinder cars, but our sample didn't give us enough evidence of a difference to prove it more conclusively.
+If we made a Type I error, that would mean the true distribution of cars in 1974 was 38% 4-cylinder, 38% 6-cylinder, and 24% 8-cylinder, but our sample showed otherwise.
 
 
 ## Confidence interval
@@ -355,7 +391,7 @@ However we will perform a different kind of analysis...
 
 ## Post hoc analysis
 
-When we reject the null (which we did not do above), we are left with a very vague alternative hypothesis: there is some difference somewhere in one or more categories. Often, we want to follow up to figure out which categories are the ones deviating from the null expectation.
+When we reject the null, we are left with a very vague alternative hypothesis: there is some difference somewhere in one or more categories. Often, we want to follow up to figure out which categories are the ones deviating from the null expectation.
 
 The best way to do this is to look at the *residuals*. A residual for a cell measures how far away the observed count is from the expected count. It does no good just to calculate $O - E$ however; cells with a large count may be far away from their expected values only because they are large numbers. What we want is some kind of relative distance.
 
@@ -369,23 +405,25 @@ $$\frac{(O - E)}{\sqrt{E}}.$$
 
 Additionally, the above quantity can be positive or negative, and that gives us more information about the direction in which there is a deviation.
 
-Because we failed to reject the null, we didn't have any evidence of a difference anywhere and so there's not much point in examining the residuals. We'll do it here just for practice. The residuals are not stored as part of the `tidy` output, so we'll have to grab them from the original `cyl_test` object:
+If you fail to reject the null, you don't have any evidence of a difference anywhere, and so there's not much point in examining the residuals. Here, though, we did reject the null, so it's worth studying them.
+
+The residuals are not stored as part of the `tidy` output, so we'll have to grab them from the original `cyl_test` object:
 
 ```{r}
 cyl_test$residuals
 ```
 
-These numbers don't mean anything in absolute terms; they are only interpretable relative to each other. For example, the first residual is positive, but tiny compared to the others. This means that the observed number of 4-cylinder cars is very close to the expected value. On the other hand, the number of observed 6-cylinder cars is somewhat less than expected, whereas the number of observed 8-cylinder cars is a bit more than expected. If you go back to the table we made earlier, you can verify that.
+These numbers don't mean anything in absolute terms; they are only interpretable relative to each other. For example, the first residual is negative, but tiny compared to the others. This means that the observed number of 4-cylinder cars is very close to the expected number. On the other hand, the number of observed 6-cylinder cars is much less than expected, whereas the number of observed 8-cylinder cars is much more than expected. If you go back to the table we made earlier, you can verify that.
 
 
-## What if the null is not a uniform distribution?
+## Uniform null hypotheses
 
-Suppose we didn't expect an equal number of 4, 6, and 8 cylinder models. How would we run the test under a different null?
+Suppose we expected an equal number of 4, 6, and 8 cylinder models. This represents a different null hypothesis. While this type of null is not appropriate in every situation, when it does apply, the code gets a lot more simple.
 
-Suppose that we expected 35% 4-cylinder cars, 40% 6-cylinder cars, and 25% 8-cylinder cars. We would run the test as follows:
+Suppose that we expected an equal number of 4, 6, and 8 cylinder models. We would run the test without having to specify `p`, the vector of proportions:
 
 ```{r}
-cyl_test2 <- chisq.test(cyl_tally, p = c(0.35, 0.4, 0.25))
+cyl_test2 <- chisq.test(cyl_tally)
 ```
 
 Once you've run the `chisq.test` command, you can see the expected counts in each category.
@@ -393,19 +431,21 @@ Once you've run the `chisq.test` command, you can see the expected counts in eac
 ```{r}
 cyl_test2$expected
 ```
-(Again, we have to use the plain `chisq.test` command without `tidy`.)
 
-You can check on your own that 11.2 is 35%, 12.8 is 40%, and 8.0 is 25% of 32.
+(Again, we have to use the plain `chisq.test` results without `tidy`.)
 
-The numbers defining the null have to add up to 1 (since they are proportions). This causes some trouble, for example, when you have a percentage that has an infinite number of decimal places. For example, what if we expected under the null a distribution of 6/13, 4/13, 3/13? You can't express any of these as a decimal without rounding. Well it turns out that `chisq.test` can handle any set of numbers as long as you set `rescale.p = TRUE`:
+You can check on your own that 10.66667 is 1/3 of 32.
+
+
+## Non-uniform null hypotheses expressed as fractions
+
+The numbers defining the null have to add up to 1 (since they are proportions). This causes some trouble, for example, when you have percentages with an infinite number of decimal places. For example, what if we expected under the null a distribution of 6/13, 4/13, 3/13? You can't express any of these as a decimal without rounding. Well it turns out that `chisq.test` can handle any set of numbers as long as you set `rescale.p = TRUE`:
 
 ```{r}
-cyl_test3 <- chisq.test(cyl_tally, p = c(6, 4, 3), rescale.p = TRUE)
+cyl_test3 <- chisq.test(cyl_tally, p = c(6, 4, 3),
+                        rescale.p = TRUE)
+tidy(cyl_test3)
 ```
-
-Also note that these change the statements of the null distribution (in sentences and in symbols). For example, in the example above where the null is 35% 4-cylinder cars, 40% 6-cylinder cars, and 25% 8-cylinder cars, our null in symbols would be
-
-$H_{0}: p_{4} = 0.35, p_{6} = 0.4, p_{8} = 0.25.$
 
 
 ## Inference using a frequency table
@@ -426,12 +466,13 @@ There is a way to change the column names to something more informative than "A"
 Now we use `chisq_test` as before.
 
 ```{r}
-cyl_test_manual <- chisq.test(cyl_table)
+cyl_test_manual <- chisq.test(cyl_table,
+                              p = c(0.38, 0.38, 0.24))
 cyl_test_manual_tidy <- tidy(cyl_test_manual)
 cyl_test_manual_tidy
 ```
 
-Once this is done (in the step "Compute and report the test statistic"), all remaining steps of the rubric stay exactly the same except that you'll use `cyl_test_manual_tidy` instead of `cyl_test_tidy`.
+Once this is done (in the step "Compute the test statistic"), all remaining steps of the rubric stay exactly the same except that you'll use `cyl_test_manual_tidy` instead of `cyl_test_tidy`.
 
 
 ## Your turn
@@ -532,13 +573,19 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 ##### Mechanics
 
-###### Compute and report the test statistic.
+###### Compute the test statistic.
 
 <div class = "answer">
 
 ```{r}
 # Add code here to compute the test statistic.
 ```
+
+</div>
+
+###### Report the test statistic in context.
+
+<div class = "answer">
 
 Please write up your answer here.
 
@@ -554,13 +601,19 @@ Please write up your answer here.
 
 </div>
 
-###### Calculate and interpret the P-value.
+###### Calculate the P-value.
 
 <div class = "answer">
 
 ```{r}
 # Add code here to calculate the P-value.
 ```
+
+</div>
+
+###### Interpret the P-value as a probability given the null.
+
+<div class = "answer">
 
 Please write up your answer here.
 

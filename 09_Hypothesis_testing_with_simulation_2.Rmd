@@ -9,7 +9,7 @@ output:
 ---
 
 <!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style><p style="color:#ffffff">`r intToUtf8(c(49,46,49))`</p>
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(49,46,51))`</p>
 <!-- Please don't mess with the previous few lines! -->
 
 <div class = "summary">
@@ -27,7 +27,7 @@ Now that we have learned about hypothesis testing, we'll explore a different exa
 
 We load the `MASS` package to access the `Melanoma` data on patients in Denmark with malignant melanoma, and the `mosaic` package for simulation tools.
 
-```{r, message = FALSE}
+```{r, warning = FALSE, message = FALSE}
 library(MASS)
 library(mosaic)
 ```
@@ -65,7 +65,8 @@ It appears that `sex` is coded as an integer. You will recall that we need to co
 Although it seems silly to create a data frame with only one variable in it, our analysis in R will work better if it's set up like that.
 
 ```{r}
-sex <- factor(Melanoma$sex, levels = c(0, 1), labels = c("Female", "Male"))
+sex <- factor(Melanoma$sex, levels = c(0, 1), 
+              labels = c("Female", "Male"))
 sex_df <- data.frame(sex)
 sex_df
 ```
@@ -146,12 +147,14 @@ We will simulate the sampling distribution.
 
 ## Mechanics
 
-### Compute and report the test statistic.
+### Compute the test statistic.
 
 ```{r}
 female_prop <- prop(sex, data = sex_df)
 female_prop
 ```
+
+### Report the test statistic in context.
 
 The observed percentage of females with melanoma in our sample is `r 100 * female_prop`%.
 
@@ -168,34 +171,67 @@ sims <- do(1000) * rflip(205, prob = 0.5)
 # be p = 0.5.
 ```
 
+Without plotting the test statistic, here's what the graph of the simulated sampling distribution looks like:
+
+```{r}
+ggplot(sims, aes(x = prop)) +
+    geom_histogram(binwidth = 0.01)
+```
+
+The value of our test statistic, `female_prop`, is 0.6146341. It appears in the right tail:
+
+
+```{r}
+ggplot(sims, aes(x = prop)) +
+    geom_histogram(binwidth = 0.01) +
+    geom_vline(xintercept = female_prop, color = "blue")
+```
+
+But since we're conducting a two-sided test, we need to plot another blue line in the other tail as well. Where would that line go?
+
+Since the null value is 0.5, the distance from the null value to the test statistic is 0.1146341:
+
+```{r}
+0.6146341 - 0.5
+```
+
+Now we need to take that distance, but move it to the *left* of the null value:
+
+```{r}
+0.5 - 0.1146341
+```
+
+In other words, if the test statistic is 11% to the right of the null value, the corrsponding value in the left tail needs to be 11% to the left of the null value. That puts us at about 39%. The exact value is 0.3853659. Here is the plot:
+
 ```{r}
 ggplot(sims, aes(x = prop)) +
     geom_histogram(binwidth = 0.01) +
     geom_vline(xintercept = female_prop, color = "blue") +
-    geom_vline(xintercept = 1 - female_prop, color = "blue")
+    geom_vline(xintercept = 0.3853659, color = "blue")
 ```
 
-(The last line of the code chunk above requires a little explanation. The proportion of successes is `r female_prop`, but we're running a two-sided test. So we also need to plot another blue line at a value that's as extreme as `r female_prop`, but on the other side of 50%. That number is `r 1 - female_prop`. This trick of subtracting from 1 will only work, though, if you're working with a null of 50%. Otherwise, you'll have to calculate the value in the other tail manually.)
+This final graph is the correct one to produce in this step of the rubric (at least for a two-sided test).
 
-
-### Calculate and interpret the P-value.
+### Calculate the P-value.
 
 ```{r}
 P <- 2 * prop(sims$prop >= female_prop)
 P
 ```
 
-$P < 0.001$. If there were no sex bias in malignant melanoma patients, there would be less than a 0.1% chance of seeing a percentage of females at least as extreme as the one we saw in our data.
-
-Four observations here:
+Three observations here:
 
 1. We need "greater than or equal to" (`>=`) here because the simulated values that are more extreme than `r female_prop` are lying *above* `r female_prop`, in the right tail of the simulated sampling distribution.
 
 2. We multiplied by 2 because this is a two-sided test.
 
-3. The P-value appears to be zero. Indeed, among the 1000 simulated values, we saw none that exceeded `r female_prop` and none that were less than `r 1 - female_prop`. However, a true P-value can never be zero. If you did millions or billions of simulations (please don't try!), surely there would be one or two with even more extreme values. In cases when the P-value is really, really tiny, it is traditional to report $P < 0.001$. It is **incorrect** to say $P = 0$.
+3. The P-value appears to be zero. Indeed, among the 1000 simulated values, we saw none that exceeded `r female_prop` and none that were less than 0.3853659. However, a true P-value can never be zero. If you did millions or billions of simulations (please don't try!), surely there would be one or two with even more extreme values. In cases when the P-value is really, really tiny, it is traditional to report $P < 0.001$. It is **incorrect** to say $P = 0$.
 
-4. Don't forget to interpret the P-value in a contextually meaningful way. The P-value is the probability under the assumption of the null hypothesis of seeing data at least as extreme as the data we saw. In this context, that means that if we assume 50% of patients are female, it would be extremely rare to see more than 61% or less than 39% females in a sample of size 205.
+### Interpret the P-value as a probability given the null.
+
+$P < 0.001$. If there were no sex bias in malignant melanoma patients, there would be less than a 0.1% chance of seeing a percentage of females at least as extreme as the one we saw in our data.
+
+Note: Don't forget to interpret the P-value in a contextually meaningful way. The P-value is the probability under the assumption of the null hypothesis of seeing data at least as extreme as the data we saw. In this context, that means that if we assume 50% of patients are female, it would be extremely rare to see more than 61% or less than 39% females in a sample of size 205.
 
 
 ## Conclusion
@@ -235,6 +271,8 @@ The template below is exactly the same as in the file `Rubric_for_inference` up 
 </div>
 
 ###### Prepare the data for analysis. [Not always necessary.]
+
+[When converting `ulcer` to a factor variable, be sure to use "present" as the success condition. This will require you to use `levels = c(1, 0)` and `labels = c("present", "absent")` so that the factor variable gets coded in the right order.]
 
 <div class = "answer">
 
@@ -307,13 +345,19 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 ##### Mechanics
 
-###### Compute and report the test statistic.
+###### Compute the test statistic.
 
 <div class = "answer">
 
 ```{r}
 # Add code here to compute the test statistic.
 ```
+
+</div>
+
+###### Report the test statistic in context.
+
+<div class = "answer">
 
 Please write up your answer here.
 
@@ -326,6 +370,7 @@ Please write up your answer here.
 ```{r}
 set.seed(42)
 # Add code here to simulate the null distribution.
+# Run 1000 simulations like in the earlier example.
 ```
 
 ```{r}
@@ -334,13 +379,19 @@ set.seed(42)
 
 </div>
 
-###### Calculate and interpret the P-value.
+###### Calculate the P-value.
 
 <div class = "answer">
 
 ```{r}
 # Add code here to calculate the P-value.
 ```
+
+</div>
+
+###### Interpret the P-value as a probability given the null.
+
+<div class = "answer">
 
 Please write up your answer here.
 
