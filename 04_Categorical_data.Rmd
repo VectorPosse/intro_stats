@@ -45,24 +45,45 @@ We are interested in the `race` variable. At the Console, type
 
 ?birthwt
 
-and scroll down to read information about how the `race` variable is coded. You'll see that "1 = white, 2 = black, 3 = other". (These are obviously not ideal categories for classifying race.)
+and scroll down to read information about how the `race` variable is coded. You'll see that "1 = white, 2 = black, 3 = other".
 
-The code below is somewhat involved and technical. After the code chunk, I'll explain what each piece does.
+##### Exercise 1
+
+Explain some of the problems you see in recording the race of the mother using these values.
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
+
+*****
+
+The code below is somewhat involved, but it's important to understand as it's used throughout the entire course.
+
+After each code chunk, I'll explain what it does.
 
 ```{r}
 race <- factor(birthwt$race,
                levels = c(1, 2, 3),
                labels = c("White", "Black", "Other"))
-race_df <- data.frame(race)
 ```
 
-First of all, because `birthwt` is a dataset defined in the `MASS` package, we don't want to modify it. Therefore, if we want to change something, we have to assign a new name to the result of any operation. That is why we have `race <-` at the beginning of the code line. The symbol `<-` is taking the result of the command on the right (in this case, the `factor` command) and giving it a new name.
+First of all, because `birthwt` is a dataset defined in the `MASS` package, we don't want to modify it. Therefore, if we want to change something, we should assign a new name to the result of any operation. That is why we have `race <-` at the beginning of the code line. The symbol `<-` is taking the result of the command on the right (in this case, the `factor` command) and giving it a new name.
 
 The `factor` command converts `birthwt$race` into a factor variable. The `levels` of the variable are the pre-existing numerical values.  The `labels` are the names we actually want to appear in our output.
 
 The letter `c` in `c(1, 2, 3)` and `c("White", "Black", "Other")` is necessary whenever we want to combine more than one thing into a single expression. (In technical terms, the "c" stands for "combine" or "concatenate" and creates a "vector".)
 
-The last line takes the single vector `race` and turns it into a data frame that we call `race_df`. Many of the commands we will use require that we analyze variables that are sitting inside of data frames. Let's see how this worked. 
+If you look at the Global Environment, you'll see that the previous command created a standalone vector called `race`. The `birthwt` data frame still exists and there is still a `race` variable in that data frame consisting of 1s, 2s, and 3s. But the new `race` variable is a factor with three named levels.
+
+Many of the commands we will use require that we analyze variables that are sitting inside of data frames. Therefore, we need to take the standalone `race` variable and put it into a data frame. We can do that as follows:
+
+```{r}
+race_df <- data.frame(race)
+```
+
+The code above takes the single vector `race` and turns it into a data frame that we call `race_df`.  Let's see how this worked:
 
 ```{r}
 race_df
@@ -76,7 +97,7 @@ Another way to look at variables in a data frame is to use the `str` command.
 str(race_df)
 ```
 
-You can see from the output that this created a data frame called `race_df` containing a single factor variable called `race` sitting inside it. The values of race are no longer numbers 1, 2, or 3. Instead, those numbers have been replaced by human-readable words describing the three racial categories.
+You can see from the output that this created a data frame called `race_df` containing a single factor variable called `race` sitting inside it. The values of race are no longer numbers 1, 2, or 3. Instead, those numbers have been replaced by human-readable words describing the three racial categories. From here on out, instead of working with `birthwt$race`, we can work with `race_df$race`.
 
 If a variable is already coded as a factor variable in its data frame, it is important **not** to use the `factor` command on it. This will mess up the data and make all future attempts at analysis break. It is, therefore, extremely important that you check the original data frame first using `str`. **If the variable of interest is already coded as a factor variable, you cannot use the `factor` command.**
 
@@ -99,7 +120,7 @@ tally(~ race, data = race_df, format = "proportion")
 tally(~ race, data = race_df, format = "percent")
 ```
 
-##### Exercise 1(a)
+##### Exercise 2(a)
 
 Generate a frequency table like above, but this time use `data = birthwt` to grab the *unmodified* `race` variable from the original `birthwt` data frame.
 
@@ -111,7 +132,7 @@ Generate a frequency table like above, but this time use `data = birthwt` to gra
 
 </div>
 
-##### Exercise 1(b)
+##### Exercise 2(b)
 
 Explain the advantage of creating a factor variable with meaningful labels over using the original numerical variable.
 
@@ -144,7 +165,7 @@ ggplot(race_df, aes(x = race, y = ..prop.., group = 1)) +
 
 These bar charts are the graphical analogues of a frequency table and a relative frequency table, respectively.
 
-##### Exercise 2
+##### Exercise 3
 
 In a sentence or two at most, describe the distribution of race in this data set.
 
@@ -167,16 +188,19 @@ A table summarizing two categorical variables is called a contingency table (or 
 
 For example, we might pose the following research question: is smoking during pregnancy associated with a woman's race? 
 
-First things first, though. We need to create one more factor variable. We'll use the `smoke` variable about whether the mothers smoked during pregnancy.
+First things first, though. We need to create one more factor variable. We'll use the `smoke` variable about whether the mothers smoked during pregnancy. Following the template for the `factor` command that we learned before:
 
 ```{r}
 smoke <- factor(birthwt$smoke,
                 levels = c(1, 0),
                 labels = c("Yes", "No"))
-smoke_race <- data.frame(smoke, race)
 ```
 
-The `smoke` variable is created in exactly the same way as the `race` variable was earlier. Now, though, because we want to analyze both `smoke` and `race` together, we create a new data frame called `smoke_race` with both variables.
+Now we create a new data frame, but this time, we'll include both standalone vectors for `smoke` and `race`. For convenience, we'll call this new data frame `smoke_race`.
+
+```{r}
+smoke_race <- data.frame(smoke, race)
+```
 
 When we work with two variables, typically we think of one variable as response and the other as explanatory. For reasons that will become more clear later, we will adopt the convention of always listing the response variable first, followed by the explanatory variable. So we use `smoke_race` instead of `race_smoke`.
 
@@ -202,7 +226,7 @@ instead of like this:
 
 `smoke <- factor(birthwt$smoke, levels = c(0, 1), labels = c("No", "Yes"))`.
 
-For most response variables, we often designate one category as a category of interest in our study. This category is often called the "Success" condition. For example, the question we're asking about this data is, "Within each racial category, what percentage of mothers smoked?" Therefore, the "Yes" condition in the `smoke` variable is considered the "Success" category (even though there's obviously nothing "successful" about smoking while pregnant!). When we list that success category first in the factor command, R will treat it a little differently than other categories. It's not so important to us here, but it will be very important in the future. This typically only matters for the response variable. (The explanatory variable is `race` and we're not singling out one racial category as being of more interest to us than any other.)
+For most response variables, we often designate one category as a category of interest in our study. This category is often called the "success" condition. For example, the question we're asking about this data is, "Within each racial category, what percentage of mothers smoked?" Therefore, the "Yes" condition in the `smoke` variable is considered the "success" category (even though there's obviously nothing "successful" about smoking while pregnant!). When we list that success category first in the factor command, R will treat it a little differently than other categories. It's not so important to us here, but it will be very important in the future. This typically only matters for the response variable. (The explanatory variable is `race` and we're not singling out one racial category as being of more interest to us than any other.)
 
 The `tally` command uses R's "formula" notation to indicate which variable is response and which value is explanatory. The response variable goes first, followed by a tilde (~), followed by the explanatory variable:
 
@@ -215,20 +239,23 @@ In other words, we are using knowledge of a woman's race to *predict* if she is 
 And now for the contingency table. The `tally` command will, by default, put the response variable in the rows and the explanatory variable in the columns. We'll also add a new argument `margins = TRUE` to print the marginal distribution (the column totals).
 
 ```{r}
-tally(smoke ~ race, data = smoke_race, margins = TRUE)
+tally(smoke ~ race, data = smoke_race,
+      margins = TRUE)
 ```
 
-Unfortunately, this table is highly misleading. For example, one cannot compare the 10 black women who smoked to the 12 "other" women who smoked. The 10 are out of 26, but the 12 are out of 67. That's why we need percentages.
+Unfortunately, this table is highly misleading. For example, one cannot compare the 10 black women who smoked to the 12 women in the "Other" category who smoked. The 10 are out of 26, but the 12 are out of 67. That's why we need percentages.
 
 ```{r}
-tally(smoke ~ race, data = smoke_race, margins = TRUE, format = "percent")
+tally(smoke ~ race, data = smoke_race,
+      margins = TRUE,
+      format = "percent")
 ```
 
 Now we can see that each column adds up to 100%. In other words, each racial group is now on equal footing, and only the distribution of smokers within each group matters.
 
-##### Exercise 3(a)
+##### Exercise 4(a)
 
-What percentage of black women smoked during pregnancy? What percentage of "other" women smoked during pregnancy?
+What percentage of white women smoked during pregnancy? What percentage of black women smoked during pregnancy? What percentage of women in the "Other" category smoked during pregnancy?
 
 <div class = "answer">
 
@@ -236,7 +263,7 @@ Please write up your answer here.
 
 </div>
 
-##### Exercise 3(b)
+##### Exercise 4(b)
 
 Does the likelihood of smoking during pregnancy appear to be associated with race for the women in this data set? Or are these variables independent?
 
@@ -248,15 +275,19 @@ Please write up your answer here.
 
 *****
 
-##### Exercise 4
+##### Exercise 5
 
 Choose two categorical variables of interest from the `birthwt` data set. Identify one as response and one as explanatory. (Choose at least one variable other than `race` or `smoke`.) Turn them into factor variables with meaningful labels. (If you use `race` or `smoke` again, **do not** use factor again!) Create a new data frame containing both variables. Then create a contingency table with percentages. Comment on the association (or independence) of the two variables.
 
 <div class = "answer">
 
 ```{r}
-# Add code here to convert one or more variables to factor variables
-# and make a data frame.
+# Add code here to convert one or more variables to factor variables.
+```
+
+```{r}
+# Add code here to make a data frame containing
+# the variables of interest.
 ```
 
 ```{r}
@@ -297,11 +328,11 @@ ggplot(smoke_race, aes(fill = smoke, x = race)) +
     geom_bar(position = "fill")
 ```
 
-This graph does correctly show that a larger proportion of black women in this sample smoked during pregnancy when compared to women from the "Other" category. (And white women smoked the most of all; the majority of white women smoked during pregnancy in this data set!)
+This graph does correctly show that a larger proportion of black women in this sample smoked during pregnancy when compared to women from the "Other" category. And white women smoked the most of all; the majority of white women smoked during pregnancy in this data set!
 
-##### Exercise 5
+##### Exercise 6
 
-Use the same two categorical variables from Exercise 4. (They should already be defined and placed in their own data frame.) Create a side-by-side bar chart. Comment on the association (or independence) of the two variables.
+Use the same two categorical variables from Exercise 5. (They should already be defined and placed in their own data frame.) Create a side-by-side bar chart. Comment on the association (or independence) of the two variables.
 
 <div class = "answer">
 
@@ -317,11 +348,13 @@ Please write up your answer here.
 
 Suppose you want to analyze one numerical variable and one categorical variable. Usually, the idea here is that the categorical variable divides up the data into groups and you are interested in understanding the numerical variable for each group separately. Another way to say this is that your numerical variable is response and your categorical variable is explanatory. (It is also possible for a categorical variable to be response and a numerical variable to be explanatory. This is common in so-called "classification" problems. We will not cover this possibility in this course, but it is covered in more advanced courses.)
 
-For an example, let's consider the mother's weight by race. As always, we'll need to make a data frame that contains both variables `race` and `lwt` together. In the following code, note that `race` can be included in the data frame as is, but `birthwt$lwt` has to be renamed as `lwt`. This is because there is already a variable called `race` defined in the Global Environment. (We created it earlier by converting the variable `birthwt$race` to a factor variable.) But there is no variable in the Global Environment called `lwt`. Of course, we don't need to *convert* `birthwt$lwt` because it's already coded numerically (in this case as `int`,  meaning an integer, or whole number). But we do need to rename the variable so it enters the new data frame with the concise name `lwt`.
+For an example, let's consider the mother's weight by race. As always, we'll need to make a data frame that contains both variables `race` and `lwt` together. In the following code, note that `race` can be included in the data frame as is. This is because there is already a variable called `race` defined in the Global Environment. (We created it earlier by converting the variable `birthwt$race` to a factor variable.) But `birthwt$lwt` has to be renamed as `lwt`. There is no variable in the Global Environment called `lwt`. Of course, we don't need to *convert* `birthwt$lwt` because it's already coded numerically (in this case as `int`,  meaning an integer, or whole number). But we do need to rename the variable so it enters the new data frame with the concise name `lwt`.
 
 ```{r}
 lwt_race <- data.frame(lwt = birthwt$lwt, race)
 ```
+
+This issue will come up again and again, so be sure you understand why we needed to type `lwt = birthwt$lwt` even though following that we just typed `race`. It's all about what is already defined in the Global Environment and what is not.
 
 We check to make sure this worked.
 
@@ -370,9 +403,19 @@ ggplot(lwt_race, aes(x = lwt)) +
     facet_grid(. ~ race)
 ```
 
-##### Exercise 6
+##### Exercise 7(a)
 
-Explain why that last graph (which might be called a side-by-side histogram) is less effective than the earlier stacked histogram. (Hint: what stays lined up when the histograms are stacked vertically rather than horizontally?) Also, can you figure out what's going on with the weird syntax of `race ~ .` vs `. ~ race`? Explain it in your own words.
+Explain why that last graph (which might be called a side-by-side histogram) is less effective than the earlier stacked histogram. (Hint: what stays lined up when the histograms are stacked vertically rather than horizontally?)
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
+
+##### Exercise 7(b)
+
+Can you figure out what's going on with the weird syntax of `race ~ .` vs `. ~ race`? Explain it in your own words.
 
 <div class = "answer">
 
@@ -386,22 +429,54 @@ The other thing that kind of sucks is the fact that the y-axis is showing counts
 
 ```{r}
 ggplot(lwt_race, aes(x = lwt)) +
-    geom_histogram(aes(y = ..density..), binwidth = 10, boundary = 100) +
+    geom_histogram(aes(y = ..density..),
+                   binwidth = 10, boundary = 100) +
     facet_grid(race ~ .)
 ```
 
 Due to some technical issues in `ggplot2`, these are not strictly proportions. (If you were to add up the heights of all the bars, they would not add up to 100%.) Nevertheless, the graph is still useful because it does scale the groups to put them on equal footing. In other words, it treats each group as if they all had the same sample size.
 
-##### Exercise 7
+##### Exercise 8(a)
 
-Choose an interesting numerical variable and an interesting categorical variable from the `birthwt` data set. (Choose at least one variable you haven't used already.) Convert the categorical variable to a factor variable if it hasn't already been done earlier. Create a data frame with your chosen variables. Then make both a side-by-side boxplot and a stacked histogram. Discuss the resulting graphs. Comment on the association (or independence) of the two variables.
+The `ptl` variable seems to be a numerical variable from its description in the help file. Use an appropriate graph to explore this variable. (You can use the `birthwt` data frame; no need to create a new data frame for this exercise.) Based on the graph, why do you think `ptl` could possibly be classified as a categorical variable instead of a numerical variable?
+
+<div class = "answer">
+
+```{r}
+# Add code here to graph ptl.
+```
+
+Please write up your answer here.
+
+</div>
+
+##### Exercise 8(b)
+
+Do the same thing for the `ftv` variable as you did for the `ptl` variable. Classifying `ftv` as numerical or categorical is, perhaps, more difficult. Why?
+
+<div class = "answer">
+
+```{r}
+# Add code here to graph ptl.
+```
+
+Please write up your answer here.
+
+</div>
+
+##### Exercise 8(c)
+
+Choose an interesting numerical variable (not `ptl` or `ftv`) and an interesting categorical variable from the `birthwt` data set. (Choose at least one variable you haven't used already.) Convert the categorical variable to a factor variable if it hasn't already been done earlier. Create a data frame with your chosen variables. Then make both a side-by-side boxplot and a stacked histogram. Discuss the resulting graphs. Comment on the association (or independence) of the two variables.
 
 <div class = "answer">
 
 ```{r}
 # Add code here to convert a categorical variable to a 
 # factor variable if needed.
-# Make a data frame.
+```
+
+```{r}
+# Make a new data frame.
 ```
 
 ```{r}
@@ -448,7 +523,7 @@ ggplot(lwt_race, aes(y =lwt, x = race)) +
 
 You can also see that we took the opportunity to mention the units of measurement (pounds) for our numerical variable in the y-axis label. This is good practice.
 
-##### Exercise 8
+##### Exercise 9
 
 Modify the following side-by-side bar chart by adding a title and labels for both the fill variable and the x-axis variable. (Hint: you can use `fill` inside the `labs` command just like you used `title`, `x`, and `y`.)
 
@@ -463,7 +538,7 @@ ggplot(smoke_race, aes(fill = smoke, x = race)) +
 
 </div>
 
-##### Exercise 9
+##### Exercise 10
 
 Modify the following stacked histogram by adding a title and labels for both the y-axis and x-axis.
 
