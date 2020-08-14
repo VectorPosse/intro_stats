@@ -9,7 +9,7 @@ output:
 ---
 
 <!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(49,46,51))`</p>
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(49,46,52))`</p>
 <!-- Please don't mess with the previous few lines! -->
 
 <div class = "summary">
@@ -163,7 +163,9 @@ Again, for inline R code, you don't need to specify `plot = FALSE`:
 
 > The model predicts that `r 100 * diff(pdist("norm", q = c(110, 130), mean = 114, sd = 14))`% of women ages 30--44 in the U.S. and Canada will have systolic blood pressure between 110 mmHg and 130 mmHg.
 
-For the following exercises, we'll use a running example of IQ scores. IQ scores are standardized so that they have a mean of 100 and a standard deviation of 16. For each exercise, use the `pdist` command with `invisible = TRUE` to draw the right picture and then state your answer in a contextually meaningful full sentence using inline R code. Don't forget to use the phrase "The model predicts..." and report numbers as percentages, not decimals.
+For the following exercises, we'll use a running example of IQ scores. Keep in mind that, at best, IQ scores fail to measure anything like "intelligence" (https://www.sciencedaily.com/releases/2012/12/121219133334.htm). At worse, IQ tests (and other forms of standardized testing) have been used to perpetuate systemic racism and inequality (http://www.nea.org/home/73288.htm).
+
+IQ scores---whatever they actually measure---are standardized so that they have a mean of 100 and a standard deviation of 16. For each exercise, use the `pdist` command with `invisible = TRUE` to draw the right picture and then state your answer in a contextually meaningful full sentence using inline R code. Don't forget to use the phrase "The model predicts..." and report numbers as percentages, not decimals.
 
 ##### Exercise 1(a)
 
@@ -382,7 +384,7 @@ pdist("norm", q = -1, invisible = TRUE)
 
 ##### Exercise 4
 
-Albert Einstein supposedly had an IQ of 160. Calculate the z score for his IQ and then use that z score to figure out what percentage of the population is smarter than Einstein. Use full sentences and inline R code to express your answer.
+Albert Einstein supposedly had an IQ of 160. Calculate the z score for his IQ and then use that z score to figure out what percentage of the population is predicted to have higher IQ than Einstein. Use full sentences and inline R code to express your answer.
 
 <div class = "answer">
 
@@ -410,10 +412,13 @@ Here is the QQ plot for the same data. Notice that the aesthetics are a little d
 
 ```{r}
 ggplot(SnowGR, aes(sample = Total)) +
-    geom_qq()
+    geom_qq() +
+    geom_qq_line()
 ```
 
 (The warning is because there is one missing value in the data.)
+
+The `geom_qq()` layer plots the dots and the `geom_qq_line()` layer plots a diagonal line that the dots should more or less follow.
 
 Other than a few points here and there, the bulk of the data is lined up nicely. There's a minor outlier, and that can be seen in both the histogram and the QQ plot.
 
@@ -428,7 +433,8 @@ It is also apparent in the QQ plot that the data is not normally distributed.
 
 ```{r}
 ggplot(Alcohol, aes(sample = alcohol)) +
-    geom_qq()
+    geom_qq() +
+    geom_qq_line()
 ```
 
 The path of dots is sharply curved, indicating a lack of normality.

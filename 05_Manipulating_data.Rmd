@@ -9,7 +9,7 @@ output:
 ---
 
 <!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(49,46,51))`</p>
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(49,46,52))`</p>
 <!-- Please don't mess with the previous few lines! -->
 
 <div class = "summary">
@@ -77,22 +77,26 @@ We'll consider these one by one. We won't have time to cover every aspect of the
 
 ## `select`
 
-The `select` verb is very easy. It just selects some subset of variables (the columns of your data set). Suppose all we wanted to see was the carrier, origin, and destination. We would type
+The `select` verb is very easy. It just selects some subset of variables (the columns of your data set).
+
+The `select` command from the `dplyr` package illustrates one of the common issues R users face. Because the word "select" is pretty common, and selecting things is a common task, there are multiple packages that have a function called `select`. For example, the `MASS` package that you've loaded before (to access the `birthwt` data) also has a `select` function. Depending on the order in which packages were loaded, R might get confused as to which version of `select` you want and try to apply the wrong one. One way to get the correct version is to specify the package in the syntax. Instead of typing `select`, we can type `dplyr::select` to ensure we get the version from the `dplyr` package. We'll do this in all future uses of the `select` function. (The other functions in this module don't cause us trouble because we don't use any other packages whose functions conflict like this.)
+
+Suppose all we wanted to see was the carrier, origin, and destination. We would type
 
 ```{r}
-hf_select <- select(hf, UniqueCarrier, Origin, Dest)
+hf_select <- dplyr::select(hf, UniqueCarrier, Origin, Dest)
 hf_select
 ```
 
 A brief but important aside here: there is nothing special about the variable name `hf_select`. I could have typed
 
-`beef_gravy <- select(hf, UniqueCarrier, Origin, Dest)`
+`beef_gravy <- dplyr::select(hf, UniqueCarrier, Origin, Dest)`
 
 and it would work just as well. Generally speaking, though, you want to give variables a name that reflects the intent of your analysis.
 
 Also, **it is important to assign the result to a new variable**. If I had typed
 
-`hf <- select(hf, UniqueCarrier, Origin, Dest)`
+`hf <- dplyr::select(hf, UniqueCarrier, Origin, Dest)`
 
 this would have overwritten the original data frame `hf` with this new version with only three variables. I want to preserve `hf` because I want to do other things with the entire data set later. The take-home message here is this: **Major modifications to your data should generally be given a new variable name.** There are caveats here, though. Every time you create a new variable, you also fill up more memory with your creation. If you check your Global Environment, you'll see that both `hf` and `hf_select` are sitting in there. We'll have more to say about this in a moment.
 
@@ -101,8 +105,10 @@ Okay, back to the `select` function. The first argument of `select` is the data 
 If you don't like the names of the variables, you can change them as part of the select process.
 
 ```{r}
-hf_select <- select(hf, carrier = UniqueCarrier,
-                    origin = Origin, dest = Dest)
+hf_select <- dplyr::select(hf,
+                           carrier = UniqueCarrier,
+                           origin = Origin,
+                           dest = Dest)
 hf_select
 ```
 
@@ -111,12 +117,12 @@ hf_select
 There are a few notational shortcuts. For example, see what the following do.
 
 ```{r}
-hf_select2 <- select(hf, DayOfWeek:UniqueCarrier)
+hf_select2 <- dplyr::select(hf, DayOfWeek:UniqueCarrier)
 hf_select2
 ```
 
 ```{r}
-hf_select3 <- select(hf, starts_with("Taxi"))
+hf_select3 <- dplyr::select(hf, starts_with("Taxi"))
 hf_select3
 ```
 
@@ -139,7 +145,7 @@ The other command that's related to `select` is `rename`. The only difference is
 
 ##### Exercise 3
 
-Putting a minus sign in front of a variable name in the `select` command will remove the variable. Create a data frame called `hf_select4` that removes `Year`, `DayofMonth`, `DayOfWeek`, `FlightNum`, and `Diverted`. (Be careful with the unusual---and inconsistent!---capitalization in those variable names.) In the second line of code below, type `hf_select4` so that the data frame prints to the screen (just like in all the above examples).
+Putting a minus sign in front of a variable name in the `select` command will remove the variable. Create a data frame called `hf_select4` that removes `Year`, `DayofMonth`, `DayOfWeek`, `FlightNum`, and `Diverted`. (Be careful with the unusual---and inconsistent!---capitalization in those variable names.) In the second part of the code chunk below, type `hf_select4` so that the data frame prints to the screen (just like in all the above examples).
 
 <div class = "answer">
 
@@ -379,7 +385,8 @@ If we would rather see more descriptive words than `TRUE` or `FALSE`, we have to
 
 ```{r}
 hf_mutate3 <- mutate(hf,
-                     late = factor(ifelse(ArrDelay > 0, "Late", "On time")))
+                     late = factor(ifelse(ArrDelay > 0,
+                                          "Late", "On time")))
 hf_mutate3
 ```
 
@@ -464,6 +471,8 @@ hf_summ_grouped <- group_by(hf, UniqueCarrier)
 hf_summ <- summarise(hf_summ_grouped, mean(Distance))
 hf_summ
 ```
+
+(Don't worry about any warnings you might get about "ungrouping output".)
 
 This is a good spot to introduce a time-saving and helpful device called "piping", denoted by the symbol `%>%`. Piping always looks more complicated than it really is. The technical definition is that
 
@@ -578,7 +587,7 @@ Here's a example of multi-step piping. Let's say that we only care about Delta f
 ```{r}
 hf_grand_finale <- hf %>%
     filter(UniqueCarrier == "DL") %>%
-    select(Month, DepDelay) %>%
+    dplyr::select(Month, DepDelay) %>%
     group_by(Month) %>%
     summarise(max_delay = max(DepDelay, na.rm = TRUE))
 hf_grand_finale
@@ -588,7 +597,7 @@ Go through each line of code carefully and translate it into English:
 
 1. We define a variable called `hf_grand_finale` that starts with the original `hf` data.
 2. We `filter` this data so that only Delta flights will be analyzed.
-3. We `select` the variables `Month` and `DepDelay` (throwing away all other variables that are not of interest to us).
+3. We `select` the variables `Month` and `DepDelay`, throwing away all other variables that are not of interest to us. (Don't forget to use the `dplyr::select` syntax to make sure we get the right function!)
 4. We `group_by` month so that the results will be displayed by month.
 5. We `summarise` each month by listing the maximum value of `DepDelay` that appears within each month.
 6. We print the result to the screen.
