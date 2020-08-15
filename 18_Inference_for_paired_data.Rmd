@@ -25,13 +25,13 @@ In this module we will learn how to run inference for two paired numerical varia
 
 ## Load packages
 
-We load the standard `mosaic` package as well as the `MASS` package for the `immer` data, the `openintro` package for the `hsb2` data, and the `broom` package for tidy output. 
+We load the standard `mosaic` package as well as the `MASS` package for the `immer` data and the `broom` package for tidy output. The `openintro` package will give access to the `hsb2` data.
 
 ```{r, warning = FALSE, message = FALSE}
-library(openintro)
 library(MASS)
 library(broom)
 library(mosaic)
+library(openintro)
 ```
 
 
@@ -95,7 +95,8 @@ ggplot(immer_d, aes(x = d)) +
 
 ```{r}
 ggplot(immer_d, aes(sample = d)) +
-    geom_qq()
+    geom_qq() +
+    geom_qq_line()
 ```
 
 This distribution appears to be somewhat bimodal. This is a problem for inference because the mean of a bimodal distribution is not a good measure of center for the distribution. The typical method for dealing with bimodal data is to see if you can determine the reason for the two peaks. If there is a way of separating the data into the two groups, we should do that. Assuming there is enough data in both groups, they should be analyzed separately.
@@ -132,7 +133,8 @@ ggplot(immer_d_no_M, aes(x = d)) +
 
 ```{r}
 ggplot(immer_d_no_M, aes(sample = d)) +
-    geom_qq()
+    geom_qq() +
+    geom_qq_line()
 ```
 
 There is still a significant outlier. There is no real justification for removing it, so we need to run the analysis once with the outlier included and once with it excluded.
