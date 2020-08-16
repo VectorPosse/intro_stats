@@ -47,17 +47,17 @@ When we have a linear relationship between two numerical variables, it's helpful
 
 The mathematics involved in figuring out what this line should be is more complicated than we cover in these modules. But R will do all the complicated calculations for us.
 
-Let's look at a scatterplot of data from the `bdims` data set. These measurements come from 507 physically active individuals (a mix of males and females). The weight `wgt` is measured in kilograms and the wrist diameter `wri.di` is measured in centimeters as the sum of both wrists.
+Let's look at a scatterplot of data from the `bdims` data set. These measurements come from 507 physically active individuals (a mix of males and females). The weight `wgt` is measured in kilograms and the wrist diameter `wri_di` is measured in centimeters as the sum of both wrists.
 
 ```{r}
-ggplot(bdims, aes(y = wgt, x = wri.di)) +
+ggplot(bdims, aes(y = wgt, x = wri_di)) +
     geom_point()
 ```
 
 If certain conditions are met, we can graph a regression line; just add a `geom_smooth` layer to the scatterplot:
 
 ```{r}
-ggplot(bdims, aes(y = wgt, x = wri.di)) +
+ggplot(bdims, aes(y = wgt, x = wri_di)) +
     geom_point() +
     geom_smooth(method = "lm")
 ```
@@ -75,7 +75,7 @@ The intercept is $b_{0}$ and the slope is $b_{1}$. We use $\hat{y}$ instead of $
 To run a regression analysis, we use the `lm` command in R. (`lm` stands for "linear model".) As usual, we then use the `tidy` command to make the output a little cleaner. There is one tiny change we'll make to the `tidy` command: unlike previous hypothesis tests we've seen, the `tidy` command for `lm` does not automatically include a confidence interval. So we'll need to add an argument `conf.int = TRUE`.
 
 ```{r}
-wgt_wrist_lm <- lm(wgt ~ wri.di, data = bdims)
+wgt_wrist_lm <- lm(wgt ~ wri_di, data = bdims)
 wgt_wrist_tidy <- tidy(wgt_wrist_lm, conf.int = TRUE)
 wgt_wrist_tidy
 ```
@@ -196,7 +196,7 @@ We see that the shape is mostly normal. There's a little bit of skew in the hist
 We should also create a *residual plot*, which looks at the residuals above each value along the x-axis. (In the command below, we also add a horizontal reference line so that it is clear which points have positive or negative residuals.)
 
 ```{r}
-ggplot(wgt_wrist_aug, aes(y = .std.resid, x = wri.di)) +
+ggplot(wgt_wrist_aug, aes(y = .std.resid, x = wri_di)) +
     geom_point() +
     geom_hline(yintercept = 0)
 ```
@@ -279,19 +279,19 @@ favstats(bdims$wgt)
 ```
 
 ```{r}
-favstats(bdims$wri.di)
+favstats(bdims$wri_di)
 ```
 
 ### Prepare the data for analysis. [Not always necessary.]
 
-The two variables of interest, `wgt` and `wri.di`, are already coded as numerical variables.
+The two variables of interest, `wgt` and `wri_di`, are already coded as numerical variables.
 
 ### Make tables or plots to explore the data visually.
 
 Here is the scatterplot with the regression line added:
 
 ```{r}
-ggplot(bdims, aes(y = wgt, x = wri.di)) +
+ggplot(bdims, aes(y = wgt, x = wri_di)) +
     geom_point() +
     geom_smooth(method = "lm")
 ```
