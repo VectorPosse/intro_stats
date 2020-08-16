@@ -51,31 +51,31 @@ The example below will pause frequently for commentary on the steps, especially 
 
 ## Research question
 
-Data from the Stanford University Heart Transplant Study is located in the `openintro` package in a data frame called `heartTr`. From the help file we learn, "Each patient entering the program was designated officially a heart transplant candidate, meaning that he was gravely ill and would most likely benefit from a new heart." Survival rates are not good for this population, although they are better for those who receive a heart transplant. Do heart transplant recipients still have less than a 50% chance of survival?
+Data from the Stanford University Heart Transplant Study is located in the `openintro` package in a data frame called `heart_transplant`. From the help file we learn, "Each patient entering the program was designated officially a heart transplant candidate, meaning that he was gravely ill and would most likely benefit from a new heart." Survival rates are not good for this population, although they are better for those who receive a heart transplant. Do heart transplant recipients still have less than a 50% chance of survival?
 
 
 ## Exploratory data analysis
 
 ### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
 
-[You should type `?heartTr` at the Console to read the help file.]
+[You should type `?heart_transplant` at the Console to read the help file.]
 
 ```{r}
-heartTr
+heart_transplant
 ```
 
 ```{r}
-str(heartTr)
+str(heart_transplant)
 ```
 
 Commentary: The variable of interest is `survived`, which is coded as a factor variable with two categories, "alive" and "dead". Keep in mind that because we are interested in survival rates, the "alive" condition will be considered the "success" condition.^[Finally, a "success" condition that actually sounds successful!]
 
-**Do not under any circumstances attempt to convert `heartTr$survived` to a factor variable using the `factor` command!** It is already a factor variable. Applying the `factor` command the way you have in past modules will break a variable that is already coded as a factor variable. This is one of the most common mistakes students make when working with factor variables. This is why the `str` command is so important. You always need to check your categorical data to see if it's already a factor variable! (If not, then of course we would recode it the way you've been taught.)
+**Do not under any circumstances attempt to convert `heart_transplant$survived` to a factor variable using the `factor` command!** It is already a factor variable. Applying the `factor` command the way you have in past modules will break a variable that is already coded as a factor variable. This is one of the most common mistakes students make when working with factor variables. This is why the `str` command is so important. You always need to check your categorical data to see if it's already a factor variable! (If not, then of course we would recode it the way you've been taught.)
 
 There are 103 patients, but we are not considering all these patients. Our sample should consist of only those patients who actually received the transplant. The following table shows that only 69 patients were in the "treatment" group (meaning that they received a heart transplant).
 
 ```{r}
-tally(~ transplant, data = heartTr, margins = TRUE)
+tally(~ transplant, data = heart_transplant, margins = TRUE)
 ```
 
 ### Prepare the data for analysis.
@@ -85,23 +85,23 @@ tally(~ transplant, data = heartTr, margins = TRUE)
 We need to use `filter` so we get only the patients who actually received the heart transplant.
 
 ```{r}
-heartTr2 <- filter(heartTr, transplant == "treatment")
+heart_transplant2 <- filter(heart_transplant, transplant == "treatment")
 ```
 
 Commentary: don't forget the double equal sign (`==`) that checks whether the `treatment` variable is equal to the value "treatment". (See the module `05_Manipulating_data` if you've forgotten how to use `filter`.)
 
-Again, this step isn't something you need to do for other research questions. This question is peculiar because it asks only about patients who received a heart transplant, and that only involves a subset of the data we have in the `heartTr` data frame.
+Again, this step isn't something you need to do for other research questions. This question is peculiar because it asks only about patients who received a heart transplant, and that only involves a subset of the data we have in the `heart_transplant` data frame.
 
 ### Make tables or plots to explore the data visually.
 
-Making sure that we refer from now on to the `heartTr2` data frame and not the original `heartTr` data frame:
+Making sure that we refer from now on to the `heart_transplant2` data frame and not the original `heart_transplant` data frame:
 
 ```{r}
-tally(~ survived, data = heartTr2, margins = TRUE)
+tally(~ survived, data = heart_transplant2, margins = TRUE)
 ```
 
 ```{r}
-tally(~ survived, data = heartTr2, margins = TRUE, format = "percent")
+tally(~ survived, data = heart_transplant2, margins = TRUE, format = "percent")
 ```
 
 
@@ -109,7 +109,7 @@ tally(~ survived, data = heartTr2, margins = TRUE, format = "percent")
 
 ### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
-The sample consists of `r NROW(heartTr2)` heart transplant recipients in a study at Stanford University. The population of interest is presumably all heart transplants recipients.
+The sample consists of `r NROW(heart_transplant2)` heart transplant recipients in a study at Stanford University. The population of interest is presumably all heart transplants recipients.
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
@@ -135,10 +135,10 @@ We will use a normal model.
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 * Random
-    - Since the `r NROW(heartTr2)` patients are from a study at Stanford, we do not have a random sample of all heart transplant recipients. We hope that the patients recruited to this study were physiologically similar to other heart patients so that they are a representative sample. Without more information, we have no real way of knowing.
+    - Since the `r NROW(heart_transplant2)` patients are from a study at Stanford, we do not have a random sample of all heart transplant recipients. We hope that the patients recruited to this study were physiologically similar to other heart patients so that they are a representative sample. Without more information, we have no real way of knowing.
 
 * 10%
-    - `r NROW(heartTr2)` patients are definitely less than 10% of all heart transplant recipients.
+    - `r NROW(heart_transplant2)` patients are definitely less than 10% of all heart transplant recipients.
 
 * Success/failure
 
@@ -160,7 +160,7 @@ That's also why the numbers don't have to be whole numbers. If the null states t
 ### Compute the test statistic.
 
 ```{r}
-surv_test <- binom.test(heartTr2$survived, p = 0.5, success = "alive")
+surv_test <- binom.test(heart_transplant2$survived, p = 0.5, success = "alive")
 surv_test_tidy <- tidy(surv_test)
 surv_test_tidy
 ```
@@ -360,7 +360,7 @@ If you're paying close attention, you might recognize that we discussed these tw
 
 Follow the rubric to answer the following research question:
 
-Some heart transplant candidates have already had a prior surgery. Use the variable `prior` in the `heartTr` data set to determine if fewer than 50% of patients have had a prior surgery. (To be clear, you are being asked to perform a one-sided test again.) **Be sure to use the full `heartTr` data, not the modified `heartTr2` from the previous example.**
+Some heart transplant candidates have already had a prior surgery. Use the variable `prior` in the `heart_transplant` data set to determine if fewer than 50% of patients have had a prior surgery. (To be clear, you are being asked to perform a one-sided test again.) **Be sure to use the full `heart_transplant` data, not the modified `heart_transplant2` from the previous example.**
 
 The rubric outline is reproduced below. You may refer to the worked example above and modify it accordingly. Remember to strip out all the commentary. That is just exposition for your benefit in understanding the steps, but is not meant to form part of the formal inference process.
 
@@ -405,7 +405,7 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 
 ###### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
-[Remember that you are using the full `heartTr` data, so your sample size should be larger here than in the example above.]
+[Remember that you are using the full `heart_transplant` data, so your sample size should be larger here than in the example above.]
 
 <div class = "answer">
 
@@ -446,7 +446,7 @@ Please write up your answer here.
 
 ###### Check the relevant conditions to ensure that model assumptions are met.
 
-[Remember that you are using the full `heartTr` data, so the number of successes and failures will be different here than in the example above.]
+[Remember that you are using the full `heart_transplant` data, so the number of successes and failures will be different here than in the example above.]
 
 <div class = "answer">
 
@@ -457,7 +457,7 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 ##### Mechanics
 
-[Be sure to use `heartTr` everywhere and not `heartTr2`!]
+[Be sure to use `heart_transplant` everywhere and not `heart_transplant2`!]
 
 ###### Compute the test statistic.
 
