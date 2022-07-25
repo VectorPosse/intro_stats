@@ -9,10 +9,6 @@
 
 :::
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(eval = FALSE)
-```
-
 
 ## Introduction {#intror-intro}
 
@@ -51,7 +47,7 @@ Now look at the lower-right corner of the screen. There are likely five tabs her
 
 So let's do something in R! Go back to the Console and at the command prompt (the ">" symbol with the blinking cursor), type
 
-```{r}
+```{r, eval = FALSE}
 1+1
 ```
 
@@ -61,7 +57,7 @@ Congratulations! You just ran your first command in R. It's all downhill from he
 
 Okay, let's do something slightly more sophisticated. It's important to note that R is case-sensitive, which means that lowercase letters and uppercase letters are treated differently. Type the following, making sure you use a lowercase `c`, and hit Enter:
 
-```{r}
+```{r, eval = FALSE}
 x <- c(1, 3, 4, 7, 9)
 ```
 
@@ -71,13 +67,13 @@ Check out the "Environment" pane now. You should see the vector `x` that you jus
 
 At the command prompt in the Console, type
 
-```{r}
+```{r, eval = FALSE}
 x
 ```
 
 and hit Enter. Yup, `x` is there. R knows what it is. You may be wondering about the `[1]` that appears at the beginning of the line. To see what that means, try typing this (and hit Enter---at some point here I'm going to stop reminding you to hit Enter after everything you type):
 
-```{r}
+```{r, eval = FALSE}
 y <- letters
 ```
 
@@ -85,7 +81,7 @@ R is clever, so the alphabet is built in under the name `letters`.
 
 Type
 
-```{r}
+```{r, eval = FALSE}
 y
 ```
 
@@ -97,7 +93,7 @@ When we want to re-use an old command, it has usually not been that long since w
 
 Let's do something with `x`. Type
 
-```{r}
+```{r, eval = FALSE}
 sum(x)
 ```
 
@@ -105,19 +101,19 @@ I bet you figured out what just happened.
 
 Now try
 
-```{r}
+```{r, eval = FALSE}
 mean(x)
 ```
 
 What if we wanted to save the mean of those five numbers for use later? We can assign the result to another variable! Type the following and observe the effect in the Environment.
 
-```{r}
+```{r, eval = FALSE}
 m <- mean(x)
 ```
 
 It makes no difference what letter or combination of letters we use to name our variables. For example,
 
-```{r}
+```{r, eval = FALSE}
 mean_x <- mean(x)
 ```
 
@@ -132,7 +128,7 @@ If you have installed R and RStudio on your own machine instead of accessing RSt
 
 The data set is called `penguins`. Let's see what happens when we try to access this data set without loading the package that contains it. Try typing this:
 
-```{r, error = TRUE}
+```{r, eval = FALSE, error = TRUE}
 penguins
 ```
 
@@ -140,7 +136,7 @@ You should have received an error. That makes sense because R doesn't know anyth
 
 Now---assuming you have the `palmerpenguins` package installed---type this at the command prompt:
 
-```{r, warning = FALSE, message = FALSE}
+```{r, eval = FALSE}
 library(palmerpenguins)
 ```
 
@@ -148,7 +144,7 @@ It didn't look like anything happened. However, in the background, all the stuff
 
 Let's test that claim. Hit the up arrow twice and get back to where you see this at the Console (or you can manually re-type it, but that's no fun!):
 
-```{r}
+```{r, eval = FALSE}
 penguins
 ```
 
@@ -167,7 +163,7 @@ Help files are only as good as their authors. Fortunately, most package develope
 
 The second way of getting help is from the Console. Go to the Console and type
 
-```{r}
+```{r, eval = FALSE}
 ?letters
 ```
 
@@ -175,13 +171,13 @@ The question mark tells R you need help with the R command `letters`. This will 
 
 Sometimes, you don't know exactly what the name of the command is. For example, suppose we misremembered the name and thought it was `letter` instead of `letters`. Try typing this:
 
-```{r}
+```{r, eval = FALSE}
 ?letter
 ```
 
 You should have received an error because there is no command called `letter`. Try this instead:
 
-```{r}
+```{r, eval = FALSE}
 ??letter
 ```
 
@@ -200,7 +196,7 @@ The first thing we do to understand a data set is to read the help file on it. (
 
 Next, we can also look at the data in "spreadsheet" form. Type
 
-```{r}
+```{r, eval = FALSE}
 View(penguins)
 ```
 
@@ -208,29 +204,29 @@ View(penguins)
 
 Try this to print just a few rows of data to the Console:
 
-```{r}
+```{r, eval = FALSE}
 head(penguins)
 ```
 
 We can customize this by specifying the number of rows to print. (Don't forget about the up arrow trick!)
 
-```{r}
+```{r, eval = FALSE}
 head(penguins, n = 10)
 ```
 
 The `tail` command does something similar.
 
-```{r}
+```{r, eval = FALSE}
 tail(penguins)
 ```
 
 When we're working with HTML documents like this one, it's usually not necessary to use `View`, `head`, or `tail` because the HTML format will print the data frame a lot more neatly than it did in the Console. You do not need to type the following code; just look below it for the table that appears.
 
-```{r, eval = TRUE, echo = FALSE}
+```{r, echo = FALSE}
 library(palmerpenguins)
 ```
 
-```{r, eval = TRUE}
+```{r}
 penguins
 ```
 
@@ -238,17 +234,17 @@ You can scroll through the rows by using the numbers at the bottom or the "Next"
 
 We want to understand the "structure" of our data. For this, we use the `str` command. Try it:
 
-```{r}
+```{r, eval = FALSE}
 str(penguins)
 ```
 
 This tells us several important things. First it says that there are 344 observations of 8 variables. We can isolate those pieces of information separately as well, if we need:
 
-```{r}
+```{r, eval = FALSE}
 NROW(penguins)
 ```
 
-```{r}
+```{r, eval = FALSE}
 NCOL(penguins)
 ```
 
@@ -258,7 +254,7 @@ The `str` command also tells us about each of the variables in our data set. We'
 
 We need to be able to summarize variables in the data set. The `summary` command is one way to do it:
 
-```{r}
+```{r, eval = FALSE}
 summary(penguins)
 ```
 
@@ -269,19 +265,19 @@ You may not recognize terms like "Median" or "1st Qu." or "3rd Qu." yet. Neverth
 
 When we want to look at only one variable at a time, we use the dollar sign to grab it. Try this:
 
-```{r}
+```{r, eval = FALSE}
 penguins$body_mass_g
 ```
 
 This will list the entire `body_mass_g` column, in other words, the body masses (in grams) of all the penguins in this particular study. If we only want to see the first few, we can use `head` like before.
 
-```{r}
+```{r, eval = FALSE}
 head(penguins$body_mass_g)
 ```
 
 If we want the structure of the variable `body_mass_g`, we do this:
 
-```{r}
+```{r, eval = FALSE}
 str(penguins$body_mass_g)
 ```
 
@@ -295,7 +291,7 @@ There are other data types, but the ones above are by far the most common that y
 
 If we want to summarize only the variable `body_mass_g`, we can do this:
 
-```{r}
+```{r, eval = FALSE}
 summary(penguins$body_mass_g)
 ```
 
