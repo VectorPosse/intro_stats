@@ -4,16 +4,16 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Chapter 3 Categorical data” | Introduction to Statistics: an integrated textbook and workbook using R</title>
+<title>Chapter 3 Categorical data | Introduction to Statistics: an integrated textbook and workbook using R</title>
 <meta name="author" content="Sean Raleigh, Westminster College (Salt Lake City, UT)">
 <meta name="description" content="h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px}...">
 <meta name="generator" content="bookdown 0.27 with bs4_book()">
-<meta property="og:title" content="Chapter 3 Categorical data” | Introduction to Statistics: an integrated textbook and workbook using R">
+<meta property="og:title" content="Chapter 3 Categorical data | Introduction to Statistics: an integrated textbook and workbook using R">
 <meta property="og:type" content="book">
 <meta property="og:url" content="https://vectorposse.github.io/intro_stats/categorical.html">
 <meta property="og:description" content="h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px}...">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Chapter 3 Categorical data” | Introduction to Statistics: an integrated textbook and workbook using R">
+<meta name="twitter:title" content="Chapter 3 Categorical data | Introduction to Statistics: an integrated textbook and workbook using R">
 <meta name="twitter:description" content="h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px}...">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
@@ -48,7 +48,7 @@
 <li><a class="" href="index.html">Introduction</a></li>
 <li><a class="" href="intror.html"><span class="header-section-number">1</span> Introduction to R</a></li>
 <li><a class="" href="rmark.html"><span class="header-section-number">2</span> Using R Markdown</a></li>
-<li><a class="active" href="categorical.html"><span class="header-section-number">3</span> Categorical data”</a></li>
+<li><a class="active" href="categorical.html"><span class="header-section-number">3</span> Categorical data</a></li>
 </ul>
 
         <div class="book-extra">
@@ -58,7 +58,7 @@
 </div>
   </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="categorical" class="section level1" number="3">
 <h1>
-<span class="header-section-number">3</span> Categorical data”<a class="anchor" aria-label="anchor" href="#categorical"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3</span> Categorical data<a class="anchor" aria-label="anchor" href="#categorical"><i class="fas fa-link"></i></a>
 </h1>
 <!-- Please don't mess with the next few lines! -->
 <style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>
@@ -69,7 +69,7 @@
 <div id="functions-introduced-in-this-chapter-2" class="section level3 unnumbered summary">
 <h3>Functions introduced in this chapter:<a class="anchor" aria-label="anchor" href="#functions-introduced-in-this-chapter-2"><i class="fas fa-link"></i></a>
 </h3>
-<p><code>glimpse</code>, <code>table</code>, <code>tabyl</code>, <code>adorn_pct_formatting</code>, <code>ggplot</code>, <code>geom_bar</code>, <code>adorn_percentages</code>, <code>mutate</code>, <code>as_factor</code>, <code>labs</code>, <code>tibble</code></p>
+<p><code>glimpse</code>, <code>table</code>, <code>tabyl</code>, <code>adorn_pct_formatting</code>, <code>ggplot</code>, <code>geom_bar</code>, <code>adorn_percentages</code>, <code>mutate</code>, <code>as_factor</code>, <code>labs</code>, <code>tibble</code>, <code>geom_col</code></p>
 </div>
 <div id="categorical-intro" class="section level2" number="3.1">
 <h2>
@@ -123,9 +123,8 @@
 <p>Even “numbers” can sometimes represent categorical data. For example, suppose in a survey there is a Yes/No question. Instead of seeing the words “Yes” or “No”, though, you might see a data set with ones and zeros, where 1 = Yes and 0 = No. The presence of numbers does not automatically make that data numerical. In fact, the data is categorical. Yes and No are categories that sort the survey respondents into two groups based on their responses to a certain question.</p>
 <p>What about ZIP codes? They are recorded as numbers, and unlike the Yes/No example above, those numbers aren’t just substitutes for words. Nevertheless, ZIP codes are categorical. They sort addresses into a finite number of groups based on geographic proximity.</p>
 <p>Another way to think of it is this: can the numerical values of ZIP codes be treated as numbers in any meaningful way? Can you take a sum or an average of ZIP codes? Sure, technically a computer can add up or average a set of ZIP codes, but would the result be a meaningful number? Since the answer is “no” we cannot think of ZIP codes as numbers, even though they are recorded that way.</p>
-<div id="exercise-1" class="section level5" number="3.5.0.0.1">
-<h5>
-<span class="header-section-number">3.5.0.0.1</span> Exercise 1<a class="anchor" aria-label="anchor" href="#exercise-1"><i class="fas fa-link"></i></a>
+<div id="exercise-1" class="section level5 unnumbered">
+<h5>Exercise 1<a class="anchor" aria-label="anchor" href="#exercise-1"><i class="fas fa-link"></i></a>
 </h5>
 <p>Think of another type of data that would be recorded using numbers but should be thought of as categorical data.</p>
 <div class="answer">
@@ -163,9 +162,8 @@
 ## $ body_mass_g       &lt;int&gt; 3750, 3800, 3250, NA, 3450, 3650, 3625, 4675, 3475, …
 ## $ sex               &lt;fct&gt; male, female, female, NA, female, male, female, male…
 ## $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007…</code></pre>
-<div id="exercise-2" class="section level5" number="3.6.0.0.1">
-<h5>
-<span class="header-section-number">3.6.0.0.1</span> Exercise 2<a class="anchor" aria-label="anchor" href="#exercise-2"><i class="fas fa-link"></i></a>
+<div id="exercise-2" class="section level5 unnumbered">
+<h5>Exercise 2<a class="anchor" aria-label="anchor" href="#exercise-2"><i class="fas fa-link"></i></a>
 </h5>
 <p>Look at the output of <code>str</code> versus <code>glimpse</code> above. Write down any advantages or disadvantages you see using one versus the other. (You may also want to check the help file for the two commands to see if they offer any clues as to why you might use one over the other.)</p>
 <div class="answer">
@@ -208,9 +206,8 @@
   </script>
 </div>
 <p>The syntax above looks a little confusing with the unusual <code>%&gt;%</code> there. You will learn more about that weird set of symbols in a later chapter. For now, you can just copy and paste this code and make any necessary changes to the tibble and/or variables names as needed.</p>
-<div id="exercise-3a" class="section level5" number="3.7.0.0.1">
-<h5>
-<span class="header-section-number">3.7.0.0.1</span> Exercise 3(a)<a class="anchor" aria-label="anchor" href="#exercise-3a"><i class="fas fa-link"></i></a>
+<div id="exercise-3a" class="section level5 unnumbered">
+<h5>Exercise 3(a)<a class="anchor" aria-label="anchor" href="#exercise-3a"><i class="fas fa-link"></i></a>
 </h5>
 <p>Use the <code>tabyl</code> command as above to create a frequency table for the sex of the penguins. (You will also get a relative frequency table for free.)</p>
 <div class="answer">
@@ -218,18 +215,16 @@
 <code class="sourceCode R"><span><span class="co"># Add code here to create a frequency table for sex</span></span></code></pre></div>
 </div>
 </div>
-<div id="exercise-3b" class="section level5" number="3.7.0.0.2">
-<h5>
-<span class="header-section-number">3.7.0.0.2</span> Exercise 3(b)<a class="anchor" aria-label="anchor" href="#exercise-3b"><i class="fas fa-link"></i></a>
+<div id="exercise-3b" class="section level5 unnumbered">
+<h5>Exercise 3(b)<a class="anchor" aria-label="anchor" href="#exercise-3b"><i class="fas fa-link"></i></a>
 </h5>
 <p>In the table for sex that you just created, what does the last row mean?</p>
 <div class="answer">
 <p>Please write up your answer here.</p>
 </div>
 </div>
-<div id="exercise-3c" class="section level5" number="3.7.0.0.3">
-<h5>
-<span class="header-section-number">3.7.0.0.3</span> Exercise 3(c)<a class="anchor" aria-label="anchor" href="#exercise-3c"><i class="fas fa-link"></i></a>
+<div id="exercise-3c" class="section level5 unnumbered">
+<h5>Exercise 3(c)<a class="anchor" aria-label="anchor" href="#exercise-3c"><i class="fas fa-link"></i></a>
 </h5>
 <p>Now create a relative frequency table for sex that reports percentages and not proportions.</p>
 <div class="answer">
@@ -237,9 +232,8 @@
 <code class="sourceCode R"><span><span class="co"># Add code here that reports percentages instead of proportions</span></span></code></pre></div>
 </div>
 </div>
-<div id="exercise-3d" class="section level5" number="3.7.0.0.4">
-<h5>
-<span class="header-section-number">3.7.0.0.4</span> Exercise 3(d)<a class="anchor" aria-label="anchor" href="#exercise-3d"><i class="fas fa-link"></i></a>
+<div id="exercise-3d" class="section level5 unnumbered">
+<h5>Exercise 3(d)<a class="anchor" aria-label="anchor" href="#exercise-3d"><i class="fas fa-link"></i></a>
 </h5>
 <p>In the previous tables, what is the difference between <code>percent</code> and <code>valid_percent</code>? Why are there two different sets of percentages being computed?</p>
 <div class="answer">
@@ -278,9 +272,8 @@
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-54-1.png" width="672"></div>
 <p>These bar charts are the graphical analogues of a frequency table and a relative frequency table, respectively.</p>
-<div id="exercise-4" class="section level5" number="3.9.0.0.1">
-<h5>
-<span class="header-section-number">3.9.0.0.1</span> Exercise 4<a class="anchor" aria-label="anchor" href="#exercise-4"><i class="fas fa-link"></i></a>
+<div id="exercise-4" class="section level5 unnumbered">
+<h5>Exercise 4<a class="anchor" aria-label="anchor" href="#exercise-4"><i class="fas fa-link"></i></a>
 </h5>
 <p>In a sentence or two at most, describe the distribution of species in this data set.</p>
 <div class="answer">
@@ -311,9 +304,8 @@
   </script>
 </div>
 <p>Each column is a group, and our question is whether the distribution of sexes in each column is similar.</p>
-<div id="exercise-5" class="section level5" number="3.10.0.0.1">
-<h5>
-<span class="header-section-number">3.10.0.0.1</span> Exercise 5<a class="anchor" aria-label="anchor" href="#exercise-5"><i class="fas fa-link"></i></a>
+<div id="exercise-5" class="section level5 unnumbered">
+<h5>Exercise 5<a class="anchor" aria-label="anchor" href="#exercise-5"><i class="fas fa-link"></i></a>
 </h5>
 <p>Counts can be misleading. For example, there are 73 female Adelie penguins, but only 34 female Chinstrap penguins. Does that mean that Adelie penguins are more likely to be female than Chinstrap penguins? Why or why not?</p>
 <div class="answer">
@@ -341,18 +333,16 @@
 </div>
 <p>Now we can see that each column adds up to 100%. In other words, each species is now on equal footing, and only the distribution of sexes within each group matters.</p>
 </div>
-<div id="exercise-6a" class="section level5" number="3.10.0.0.2">
-<h5>
-<span class="header-section-number">3.10.0.0.2</span> Exercise 6(a)<a class="anchor" aria-label="anchor" href="#exercise-6a"><i class="fas fa-link"></i></a>
+<div id="exercise-6a" class="section level5 unnumbered">
+<h5>Exercise 6(a)<a class="anchor" aria-label="anchor" href="#exercise-6a"><i class="fas fa-link"></i></a>
 </h5>
 <p>What percentage of Adelie penguins are male? What percentage of Chinstrap penguins are male? What percentage of Gentoo penguins are male?</p>
 <div class="answer">
 <p>Please write up your answer here.</p>
 </div>
 </div>
-<div id="exercise-6b" class="section level5" number="3.10.0.0.3">
-<h5>
-<span class="header-section-number">3.10.0.0.3</span> Exercise 6(b)<a class="anchor" aria-label="anchor" href="#exercise-6b"><i class="fas fa-link"></i></a>
+<div id="exercise-6b" class="section level5 unnumbered">
+<h5>Exercise 6(b)<a class="anchor" aria-label="anchor" href="#exercise-6b"><i class="fas fa-link"></i></a>
 </h5>
 <p>Does sex appear to be associated with species for the penguins in this data set? Or are these variables independent?</p>
 <div class="answer">
@@ -361,9 +351,8 @@
 <hr>
 <p>The islands of Antarctica on which the penguins were observed and measured are recorded in the variable called <code>island</code>. Is the distribution of the three species of penguin the same (or similar) on the three islands?</p>
 </div>
-<div id="exercise-7a" class="section level5" number="3.10.0.0.4">
-<h5>
-<span class="header-section-number">3.10.0.0.4</span> Exercise 7(a)<a class="anchor" aria-label="anchor" href="#exercise-7a"><i class="fas fa-link"></i></a>
+<div id="exercise-7a" class="section level5 unnumbered">
+<h5>Exercise 7(a)<a class="anchor" aria-label="anchor" href="#exercise-7a"><i class="fas fa-link"></i></a>
 </h5>
 <p>Choosing which variables play the roles of response and predictor can be tricky. For the question above, with <code>species</code> and <code>island</code>, which is response and which is predictor?</p>
 <p>One way to think about this is to ask the following two questions and see which one is closer to the question asked:</p>
@@ -375,9 +364,8 @@
 <p>Please write up your answer here.</p>
 </div>
 </div>
-<div id="exercise-7b" class="section level5" number="3.10.0.0.5">
-<h5>
-<span class="header-section-number">3.10.0.0.5</span> Exercise 7(b)<a class="anchor" aria-label="anchor" href="#exercise-7b"><i class="fas fa-link"></i></a>
+<div id="exercise-7b" class="section level5 unnumbered">
+<h5>Exercise 7(b)<a class="anchor" aria-label="anchor" href="#exercise-7b"><i class="fas fa-link"></i></a>
 </h5>
 <p>Create a contingency table with percentages. List <code>species</code> first, followed by <code>island</code>. (Hey, that’s hint in case you need to go back and change your answer to part (a).)</p>
 <div class=".{answer}">
@@ -385,9 +373,8 @@
 <code class="sourceCode R"><span><span class="co"># Add code here to create a contingency table with percentages.</span></span></code></pre></div>
 </div>
 </div>
-<div id="exercise-7c" class="section level5" number="3.10.0.0.6">
-<h5>
-<span class="header-section-number">3.10.0.0.6</span> Exercise 7(c)<a class="anchor" aria-label="anchor" href="#exercise-7c"><i class="fas fa-link"></i></a>
+<div id="exercise-7c" class="section level5 unnumbered">
+<h5>Exercise 7(c)<a class="anchor" aria-label="anchor" href="#exercise-7c"><i class="fas fa-link"></i></a>
 </h5>
 <p>Finally, comment on the association or independence of the two variables.</p>
 <div class="answer">
@@ -423,9 +410,8 @@
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"fill"</span><span class="op">)</span></span></code></pre></div>
 <div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-61-1.png" width="672"></div>
 <p>This graph does correctly show that the sexes are pretty much equally balances across all three species.</p>
-<div id="exercise-8a" class="section level5" number="3.11.0.0.1">
-<h5>
-<span class="header-section-number">3.11.0.0.1</span> Exercise 8(a)<a class="anchor" aria-label="anchor" href="#exercise-8a"><i class="fas fa-link"></i></a>
+<div id="exercise-8a" class="section level5 unnumbered">
+<h5>Exercise 8(a)<a class="anchor" aria-label="anchor" href="#exercise-8a"><i class="fas fa-link"></i></a>
 </h5>
 <p>Using <code>species</code> and <code>island</code>, create a side-by-side bar chart. Be careful, though, to change the sample code above to make sure <code>species</code> is now the response variable (using the <code>fill</code> aesthetic) and that <code>island</code> is the explanatory variable (using <code>x</code>). (Hey, that’s another hint to go back and look at the previous exercise and make sure you got part (a) right!)</p>
 <div class="answer">
@@ -433,9 +419,8 @@
 <code class="sourceCode R"><span><span class="co"># Add code here to make a side-by-side bar chart.</span></span></code></pre></div>
 </div>
 </div>
-<div id="exercise-8b" class="section level5" number="3.11.0.0.2">
-<h5>
-<span class="header-section-number">3.11.0.0.2</span> Exercise 8(b)<a class="anchor" aria-label="anchor" href="#exercise-8b"><i class="fas fa-link"></i></a>
+<div id="exercise-8b" class="section level5 unnumbered">
+<h5>Exercise 8(b)<a class="anchor" aria-label="anchor" href="#exercise-8b"><i class="fas fa-link"></i></a>
 </h5>
 <p>Comment on the association or independence of the two variables.</p>
 <div class="answer">
@@ -452,9 +437,8 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">$</span><span class="va">year</span><span class="op">)</span></span></code></pre></div>
 <pre><code>##  int [1:344] 2007 2007 2007 2007 2007 2007 2007 2007 2007 2007 ...</code></pre>
 <p>These appear as integers. Yes, years are whole numbers, but why might this variable be treated as categorical data and not numerical data?</p>
-<div id="exercise-9a" class="section level5" number="3.12.0.0.1">
-<h5>
-<span class="header-section-number">3.12.0.0.1</span> Exercise 9(a)<a class="anchor" aria-label="anchor" href="#exercise-9a"><i class="fas fa-link"></i></a>
+<div id="exercise-9a" class="section level5 unnumbered">
+<h5>Exercise 9(a)<a class="anchor" aria-label="anchor" href="#exercise-9a"><i class="fas fa-link"></i></a>
 </h5>
 <p>Use the <code>tabyl</code> command to create a frequency table for <code>year</code>.</p>
 <div class="answer">
@@ -462,9 +446,8 @@
 <code class="sourceCode R"><span><span class="co"># Add code here to make a frequency table for year.</span></span></code></pre></div>
 </div>
 </div>
-<div id="exercise-9b" class="section level5" number="3.12.0.0.2">
-<h5>
-<span class="header-section-number">3.12.0.0.2</span> Exercise 9(b)<a class="anchor" aria-label="anchor" href="#exercise-9b"><i class="fas fa-link"></i></a>
+<div id="exercise-9b" class="section level5 unnumbered">
+<h5>Exercise 9(b)<a class="anchor" aria-label="anchor" href="#exercise-9b"><i class="fas fa-link"></i></a>
 </h5>
 <p>Why is <code>year</code> better thought of as categorical data and not numerical data (at least for this data set—we’re not claiming years should always be treated as categorical)?</p>
 <div class="answer">
@@ -490,9 +473,8 @@
 ## $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007…
 ## $ year_fct          &lt;fct&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007…</code></pre>
 </div>
-<div id="exercise-10a" class="section level5" number="3.12.0.0.3">
-<h5>
-<span class="header-section-number">3.12.0.0.3</span> Exercise 10(a)<a class="anchor" aria-label="anchor" href="#exercise-10a"><i class="fas fa-link"></i></a>
+<div id="exercise-10a" class="section level5 unnumbered">
+<h5>Exercise 10(a)<a class="anchor" aria-label="anchor" href="#exercise-10a"><i class="fas fa-link"></i></a>
 </h5>
 <p>Make a contingency table of the species measured in each year using counts. Use the <code>species</code> variable first, followed by the new factor variable <code>year_fct</code>. (Think about why that order makes sense. <strong>We will always list the response variable first so that the categories of interest will be the rows and the groups will be the columns.</strong>)</p>
 <div class="answer">
@@ -500,9 +482,8 @@
 <code class="sourceCode R"><span><span class="co"># Add code here to make a contingency table for species and year with counts.</span></span></code></pre></div>
 </div>
 </div>
-<div id="exercise-10b" class="section level5" number="3.12.0.0.4">
-<h5>
-<span class="header-section-number">3.12.0.0.4</span> Exercise 10(b)<a class="anchor" aria-label="anchor" href="#exercise-10b"><i class="fas fa-link"></i></a>
+<div id="exercise-10b" class="section level5 unnumbered">
+<h5>Exercise 10(b)<a class="anchor" aria-label="anchor" href="#exercise-10b"><i class="fas fa-link"></i></a>
 </h5>
 <p>Make a contingency table of the species measured in each year using column percentages (<em>not</em> proportions). (Again, be sure to use the new factor variable <code>year_fct</code>, not the old variable <code>year</code>.)</p>
 <div class="answer">
@@ -510,9 +491,8 @@
 <code class="sourceCode R"><span><span class="co"># Add code here to make a contingency table for species and year with percentages.</span></span></code></pre></div>
 </div>
 </div>
-<div id="exercise-10c" class="section level5" number="3.12.0.0.5">
-<h5>
-<span class="header-section-number">3.12.0.0.5</span> Exercise 10(c)<a class="anchor" aria-label="anchor" href="#exercise-10c"><i class="fas fa-link"></i></a>
+<div id="exercise-10c" class="section level5 unnumbered">
+<h5>Exercise 10(c)<a class="anchor" aria-label="anchor" href="#exercise-10c"><i class="fas fa-link"></i></a>
 </h5>
 <p>How similar or dissimilar are the distributions of species across the three years of the study?</p>
 <div class="answer">
@@ -537,9 +517,8 @@
 <span>         y <span class="op">=</span> <span class="st">"Proportion"</span>,</span>
 <span>         x <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></span></code></pre></div>
 <div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-69-1.png" width="672"></div>
-<div id="exercise-11" class="section level5" number="3.13.0.0.1">
-<h5>
-<span class="header-section-number">3.13.0.0.1</span> Exercise 11<a class="anchor" aria-label="anchor" href="#exercise-11"><i class="fas fa-link"></i></a>
+<div id="exercise-11" class="section level5 unnumbered">
+<h5>Exercise 11<a class="anchor" aria-label="anchor" href="#exercise-11"><i class="fas fa-link"></i></a>
 </h5>
 <p>Modify the following side-by-side bar chart by adding a title and labels for both the fill variable and the x-axis variable. (Hint: you can use <code>fill = sex</code> inside the <code>labs</code> command just like you used <code>title</code>, <code>y</code>, and <code>x</code>.)</p>
 <div class="answer">
@@ -601,9 +580,8 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguin_species_table</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-72-1.png" width="672"></div>
-<div id="exercise-12" class="section level5" number="3.14.0.0.1">
-<h5>
-<span class="header-section-number">3.14.0.0.1</span> Exercise 12<a class="anchor" aria-label="anchor" href="#exercise-12"><i class="fas fa-link"></i></a>
+<div id="exercise-12" class="section level5 unnumbered">
+<h5>Exercise 12<a class="anchor" aria-label="anchor" href="#exercise-12"><i class="fas fa-link"></i></a>
 </h5>
 <p>Explain what went wrong with the previous command? Why does <code>ggplot</code> think that each species has count 1?</p>
 <div class="answer">
@@ -616,9 +594,8 @@
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_col</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-73-1.png" width="672"></div>
 </div>
-<div id="exercise-13a" class="section level5" number="3.14.0.0.2">
-<h5>
-<span class="header-section-number">3.14.0.0.2</span> Exercise 13(a)<a class="anchor" aria-label="anchor" href="#exercise-13a"><i class="fas fa-link"></i></a>
+<div id="exercise-13a" class="section level5 unnumbered">
+<h5>Exercise 13(a)<a class="anchor" aria-label="anchor" href="#exercise-13a"><i class="fas fa-link"></i></a>
 </h5>
 <p>Use the <code>tabyl</code> command to create a frequency table for <code>island</code>.</p>
 <div class="answer">
@@ -626,9 +603,8 @@
 <code class="sourceCode R"><span><span class="co"># Add code here to create a frequency table for island</span></span></code></pre></div>
 </div>
 </div>
-<div id="exercise-13b" class="section level5" number="3.14.0.0.3">
-<h5>
-<span class="header-section-number">3.14.0.0.3</span> Exercise 13(b)<a class="anchor" aria-label="anchor" href="#exercise-13b"><i class="fas fa-link"></i></a>
+<div id="exercise-13b" class="section level5 unnumbered">
+<h5>Exercise 13(b)<a class="anchor" aria-label="anchor" href="#exercise-13b"><i class="fas fa-link"></i></a>
 </h5>
 <p>Use the <code>tibble</code> command to create a new tibble manually that contains the frequency data for the <code>island</code> variable. It should have two columns, one called <code>island</code> and the other called <code>count</code>. Name it <code>penguin_island_table</code>.</p>
 <div class="answer">
@@ -636,9 +612,8 @@
 <code class="sourceCode R"><span><span class="co"># Add code here to create a tibble with frequency data for island</span></span></code></pre></div>
 </div>
 </div>
-<div id="exercise-13c" class="section level5" number="3.14.0.0.4">
-<h5>
-<span class="header-section-number">3.14.0.0.4</span> Exercise 13(c)<a class="anchor" aria-label="anchor" href="#exercise-13c"><i class="fas fa-link"></i></a>
+<div id="exercise-13c" class="section level5 unnumbered">
+<h5>Exercise 13(c)<a class="anchor" aria-label="anchor" href="#exercise-13c"><i class="fas fa-link"></i></a>
 </h5>
 <p>Use <code>ggplot</code> with <code>geom_col</code> to create a bar chart for island.</p>
 <div class="answer">
@@ -691,7 +666,7 @@
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
 <li>
-<a class="nav-link" href="#categorical"><span class="header-section-number">3</span> Categorical data”</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#functions-introduced-in-this-chapter-2">Functions introduced in this chapter:</a></li></ul>
+<a class="nav-link" href="#categorical"><span class="header-section-number">3</span> Categorical data</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#functions-introduced-in-this-chapter-2">Functions introduced in this chapter:</a></li></ul>
 </li>
 <li><a class="nav-link" href="#categorical-intro"><span class="header-section-number">3.1</span> Introduction</a></li>
 <li><a class="nav-link" href="#categorical-download"><span class="header-section-number">3.2</span> Download the R notebook file</a></li>
