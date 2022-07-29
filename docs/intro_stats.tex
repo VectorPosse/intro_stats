@@ -124,7 +124,7 @@
 
 \title{Introduction to Statistics: an integrated textbook and workbook using R}
 \author{Sean Raleigh, Westminster College (Salt Lake City, UT)}
-\date{2022-07-26}
+\date{2022-07-28}
 
 \begin{document}
 \maketitle
@@ -389,9 +389,19 @@ Use Google to find out how to take the square root of a number in R. Test out yo
 
 Let's go back to the penguins data contained in the \texttt{penguins} data set from the \texttt{palmerpenguins} package.
 
-The first thing we do to understand a data set is to read the help file on it. (We've already done this for the penguins data.) Of course, this only works for data files that come with R or with a package that can be loaded into R. If you are using R to analyze your own data, presumably you don't need a help file. And if you're analyzing data from another source, you'll have to go to that source to find out about the data.
+The first thing we do to understand a data set is to read the help file on it. (We've already done this for the \texttt{penguins} data.) Of course, this only works for data files that come with R or with a package that can be loaded into R. If you are using R to analyze your own data, presumably you don't need a help file. And if you're analyzing data from another source, you'll have to go to that source to find out about the data.
 
-Next, we can also look at the data in ``spreadsheet'' form. Type
+When you read the help file for \texttt{penguins}, you may have noticed that it described the ``Format'' as being ``A tibble with 344 rows and 8 variables.'' What is a ``tibble''?
+
+The word ``tibble'' is an R-specific term that describes data organized in a specific way. A more common term is ``data frame'' (or sometimes ``data table''). The idea is that in a data frame, the rows and the columns have very specific interpretations.
+
+Each row of a data frame represents a single object or observation. So in the \texttt{penguins} data, each row represents a penguin. If you have survey data, each row will usually represent a single person. But an ``object'' can be anything about which we collect data. State-level data might have 50 rows and each row represents an entire state.
+
+Each column of a data frame represents a \emph{variable}, which is a property, attribute, or measurement made about the objects in the data. For example, the help file mentions that various pieces of information are recorded about each penguin, like species, bill length, flipper length, boy mass, sex, and so on. These are examples of variables. In a survey, for example, the variables will likely be the responses to individual questions.
+
+We will use the terms tibble and data frame interchangeably in this course. They are not quite synonyms: tibbles are R-specific implementations of data frames, the latter being a more general term that applies in all statistical contexts. Nevertheless, there are no situations (at least not encountered in this course) where it makes any difference if a data set is called a tibble or a data frame.
+
+We can also look at the data frame in ``spreadsheet'' form. Type
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -399,9 +409,9 @@ Next, we can also look at the data in ``spreadsheet'' form. Type
 \end{Highlighting}
 \end{Shaded}
 
-(Be sure you're using an upper-case ``V'' in \texttt{View}.) A new pane should open up in the upper-left corner of the screen. In that pane, the penguins data appears in a grid format, like a spreadsheet. The observations (individual penguins) are the rows and the variables are the columns. This will also let you sort each column by clicking on the arrows next to the variable name across the top.
+(Be sure you're using an upper-case ``V'' in \texttt{View}.) A new pane should open up in the upper-left corner of the screen. In that pane, the penguins data appears in a grid format, like a spreadsheet. The observations (individual penguins) are the rows and the variables (attributes and measurements about the penguins) are the columns. This will also let you sort each column by clicking on the arrows next to the variable name across the top.
 
-Try this to print just a few rows of data to the Console:
+Sometimes, we just need a little peek at the data. Try this to print just a few rows of data to the Console:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -460,7 +470,7 @@ We want to understand the ``structure'' of our data. For this, we use the \textt
 \end{Highlighting}
 \end{Shaded}
 
-This tells us several important things. First it says that there are 344 observations of 8 variables. We can isolate those pieces of information separately as well, if we need:
+This tells us several important things. First it says that we are looking at a tibble with 344 observations of 8 variables. We can isolate those pieces of information separately as well, if needed:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -593,7 +603,7 @@ If you followed the directions at the end of the last chapter, you should have c
 If you're not in the \texttt{intro\_stats} project, click on whatever it does say in the upper right corner (probably \texttt{Project:\ (None)}). You can click ``Open Project'' but it's likely that the \texttt{intro\_stats} project appears in the drop-down menu in your list of recently accessed projects. So click on the project \texttt{intro\_stats}.
 
 \hypertarget{rmark-download}{%
-\section{Download assignment file}\label{rmark-download}}
+\section{Download the R notebook file}\label{rmark-download}}
 
 You need to download this chapter as an R Notebook (\texttt{.Rmd}) file. Please click the following link to do so:
 
@@ -1088,7 +1098,10 @@ One final note about copying and pasting. Sometimes, people will try to copy and
 
 That's it! There wasn't too much you were asked to do for this assignment that will actually show up in the HTML output. (Make sure you did do the three things that were asked of you however: one was adding your name and the date to the YAML header, one was typing something in the blue answer box, and the last was to make a section header appear properly.) As you gain confidence and as we move into more serious stats material, you will be asked to do a lot more.
 
-Now you know how to use an R Notebook file to generate pretty output files. If you look in your project folder, you should see three files:
+\hypertarget{rmark-prep}{%
+\section{Preparing and submitting your assignment}\label{rmark-prep}}
+
+If you look in your project folder, you should see three files:
 
 \begin{verbatim}
 intro_stats.Rproj
@@ -1098,9 +1111,826 @@ intro_stats.Rproj
 
 The first file (with extension \texttt{.Rproj}) you were instructed never to touch.
 
-The next file (with extension \texttt{.Rmd}) is your R Notebook file. It is really nothing more than a plain text file, although when you open it in RStudio, some magic allows you to see the output from the code chunks you run.
+The next file (with extension \texttt{.Rmd}) is your R Notebook file. It's the file you're looking at right now. It is really nothing more than a plain text file, although when you open it in RStudio, some magic allows you to see the output from the code chunks you run.
 
-Finally, you have a file with extension \texttt{.nb.html}. That is the pretty output file generated when you hit the ``Preview'' button. (If you happen to see other files in your project folder, you should ignore those and not mess with them.)
+Finally, you have a file with extension \texttt{.nb.html}. That is the pretty output file generated when you hit the ``Preview'' button. (If you happen to see other files in your project folder, you should ignore those and not mess with them.) This is the ``final product'' of your work.
+
+There are several steps that you should follow at the end of each of every chapter.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  From the ``Run'' menu, select ``Restart R and Run All Chunks''.
+\item
+  Deal with any code errors that crop up. Repeat steps 1---2 until there are no more code errors.
+\item
+  Spell check your document by clicking the icon with ``ABC'' and a check mark.
+\item
+  Hit the ``Preview'' button one last time to generate the final draft of the \texttt{.nb.html} file.
+\item
+  Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
+\end{enumerate}
+
+If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
+
+\hypertarget{categorical}{%
+\chapter{Categorical data''}\label{categorical}}
+
+2.0
+
+\hypertarget{functions-introduced-in-this-chapter-2}{%
+\subsection*{Functions introduced in this chapter:}\label{functions-introduced-in-this-chapter-2}}
+\addcontentsline{toc}{subsection}{Functions introduced in this chapter:}
+
+\texttt{glimpse}, \texttt{table}, \texttt{tabyl}, \texttt{adorn\_pct\_formatting}, \texttt{ggplot}, \texttt{geom\_bar}, \texttt{adorn\_percentages}, \texttt{mutate}, \texttt{as\_factor}, \texttt{labs}, \texttt{tibble}
+
+\hypertarget{categorical-intro}{%
+\section{Introduction}\label{categorical-intro}}
+
+In this chapter, we'll learn about categorical data and how to summarize it using tables and graphs.
+
+\hypertarget{categorical-download}{%
+\section{Download the R notebook file}\label{categorical-download}}
+
+Check the upper-right corner in RStudio to make sure you're in your \texttt{intro\_stats} project. Then click on the following link to download this chapter as an R notebook file (\texttt{.Rmd}).
+
+https://vectorposse.github.io/intro\_stats/chapter\_downloads/03-categorical\_data.Rmd
+
+Once the file is downloaded, move it to your project folder in RStudio and open it there.
+
+\hypertarget{categorical-restart}{%
+\section{Restart R and run all chunks}\label{categorical-restart}}
+
+In RStudio, in the toolbar above this document, find the ``Run'' drop-down menu and select ``Restart R and Run All Chunks.''
+
+This does two important things:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  R will restart. This will clear out the Global Environment and provide a fresh session for this new assignment. None of the clutter from previous chapters will be there to mess up your work in this chapter.
+\item
+  All the code chunks in this document will run so that you can see the output as you scroll past it. This saves you some effort in having to click the little green ``Run'' button in each code chunk as you come across it. (Also, if you forget to run one, that could cause errors later on, so this way, all the variables you need will be in the Global Environment for when they're needed later.) You will still need to click the green arrow for new code chunks that you create, of course.
+\end{enumerate}
+
+At the end of the assignment, you will ``Restart R and Run All Chunks'' once again to make sure that everything works smoothly and there are no lingering errors.
+
+\hypertarget{categorical-load}{%
+\section{Load packages}\label{categorical-load}}
+
+We load the \texttt{tidyverse} package since it also loads the \texttt{ggplot2} package that we'll use throughout the course to make graphs. It also loads several other packages, for example, one called \texttt{dplyr} to give us a command called \texttt{mutate}, and another called \texttt{forcats} to give us \texttt{as\_factor}. (These will all be explained later.) The \texttt{janitor} package gives us the \texttt{tabyl} command for creating nice tables. Finally, We load the \texttt{palmerpenguins} package to work with the penguin data.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(janitor)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'janitor'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     chisq.test, fisher.test
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(palmerpenguins)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{categorical-data}{%
+\section{Categorical data}\label{categorical-data}}
+
+Data comes in different types depending on what is being measured. When people think of ``data'', they often imagine \emph{numerical data}, consisting of numbers. But there are other kinds of data as well.
+
+In this chapter, we focus on \emph{categorical data} that groups observations into categories.
+
+For example, if we record the species of a penguin, that is not a number. It's a word that classifies that penguin into one of a finite number of types. Whenever you see words in a data set, there's a good chance that you're looking at categorical data.
+
+Even ``numbers'' can sometimes represent categorical data. For example, suppose in a survey there is a Yes/No question. Instead of seeing the words ``Yes'' or ``No'', though, you might see a data set with ones and zeros, where 1 = Yes and 0 = No.~The presence of numbers does not automatically make that data numerical. In fact, the data is categorical. Yes and No are categories that sort the survey respondents into two groups based on their responses to a certain question.
+
+What about ZIP codes? They are recorded as numbers, and unlike the Yes/No example above, those numbers aren't just substitutes for words. Nevertheless, ZIP codes are categorical. They sort addresses into a finite number of groups based on geographic proximity.
+
+Another way to think of it is this: can the numerical values of ZIP codes be treated as numbers in any meaningful way? Can you take a sum or an average of ZIP codes? Sure, technically a computer can add up or average a set of ZIP codes, but would the result be a meaningful number? Since the answer is ``no'' we cannot think of ZIP codes as numbers, even though they are recorded that way.
+
+\hypertarget{exercise-1}{%
+\paragraph{Exercise 1}\label{exercise-1}}
+
+Think of another type of data that would be recorded using numbers but should be thought of as categorical data.
+
+Please write up your answer here.
+
+\hypertarget{categorical-factor}{%
+\section{Factor variables}\label{categorical-factor}}
+
+R uses the term ``factor variable'' to refer to a categorical variable. Look at the structure of the \texttt{penguins} data below.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{str}\NormalTok{(penguins)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## tibble [344 x 8] (S3: tbl_df/tbl/data.frame)
+##  $ species          : Factor w/ 3 levels "Adelie","Chinstrap",..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ island           : Factor w/ 3 levels "Biscoe","Dream",..: 3 3 3 3 3 3 3 3 3 3 ...
+##  $ bill_length_mm   : num [1:344] 39.1 39.5 40.3 NA 36.7 39.3 38.9 39.2 34.1 42 ...
+##  $ bill_depth_mm    : num [1:344] 18.7 17.4 18 NA 19.3 20.6 17.8 19.6 18.1 20.2 ...
+##  $ flipper_length_mm: int [1:344] 181 186 195 NA 193 190 181 195 193 190 ...
+##  $ body_mass_g      : int [1:344] 3750 3800 3250 NA 3450 3650 3625 4675 3475 4250 ...
+##  $ sex              : Factor w/ 2 levels "female","male": 2 1 1 NA 1 2 1 2 NA NA ...
+##  $ year             : int [1:344] 2007 2007 2007 2007 2007 2007 2007 2007 2007 2007 ...
+\end{verbatim}
+
+The categorical variables \texttt{species}, \texttt{island}, and \texttt{sex} are coded correctly as factor variables.
+
+The \texttt{tidyverse} package offers a function called \texttt{glimpse} that effectively does the same thing as \texttt{str}. We'll use \texttt{glimpse} throughout the rest of the course.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{glimpse}\NormalTok{(penguins)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rows: 344
+## Columns: 8
+## $ species           <fct> Adelie, Adelie, Adelie, Adelie, Adelie, Adelie, Adel~
+## $ island            <fct> Torgersen, Torgersen, Torgersen, Torgersen, Torgerse~
+## $ bill_length_mm    <dbl> 39.1, 39.5, 40.3, NA, 36.7, 39.3, 38.9, 39.2, 34.1, ~
+## $ bill_depth_mm     <dbl> 18.7, 17.4, 18.0, NA, 19.3, 20.6, 17.8, 19.6, 18.1, ~
+## $ flipper_length_mm <int> 181, 186, 195, NA, 193, 190, 181, 195, 193, 190, 186~
+## $ body_mass_g       <int> 3750, 3800, 3250, NA, 3450, 3650, 3625, 4675, 3475, ~
+## $ sex               <fct> male, female, female, NA, female, male, female, male~
+## $ year              <int> 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007~
+\end{verbatim}
+
+\hypertarget{exercise-2}{%
+\paragraph{Exercise 2}\label{exercise-2}}
+
+Look at the output of \texttt{str} versus \texttt{glimpse} above. Write down any advantages or disadvantages you see using one versus the other. (You may also want to check the help file for the two commands to see if they offer any clues as to why you might use one over the other.)
+
+Please write up your answer here.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+Your data set may already come with its variables coded correctly as factor variables, but often they are not. As described above, numbers are often used to represent categories, so R may think that those variables represent numerical data. Later, we'll see an example of this and learn how to handle categorical variables that are not coded as factor variables in R.
+
+\hypertarget{categorical-summarizing-one}{%
+\section{Summarizing one categorical variable}\label{categorical-summarizing-one}}
+
+If you need to summarize a single categorical variable, a \emph{frequency table} usually suffices. This is simply a table that counts up all the instances of each category. The word ``frequency'' is synonymous here with the word ``count''.
+
+We can use the \texttt{table} command:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{table}\NormalTok{(penguins}\SpecialCharTok{$}\NormalTok{species)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##    Adelie Chinstrap    Gentoo 
+##       152        68       124
+\end{verbatim}
+
+Recall that the dollar sign means to grab the variable \texttt{species} from the tibble \texttt{penguins}.
+
+You can also generate a \emph{relative frequency table} which is a table that uses proportions or percentages instead of counts.
+
+\textbf{NOTE:} For purposes of this course, we're going to be very careful about the terms \emph{proportion} and \emph{percentage}. For us, a proportion will always be a number between 0 and 1 whereas a percentage will be between 0 and 100. Calculating a percentage is the same as multiplying a proportion by 100.
+
+The \texttt{table} command stops being convenient if you want proportions instead of counts. Instead, we will use the \texttt{tabyl} command from the \texttt{janitor} package that was loaded near the top of the chapter. The syntax for this command is a little different. The tibble goes first, followed by a comma, followed by the variable you want to summarize:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tabyl}\NormalTok{(penguins, species)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    species   n   percent
+##     Adelie 152 0.4418605
+##  Chinstrap  68 0.1976744
+##     Gentoo 124 0.3604651
+\end{verbatim}
+
+Now you get both counts and proportions. Note that in the output above, it's a little misleading to call the last column ``percent''. These are actually proportions, and we would have to multiply by 100 to get percentages.
+
+If you really want percentages, we can use an \texttt{adorn} function to get them as follows:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tabyl}\NormalTok{(penguins, species) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_pct\_formatting}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    species   n percent
+##     Adelie 152   44.2%
+##  Chinstrap  68   19.8%
+##     Gentoo 124   36.0%
+\end{verbatim}
+
+The syntax above looks a little confusing with the unusual \texttt{\%\textgreater{}\%} there. You will learn more about that weird set of symbols in a later chapter. For now, you can just copy and paste this code and make any necessary changes to the tibble and/or variables names as needed.
+
+\hypertarget{exercise-3a}{%
+\paragraph{Exercise 3(a)}\label{exercise-3a}}
+
+Use the \texttt{tabyl} command as above to create a frequency table for the sex of the penguins. (You will also get a relative frequency table for free.)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to create a frequency table for sex}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{exercise-3b}{%
+\paragraph{Exercise 3(b)}\label{exercise-3b}}
+
+In the table for sex that you just created, what does the last row mean?
+
+Please write up your answer here.
+
+\hypertarget{exercise-3c}{%
+\paragraph{Exercise 3(c)}\label{exercise-3c}}
+
+Now create a relative frequency table for sex that reports percentages and not proportions.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here that reports percentages instead of proportions}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{exercise-3d}{%
+\paragraph{Exercise 3(d)}\label{exercise-3d}}
+
+In the previous tables, what is the difference between \texttt{percent} and \texttt{valid\_percent}? Why are there two different sets of percentages being computed?
+
+Please write up your answer here.
+
+\hypertarget{categorical-graphing-one}{%
+\section{Graphing one categorical variable}\label{categorical-graphing-one}}
+
+When asked, ``What type of graph should I use when graphing a single categorical variable?'' the simple answer is ``None.'' If you do need to summarize a categorical variable, a frequency table usually suffices.
+
+If you really, really want a graph, the standard type is a bar chart. But before we can create one, we need to start learning about the very important tool we will use throughout the course for graphing. It's called \texttt{ggplot} and it's part of a package called \texttt{ggplot2}.\footnote{Why the ``2''? It's a long story. Google it if you're interested in the history of the development of the \texttt{ggplot2} package.}
+
+We don't have to load the \texttt{ggplot2} package explicitly because it got loaded alongside a number of other packages when we called \texttt{library(tidyverse)} early on in the chapter.
+
+\hypertarget{categorical-ggplot}{%
+\section{ggplot}\label{categorical-ggplot}}
+
+The \texttt{ggplot} command is an all-purpose graphing utility. It uses a graphing philosophy derived from a book called \emph{The Grammar of Graphics} by Leland Wilkinson. The basic idea is that each variable you want to plot should correspond to some element or ``aesthetic'' component of the graph. The obvious places for data to go are along the y-axis or x-axis, but other aesthetics are important too; graphs often use color, shape, or size to illustrate different aspects of data. Once these aesthetics have been defined, we will add ``layers'' to the graph. These are objects like dots, boxes, lines, or bars that dictate the type of graph we want to see.
+
+In an introductory course, we won't get too fancy with these graphs. But be aware that there's a whole field of data visualization that studies clear and interesting ways to understand data graphically.
+
+It will be easier to explain the \texttt{ggplot} syntax in the context of specific graph types, so let's create a bar chart for species.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(penguins, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ species)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_bar}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-53-1.pdf}
+
+We'll walk through this syntax step by step.
+
+\begin{itemize}
+\tightlist
+\item
+  The first argument of the \texttt{ggplot} command is the name of the tibble, in this case, \texttt{penguins}.
+\item
+  Next we define the aesthetics using \texttt{aes} and parentheses. Inside the parentheses, we assign any variables we want to plot to aesthetics of the graph. For this analysis, we are only interested in the variable \texttt{species} and for a bar chart, the categorical variable typically goes on the x-axis. That's why it says \texttt{x\ =\ species} inside the \texttt{aes} argument.
+\item
+  Finally, \texttt{ggplot} needs to know what kind of graph we want. Graph types are called ``geoms'' in the \texttt{ggplot} world, and \texttt{geom\_bar()} tells \texttt{ggplot} to add a ``bar chart layer''. Adding a layer is accomplished by literally typing a plus sign.
+\end{itemize}
+
+This can be modified somewhat to give proportions (relative frequencies) on the y-axis instead of counts. Unfortunately, the \texttt{ggplot} syntax is not very transparent here. My recommendation is to copy and paste the code below if you need to make a relative frequency bar chart in the future, making the necessary changes to the tibble and variable names, of course.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(penguins, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ species, }\AttributeTok{y =}\NormalTok{ ..prop.., }\AttributeTok{group =} \DecValTok{1}\NormalTok{)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_bar}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-54-1.pdf}
+
+These bar charts are the graphical analogues of a frequency table and a relative frequency table, respectively.
+
+\hypertarget{exercise-4}{%
+\paragraph{Exercise 4}\label{exercise-4}}
+
+In a sentence or two at most, describe the distribution of species in this data set.
+
+Please write up your answer here.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+What about pie charts? Just. Don't.
+
+Seriously. Pie charts suck.\footnote{\url{https://medium.com/the-mission/to-pie-charts-3b1f57bcb34a}}
+
+\hypertarget{categorical-summarizing-two}{%
+\section{Summarizing two categorical variables}\label{categorical-summarizing-two}}
+
+A table summarizing two categorical variables is called a \emph{contingency table} (or pivot table, or cross-tabulation, or probably several other terms as well).
+
+For example, we might pose the following question: is the distribution of sex among penguins in our data more or less balanced across the three species?
+
+When we work with two variables, typically we think of one variable as \emph{response} and the other as \emph{predictor}. The response variable is usually the variable of main interest. A predictor variable is another attribute that might predict or explain more about the response variable.
+
+For example, our question is concerned with the sex distribution of penguins. We could create a relative frequency table of sex alone to see if male and female penguins are balanced in the data. In fact, you did that very thing above and saw that, indeed, there were roughly equal numbers of male and female penguins. But is that still true when we divide up the data into the three groups representing the separate species?
+
+Two variables are called \emph{associated} when there is a relationship between them. For example, if sex and species were associated, then the distribution of sex would change depending on the species. Maybe one species of penguin had more females and another had fewer females. Our prediction of the sex distribution would change based on the value of the predictor variable \texttt{species}.
+
+On the other hand, two variables that are not associated are called \emph{independent}. Independent variables are not related. If the sex distribution were the same across all species, then knowledge of the species would not change our predictions about the sex of a penguin. It wouldn't matter because there was no relationship between sex and species.
+
+Most research questions that involve two or more variables are fundamentally questions of whether a response variable is associated with one or more predictor variables, or whether they are independent.
+
+Let's check the contingency table. The \texttt{tabyl} command will place the first variable listed across the rows and the second one listed down the columns. It doesn't make any difference which variable is where, but to have a consistent rule on which we can rely, \textbf{let's always list the response variable first}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tabyl}\NormalTok{(penguins, sex, species)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     sex Adelie Chinstrap Gentoo
+##  female     73        34     58
+##    male     73        34     61
+##    <NA>      6         0      5
+\end{verbatim}
+
+Each column is a group, and our question is whether the distribution of sexes in each column is similar.
+
+\hypertarget{exercise-5}{%
+\paragraph{Exercise 5}\label{exercise-5}}
+
+Counts can be misleading. For example, there are 73 female Adelie penguins, but only 34 female Chinstrap penguins. Does that mean that Adelie penguins are more likely to be female than Chinstrap penguins? Why or why not?
+
+Please write up your answer here.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+A more fair way to compare across columns is to create relative frequencies. We can do this with a slightly different \texttt{adorn} command. The following code says that we want to compute column proportions (yes, I know the command is called \texttt{adorn\_percentages}, but these are proportions):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tabyl}\NormalTok{(penguins, sex, species) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_percentages}\NormalTok{(}\StringTok{"col"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     sex     Adelie Chinstrap     Gentoo
+##  female 0.48026316       0.5 0.46774194
+##    male 0.48026316       0.5 0.49193548
+##    <NA> 0.03947368       0.0 0.04032258
+\end{verbatim}
+
+If we actually want percentages, we need one more line of code. This command---\texttt{adorn\_pct\_formatting}---is the same as we used before with frequency tables.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tabyl}\NormalTok{(penguins, sex, species) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_percentages}\NormalTok{(}\StringTok{"col"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_pct\_formatting}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     sex Adelie Chinstrap Gentoo
+##  female  48.0%     50.0%  46.8%
+##    male  48.0%     50.0%  49.2%
+##    <NA>   3.9%      0.0%   4.0%
+\end{verbatim}
+
+Now we can see that each column adds up to 100\%. In other words, each species is now on equal footing, and only the distribution of sexes within each group matters.
+
+\hypertarget{exercise-6a}{%
+\paragraph{Exercise 6(a)}\label{exercise-6a}}
+
+What percentage of Adelie penguins are male? What percentage of Chinstrap penguins are male? What percentage of Gentoo penguins are male?
+
+Please write up your answer here.
+
+\hypertarget{exercise-6b}{%
+\paragraph{Exercise 6(b)}\label{exercise-6b}}
+
+Does sex appear to be associated with species for the penguins in this data set? Or are these variables independent?
+
+Please write up your answer here.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+The islands of Antarctica on which the penguins were observed and measured are recorded in the variable called \texttt{island}. Is the distribution of the three species of penguin the same (or similar) on the three islands?
+
+\hypertarget{exercise-7a}{%
+\paragraph{Exercise 7(a)}\label{exercise-7a}}
+
+Choosing which variables play the roles of response and predictor can be tricky. For the question above, with \texttt{species} and \texttt{island}, which is response and which is predictor?
+
+One way to think about this is to ask the following two questions and see which one is closer to the question asked:
+
+\begin{itemize}
+\tightlist
+\item
+  Given information about the species, are you interested in which island the penguin lives on? If so, \texttt{species} is a predictor and \texttt{island} is response. (You are using \texttt{species} to predict \texttt{island}.)
+\item
+  Given information about the island, are you interested in the species of the penguin? If so, \texttt{island} is a predictor and \texttt{species} is response. (You are using \texttt{island} to predict \texttt{species}.)
+\end{itemize}
+
+Please write up your answer here.
+
+\hypertarget{exercise-7b}{%
+\paragraph{Exercise 7(b)}\label{exercise-7b}}
+
+Create a contingency table with percentages. List \texttt{species} first, followed by \texttt{island}. (Hey, that's hint in case you need to go back and change your answer to part (a).)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to create a contingency table with percentages.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{exercise-7c}{%
+\paragraph{Exercise 7(c)}\label{exercise-7c}}
+
+Finally, comment on the association or independence of the two variables.
+
+Please write up your answer here.
+
+\hypertarget{categorical-graphing-two}{%
+\section{Graphing two categorical variables}\label{categorical-graphing-two}}
+
+A somewhat effective way to display two categorical variables is with a side-by-side bar chart. Here is the \texttt{ggplot} code for the relationship between \texttt{sex} and \texttt{species}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(penguins, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{fill =}\NormalTok{ sex, }\AttributeTok{x =}\NormalTok{ species)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{position =} \StringTok{"dodge"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-59-1.pdf}
+
+This is somewhat different from the first \texttt{ggplot} example you saw above, so let's take a moment to go through it.
+
+\begin{itemize}
+\tightlist
+\item
+  The first argument is the data frame \texttt{penguins}; no mystery there.
+\item
+  The second aesthetic \texttt{x\ =\ species} also makes a lot of sense. As \texttt{species} is our predictor variable---we're using species to group the penguins, and then within each species, we're interested in the sex distribution---\texttt{species} goes on the x-axis.
+\item
+  However, \texttt{sex} does not go on the y-axis! (This is a very common mistake for novices.) The y-axis of a bar chart is always a count or a proportion/percentage, so no variable should ever go on the y-axis of a bar chart. In that case, how does \texttt{sex} enter the picture? Through the use of color! The aesthetic \texttt{fill\ =\ sex} says to use the \texttt{sex} variable to shade or ``fill'' the bars with different colors. You'll also notice that \texttt{ggplot} makes a legend automatically with the colors so you can see which color corresponds to which value (in this case, ``female'', ``male'', or ``NA'' for the missing data).
+\end{itemize}
+
+Another unusual feature is the argument \texttt{position\ =\ "dodge"} in the \texttt{geom\_bar} layer. Let's see what happens if we remove it.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(penguins, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{fill =}\NormalTok{ sex, }\AttributeTok{x =}\NormalTok{ species)) }\SpecialCharTok{+} 
+    \FunctionTok{geom\_bar}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-60-1.pdf}
+
+We get a stacked bar chart! This is another popular way of displaying two categorical variables, but we don't tend to prefer it. Notice how difficult it is to compare the number of females across species; since there is no common baseline for the red segments of each bar, it is harder to determine which ones are bigger or smaller. (In this case, it's fairly clear, but there are plenty of data sets for which the counts might be a lot closer.)
+
+So let's agree to use side-by-side bar charts. There is still one aspect of the side-by-side bar chart that is misleading, though. For example, the red bar for Adelie penguins is bigger than the red bar for Gentoo penguins. Does this mean Adelie penguins are more likely to be female?
+
+This is the same issue we identified in an exercise above. To fix this problem, a better option here would be to use relative frequencies (i.e., proportions/percentages within each group) instead of counts on the y-axis. This is analogous to using proportions/percentages in a contingency table. Unfortunately, it is rather difficult to do this with \texttt{ggplot}. A compromise is available: by using \texttt{position\ =\ fill}, you can create a stacked bar chart that scales every group to 100\%. Making comparisons across groups can still be hard, as explained above for any kind of stacked bar chart, but it works okay if there are only two categories in the response variable (as is almost the case with \texttt{sex} here, although the missing data distorts things a little at the bottom).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(penguins, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{fill =}\NormalTok{ sex, }\AttributeTok{x =}\NormalTok{ species)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{position =} \StringTok{"fill"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-61-1.pdf}
+
+This graph does correctly show that the sexes are pretty much equally balances across all three species.
+
+\hypertarget{exercise-8a}{%
+\paragraph{Exercise 8(a)}\label{exercise-8a}}
+
+Using \texttt{species} and \texttt{island}, create a side-by-side bar chart. Be careful, though, to change the sample code above to make sure \texttt{species} is now the response variable (using the \texttt{fill} aesthetic) and that \texttt{island} is the explanatory variable (using \texttt{x}). (Hey, that's another hint to go back and look at the previous exercise and make sure you got part (a) right!)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to make a side{-}by{-}side bar chart.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{exercise-8b}{%
+\paragraph{Exercise 8(b)}\label{exercise-8b}}
+
+Comment on the association or independence of the two variables.
+
+Please write up your answer here.
+
+\hypertarget{categorical-recoding}{%
+\section{Recoding factor variables}\label{categorical-recoding}}
+
+As mentioned earlier, there are situations where a categorical variable is not recorded in R as a factor variable. Let's look at the \texttt{year} variable:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{glimpse}\NormalTok{(penguins}\SpecialCharTok{$}\NormalTok{year)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  int [1:344] 2007 2007 2007 2007 2007 2007 2007 2007 2007 2007 ...
+\end{verbatim}
+
+These appear as integers. Yes, years are whole numbers, but why might this variable be treated as categorical data and not numerical data?
+
+\hypertarget{exercise-9a}{%
+\paragraph{Exercise 9(a)}\label{exercise-9a}}
+
+Use the \texttt{tabyl} command to create a frequency table for \texttt{year}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to make a frequency table for year.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{exercise-9b}{%
+\paragraph{Exercise 9(b)}\label{exercise-9b}}
+
+Why is \texttt{year} better thought of as categorical data and not numerical data (at least for this data set---we're not claiming years should always be treated as categorical)?
+
+Please write up your answer here.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+While the \texttt{tabyl} command seemed to work just fine with the \texttt{year} data in integer format, there are other commands that will not work so well. For example, \texttt{ggplot} often fails to do the right thing when a categorical variable is coded as a number. Therefore, we need a way to change numerically coded variables to factors.
+
+The code below uses a command called \texttt{mutate} that takes an old variable and creates a new variable. (You'll learn more about this command in a later chapter. For now, you can just copy and paste this code if you need it again.) The name of the new variable can be anything we want; we'll just call it \texttt{year\_fct}. Then the real work is being done by the \texttt{as\_factor} command that concerts the numeric \texttt{year} variable into a factor variable.
+
+Observe the effect below:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{penguins }\OtherTok{\textless{}{-}}\NormalTok{ penguins }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{year\_fct =} \FunctionTok{as\_factor}\NormalTok{(year))}
+\FunctionTok{glimpse}\NormalTok{(penguins)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rows: 344
+## Columns: 9
+## $ species           <fct> Adelie, Adelie, Adelie, Adelie, Adelie, Adelie, Adel~
+## $ island            <fct> Torgersen, Torgersen, Torgersen, Torgersen, Torgerse~
+## $ bill_length_mm    <dbl> 39.1, 39.5, 40.3, NA, 36.7, 39.3, 38.9, 39.2, 34.1, ~
+## $ bill_depth_mm     <dbl> 18.7, 17.4, 18.0, NA, 19.3, 20.6, 17.8, 19.6, 18.1, ~
+## $ flipper_length_mm <int> 181, 186, 195, NA, 193, 190, 181, 195, 193, 190, 186~
+## $ body_mass_g       <int> 3750, 3800, 3250, NA, 3450, 3650, 3625, 4675, 3475, ~
+## $ sex               <fct> male, female, female, NA, female, male, female, male~
+## $ year              <int> 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007~
+## $ year_fct          <fct> 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007~
+\end{verbatim}
+
+\hypertarget{exercise-10a}{%
+\paragraph{Exercise 10(a)}\label{exercise-10a}}
+
+Make a contingency table of the species measured in each year using counts. Use the \texttt{species} variable first, followed by the new factor variable \texttt{year\_fct}. (Think about why that order makes sense. \textbf{We will always list the response variable first so that the categories of interest will be the rows and the groups will be the columns.})
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to make a contingency table for species and year with counts.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{exercise-10b}{%
+\paragraph{Exercise 10(b)}\label{exercise-10b}}
+
+Make a contingency table of the species measured in each year using column percentages (\emph{not} proportions). (Again, be sure to use the new factor variable \texttt{year\_fct}, not the old variable \texttt{year}.)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to make a contingency table for species and year with percentages.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{exercise-10c}{%
+\paragraph{Exercise 10(c)}\label{exercise-10c}}
+
+How similar or dissimilar are the distributions of species across the three years of the study?
+
+Please write up your answer here.
+
+\hypertarget{categorical-pub}{%
+\section{Publication-ready graphics}\label{categorical-pub}}
+
+Let's go back to the first relative frequency bar chart from this chapter.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(penguins, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ species, }\AttributeTok{y =}\NormalTok{ ..prop.., }\AttributeTok{group =} \DecValTok{1}\NormalTok{)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_bar}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-68-1.pdf}
+
+The variable name \texttt{species} is already informative, but the y-axis is labeled with ``prop''. Also note that this graph could use a title. We can do all this with \texttt{labs} (for labels). Observe:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(penguins, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ species, }\AttributeTok{y =}\NormalTok{ ..prop.., }\AttributeTok{group =} \DecValTok{1}\NormalTok{)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_bar}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Distribution of species"}\NormalTok{,}
+         \AttributeTok{y =} \StringTok{"Proportion"}\NormalTok{,}
+         \AttributeTok{x =} \StringTok{"Species"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-69-1.pdf}
+
+\hypertarget{exercise-11}{%
+\paragraph{Exercise 11}\label{exercise-11}}
+
+Modify the following side-by-side bar chart by adding a title and labels for both the fill variable and the x-axis variable. (Hint: you can use \texttt{fill\ =\ sex} inside the \texttt{labs} command just like you used \texttt{title}, \texttt{y}, and \texttt{x}.)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Modify the following side{-}by{-}side bar chart by adding a title and }
+\CommentTok{\# labels for both the x{-}axis and the fill variable.}
+\FunctionTok{ggplot}\NormalTok{(penguins, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{fill =}\NormalTok{ sex, }\AttributeTok{x =}\NormalTok{ species)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_bar}\NormalTok{(}\AttributeTok{position =} \StringTok{"dodge"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-70-1.pdf}
+
+\hypertarget{categorical-summary}{%
+\section{Plotting summary data}\label{categorical-summary}}
+
+Everything we did above was summarizing \emph{raw data}; that is, the data consisted of all the observations for each individual penguin. Often, though, when you find data out in the wild, that data will be summarized into a table already and you may not have access to the raw data.
+
+For example, let's suppose that you found some data online, but it looked like this:
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule()
+species & count \\
+\midrule()
+\endhead
+Adelie & 152 \\
+Chinstrap & 68 \\
+Gentoo & 124 \\
+\bottomrule()
+\end{longtable}
+
+This raises two questions:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  How would you get this data into R?
+\item
+  How would you plot the data?
+\end{enumerate}
+
+To answer the first question, we show you how to create your own tibble. Here is the syntax:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{penguin\_species\_table }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+    \AttributeTok{species =} \FunctionTok{c}\NormalTok{(}\StringTok{"Adelie"}\NormalTok{, }\StringTok{"Chinstrap"}\NormalTok{, }\StringTok{"Gentoo"}\NormalTok{),}
+    \AttributeTok{count =} \FunctionTok{c}\NormalTok{(}\DecValTok{152}\NormalTok{, }\DecValTok{68}\NormalTok{, }\DecValTok{124}\NormalTok{)}
+\NormalTok{)}
+\NormalTok{penguin\_species\_table}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 3 x 2
+##   species   count
+##   <chr>     <dbl>
+## 1 Adelie      152
+## 2 Chinstrap    68
+## 3 Gentoo      124
+\end{verbatim}
+
+Basically, the \texttt{tibble} command creates a new tibble. Then each column of data must be entered manually as a ``vector'' using the \texttt{c} to group all the data values together for each column. Be careful about the placement of quotation marks, commas, and parentheses.
+
+Once we have our summary data, we want to make a bar chart. But this won't work:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(penguin\_species\_table, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ species)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_bar}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-72-1.pdf}
+
+\hypertarget{exercise-12}{%
+\paragraph{Exercise 12}\label{exercise-12}}
+
+Explain what went wrong with the previous command? Why does \texttt{ggplot} think that each species has count 1?
+
+Please write up your answer here.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+Instead, we need to use \texttt{geom\_col}. This works a lot like \texttt{geom\_bar} except that it also requires a \texttt{y} value in its aesthetics to force the command to look for the counts in some other variable in the data.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(penguin\_species\_table, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ species, }\AttributeTok{y =}\NormalTok{ count)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_col}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-73-1.pdf}
+
+\hypertarget{exercise-13a}{%
+\paragraph{Exercise 13(a)}\label{exercise-13a}}
+
+Use the \texttt{tabyl} command to create a frequency table for \texttt{island}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to create a frequency table for island}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{exercise-13b}{%
+\paragraph{Exercise 13(b)}\label{exercise-13b}}
+
+Use the \texttt{tibble} command to create a new tibble manually that contains the frequency data for the \texttt{island} variable. It should have two columns, one called \texttt{island} and the other called \texttt{count}. Name it \texttt{penguin\_island\_table}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to create a tibble with frequency data for island}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{exercise-13c}{%
+\paragraph{Exercise 13(c)}\label{exercise-13c}}
+
+Use \texttt{ggplot} with \texttt{geom\_col} to create a bar chart for island.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to create a bar chart for island}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{categorical-conclusion}{%
+\section{Conclusion}\label{categorical-conclusion}}
+
+You can summarize a single categorical variable using a frequency table. For only one categorical variable, a graph is usually overkill, but if you really want a graph, the bar chart is the best option. Both raw counts and proportions/percentages can be useful.
+
+We use contingency tables to summarize two categorical variables. Unless groups are of equal size, raw counts can be incredibly misleading here. You should include proportions/percentages to be able to compare the distributions across groups. If the proportions/percentages are roughly the same, the variables are more likely to be independent, whereas if the proportions/percentages are different, there may be an association between the variables. For graphing, the best choice is usually a side-by-side bar chart. A stacked bar chart will also work, especially if using relative frequencies on the y-axis, but it can be hard to compare across groups when the response variable has three or more categories.
+
+Sometimes we come across categorical data that is recorded using numbers. Many R commands will not work properly if they expect factors and receive numbers, so we use the \texttt{mutate} command to create a new variable along with \texttt{as\_factor} to convert the numbers to categories.
+
+Sometimes we come across summary data instead of raw data. We can then manually create tibbles with that summary data and use \texttt{geom\_col} instead of \texttt{geom\_bar} to graph it.
+
+\hypertarget{categorical-prep}{%
+\section{Preparing and submitting your assignment}\label{categorical-prep}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  From the ``Run'' menu, select ``Restart R and Run All Chunks''.
+\item
+  Deal with any code errors that crop up. Repeat steps 1---2 until there are no more code errors.
+\item
+  Spell check your document by clicking the icon with ``ABC'' and a check mark.
+\item
+  Hit the ``Preview'' button one last time to generate the final draft of the \texttt{.nb.html} file.
+\item
+  Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
+\end{enumerate}
 
 If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
 

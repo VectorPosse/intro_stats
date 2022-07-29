@@ -48,6 +48,7 @@
 <li><a class="" href="index.html">Introduction</a></li>
 <li><a class="active" href="intror.html"><span class="header-section-number">1</span> Introduction to R</a></li>
 <li><a class="" href="rmark.html"><span class="header-section-number">2</span> Using R Markdown</a></li>
+<li><a class="" href="categorical.html"><span class="header-section-number">3</span> Categorical data”</a></li>
 </ul>
 
         <div class="book-extra">
@@ -180,12 +181,17 @@
 <span class="header-section-number">1.7</span> Understanding the data<a class="anchor" aria-label="anchor" href="#intror-understandingdata"><i class="fas fa-link"></i></a>
 </h2>
 <p>Let’s go back to the penguins data contained in the <code>penguins</code> data set from the <code>palmerpenguins</code> package.</p>
-<p>The first thing we do to understand a data set is to read the help file on it. (We’ve already done this for the penguins data.) Of course, this only works for data files that come with R or with a package that can be loaded into R. If you are using R to analyze your own data, presumably you don’t need a help file. And if you’re analyzing data from another source, you’ll have to go to that source to find out about the data.</p>
-<p>Next, we can also look at the data in “spreadsheet” form. Type</p>
+<p>The first thing we do to understand a data set is to read the help file on it. (We’ve already done this for the <code>penguins</code> data.) Of course, this only works for data files that come with R or with a package that can be loaded into R. If you are using R to analyze your own data, presumably you don’t need a help file. And if you’re analyzing data from another source, you’ll have to go to that source to find out about the data.</p>
+<p>When you read the help file for <code>penguins</code>, you may have noticed that it described the “Format” as being “A tibble with 344 rows and 8 variables.” What is a “tibble”?</p>
+<p>The word “tibble” is an R-specific term that describes data organized in a specific way. A more common term is “data frame” (or sometimes “data table”). The idea is that in a data frame, the rows and the columns have very specific interpretations.</p>
+<p>Each row of a data frame represents a single object or observation. So in the <code>penguins</code> data, each row represents a penguin. If you have survey data, each row will usually represent a single person. But an “object” can be anything about which we collect data. State-level data might have 50 rows and each row represents an entire state.</p>
+<p>Each column of a data frame represents a <em>variable</em>, which is a property, attribute, or measurement made about the objects in the data. For example, the help file mentions that various pieces of information are recorded about each penguin, like species, bill length, flipper length, boy mass, sex, and so on. These are examples of variables. In a survey, for example, the variables will likely be the responses to individual questions.</p>
+<p>We will use the terms tibble and data frame interchangeably in this course. They are not quite synonyms: tibbles are R-specific implementations of data frames, the latter being a more general term that applies in all statistical contexts. Nevertheless, there are no situations (at least not encountered in this course) where it makes any difference if a data set is called a tibble or a data frame.</p>
+<p>We can also look at the data frame in “spreadsheet” form. Type</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/View.html">View</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">)</span></span></code></pre></div>
-<p>(Be sure you’re using an upper-case “V” in <code>View</code>.) A new pane should open up in the upper-left corner of the screen. In that pane, the penguins data appears in a grid format, like a spreadsheet. The observations (individual penguins) are the rows and the variables are the columns. This will also let you sort each column by clicking on the arrows next to the variable name across the top.</p>
-<p>Try this to print just a few rows of data to the Console:</p>
+<p>(Be sure you’re using an upper-case “V” in <code>View</code>.) A new pane should open up in the upper-left corner of the screen. In that pane, the penguins data appears in a grid format, like a spreadsheet. The observations (individual penguins) are the rows and the variables (attributes and measurements about the penguins) are the columns. This will also let you sort each column by clicking on the arrows next to the variable name across the top.</p>
+<p>Sometimes, we just need a little peek at the data. Try this to print just a few rows of data to the Console:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">)</span></span></code></pre></div>
 <p>We can customize this by specifying the number of rows to print. (Don’t forget about the up arrow trick!)</p>
@@ -206,7 +212,7 @@
 <p>We want to understand the “structure” of our data. For this, we use the <code>str</code> command. Try it:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">)</span></span></code></pre></div>
-<p>This tells us several important things. First it says that there are 344 observations of 8 variables. We can isolate those pieces of information separately as well, if we need:</p>
+<p>This tells us several important things. First it says that we are looking at a tibble with 344 observations of 8 variables. We can isolate those pieces of information separately as well, if needed:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">NROW</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
@@ -305,7 +311,7 @@
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Introduction to Statistics: an integrated textbook and workbook using R</strong>" was written by Sean Raleigh, Westminster College (Salt Lake City, UT). It was last built on 2022-07-26.</p>
+    <p>"<strong>Introduction to Statistics: an integrated textbook and workbook using R</strong>" was written by Sean Raleigh, Westminster College (Salt Lake City, UT). It was last built on 2022-07-28.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

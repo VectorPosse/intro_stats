@@ -192,17 +192,27 @@ Use Google to find out how to take the square root of a number in R. Test out yo
 
 Let's go back to the penguins data contained in the `penguins` data set from the `palmerpenguins` package.
 
-The first thing we do to understand a data set is to read the help file on it. (We've already done this for the penguins data.) Of course, this only works for data files that come with R or with a package that can be loaded into R. If you are using R to analyze your own data, presumably you don't need a help file. And if you're analyzing data from another source, you'll have to go to that source to find out about the data.
+The first thing we do to understand a data set is to read the help file on it. (We've already done this for the `penguins` data.) Of course, this only works for data files that come with R or with a package that can be loaded into R. If you are using R to analyze your own data, presumably you don't need a help file. And if you're analyzing data from another source, you'll have to go to that source to find out about the data.
 
-Next, we can also look at the data in "spreadsheet" form. Type
+When you read the help file for `penguins`, you may have noticed that it described the "Format" as being "A tibble with 344 rows and 8 variables." What is a "tibble"?
+
+The word "tibble" is an R-specific term that describes data organized in a specific way. A more common term is "data frame" (or sometimes "data table"). The idea is that in a data frame, the rows and the columns have very specific interpretations.
+
+Each row of a data frame represents a single object or observation. So in the `penguins` data, each row represents a penguin. If you have survey data, each row will usually represent a single person. But an "object" can be anything about which we collect data. State-level data might have 50 rows and each row represents an entire state.
+
+Each column of a data frame represents a *variable*, which is a property, attribute, or measurement made about the objects in the data. For example, the help file mentions that various pieces of information are recorded about each penguin, like species, bill length, flipper length, boy mass, sex, and so on. These are examples of variables. In a survey, for example, the variables will likely be the responses to individual questions.
+
+We will use the terms tibble and data frame interchangeably in this course. They are not quite synonyms: tibbles are R-specific implementations of data frames, the latter being a more general term that applies in all statistical contexts. Nevertheless, there are no situations (at least not encountered in this course) where it makes any difference if a data set is called a tibble or a data frame.
+
+We can also look at the data frame in "spreadsheet" form. Type
 
 ```{r, eval = FALSE}
 View(penguins)
 ```
 
-(Be sure you're using an upper-case "V" in `View`.) A new pane should open up in the upper-left corner of the screen. In that pane, the penguins data appears in a grid format, like a spreadsheet. The observations (individual penguins) are the rows and the variables are the columns. This will also let you sort each column by clicking on the arrows next to the variable name across the top.
+(Be sure you're using an upper-case "V" in `View`.) A new pane should open up in the upper-left corner of the screen. In that pane, the penguins data appears in a grid format, like a spreadsheet. The observations (individual penguins) are the rows and the variables (attributes and measurements about the penguins) are the columns. This will also let you sort each column by clicking on the arrows next to the variable name across the top.
 
-Try this to print just a few rows of data to the Console:
+Sometimes, we just need a little peek at the data. Try this to print just a few rows of data to the Console:
 
 ```{r, eval = FALSE}
 head(penguins)
@@ -238,7 +248,7 @@ We want to understand the "structure" of our data. For this, we use the `str` co
 str(penguins)
 ```
 
-This tells us several important things. First it says that there are 344 observations of 8 variables. We can isolate those pieces of information separately as well, if we need:
+This tells us several important things. First it says that we are looking at a tibble with 344 observations of 8 variables. We can isolate those pieces of information separately as well, if needed:
 
 ```{r, eval = FALSE}
 NROW(penguins)
