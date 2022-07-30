@@ -1,12 +1,4 @@
----
-title: "4. Numerical data"
-author: "Put your name here"
-date: "Put the date here"
-output:
-    html_notebook:
-        toc: yes
-        toc_float: yes
----
+# Numerical data {#numerical}
 
 <!-- Please don't mess with the next few lines! -->
 <style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(50,46,48))`</p>
@@ -14,19 +6,19 @@ output:
 
 ::: {.summary}
 
-### Functions introduced in this chapter
+### Functions introduced in this chapter {-}
 
 `mean`, `sd`, `var`, `median`, `sort`, `IQR`, `quantile`, `summary`, `min`, `max`, `geom_histogram`, `geom_point`, `geom_boxplot`, `facet_grid`
 
 :::
 
 
-## Introduction
+## Introduction {#numerical-intro}
 
 In this chapter, we'll learn about numerical data and how to summarize it through summary statistics and graphs.
 
 
-### Download the R notebook file
+### Download the R notebook file {#numerical-download}
 
 Check the upper-right corner in RStudio to make sure you're in your `intro_stats` project. Then click on the following link to download this chapter as an R notebook file (`.Rmd`).
 
@@ -35,12 +27,12 @@ Check the upper-right corner in RStudio to make sure you're in your `intro_stats
 Once the file is downloaded, move it to your project folder in RStudio and open it there.
 
 
-### Restart R and run all chunks
+### Restart R and run all chunks {#numerical-restart}
 
 In RStudio, select "Restart R and Run All Chunks" from the "Run" menu.
 
 
-### Load packages
+### Load packages {#numerical-load}
 
 We load the `tidyverse` package to get `ggplot2` and the `palmerpenguins` package to work with the penguin data.
 
@@ -50,7 +42,7 @@ library(palmerpenguins)
 ```
 
 
-## A note about mathematical notation
+## A note about mathematical notation {#numerical-notation}
 
 From time to time, we will use mathematical notation that can't be typed directly on the keyboard. For example, let's suppose we want to typeset the quadratic formula, which involves a complicated fraction as well as a square root symbol.
 
@@ -69,14 +61,14 @@ This will *not* render visually in the R Notebook, but it will show up in the HT
 You will be shown examples of any mathematical notation you need to use in any given chapter, so feel free to copy/paste/modify any math notation you need.
 
 
-## Statistics
+## Statistics {#numerical-statistics}
 
 The word "statistics" has several meanings. On one hand, it's an entire field of study, as in the subject of this course. More specifically, though, a "statistic" is any kind of numerical summary of data. While there are many ways to summarize data, they mostly fall into two main flavors: measures of *center* and measures of *spread*. Measures of center try to estimate some kind of average, middle, or common value in data. Measures of spread try to estimate something like the width, range, variability, or uncertainty of data.
 
 There are two pairs of measurements that we will learn about in this chapter: the mean/standard deviation, and the median/IQR.
 
 
-### Mean and standard deviation
+### Mean and standard deviation {#numerical-mean-sd}
 
 The first pair of the summary statistics we'll discuss consists of the mean and the standard deviation.
 
@@ -147,7 +139,7 @@ var(penguins$body_mass_g, na.rm = TRUE)
 You can check and see that the number above really is just `r sd(penguins$body_mass_g, na.rm = TRUE)` squared. Regarding the inline code in the previous sentence, remember, in the R Notebook, you can click inside the inline code and hit Ctrl-Enter or Cmd-Enter. In the HTML document, the number will be calculated and will magically appear.
 
 
-### Median and IQR
+### Median and IQR {#numerical-median-iqr}
 
 Another choice for measuring the center and spread of a data set is the median and the IQR.
 
@@ -258,7 +250,7 @@ The median and the IQR should always be reported together.
 Also, don't mix and match. For example, it doesn't really make sense to report the mean and the IQR. Nor should you report the median and the standard deviation. They go together in pairs: either the mean and the standard deviation together, or the median and the IQR together.
 
 
-### Robust statistics
+### Robust statistics {#numerical-robust}
 
 Some statistics are more sensitive than others to features of the data. For example, outliers are data points that are far away from the bulk of the data. The mean and especially the standard deviation can change a lot when outliers are present. Also, skewness in the data frequently pulls the mean too far in the direction of the skew while simultaneously inflating the standard deviation. (We'll learn more about skewed data later in this chapter.)
 
@@ -277,7 +269,7 @@ Please write up your answer here.
 *****
 
 
-### Five-number summary
+### Five-number summary {#numerical-five}
 
 A *five-number summary* is the minimum, Q1, median, Q3, and maximum of a set of numbers.
 
@@ -338,7 +330,7 @@ Please write up your answer here.
 :::
 
 
-## Graphing one numerical variable
+## Graphing one numerical variable {#numerical-graphing-one}
 
 From the `penguins` data, let's consider again the body mass in grams. This is clearly a numerical variable.
 
@@ -350,7 +342,7 @@ ggplot(penguins, aes(x = body_mass_g)) +
 ```
 
 
-### The shape of data
+### The shape of data {#numerical-shape}
 
 The way histograms work is to create "bins", which are ranges of numbers along the x-axis. R goes through the data and counts how many observations fall into each bin. In that way, a histogram is somewhat like a bar chart. However, a bar chart uses bars to represent distinct, discrete categories, whereas a histogram uses bars that are all next to each other to represent values along a continuous numerical range. Histograms are meant to give you--at a quick glance--a sense of the "shape" of the data.
 
@@ -455,12 +447,12 @@ Please write up your answer here.
 :::
 
 
-### Less useful plot types
+### Less useful plot types {#numerical-less-useful}
 
 There are several other graph types that one might see for a single numerical variable: e.g., dotplots, stem-and-leaf plots, boxplots, etc. I'm not a big fan of dotplots or stem-and-leaf plots as they are just messier versions of histograms. I do like boxplots, but they are typically less informative than histograms. Boxplots are much better for comparing groups, and we'll see them later in the chapter.
 
 
-## Graphing two numerical variables
+## Graphing two numerical variables {#numerical-graphing-two}
 
 The proper graph for two numerical variables is a scatterplot. We graph the response variable on the y-axis and the predictor variable on the x-axis.
 
@@ -503,7 +495,7 @@ Please write up your answer here.
 :::
 
 
-## Graphing grouped numerical data
+## Graphing grouped numerical data {#numerical-graphing-grouped}
 
 Suppose you want to analyze one numerical variable and one categorical variable. Usually, the idea here is that the categorical variable divides up the data into groups and you are interested in understanding the numerical variable for each group separately. Another way to say this is that your numerical variable is response and your categorical variable is predictor. (It is also possible for a categorical variable to be response and a numerical variable to be predictor. This is common in so-called "classification" problems. We will not cover this possibility in this course, but it is covered in more advanced courses.)
 
@@ -596,7 +588,7 @@ Please write up your answer here.
 :::
 
 
-## Publication-ready graphics
+## Publication-ready graphics {#numerical-pub}
 
 The great thing about `ggplot2` graphics is that they are already quite pretty. To take them from exploratory data analysis to the next level, there are a few things we can do to tidy them up.
 
@@ -665,13 +657,13 @@ Please write up your answer here.
 Every part of the graph can be customized, from the color scheme to the tick marks on the axes, to the major and minor grid lines that appear on the background. We won't go into all that, but you can look at the [ggplot2 documentation](http://ggplot2.tidyverse.org/) online and search Google for examples if you want to dig in and figure out how to do some of that stuff. However, the default options are often (but not always) the best, so be careful that your messing around doesn't inadvertently make the graph less clear or less appealing.
 
 
-## Conclusion
+## Conclusion {#numerical-conclusion}
 
 Summary statistics are simple numbers that describe and summarize data sets. Measures of center tell us where the "middle" of our numerical data lies, and measures of spread tell us how spread out our numerical data is. These measures should always be reported in pairs, for example the mean/standard deviation, or the median/IQR.
 
 The `ggplot2` package with its `ggplot` command is a very versatile tool for creating nice graphs relatively easily. For a single numerical variable, the standard graph type is a histogram. For two numerical variables, use a scatterplot. For a numerical response with a categorical predictor, use either a side-by-side boxplot or a stacked histogram.
 
-### Preparing and submitting your assignment
+### Preparing and submitting your assignment {#numerical-prep}
 
 1. From the "Run" menu, select "Restart R and Run All Chunks".
 2. Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.

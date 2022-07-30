@@ -14,7 +14,7 @@ output:
 
 ::: {.summary}
 
-### Functions introduced in this chapter:
+### Functions introduced in this chapter
 
 `glimpse`, `table`, `tabyl`, `adorn_pct_formatting`, `ggplot`, `geom_bar`, `adorn_percentages`, `mutate`, `as_factor`, `labs`, `tibble`, `geom_col`
 
@@ -26,7 +26,7 @@ output:
 In this chapter, we'll learn about categorical data and how to summarize it using tables and graphs.
 
 
-## Download the R notebook file
+### Download the R notebook file
 
 Check the upper-right corner in RStudio to make sure you're in your `intro_stats` project. Then click on the following link to download this chapter as an R notebook file (`.Rmd`).
 
@@ -35,7 +35,7 @@ Check the upper-right corner in RStudio to make sure you're in your `intro_stats
 Once the file is downloaded, move it to your project folder in RStudio and open it there.
 
 
-## Restart R and run all chunks
+### Restart R and run all chunks
 
 In RStudio, in the toolbar above this document, find the "Run" drop-down menu and select "Restart R and Run All Chunks."
 
@@ -47,7 +47,7 @@ This does two important things:
 At the end of the assignment, you will "Restart R and Run All Chunks" once again to make sure that everything works smoothly and there are no lingering errors.
 
 
-## Load packages
+### Load packages
 
 We load the `tidyverse` package since it also loads the `ggplot2` package that we'll use throughout the course to make graphs. It also loads several other packages, for example, one called `dplyr` to give us a command called `mutate`, and another called `forcats` to give us `as_factor`. (These will all be explained later.) The `janitor` package gives us the `tabyl` command for creating nice tables.  Finally, We load the `palmerpenguins` package to work with the penguin data.
 
@@ -83,7 +83,6 @@ Please write up your answer here.
 :::
 
 
-
 ## Factor variables
 
 R uses the term "factor variable" to refer to a categorical variable. Look at the structure of the `penguins` data below.
@@ -110,7 +109,6 @@ Please write up your answer here.
 
 :::
 
-
 *****
 
 Your data set may already come with its variables coded correctly as factor variables, but often they are not. As described above, numbers are often used to represent categories, so R may think that those variables represent numerical data. Later, we'll see an example of this and learn how to handle categorical variables that are not coded as factor variables in R.
@@ -133,7 +131,6 @@ You can also generate a *relative frequency table* which is a table that uses pr
 **NOTE:** For purposes of this course, we're going to be very careful about the terms *proportion* and *percentage*. For us, a proportion will always be a number between 0 and 1 whereas a percentage will be between 0 and 100. Calculating a percentage is the same as multiplying a proportion by 100.
 
 The `table` command stops being convenient if you want proportions instead of counts. Instead, we will use the `tabyl` command from the `janitor` package that was loaded near the top of the chapter. The syntax for this command is a little different. The tibble goes first, followed by a comma, followed by the variable you want to summarize:
-
 
 ```{r}
 tabyl(penguins, species)
@@ -204,7 +201,7 @@ If you really, really want a graph, the standard type is a bar chart. But before
 We don't have to load the `ggplot2` package explicitly because it got loaded alongside a number of other packages when we called `library(tidyverse)` early on in the chapter.
 
 
-## ggplot
+### ggplot
 
 The `ggplot` command is an all-purpose graphing utility. It uses a graphing philosophy derived from a book called *The Grammar of Graphics* by Leland Wilkinson. The basic idea is that each variable you want to plot should correspond to some element or "aesthetic" component of the graph. The obvious places for data to go are along the y-axis or x-axis, but other aesthetics are important too; graphs often use color, shape, or size to illustrate different aspects of data. Once these aesthetics have been defined, we will add "layers" to the graph. These are objects like dots, boxes, lines, or bars that dictate the type of graph we want to see.
 
@@ -335,7 +332,6 @@ One way to think about this is to ask the following two questions and see which 
 - Given information about the species, are you interested in which island the penguin lives on? If so, `species` is a predictor and `island` is response. (You are using `species` to predict `island`.)
 - Given information about the island, are you interested in the species of the penguin? If so, `island` is a predictor and `species` is response. (You are using `island` to predict `species`.)
 
-
 ::: {.answer}
 
 Please write up your answer here.
@@ -464,12 +460,12 @@ The code below uses a command called `mutate` that takes an old variable and cre
 
 Observe the effect below:
 
-
 ```{r}
 penguins <- penguins %>%
     mutate(year_fct = as_factor(year))
 glimpse(penguins)
 ```
+
 ##### Exercise 10(a)
 
 Make a contingency table of the species measured in each year using counts. Use the `species` variable first, followed by the new factor variable `year_fct`. (Think about why that order makes sense. **We will always list the response variable first so that the categories of interest will be the rows and the groups will be the columns.**)
@@ -566,6 +562,7 @@ penguin_species_table <- tibble(
 )
 penguin_species_table
 ```
+
 Basically, the `tibble` command creates a new tibble. Then each column of data must be entered manually as a "vector" using the `c` to group all the data values together for each column. Be careful about the placement of quotation marks, commas, and parentheses.
 
 Once we have our summary data, we want to make a bar chart. But this won't work:
@@ -642,8 +639,7 @@ Sometimes we come across categorical data that is recorded using numbers. Many R
 Sometimes we come across summary data instead of raw data. We can then manually create tibbles with that summary data and use `geom_col` instead of `geom_bar` to graph it.
 
 
-## Preparing and submitting your assignment
-
+### Preparing and submitting your assignment
 
 1. From the "Run" menu, select "Restart R and Run All Chunks".
 2. Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.
