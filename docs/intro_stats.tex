@@ -2939,6 +2939,1309 @@ The \texttt{ggplot2} package with its \texttt{ggplot} command is a very versatil
 
 If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
 
+\hypertarget{manipulating}{%
+\chapter{Manipulating data}\label{manipulating}}
+
+2.0
+
+\hypertarget{functions-introduced-in-this-chapter-4}{%
+\subsection*{Functions introduced in this chapter}\label{functions-introduced-in-this-chapter-4}}
+\addcontentsline{toc}{subsection}{Functions introduced in this chapter}
+
+\texttt{read\_csv}, \texttt{select}, \texttt{rename}, \texttt{rm}, \texttt{filter}, \texttt{slice}, \texttt{arrange}, \texttt{mutate}, \texttt{all.equal}, \texttt{ifelse}, \texttt{transmute}, \texttt{summarise}, \texttt{group\_by}, \texttt{\%\textgreater{}\%}, \texttt{count}
+
+\hypertarget{manipulating-intro}{%
+\section{Introduction}\label{manipulating-intro}}
+
+This tutorial will import some data from the web and then explore it using the amazing \texttt{dplyr} package, a package which is quickly becoming the \emph{de facto} standard among R users for manipulating data. It's part of the \texttt{tidyverse} that we've already used in several chapters.
+
+\hypertarget{manipulating-download}{%
+\subsection{Download the R notebook file}\label{manipulating-download}}
+
+Check the upper-right corner in RStudio to make sure you're in your \texttt{intro\_stats} project. Then click on the following link to download this chapter as an R notebook file (\texttt{.Rmd}).
+
+https://vectorposse.github.io/intro\_stats/chapter\_downloads/05-manipulating\_data.Rmd
+
+Once the file is downloaded, move it to your project folder in RStudio and open it there.
+
+\hypertarget{manipulating-restart}{%
+\subsection{Restart R and run all chunks}\label{manipulating-restart}}
+
+In RStudio, select ``Restart R and Run All Chunks'' from the ``Run'' menu.
+
+\hypertarget{manipulating-load}{%
+\subsection{Load packages}\label{manipulating-load}}
+
+We load the \texttt{tidyverse} package as usual, but this time it is to give us access to the \texttt{dplyr} package, which is loaded alongside our other \texttt{tidyverse} packages like \texttt{ggplot2}. The \texttt{tidyverse} also has a package called \texttt{readr} that will allow us to import data from an external source (in this case, a web site).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{manipulating-csv}{%
+\section{Importing CSV data}\label{manipulating-csv}}
+
+For most of the chapters, we use data sets that are either included in base R or included in a package that can be loaded into R. But it is useful to see how to get a data set from outside the R ecosystem. This depends a lot on the format of the data file, but a common format is a ``comma-separated values'' file, or CSV file. If you have a data set that is not formatted as a CSV file, it is usually pretty easy to open it in something like Google Spreadsheets or Microsoft Excel and then re-save it as a CSV file.
+
+The file we'll import is a random sample from all the commercial domestic flights that departed from Houston, Texas, in 2011.
+
+We use the \texttt{read\_csv} command to import a CSV file. In this case, we're grabbing the file from a web page where the file is hosted. If you have a file on your computer, you can also put the file into your project directory and import it from there. Put the URL (for a web page) or the filename (for a file in your project directory) in quotes inside the \texttt{read\_csv}command. We also need to assign the output to a tibble, so we've called it \texttt{hf} for ``Houston flights''.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hf }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"https://vectorposse.github.io/intro\_stats/data/hf.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rows: 22758 Columns: 21
+## -- Column specification --------------------------------------------------------
+## Delimiter: ","
+## chr  (5): UniqueCarrier, TailNum, Origin, Dest, CancellationCode
+## dbl (16): Year, Month, DayofMonth, DayOfWeek, DepTime, ArrTime, FlightNum, A...
+## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hf}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 22,758 x 21
+##     Year Month DayofMonth DayOfWeek DepTime ArrTime UniqueCarrier FlightNum
+##    <dbl> <dbl>      <dbl>     <dbl>   <dbl>   <dbl> <chr>             <dbl>
+##  1  2011     1         12         3    1419    1515 AA                  428
+##  2  2011     1         17         1    1530    1634 AA                  428
+##  3  2011     1         24         1    1356    1513 AA                  428
+##  4  2011     1          9         7     714     829 AA                  460
+##  5  2011     1         18         2     721     827 AA                  460
+##  6  2011     1         22         6     717     829 AA                  460
+##  7  2011     1         11         2    1953    2051 AA                  533
+##  8  2011     1         14         5    2119    2229 AA                  533
+##  9  2011     1         26         3    2009    2103 AA                  533
+## 10  2011     1         14         5    1629    1734 AA                 1121
+## # ... with 22,748 more rows, and 13 more variables: TailNum <chr>,
+## #   ActualElapsedTime <dbl>, AirTime <dbl>, ArrDelay <dbl>, DepDelay <dbl>,
+## #   Origin <chr>, Dest <chr>, Distance <dbl>, TaxiIn <dbl>, TaxiOut <dbl>,
+## #   Cancelled <dbl>, CancellationCode <chr>, Diverted <dbl>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{glimpse}\NormalTok{(hf)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rows: 22,758
+## Columns: 21
+## $ Year              <dbl> 2011, 2011, 2011, 2011, 2011, 2011, 2011, 2011, 2011~
+## $ Month             <dbl> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1~
+## $ DayofMonth        <dbl> 12, 17, 24, 9, 18, 22, 11, 14, 26, 14, 18, 20, 3, 12~
+## $ DayOfWeek         <dbl> 3, 1, 1, 7, 2, 6, 2, 5, 3, 5, 2, 4, 1, 3, 6, 4, 1, 3~
+## $ DepTime           <dbl> 1419, 1530, 1356, 714, 721, 717, 1953, 2119, 2009, 1~
+## $ ArrTime           <dbl> 1515, 1634, 1513, 829, 827, 829, 2051, 2229, 2103, 1~
+## $ UniqueCarrier     <chr> "AA", "AA", "AA", "AA", "AA", "AA", "AA", "AA", "AA"~
+## $ FlightNum         <dbl> 428, 428, 428, 460, 460, 460, 533, 533, 533, 1121, 1~
+## $ TailNum           <chr> "N577AA", "N518AA", "N531AA", "N586AA", "N558AA", "N~
+## $ ActualElapsedTime <dbl> 56, 64, 77, 75, 66, 72, 58, 70, 54, 65, 135, 144, 64~
+## $ AirTime           <dbl> 41, 48, 43, 51, 46, 47, 44, 45, 39, 47, 114, 111, 46~
+## $ ArrDelay          <dbl> 5, 84, 3, -6, -8, -6, -29, 69, -17, -11, 39, -1, -2,~
+## $ DepDelay          <dbl> 19, 90, -4, -6, 1, -3, -12, 74, 4, -1, 44, -5, -1, 1~
+## $ Origin            <chr> "IAH", "IAH", "IAH", "IAH", "IAH", "IAH", "IAH", "IA~
+## $ Dest              <chr> "DFW", "DFW", "DFW", "DFW", "DFW", "DFW", "DFW", "DF~
+## $ Distance          <dbl> 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 96~
+## $ TaxiIn            <dbl> 4, 8, 6, 11, 7, 18, 3, 5, 9, 8, 7, 20, 5, 8, 8, 7, 4~
+## $ TaxiOut           <dbl> 11, 8, 28, 13, 13, 7, 11, 20, 6, 10, 14, 13, 13, 10,~
+## $ Cancelled         <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0~
+## $ CancellationCode  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ~
+## $ Diverted          <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0~
+\end{verbatim}
+
+The one disadvantage of a file imported from the internet or your computer is that it does not come with a help file. (Only packages in R have help files.) Hopefully you have access to some kind of information about the data you're importing. In this case, we get lucky because the full Houston flights data set happens to be available in a package called \texttt{hflights}.
+
+\hypertarget{exercise-1-2}{%
+\paragraph{Exercise 1}\label{exercise-1-2}}
+
+Go to the help tab in RStudio and search for \texttt{hflights}. Of the several options that appear, click the one from the \texttt{hflights} package (listed as \texttt{hflights::hflights}). Review the help file so you know what all the variables mean. Report below how many cases are in the original \texttt{hflights} data. What fraction of the original data has been sampled in the CSV file we imported above?
+
+Please write up your answer here.
+
+\hypertarget{manipulating-dplyr}{%
+\section{\texorpdfstring{Introduction to \texttt{dplyr}}{Introduction to dplyr}}\label{manipulating-dplyr}}
+
+The \texttt{dplyr} package (pronounced ``dee-ply-er'') contains tools for manipulating the rows and columns of tibbles. The key to using \texttt{dplyr} is to familiarize yourself with the ``key verbs'':
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{select} (and \texttt{rename})
+\item
+  \texttt{filter} (and \texttt{slice})
+\item
+  \texttt{arrange}
+\item
+  \texttt{mutate} (and \texttt{transmute})
+\item
+  \texttt{summarise} (with \texttt{group\_by})
+\end{itemize}
+
+We'll consider these one by one. We won't have time to cover every aspect of these functions. More information appears in the help files, as well as this very helpful ``cheat sheet'': \url{https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-transformation.pdf}
+
+\hypertarget{manipulating-select}{%
+\section{\texorpdfstring{\texttt{select}}{select}}\label{manipulating-select}}
+
+The \texttt{select} verb is very easy. It just selects some subset of variables (the columns of your data set).
+
+The \texttt{select} command from the \texttt{dplyr} package illustrates one of the common issues R users face. Because the word ``select'' is pretty common, and selecting things is a common task, there are multiple packages that have a function called \texttt{select}. Depending on the order in which packages were loaded, R might get confused as to which version of \texttt{select} you want and try to apply the wrong one. One way to get the correct version is to specify the package in the syntax. Instead of typing \texttt{select}, we can type \texttt{dplyr::select} to ensure we get the version from the \texttt{dplyr} package. We'll do this in all future uses of the \texttt{select} function. (The other functions in this chapter don't cause us trouble because we don't use any other packages whose functions conflict like this.)
+
+Suppose all we wanted to see was the carrier, origin, and destination. We would type
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hf\_select }\OtherTok{\textless{}{-}}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(hf, UniqueCarrier, Origin, Dest)}
+\NormalTok{hf\_select}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 22,758 x 3
+##    UniqueCarrier Origin Dest 
+##    <chr>         <chr>  <chr>
+##  1 AA            IAH    DFW  
+##  2 AA            IAH    DFW  
+##  3 AA            IAH    DFW  
+##  4 AA            IAH    DFW  
+##  5 AA            IAH    DFW  
+##  6 AA            IAH    DFW  
+##  7 AA            IAH    DFW  
+##  8 AA            IAH    DFW  
+##  9 AA            IAH    DFW  
+## 10 AA            IAH    DFW  
+## # ... with 22,748 more rows
+\end{verbatim}
+
+A brief but important aside here: there is nothing special about the variable name \texttt{hf\_select}. I could have typed
+
+\texttt{beef\_gravy\ \textless{}-\ dplyr::select(hf,\ UniqueCarrier,\ Origin,\ Dest)}
+
+and it would work just as well. Generally speaking, though, you want to give variables a name that reflects the intent of your analysis.
+
+Also, \textbf{it is important to assign the result to a new variable}. If I had typed
+
+\texttt{hf\ \textless{}-\ dplyr::select(hf,\ UniqueCarrier,\ Origin,\ Dest)}
+
+this would have overwritten the original tibble \texttt{hf} with this new version with only three variables. I want to preserve \texttt{hf} because I want to do other things with the entire data set later. The take-home message here is this: \textbf{Major modifications to your data should generally be given a new variable name.} There are caveats here, though. Every time you create a new variable, you also fill up more memory with your creation. If you check your Global Environment, you'll see that both \texttt{hf} and \texttt{hf\_select} are sitting in there. We'll have more to say about this in a moment.
+
+Okay, back to the \texttt{select} function. The first argument of \texttt{select} is the tibble. After that, just list all the names of the variables you want to select.
+
+If you don't like the names of the variables, you can change them as part of the select process.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hf\_select }\OtherTok{\textless{}{-}}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(hf,}
+                           \AttributeTok{carrier =}\NormalTok{ UniqueCarrier,}
+                           \AttributeTok{origin =}\NormalTok{ Origin,}
+                           \AttributeTok{dest =}\NormalTok{ Dest)}
+\NormalTok{hf\_select}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 22,758 x 3
+##    carrier origin dest 
+##    <chr>   <chr>  <chr>
+##  1 AA      IAH    DFW  
+##  2 AA      IAH    DFW  
+##  3 AA      IAH    DFW  
+##  4 AA      IAH    DFW  
+##  5 AA      IAH    DFW  
+##  6 AA      IAH    DFW  
+##  7 AA      IAH    DFW  
+##  8 AA      IAH    DFW  
+##  9 AA      IAH    DFW  
+## 10 AA      IAH    DFW  
+## # ... with 22,748 more rows
+\end{verbatim}
+
+(Note here that I am overwriting \texttt{hf\_select} which had been defined slightly differently before. However, these two versions of \texttt{hf\_select} are basically the same object, so no need to keep two copies here.)
+
+There are a few notational shortcuts. For example, see what the following do.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hf\_select2 }\OtherTok{\textless{}{-}}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(hf, DayOfWeek}\SpecialCharTok{:}\NormalTok{UniqueCarrier)}
+\NormalTok{hf\_select2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 22,758 x 4
+##    DayOfWeek DepTime ArrTime UniqueCarrier
+##        <dbl>   <dbl>   <dbl> <chr>        
+##  1         3    1419    1515 AA           
+##  2         1    1530    1634 AA           
+##  3         1    1356    1513 AA           
+##  4         7     714     829 AA           
+##  5         2     721     827 AA           
+##  6         6     717     829 AA           
+##  7         2    1953    2051 AA           
+##  8         5    2119    2229 AA           
+##  9         3    2009    2103 AA           
+## 10         5    1629    1734 AA           
+## # ... with 22,748 more rows
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hf\_select3 }\OtherTok{\textless{}{-}}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(hf, }\FunctionTok{starts\_with}\NormalTok{(}\StringTok{"Taxi"}\NormalTok{))}
+\NormalTok{hf\_select3}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 22,758 x 2
+##    TaxiIn TaxiOut
+##     <dbl>   <dbl>
+##  1      4      11
+##  2      8       8
+##  3      6      28
+##  4     11      13
+##  5      7      13
+##  6     18       7
+##  7      3      11
+##  8      5      20
+##  9      9       6
+## 10      8      10
+## # ... with 22,748 more rows
+\end{verbatim}
+
+\hypertarget{exercise-2-1}{%
+\paragraph{Exercise 2}\label{exercise-2-1}}
+
+What is contained in the new tibbles \texttt{hf\_select2} and \texttt{hf\_select3}? In other words, what does the colon (:) appear to do and what does \texttt{starts\_with} appear to do in the \texttt{select} function?
+
+Please write up your answer here.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+The cheat sheet shows a lot more of these ``helper functions'' if you're interested.
+
+The other command that's related to \texttt{select} is \texttt{rename}. The only difference is that \texttt{select} will throw away any columns you don't select (which is what you want and expect, typically), whereas \texttt{rename} will keep all the columns, but rename those you designate.
+
+\hypertarget{exercise-3-1}{%
+\paragraph{Exercise 3}\label{exercise-3-1}}
+
+Putting a minus sign in front of a variable name in the \texttt{select} command will remove the variable. Create a tibble called \texttt{hf\_select4} that removes \texttt{Year}, \texttt{DayofMonth}, \texttt{DayOfWeek}, \texttt{FlightNum}, and \texttt{Diverted}. (Be careful with the unusual---and inconsistent!---capitalization in those variable names.) In the second part of the code chunk below, type \texttt{hf\_select4} so that the tibble prints to the screen (just like in all the above examples).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to define hf\_select4.}
+\CommentTok{\# Add code here to print hf\_select4.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{manipulating-rm}{%
+\section{\texorpdfstring{The \texttt{rm} command}{The rm command}}\label{manipulating-rm}}
+
+Recall that earlier we mentioned the pros and cons of creating a new tibble every time we make a change. On one hand, making a new tibble instead of overwriting the original one will keep the original one available so that we can run different commands on it. On the other hand, making a new tibble does eat up a lot of memory.
+
+One way to get rid of an object once we are done with it is the \texttt{rm} command, where \texttt{rm} is short for ``remove''. When you run the code chunk below, you'll see that all the tibbles we created with \texttt{select} will disappear from your Global Environment.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{rm}\NormalTok{(hf\_select, hf\_select2, hf\_select3)}
+\end{Highlighting}
+\end{Shaded}
+
+If you need one these tibbles back later, you can always go back and re-run the code chunk that defined it.
+
+We'll use \texttt{rm} at the end of some of the following sections so that we don't use up too much memory.
+
+\hypertarget{exercise-4-2}{%
+\paragraph{Exercise 4}\label{exercise-4-2}}
+
+Remove \texttt{hf\_select4} (that you created in Exercise 3) from the Global Environment.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to remove hf\_select4.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{manipulating-filter}{%
+\section{\texorpdfstring{\texttt{filter}}{filter}}\label{manipulating-filter}}
+
+The \texttt{filter} verb works a lot like \texttt{select}, but for rows instead of columns.
+
+For example, let's say we only want to see Delta flights. We use \texttt{filter}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hf\_filter }\OtherTok{\textless{}{-}} \FunctionTok{filter}\NormalTok{(hf, UniqueCarrier }\SpecialCharTok{==} \StringTok{"DL"}\NormalTok{)}
+\NormalTok{hf\_filter}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 265 x 21
+##     Year Month DayofMonth DayOfWeek DepTime ArrTime UniqueCarrier FlightNum
+##    <dbl> <dbl>      <dbl>     <dbl>   <dbl>   <dbl> <chr>             <dbl>
+##  1  2011     1          4         2    1834    2134 DL                   54
+##  2  2011     1          5         3    1606    1903 DL                    8
+##  3  2011     1          5         3     543     834 DL                 1248
+##  4  2011     1          7         5    1603    1902 DL                    8
+##  5  2011     1          7         5    1245    1539 DL                 1204
+##  6  2011     1          7         5     933    1225 DL                 1590
+##  7  2011     1          8         6     921    1210 DL                 1590
+##  8  2011     1         12         3      NA      NA DL                 1590
+##  9  2011     1         13         4     928    1224 DL                 1590
+## 10  2011     1         13         4     656     947 DL                 1900
+## # ... with 255 more rows, and 13 more variables: TailNum <chr>,
+## #   ActualElapsedTime <dbl>, AirTime <dbl>, ArrDelay <dbl>, DepDelay <dbl>,
+## #   Origin <chr>, Dest <chr>, Distance <dbl>, TaxiIn <dbl>, TaxiOut <dbl>,
+## #   Cancelled <dbl>, CancellationCode <chr>, Diverted <dbl>
+\end{verbatim}
+
+In the printout of the tibble above, if you can't see the \texttt{UniqueCarrier} column, click the black arrow on the right to scroll through the columns until you can see it. You can click ``Next'' at the bottom to scroll through the rows.
+
+\hypertarget{exercise-5-2}{%
+\paragraph{Exercise 5}\label{exercise-5-2}}
+
+How many rows did we get in the \texttt{hf\_filter} tibble? What do you notice about the \texttt{UniqueCarrier} of all those rows?
+
+Please write up your answer here.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+Just like \texttt{select}, the first argument of \texttt{filter} is the name of the tibble. Following that, you must specify some condition. Only rows meeting that condition will be included in the output.
+
+One thing that is unusual here is the double equal sign (\texttt{UniqueCarrier\ ==\ "DL"}). This won't be a mystery to people with programming experience, but it tends to be a sticking point for the rest of us. A single equals sign represents assignment. If I type \texttt{x\ =\ 3}, what I mean is, ``Take the letter x and assign it the value 3.'' In R, we would also write \texttt{x\ \textless{}-\ 3} to mean the same thing. The first line of the code chunk below assigns \texttt{x} to be 3. Therefore, the following line that just says \texttt{x} creates the output ``3''.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{=} \DecValTok{3}
+\NormalTok{x}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3
+\end{verbatim}
+
+On the other hand, \texttt{x\ ==\ 3} means something completely different. This is a logical statement that is either true or false. Either \texttt{x} is 3, in which case we get \texttt{TRUE} or \texttt{x} is not 3, and we get \texttt{FALSE}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\SpecialCharTok{==} \DecValTok{3}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+(It's true because we just assigned \texttt{x} to be 3 in the previous code chunk!)
+
+In the above \texttt{filter} command, we are saying, ``Give me the rows where the value of \texttt{UniqueCarrier} is \texttt{"DL"}, or, in other words, where the statement \texttt{UniqueCarrier\ ==\ "DL"} is true.
+
+As another example, suppose we wanted to find out all flights that leave before 6:00 a.m.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hf\_filter2 }\OtherTok{\textless{}{-}} \FunctionTok{filter}\NormalTok{(hf, DepTime }\SpecialCharTok{\textless{}} \DecValTok{600}\NormalTok{)}
+\NormalTok{hf\_filter2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 230 x 21
+##     Year Month DayofMonth DayOfWeek DepTime ArrTime UniqueCarrier FlightNum
+##    <dbl> <dbl>      <dbl>     <dbl>   <dbl>   <dbl> <chr>             <dbl>
+##  1  2011     1         20         4     556     912 AA                 1994
+##  2  2011     1         21         5     555     822 CO                  446
+##  3  2011     1         18         2     555     831 CO                  446
+##  4  2011     1         16         7     556     722 CO                  199
+##  5  2011     1          5         3     558    1009 CO                   89
+##  6  2011     1          1         6     558    1006 CO                   89
+##  7  2011     1          5         3     543     834 DL                 1248
+##  8  2011     1          3         1     555     749 US                  270
+##  9  2011     1          6         4     556     801 US                  270
+## 10  2011     1         13         4     552     713 US                  270
+## # ... with 220 more rows, and 13 more variables: TailNum <chr>,
+## #   ActualElapsedTime <dbl>, AirTime <dbl>, ArrDelay <dbl>, DepDelay <dbl>,
+## #   Origin <chr>, Dest <chr>, Distance <dbl>, TaxiIn <dbl>, TaxiOut <dbl>,
+## #   Cancelled <dbl>, CancellationCode <chr>, Diverted <dbl>
+\end{verbatim}
+
+\hypertarget{exercise-6}{%
+\paragraph{Exercise 6}\label{exercise-6}}
+
+Look at the help file for \texttt{hflights} again. Why do we have to use the number 600 in the command above? (Read the description of the \texttt{DepTime} variable.)
+
+Please write up your answer here.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+If we need two or more conditions, we use \texttt{\&} for ``and'' and \texttt{\textbar{}} for ``or''. The following will give us only the Delta flights that departed before 6:00 a.m.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hf\_filter3 }\OtherTok{\textless{}{-}} \FunctionTok{filter}\NormalTok{(hf, UniqueCarrier }\SpecialCharTok{==} \StringTok{"DL"} \SpecialCharTok{\&}\NormalTok{ DepTime }\SpecialCharTok{\textless{}} \DecValTok{600}\NormalTok{)}
+\NormalTok{hf\_filter3}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 30 x 21
+##     Year Month DayofMonth DayOfWeek DepTime ArrTime UniqueCarrier FlightNum
+##    <dbl> <dbl>      <dbl>     <dbl>   <dbl>   <dbl> <chr>             <dbl>
+##  1  2011     1          5         3     543     834 DL                 1248
+##  2  2011     1         16         7     542     834 DL                 1248
+##  3  2011     1         19         3     538     844 DL                 1248
+##  4  2011     1         22         6     540     850 DL                 1248
+##  5  2011     1         26         3     540     851 DL                 1248
+##  6  2011     2         12         6     538     823 DL                 1248
+##  7  2011     2         15         2     539     840 DL                 1248
+##  8  2011     2         16         3     540     829 DL                 1248
+##  9  2011     2         21         1     552     856 DL                 1248
+## 10  2011     3          2         3     557     902 DL                 2375
+## # ... with 20 more rows, and 13 more variables: TailNum <chr>,
+## #   ActualElapsedTime <dbl>, AirTime <dbl>, ArrDelay <dbl>, DepDelay <dbl>,
+## #   Origin <chr>, Dest <chr>, Distance <dbl>, TaxiIn <dbl>, TaxiOut <dbl>,
+## #   Cancelled <dbl>, CancellationCode <chr>, Diverted <dbl>
+\end{verbatim}
+
+Again, check the cheat sheet for more complicated condition-checking if needed.
+
+\hypertarget{exercise-7a-2}{%
+\paragraph{Exercise 7(a)}\label{exercise-7a-2}}
+
+The symbol \texttt{!=} means ``not equal to'' in R. Use the \texttt{filter} command to create a tibble called \texttt{hf\_filter4} that finds all flights \emph{except} those flying into Salt Lake City (``SLC''). As before, print the output to the screen.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to define hf\_filter4.}
+\CommentTok{\# Add code here to print hf\_filter4.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{exercise-7b-2}{%
+\paragraph{Exercise 7(b)}\label{exercise-7b-2}}
+
+Based on the output of the previous part, how many flights were there flying into SLC? (In other words, how many rows were removed from the original \texttt{hf} tibble to produce \texttt{hf\_filter4}?)
+
+Please write up your answer here.
+
+\hypertarget{exercise-8-1}{%
+\paragraph{Exercise 8}\label{exercise-8-1}}
+
+Use the \texttt{rm} command to remove all the extra tibbles you created in this section with \texttt{filter}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to remove all filtered tibbles.}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+The \texttt{slice} command is related, but fairly useless in practice. It will allow you to extract rows by position. So \texttt{slice(hf,\ 1:10)} will give you the first 10 rows. As a general rule, the information available in a tibble should never depend on the order in which the rows appear. Therefore, no function you run should make any assumptions about the ordering of your data. The only reason one might want to think about the order of data is for convenience in presenting that data visually for someone to inspect. And that brings us to\ldots{}
+
+\hypertarget{manipulating-arrange}{%
+\section{\texorpdfstring{\texttt{arrange}}{arrange}}\label{manipulating-arrange}}
+
+This just re-orders the rows, sorting on the values of one or more specified columns. As I mentioned before, in most data analyses you work with summaries of the data that do not depend on the order of the rows, so this is not quite as interesting as some of the other verbs. In fact, since the re-ordering is usually for the visual benefit of the reader, there is often no need to store the output in a new variable. We'll just print the output to the screen.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{arrange}\NormalTok{(hf, ActualElapsedTime)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 22,758 x 21
+##     Year Month DayofMonth DayOfWeek DepTime ArrTime UniqueCarrier FlightNum
+##    <dbl> <dbl>      <dbl>     <dbl>   <dbl>   <dbl> <chr>             <dbl>
+##  1  2011    10          5         3    1656    1731 WN                 2493
+##  2  2011     4         13         3    1207    1243 WN                 2025
+##  3  2011     7         19         2    1043    1119 CO                 1583
+##  4  2011     2         22         2    1426    1503 WN                 1773
+##  5  2011     3         19         6    1629    1706 WN                 3805
+##  6  2011     5         31         2    1937    2014 WN                  819
+##  7  2011     7         16         6    1632    1709 WN                  912
+##  8  2011     8         22         1    1708    1745 WN                 1754
+##  9  2011     9         30         5    1955    2032 WN                 1959
+## 10  2011     9          1         4    1735    1812 WN                 1754
+## # ... with 22,748 more rows, and 13 more variables: TailNum <chr>,
+## #   ActualElapsedTime <dbl>, AirTime <dbl>, ArrDelay <dbl>, DepDelay <dbl>,
+## #   Origin <chr>, Dest <chr>, Distance <dbl>, TaxiIn <dbl>, TaxiOut <dbl>,
+## #   Cancelled <dbl>, CancellationCode <chr>, Diverted <dbl>
+\end{verbatim}
+
+Scroll over to the \texttt{ActualElapsedTime} variable in the output above (using the black right arrow) to see that these are now sorted in ascending order.
+
+\hypertarget{exercise-9}{%
+\paragraph{Exercise 9}\label{exercise-9}}
+
+How long is the shortest actual elapsed time? Why is this flight so short? (Hint: look at the destination.) Which airline flies that route? You may have to use your best friend Google to look up airport and airline codes.
+
+Please write up your answer here.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+If you want descending order, do this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{arrange}\NormalTok{(hf, }\FunctionTok{desc}\NormalTok{(ActualElapsedTime))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 22,758 x 21
+##     Year Month DayofMonth DayOfWeek DepTime ArrTime UniqueCarrier FlightNum
+##    <dbl> <dbl>      <dbl>     <dbl>   <dbl>   <dbl> <chr>             <dbl>
+##  1  2011     2          4         5     941    1428 CO                    1
+##  2  2011    11          8         2     937    1417 CO                    1
+##  3  2011    11         11         5     930    1408 CO                    1
+##  4  2011    12         30         5     936    1413 CO                    1
+##  5  2011    12          8         4     935    1410 CO                    1
+##  6  2011    10         17         1     938    1311 CO                    1
+##  7  2011     6         27         1     936    1308 CO                    1
+##  8  2011     3         24         4     926    1256 CO                    1
+##  9  2011    12         27         2     935    1405 CO                    1
+## 10  2011     3          9         3     933    1402 CO                    1
+## # ... with 22,748 more rows, and 13 more variables: TailNum <chr>,
+## #   ActualElapsedTime <dbl>, AirTime <dbl>, ArrDelay <dbl>, DepDelay <dbl>,
+## #   Origin <chr>, Dest <chr>, Distance <dbl>, TaxiIn <dbl>, TaxiOut <dbl>,
+## #   Cancelled <dbl>, CancellationCode <chr>, Diverted <dbl>
+\end{verbatim}
+
+\hypertarget{exercise-10-1}{%
+\paragraph{Exercise 10}\label{exercise-10-1}}
+
+How long is the longest actual elapsed time? Why is this flight so long? Which airline flies that route? Again, you may have to use your best friend Google to look up airport and airline codes.
+
+Please write up your answer here.
+
+\hypertarget{exercise-11a}{%
+\paragraph{Exercise 11(a)}\label{exercise-11a}}
+
+You can sort by multiple columns. The first column listed will be the first in the sort order, and then within each level of that first variable, the next column will be sorted, etc. Print a tibble that sorts first by destination (\texttt{Dest}) and then by arrival time (\texttt{ArrTime}), both in the default ascending order.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to sort hf first by Dest and then by ArrTime.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{exercise-11b}{%
+\paragraph{Exercise 11(b)}\label{exercise-11b}}
+
+Based on the output of the previous part, what is the first airport code alphabetically and to what city does it correspond? (Use Google if you need to link the airport code to a city name.) At what time did the earliest flight to that city arrive?
+
+Please write up your answer here.
+
+\hypertarget{manipulating-mutate}{%
+\section{\texorpdfstring{\texttt{mutate}}{mutate}}\label{manipulating-mutate}}
+
+Frequently, we want to create new variables that combine information from one or more existing variables. We use \texttt{mutate} for this. For example, suppose we wanted to find the total time of the flight. We might do this by adding up the minutes from several variables: \texttt{TaxiOut}, \texttt{AirTime}, and \texttt{TaxiIn}, and assigning that sum to a new variable called \texttt{total}. Scroll all the way to the right in the output below (using the black right arrow) to see the new \texttt{total} variable.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hf\_mutate }\OtherTok{\textless{}{-}} \FunctionTok{mutate}\NormalTok{(hf, }\AttributeTok{total =}\NormalTok{ TaxiOut }\SpecialCharTok{+}\NormalTok{ AirTime }\SpecialCharTok{+}\NormalTok{ TaxiIn)}
+\NormalTok{hf\_mutate}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 22,758 x 22
+##     Year Month DayofMonth DayOfWeek DepTime ArrTime UniqueCarrier FlightNum
+##    <dbl> <dbl>      <dbl>     <dbl>   <dbl>   <dbl> <chr>             <dbl>
+##  1  2011     1         12         3    1419    1515 AA                  428
+##  2  2011     1         17         1    1530    1634 AA                  428
+##  3  2011     1         24         1    1356    1513 AA                  428
+##  4  2011     1          9         7     714     829 AA                  460
+##  5  2011     1         18         2     721     827 AA                  460
+##  6  2011     1         22         6     717     829 AA                  460
+##  7  2011     1         11         2    1953    2051 AA                  533
+##  8  2011     1         14         5    2119    2229 AA                  533
+##  9  2011     1         26         3    2009    2103 AA                  533
+## 10  2011     1         14         5    1629    1734 AA                 1121
+## # ... with 22,748 more rows, and 14 more variables: TailNum <chr>,
+## #   ActualElapsedTime <dbl>, AirTime <dbl>, ArrDelay <dbl>, DepDelay <dbl>,
+## #   Origin <chr>, Dest <chr>, Distance <dbl>, TaxiIn <dbl>, TaxiOut <dbl>,
+## #   Cancelled <dbl>, CancellationCode <chr>, Diverted <dbl>, total <dbl>
+\end{verbatim}
+
+As it turns out, that was wasted effort because that variable already exists in \texttt{ActualElapsedTime}. The \texttt{all.equal} command below checks that both specified columns contain the exact same values.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{all.equal}\NormalTok{(hf\_mutate}\SpecialCharTok{$}\NormalTok{total, hf}\SpecialCharTok{$}\NormalTok{ActualElapsedTime)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+Perhaps we want a variable that just classifies a flight as arriving late or not. Scroll all the way to the right in the output below to see the new \texttt{late} variable.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hf\_mutate2 }\OtherTok{\textless{}{-}} \FunctionTok{mutate}\NormalTok{(hf, }\AttributeTok{late =}\NormalTok{ (ArrDelay }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{))}
+\NormalTok{hf\_mutate2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 22,758 x 22
+##     Year Month DayofMonth DayOfWeek DepTime ArrTime UniqueCarrier FlightNum
+##    <dbl> <dbl>      <dbl>     <dbl>   <dbl>   <dbl> <chr>             <dbl>
+##  1  2011     1         12         3    1419    1515 AA                  428
+##  2  2011     1         17         1    1530    1634 AA                  428
+##  3  2011     1         24         1    1356    1513 AA                  428
+##  4  2011     1          9         7     714     829 AA                  460
+##  5  2011     1         18         2     721     827 AA                  460
+##  6  2011     1         22         6     717     829 AA                  460
+##  7  2011     1         11         2    1953    2051 AA                  533
+##  8  2011     1         14         5    2119    2229 AA                  533
+##  9  2011     1         26         3    2009    2103 AA                  533
+## 10  2011     1         14         5    1629    1734 AA                 1121
+## # ... with 22,748 more rows, and 14 more variables: TailNum <chr>,
+## #   ActualElapsedTime <dbl>, AirTime <dbl>, ArrDelay <dbl>, DepDelay <dbl>,
+## #   Origin <chr>, Dest <chr>, Distance <dbl>, TaxiIn <dbl>, TaxiOut <dbl>,
+## #   Cancelled <dbl>, CancellationCode <chr>, Diverted <dbl>, late <lgl>
+\end{verbatim}
+
+This one is a little tricky. Keep in mind that \texttt{ArrDelay\ \textgreater{}\ 0} is a logical condition that is either true or false, so that truth value is what is recorded in the \texttt{late} variable. If the arrival delay is a positive number of minutes, the flight is considered ``late'', and if the arrival delay is zero or negative, it's not late.
+
+If we would rather see more descriptive words than \texttt{TRUE} or \texttt{FALSE}, we have to do something even more tricky. Look at the \texttt{late} variable in the output below.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hf\_mutate3 }\OtherTok{\textless{}{-}} \FunctionTok{mutate}\NormalTok{(hf,}
+                     \AttributeTok{late =} \FunctionTok{as\_factor}\NormalTok{(}\FunctionTok{ifelse}\NormalTok{(ArrDelay }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{, }
+                                             \StringTok{"Late"}\NormalTok{, }\StringTok{"On time"}\NormalTok{)))}
+\NormalTok{hf\_mutate3}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 22,758 x 22
+##     Year Month DayofMonth DayOfWeek DepTime ArrTime UniqueCarrier FlightNum
+##    <dbl> <dbl>      <dbl>     <dbl>   <dbl>   <dbl> <chr>             <dbl>
+##  1  2011     1         12         3    1419    1515 AA                  428
+##  2  2011     1         17         1    1530    1634 AA                  428
+##  3  2011     1         24         1    1356    1513 AA                  428
+##  4  2011     1          9         7     714     829 AA                  460
+##  5  2011     1         18         2     721     827 AA                  460
+##  6  2011     1         22         6     717     829 AA                  460
+##  7  2011     1         11         2    1953    2051 AA                  533
+##  8  2011     1         14         5    2119    2229 AA                  533
+##  9  2011     1         26         3    2009    2103 AA                  533
+## 10  2011     1         14         5    1629    1734 AA                 1121
+## # ... with 22,748 more rows, and 14 more variables: TailNum <chr>,
+## #   ActualElapsedTime <dbl>, AirTime <dbl>, ArrDelay <dbl>, DepDelay <dbl>,
+## #   Origin <chr>, Dest <chr>, Distance <dbl>, TaxiIn <dbl>, TaxiOut <dbl>,
+## #   Cancelled <dbl>, CancellationCode <chr>, Diverted <dbl>, late <fct>
+\end{verbatim}
+
+The \texttt{as\_factor} command tells R that \texttt{late} should be a categorical variable. Without it, the variable would be a ``character'' variable, meaning a list of character strings. It won't matter for us here, but in any future analysis, you want categorical data to be treated as such by R.
+
+The main focus here is on the \texttt{ifelse} construction. The \texttt{ifelse} function takes a condition as its first argument. If the condition is true, it returns the value in the second slot, and if it's false (the ``else'' part of if/else), it returns the value in the third slot. In other words, if \texttt{ArrDelay\ \textgreater{}\ 0}, this means the flight is late, so the new \texttt{late} variable should say ``Late''; whereas, if \texttt{ArrDelay} is not greater than zero (so either zero or possibly negative if the flight arrived early), then the new variable should say ``On Time''.
+
+Having said that, I would generally recommend that you leave these kinds of variables as logical types. It's much easier to summarize such variables in R, namely because R treats \texttt{TRUE} as 1 and \texttt{FALSE} as 0, allowing us to do things like this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{mean}\NormalTok{(hf\_mutate2}\SpecialCharTok{$}\NormalTok{late, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.4761522
+\end{verbatim}
+
+This gives us the proportion of late flights.
+
+Note that we needed \texttt{na.rm} as you've seen in previous chapter. For example, look at the 93rd row of the tibble:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{slice}\NormalTok{(hf\_mutate2, }\DecValTok{93}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 22
+##    Year Month DayofMonth DayOfWeek DepTime ArrTime UniqueCarrier FlightNum
+##   <dbl> <dbl>      <dbl>     <dbl>   <dbl>   <dbl> <chr>             <dbl>
+## 1  2011     1         27         4      NA      NA CO                  258
+## # ... with 14 more variables: TailNum <chr>, ActualElapsedTime <dbl>,
+## #   AirTime <dbl>, ArrDelay <dbl>, DepDelay <dbl>, Origin <chr>, Dest <chr>,
+## #   Distance <dbl>, TaxiIn <dbl>, TaxiOut <dbl>, Cancelled <dbl>,
+## #   CancellationCode <chr>, Diverted <dbl>, late <lgl>
+\end{verbatim}
+
+Notice that all the times are missing. There are a bunch of rows like this. Since there is not always an arrival delay listed, the \texttt{ArrDelay} variable doesn't always have a value, and if \texttt{ArrDelay} is \texttt{NA}, the \texttt{late} variable will be too. So if we try to calculate the mean with just the \texttt{mean} command, this happens:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{mean}\NormalTok{(hf\_mutate2}\SpecialCharTok{$}\NormalTok{late)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] NA
+\end{verbatim}
+
+\hypertarget{exercise-12-2}{%
+\paragraph{Exercise 12}\label{exercise-12-2}}
+
+Why does taking the mean of a bunch of zeros and ones give us the proportion of ones? (Think about the formula for the mean. What happens when we take the sum of all the zeros and ones, and what happens when we divide by the total?)
+
+Please write up your answer here.
+
+\hypertarget{exercise-13}{%
+\paragraph{Exercise 13}\label{exercise-13}}
+
+Create a new tibble called \texttt{hf\_mutate4} that uses the \texttt{mutate} command to create a new variable called \texttt{dist\_k} which measures the flight distance in kilometers instead of miles. (Hint: to get from miles to kilometers, multiply the distance by 1.60934.) Print the output to the screen.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to define hf\_mutate4.}
+\CommentTok{\# Add code here to print hf\_mutate4.}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+A related verb is \texttt{transmute}. The only difference between \texttt{mutate} and \texttt{transmute} is that \texttt{mutate} creates the new column(s) and keeps all the old ones too, whereas \texttt{transmute} will throw away all the columns except the newly created ones. This is not something that you generally want to do, but there are exceptions. For example, if I was preparing a report and I needed only to talk about flights being late or not, it would do no harm (and would save some memory) to throw away everything except the \texttt{late} variable.
+
+Before moving on to the next section, we'll clean up the extra tibbles lying around. You'll need to manually click the run button in the next code chunk since you have defined \texttt{hf\_mutate4}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{rm}\NormalTok{(hf\_mutate, hf\_mutate2, hf\_mutate3, hf\_mutate4)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in rm(hf_mutate, hf_mutate2, hf_mutate3, hf_mutate4): object
+## 'hf_mutate4' not found
+\end{verbatim}
+
+\hypertarget{manipulating-summ-group}{%
+\section{\texorpdfstring{\texttt{summarise} (with \texttt{group\_by})}{summarise (with group\_by)}}\label{manipulating-summ-group}}
+
+First, before you mention that \texttt{summarise} is spelled wrong\ldots well, the author of the \texttt{dplyr} package is named Hadley Wickham (same author as the \texttt{ggplot2} package) and he is from New Zealand. So that's the way he spells it. He was nice enough to include the \texttt{summarize} function as an alias if you need to use it 'cause this is 'Murica!
+
+The \texttt{summarise} function, by itself, is kind of boring, and doesn't do anything that couldn't be done more easily with base R functions.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summarise}\NormalTok{(hf, }\FunctionTok{mean}\NormalTok{(Distance))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 1
+##   `mean(Distance)`
+##              <dbl>
+## 1             791.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{mean}\NormalTok{(hf}\SpecialCharTok{$}\NormalTok{Distance)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 790.5861
+\end{verbatim}
+
+Where \texttt{summarise} shines is in combination with \texttt{group\_by}. For example, let's suppose that we want to see average flight distances, but broken down by airline. We can do the following:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hf\_summ\_grouped }\OtherTok{\textless{}{-}} \FunctionTok{group\_by}\NormalTok{(hf, UniqueCarrier)}
+\NormalTok{hf\_summ }\OtherTok{\textless{}{-}} \FunctionTok{summarise}\NormalTok{(hf\_summ\_grouped, }\FunctionTok{mean}\NormalTok{(Distance))}
+\NormalTok{hf\_summ}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 15 x 2
+##    UniqueCarrier `mean(Distance)`
+##    <chr>                    <dbl>
+##  1 AA                        470.
+##  2 AS                       1874 
+##  3 B6                       1428 
+##  4 CO                       1097.
+##  5 DL                        723.
+##  6 EV                        788.
+##  7 F9                        883 
+##  8 FL                        686.
+##  9 MQ                        701.
+## 10 OO                        823.
+## 11 UA                       1204.
+## 12 US                        982.
+## 13 WN                        613.
+## 14 XE                        590.
+## 15 YV                        982.
+\end{verbatim}
+
+\hypertarget{manipulating-piping}{%
+\subsection{Piping}\label{manipulating-piping}}
+
+This is a good spot to introduce a time-saving and helpful device called ``piping'', denoted by the symbol \texttt{\%\textgreater{}\%}. We've seen this weird combination of symbols in past chapters, but we haven't really explained what they do.
+
+Piping always looks more complicated than it really is. The technical definition is that
+
+\texttt{x\ \%\textgreater{}\%\ f(y)}
+
+is equivalent to
+
+\texttt{f(x,\ y)}.
+
+As a simple example, we could add two numbers like this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sum}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 5
+\end{verbatim}
+
+Or using the pipe, we could do it like this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DecValTok{2} \SpecialCharTok{\%\textgreater{}\%} \FunctionTok{sum}\NormalTok{(}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 5
+\end{verbatim}
+
+All this is really saying is that the pipe takes the thing on its left, and plugs it into the first slot of the function on its right. So why do we care?
+
+Let's revisit the combination \texttt{group\_by}/\texttt{summarise} example above. There are two ways to do this without pipes, and both are a little ugly. One way is above, where you have to keep reassigning the output to new variables (in the case above, to \texttt{hf\_summ\_grouped} and then \texttt{hf\_summ}). The other way is to nest the functions:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summarise}\NormalTok{(}\FunctionTok{group\_by}\NormalTok{(hf, UniqueCarrier), }\FunctionTok{mean}\NormalTok{(Distance))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 15 x 2
+##    UniqueCarrier `mean(Distance)`
+##    <chr>                    <dbl>
+##  1 AA                        470.
+##  2 AS                       1874 
+##  3 B6                       1428 
+##  4 CO                       1097.
+##  5 DL                        723.
+##  6 EV                        788.
+##  7 F9                        883 
+##  8 FL                        686.
+##  9 MQ                        701.
+## 10 OO                        823.
+## 11 UA                       1204.
+## 12 US                        982.
+## 13 WN                        613.
+## 14 XE                        590.
+## 15 YV                        982.
+\end{verbatim}
+
+This requires a lot of brain power to parse. In part, this is because the function is inside-out: first you group \texttt{hf} by \texttt{UniqueCarrier}, and then the result of that is summarized. Here's how the pipe fixes it:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hf }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{group\_by}\NormalTok{(UniqueCarrier) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{summarise}\NormalTok{(}\FunctionTok{mean}\NormalTok{(Distance))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 15 x 2
+##    UniqueCarrier `mean(Distance)`
+##    <chr>                    <dbl>
+##  1 AA                        470.
+##  2 AS                       1874 
+##  3 B6                       1428 
+##  4 CO                       1097.
+##  5 DL                        723.
+##  6 EV                        788.
+##  7 F9                        883 
+##  8 FL                        686.
+##  9 MQ                        701.
+## 10 OO                        823.
+## 11 UA                       1204.
+## 12 US                        982.
+## 13 WN                        613.
+## 14 XE                        590.
+## 15 YV                        982.
+\end{verbatim}
+
+Look at the \texttt{group\_by} line. The \texttt{group\_by} function should take two arguments, the tibble, and then the grouping variable. It appears to have only one argument. But look at the previous line. The pipe says to insert whatever is on its left (\texttt{hf}) into the first slot of the function on its right (\texttt{group\_by}). So the net effect is still to evaluate the function \texttt{group\_by(hf,\ UniqueCarrier)}.
+
+Now look at the \texttt{summarise} line. Again, \texttt{summarise} is a function of two inputs, but all we see is the part that finds the mean. The pipe at the end of the previous line tells the \texttt{summarise} function to insert the stuff already computed (the grouped tibble returned by \texttt{group\_by(hf,\ UniqueCarrier)}) into the first slot of the \texttt{summarise} function.
+
+Piping takes a little getting used to, but once you're good at it, you'll never go back. It's just makes more sense semantically. When I read the above set of commands, I see a set of instructions in chronological order:
+
+\begin{itemize}
+\tightlist
+\item
+  Start with the tibble \texttt{hf}.
+\item
+  Next, group by the carrier.
+\item
+  Next, summarize each group using the mean distance.
+\end{itemize}
+
+Now we can assign the result of all that to the new variable \texttt{hf\_summ}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hf\_summ }\OtherTok{\textless{}{-}}\NormalTok{ hf }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{group\_by}\NormalTok{(UniqueCarrier) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{summarise}\NormalTok{(}\FunctionTok{mean}\NormalTok{(Distance))}
+\NormalTok{hf\_summ}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 15 x 2
+##    UniqueCarrier `mean(Distance)`
+##    <chr>                    <dbl>
+##  1 AA                        470.
+##  2 AS                       1874 
+##  3 B6                       1428 
+##  4 CO                       1097.
+##  5 DL                        723.
+##  6 EV                        788.
+##  7 F9                        883 
+##  8 FL                        686.
+##  9 MQ                        701.
+## 10 OO                        823.
+## 11 UA                       1204.
+## 12 US                        982.
+## 13 WN                        613.
+## 14 XE                        590.
+## 15 YV                        982.
+\end{verbatim}
+
+Some people even take this one step further. The result of all the above is assigned to a new variable \texttt{hf\_summ} that currently appears as the first command (\texttt{hf\_summ\ \textless{}-\ ...}) But you could write this as
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hf }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{group\_by}\NormalTok{(UniqueCarrier) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{summarise}\NormalTok{(}\FunctionTok{mean}\NormalTok{(Distance)) }\OtherTok{{-}\textgreater{}}\NormalTok{ hf\_summ}
+\end{Highlighting}
+\end{Shaded}
+
+Now it says the following:
+
+\begin{itemize}
+\tightlist
+\item
+  Start with the tibble \texttt{hf}.
+\item
+  Next, group by the carrier.
+\item
+  Next, summarize each group using the mean distance.
+\item
+  \emph{Finally}, assign the result to a new variable called \texttt{hf\_summ}.
+\end{itemize}
+
+In other words, the arrow operator for assignment works both directions!
+
+Let's try some counting. This one is common enough that \texttt{dplyr} doesn't even make us use \texttt{group\_by} and \texttt{summarise}. We can just use the command \texttt{count}. What if we wanted to know how many flights correspond to each carrier?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hf\_summ2 }\OtherTok{\textless{}{-}}\NormalTok{ hf }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{count}\NormalTok{(UniqueCarrier)}
+\NormalTok{hf\_summ2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 15 x 2
+##    UniqueCarrier     n
+##    <chr>         <int>
+##  1 AA              325
+##  2 AS               37
+##  3 B6               70
+##  4 CO             7004
+##  5 DL              265
+##  6 EV              221
+##  7 F9               84
+##  8 FL              214
+##  9 MQ              465
+## 10 OO             1607
+## 11 UA              208
+## 12 US              409
+## 13 WN             4535
+## 14 XE             7306
+## 15 YV                8
+\end{verbatim}
+
+Also note that we can give summary columns a new name if we wish. In \texttt{hf\_summ}, we didn't give the new column an explicit name, so it showed up in our tibble as a column called \texttt{mean(Distance)}. If we want to change it, we can do this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hf\_summ }\OtherTok{\textless{}{-}}\NormalTok{ hf }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{group\_by}\NormalTok{(UniqueCarrier) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{summarise}\NormalTok{(}\AttributeTok{mean\_dist =} \FunctionTok{mean}\NormalTok{(Distance))}
+\NormalTok{hf\_summ}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 15 x 2
+##    UniqueCarrier mean_dist
+##    <chr>             <dbl>
+##  1 AA                 470.
+##  2 AS                1874 
+##  3 B6                1428 
+##  4 CO                1097.
+##  5 DL                 723.
+##  6 EV                 788.
+##  7 F9                 883 
+##  8 FL                 686.
+##  9 MQ                 701.
+## 10 OO                 823.
+## 11 UA                1204.
+## 12 US                 982.
+## 13 WN                 613.
+## 14 XE                 590.
+## 15 YV                 982.
+\end{verbatim}
+
+Look at the earlier version of \texttt{hf\_summ} and compare it to the one above. Make sure you see that the name of the second column changed.
+
+The new count column of \texttt{hf\_summ2} is just called \texttt{n}. That's okay, but if we insist on giving it a more user-friendly name, we can do so as follows:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hf\_summ2 }\OtherTok{\textless{}{-}}\NormalTok{ hf }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{count}\NormalTok{(UniqueCarrier, }\AttributeTok{name =} \StringTok{"total\_count"}\NormalTok{)}
+\NormalTok{hf\_summ2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 15 x 2
+##    UniqueCarrier total_count
+##    <chr>               <int>
+##  1 AA                    325
+##  2 AS                     37
+##  3 B6                     70
+##  4 CO                   7004
+##  5 DL                    265
+##  6 EV                    221
+##  7 F9                     84
+##  8 FL                    214
+##  9 MQ                    465
+## 10 OO                   1607
+## 11 UA                    208
+## 12 US                    409
+## 13 WN                   4535
+## 14 XE                   7306
+## 15 YV                      8
+\end{verbatim}
+
+This is a little different because it requires us to use a \texttt{name} argument and put the new name in quotes.
+
+\hypertarget{exercise-14a}{%
+\paragraph{Exercise 14(a)}\label{exercise-14a}}
+
+Create a tibble called \texttt{hf\_summ3} that lists the total count of flights for each day of the week. Be sure to use the pipe as above. Print the output to the screen. (You don't need to give the count column a new name.)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to define hf\_summ3.}
+\CommentTok{\# Add code here to print hf\_summ3.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{exercise-14b}{%
+\paragraph{Exercise 14(b)}\label{exercise-14b}}
+
+According to the output in the previous part, what day of the week had the fewest flights? (Assume 1 = Monday.)
+
+Please write up your answer here.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+The tibbles created in this section are all just a few rows each. They don't take up much memory, so we don't really need to remove them. You can if you want, but it's not necessary.
+
+\hypertarget{manipulating-all-together}{%
+\section{Putting it all together}\label{manipulating-all-together}}
+
+Often we need more than one of these verbs. In many data analyses, we need to do a sequence of operations to get at the answer we seek. This is most easily accomplished using a more complicated sequence of pipes.
+
+Here's a example of multi-step piping. Let's say that we only care about Delta flights, and even then, we only want to know about the month of the flight and the departure delay. From there, we wish to group by month so we can find the maximum departure delay by month. Here is a solution, piping hot and ready to go. {[}groan{]}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hf\_grand\_finale }\OtherTok{\textless{}{-}}\NormalTok{ hf }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{filter}\NormalTok{(UniqueCarrier }\SpecialCharTok{==} \StringTok{"DL"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{    dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(Month, DepDelay) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{group\_by}\NormalTok{(Month) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{summarise}\NormalTok{(}\AttributeTok{max\_delay =} \FunctionTok{max}\NormalTok{(DepDelay, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{))}
+\NormalTok{hf\_grand\_finale}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 12 x 2
+##    Month max_delay
+##    <dbl>     <dbl>
+##  1     1        26
+##  2     2       460
+##  3     3       202
+##  4     4        23
+##  5     5       127
+##  6     6       184
+##  7     7       360
+##  8     8        48
+##  9     9       292
+## 10    10        90
+## 11    11        10
+## 12    12        14
+\end{verbatim}
+
+Go through each line of code carefully and translate it into English:
+
+\begin{itemize}
+\tightlist
+\item
+  We define a variable called \texttt{hf\_grand\_finale} that starts with the original \texttt{hf} data.
+\item
+  We \texttt{filter} this data so that only Delta flights will be analyzed.
+\item
+  We \texttt{select} the variables \texttt{Month} and \texttt{DepDelay}, throwing away all other variables that are not of interest to us. (Don't forget to use the \texttt{dplyr::select} syntax to make sure we get the right function!)
+\item
+  We \texttt{group\_by} month so that the results will be displayed by month.
+\item
+  We \texttt{summarise} each month by listing the maximum value of \texttt{DepDelay} that appears within each month.
+\item
+  We print the result to the screen.
+\end{itemize}
+
+Notice in the \texttt{summarise} line, we again took advantage of \texttt{dplyr}'s ability to rename any variable along the way, assigning our computation to the new variable \texttt{max\_delay}. Also note the need for \texttt{na.rm\ =\ TRUE} so that the \texttt{max} command ignores any missing values.
+
+A minor simplification results from the realization that \texttt{summarise} must throw away any variables it doesn't need. (Think about why for a second: what would \texttt{summarise} do with, say, \texttt{ArrTime} if we've only asked it to calculate the maximum value of \texttt{DepDelay} for each month?) So you could write this instead, removing the \texttt{select} clause:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hf\_grand\_finale }\OtherTok{\textless{}{-}}\NormalTok{ hf }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{filter}\NormalTok{(UniqueCarrier }\SpecialCharTok{==} \StringTok{"DL"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{group\_by}\NormalTok{(Month) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{summarise}\NormalTok{(}\AttributeTok{max\_delay =} \FunctionTok{max}\NormalTok{(DepDelay, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{))}
+\NormalTok{hf\_grand\_finale}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 12 x 2
+##    Month max_delay
+##    <dbl>     <dbl>
+##  1     1        26
+##  2     2       460
+##  3     3       202
+##  4     4        23
+##  5     5       127
+##  6     6       184
+##  7     7       360
+##  8     8        48
+##  9     9       292
+## 10    10        90
+## 11    11        10
+## 12    12        14
+\end{verbatim}
+
+Check that you get the same result. With \emph{massive} data sets, it's possible that the selection and sequence of these verbs matter, but you don't see an appreciable difference here, even with 22758 rows. (There are ways of benchmarking performance in R, but that is a more advanced topic.)
+
+\hypertarget{exercise-15}{%
+\paragraph{Exercise 15}\label{exercise-15}}
+
+Summarize in your own words what information is contained in the \texttt{hf\_grand\_finale} tibble. In other words, what are the numbers in the \texttt{max\_delay} column telling us? Be specific!
+
+Please write up your answer here.
+
+The remaining exercises are probably the most challenging you've seen so far in the course. Take each slowly. Read the instructions carefully. Go back through the chapter and identify which ``verb'' needs to be used for each part of the task. Examine the sample code in those sections carefully to make sure you get the syntax right. Create a sequence of ``pipes'' to do each task, one-by-one. Copy and paste pieces of code from earlier and make minor changes to adapt the code to the given task.
+
+\hypertarget{exercise-16}{%
+\paragraph{Exercise 16}\label{exercise-16}}
+
+Create a tibble that counts the flights to LAX grouped by day of the week. (Hint: you need to \texttt{filter} to get flights to LAX. Then you'll need to \texttt{count} using \texttt{DayOfWeek} as a grouping variable. Because you're using \texttt{count}, you don't need \texttt{group\_by} or \texttt{summarise}.) Print the output to the screen.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to count the flights to LAX}
+\CommentTok{\# grouped by day of the week.}
+\CommentTok{\# Print the output to the screen.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{exercise-17}{%
+\paragraph{Exercise 17}\label{exercise-17}}
+
+Create a tibble that finds the median distance flight for each airline. Sort the resulting tibble from highest distance to lowest. (Hint: You'll need to \texttt{group\_by} carrier and \texttt{summarise} using the \texttt{median} function. Finally, you'll need to \texttt{arrange} the result according to the median distance variable that you just created.) Print the output to the screen.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to find the median distance by airline.}
+\CommentTok{\# Print the output to the screen.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{manipulating-conclusion}{%
+\section{Conclusion}\label{manipulating-conclusion}}
+
+Raw data often doesn't come in the right form for us to run our analyses. The \texttt{dplyr} verbs are powerful tools for manipulating tibbles until they are in the right form.
+
+\hypertarget{manipulating-prep}{%
+\subsection{Preparing and submitting your assignment}\label{manipulating-prep}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  From the ``Run'' menu, select ``Restart R and Run All Chunks''.
+\item
+  Deal with any code errors that crop up. Repeat steps 1---2 until there are no more code errors.
+\item
+  Spell check your document by clicking the icon with ``ABC'' and a check mark.
+\item
+  Hit the ``Preview'' button one last time to generate the final draft of the \texttt{.nb.html} file.
+\item
+  Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
+\end{enumerate}
+
+If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
+
   \bibliography{book.bib,packages.bib}
 
 \end{document}
