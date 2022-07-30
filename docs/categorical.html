@@ -49,6 +49,7 @@
 <li><a class="" href="intror.html"><span class="header-section-number">1</span> Introduction to R</a></li>
 <li><a class="" href="rmark.html"><span class="header-section-number">2</span> Using R Markdown</a></li>
 <li><a class="active" href="categorical.html"><span class="header-section-number">3</span> Categorical data</a></li>
+<li><a class="" href="numerical.html"><span class="header-section-number">4</span> Numerical data</a></li>
 </ul>
 
         <div class="book-extra">
@@ -67,7 +68,7 @@
 </p>
 <!-- Please don't mess with the previous few lines! -->
 <div id="functions-introduced-in-this-chapter-2" class="section level3 unnumbered summary">
-<h3>Functions introduced in this chapter:<a class="anchor" aria-label="anchor" href="#functions-introduced-in-this-chapter-2"><i class="fas fa-link"></i></a>
+<h3>Functions introduced in this chapter<a class="anchor" aria-label="anchor" href="#functions-introduced-in-this-chapter-2"><i class="fas fa-link"></i></a>
 </h3>
 <p><code>glimpse</code>, <code>table</code>, <code>tabyl</code>, <code>adorn_pct_formatting</code>, <code>ggplot</code>, <code>geom_bar</code>, <code>adorn_percentages</code>, <code>mutate</code>, <code>as_factor</code>, <code>labs</code>, <code>tibble</code>, <code>geom_col</code></p>
 </div>
@@ -76,19 +77,18 @@
 <span class="header-section-number">3.1</span> Introduction<a class="anchor" aria-label="anchor" href="#categorical-intro"><i class="fas fa-link"></i></a>
 </h2>
 <p>In this chapter, we’ll learn about categorical data and how to summarize it using tables and graphs.</p>
-</div>
-<div id="categorical-download" class="section level2" number="3.2">
-<h2>
-<span class="header-section-number">3.2</span> Download the R notebook file<a class="anchor" aria-label="anchor" href="#categorical-download"><i class="fas fa-link"></i></a>
-</h2>
+<div id="categorical-download" class="section level3" number="3.1.1">
+<h3>
+<span class="header-section-number">3.1.1</span> Download the R notebook file<a class="anchor" aria-label="anchor" href="#categorical-download"><i class="fas fa-link"></i></a>
+</h3>
 <p>Check the upper-right corner in RStudio to make sure you’re in your <code>intro_stats</code> project. Then click on the following link to download this chapter as an R notebook file (<code>.Rmd</code>).</p>
 <p><a href="https://vectorposse.github.io/intro_stats/chapter_downloads/03-categorical_data.Rmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/03-categorical_data.Rmd</a></p>
 <p>Once the file is downloaded, move it to your project folder in RStudio and open it there.</p>
 </div>
-<div id="categorical-restart" class="section level2" number="3.3">
-<h2>
-<span class="header-section-number">3.3</span> Restart R and run all chunks<a class="anchor" aria-label="anchor" href="#categorical-restart"><i class="fas fa-link"></i></a>
-</h2>
+<div id="categorical-restart" class="section level3" number="3.1.2">
+<h3>
+<span class="header-section-number">3.1.2</span> Restart R and run all chunks<a class="anchor" aria-label="anchor" href="#categorical-restart"><i class="fas fa-link"></i></a>
+</h3>
 <p>In RStudio, in the toolbar above this document, find the “Run” drop-down menu and select “Restart R and Run All Chunks.”</p>
 <p>This does two important things:</p>
 <ol style="list-style-type: decimal">
@@ -97,10 +97,10 @@
 </ol>
 <p>At the end of the assignment, you will “Restart R and Run All Chunks” once again to make sure that everything works smoothly and there are no lingering errors.</p>
 </div>
-<div id="categorical-load" class="section level2" number="3.4">
-<h2>
-<span class="header-section-number">3.4</span> Load packages<a class="anchor" aria-label="anchor" href="#categorical-load"><i class="fas fa-link"></i></a>
-</h2>
+<div id="categorical-load" class="section level3" number="3.1.3">
+<h3>
+<span class="header-section-number">3.1.3</span> Load packages<a class="anchor" aria-label="anchor" href="#categorical-load"><i class="fas fa-link"></i></a>
+</h3>
 <p>We load the <code>tidyverse</code> package since it also loads the <code>ggplot2</code> package that we’ll use throughout the course to make graphs. It also loads several other packages, for example, one called <code>dplyr</code> to give us a command called <code>mutate</code>, and another called <code>forcats</code> to give us <code>as_factor</code>. (These will all be explained later.) The <code>janitor</code> package gives us the <code>tabyl</code> command for creating nice tables. Finally, We load the <code>palmerpenguins</code> package to work with the penguin data.</p>
 <div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
@@ -113,9 +113,10 @@
 <div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://allisonhorst.github.io/palmerpenguins/">palmerpenguins</a></span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="categorical-data" class="section level2" number="3.5">
+</div>
+<div id="categorical-data" class="section level2" number="3.2">
 <h2>
-<span class="header-section-number">3.5</span> Categorical data<a class="anchor" aria-label="anchor" href="#categorical-data"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.2</span> Categorical data<a class="anchor" aria-label="anchor" href="#categorical-data"><i class="fas fa-link"></i></a>
 </h2>
 <p>Data comes in different types depending on what is being measured. When people think of “data”, they often imagine <em>numerical data</em>, consisting of numbers. But there are other kinds of data as well.</p>
 <p>In this chapter, we focus on <em>categorical data</em> that groups observations into categories.</p>
@@ -132,9 +133,9 @@
 </div>
 </div>
 </div>
-<div id="categorical-factor" class="section level2" number="3.6">
+<div id="categorical-factor" class="section level2" number="3.3">
 <h2>
-<span class="header-section-number">3.6</span> Factor variables<a class="anchor" aria-label="anchor" href="#categorical-factor"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.3</span> Factor variables<a class="anchor" aria-label="anchor" href="#categorical-factor"><i class="fas fa-link"></i></a>
 </h2>
 <p>R uses the term “factor variable” to refer to a categorical variable. Look at the structure of the <code>penguins</code> data below.</p>
 <div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
@@ -173,9 +174,9 @@
 <p>Your data set may already come with its variables coded correctly as factor variables, but often they are not. As described above, numbers are often used to represent categories, so R may think that those variables represent numerical data. Later, we’ll see an example of this and learn how to handle categorical variables that are not coded as factor variables in R.</p>
 </div>
 </div>
-<div id="categorical-summarizing-one" class="section level2" number="3.7">
+<div id="categorical-summarizing-one" class="section level2" number="3.4">
 <h2>
-<span class="header-section-number">3.7</span> Summarizing one categorical variable<a class="anchor" aria-label="anchor" href="#categorical-summarizing-one"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.4</span> Summarizing one categorical variable<a class="anchor" aria-label="anchor" href="#categorical-summarizing-one"><i class="fas fa-link"></i></a>
 </h2>
 <p>If you need to summarize a single categorical variable, a <em>frequency table</em> usually suffices. This is simply a table that counts up all the instances of each category. The word “frequency” is synonymous here with the word “count”.</p>
 <p>We can use the <code>table</code> command:</p>
@@ -241,18 +242,17 @@
 </div>
 </div>
 </div>
-<div id="categorical-graphing-one" class="section level2" number="3.8">
+<div id="categorical-graphing-one" class="section level2" number="3.5">
 <h2>
-<span class="header-section-number">3.8</span> Graphing one categorical variable<a class="anchor" aria-label="anchor" href="#categorical-graphing-one"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.5</span> Graphing one categorical variable<a class="anchor" aria-label="anchor" href="#categorical-graphing-one"><i class="fas fa-link"></i></a>
 </h2>
 <p>When asked, “What type of graph should I use when graphing a single categorical variable?” the simple answer is “None.” If you do need to summarize a categorical variable, a frequency table usually suffices.</p>
 <p>If you really, really want a graph, the standard type is a bar chart. But before we can create one, we need to start learning about the very important tool we will use throughout the course for graphing. It’s called <code>ggplot</code> and it’s part of a package called <code>ggplot2</code>.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Why the “2”? It’s a long story. Google it if you’re interested in the history of the development of the &lt;code&gt;ggplot2&lt;/code&gt; package.&lt;/p&gt;"><sup>6</sup></a></p>
 <p>We don’t have to load the <code>ggplot2</code> package explicitly because it got loaded alongside a number of other packages when we called <code><a href="https://tidyverse.tidyverse.org">library(tidyverse)</a></code> early on in the chapter.</p>
-</div>
-<div id="categorical-ggplot" class="section level2" number="3.9">
-<h2>
-<span class="header-section-number">3.9</span> ggplot<a class="anchor" aria-label="anchor" href="#categorical-ggplot"><i class="fas fa-link"></i></a>
-</h2>
+<div id="categorical-ggplot" class="section level3" number="3.5.1">
+<h3>
+<span class="header-section-number">3.5.1</span> ggplot<a class="anchor" aria-label="anchor" href="#categorical-ggplot"><i class="fas fa-link"></i></a>
+</h3>
 <p>The <code>ggplot</code> command is an all-purpose graphing utility. It uses a graphing philosophy derived from a book called <em>The Grammar of Graphics</em> by Leland Wilkinson. The basic idea is that each variable you want to plot should correspond to some element or “aesthetic” component of the graph. The obvious places for data to go are along the y-axis or x-axis, but other aesthetics are important too; graphs often use color, shape, or size to illustrate different aspects of data. Once these aesthetics have been defined, we will add “layers” to the graph. These are objects like dots, boxes, lines, or bars that dictate the type of graph we want to see.</p>
 <p>In an introductory course, we won’t get too fancy with these graphs. But be aware that there’s a whole field of data visualization that studies clear and interesting ways to understand data graphically.</p>
 <p>It will be easier to explain the <code>ggplot</code> syntax in the context of specific graph types, so let’s create a bar chart for species.</p>
@@ -284,9 +284,10 @@
 <p>Seriously. Pie charts suck.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;&lt;a href="https://medium.com/the-mission/to-pie-charts-3b1f57bcb34a" class="uri"&gt;https://medium.com/the-mission/to-pie-charts-3b1f57bcb34a&lt;/a&gt;&lt;/p&gt;'><sup>7</sup></a></p>
 </div>
 </div>
-<div id="categorical-summarizing-two" class="section level2" number="3.10">
+</div>
+<div id="categorical-summarizing-two" class="section level2" number="3.6">
 <h2>
-<span class="header-section-number">3.10</span> Summarizing two categorical variables<a class="anchor" aria-label="anchor" href="#categorical-summarizing-two"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.6</span> Summarizing two categorical variables<a class="anchor" aria-label="anchor" href="#categorical-summarizing-two"><i class="fas fa-link"></i></a>
 </h2>
 <p>A table summarizing two categorical variables is called a <em>contingency table</em> (or pivot table, or cross-tabulation, or probably several other terms as well).</p>
 <p>For example, we might pose the following question: is the distribution of sex among penguins in our data more or less balanced across the three species?</p>
@@ -382,9 +383,9 @@
 </div>
 </div>
 </div>
-<div id="categorical-graphing-two" class="section level2" number="3.11">
+<div id="categorical-graphing-two" class="section level2" number="3.7">
 <h2>
-<span class="header-section-number">3.11</span> Graphing two categorical variables<a class="anchor" aria-label="anchor" href="#categorical-graphing-two"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.7</span> Graphing two categorical variables<a class="anchor" aria-label="anchor" href="#categorical-graphing-two"><i class="fas fa-link"></i></a>
 </h2>
 <p>A somewhat effective way to display two categorical variables is with a side-by-side bar chart. Here is the <code>ggplot</code> code for the relationship between <code>sex</code> and <code>species</code>.</p>
 <div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
@@ -428,9 +429,9 @@
 </div>
 </div>
 </div>
-<div id="categorical-recoding" class="section level2" number="3.12">
+<div id="categorical-recoding" class="section level2" number="3.8">
 <h2>
-<span class="header-section-number">3.12</span> Recoding factor variables<a class="anchor" aria-label="anchor" href="#categorical-recoding"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.8</span> Recoding factor variables<a class="anchor" aria-label="anchor" href="#categorical-recoding"><i class="fas fa-link"></i></a>
 </h2>
 <p>As mentioned earlier, there are situations where a categorical variable is not recorded in R as a factor variable. Let’s look at the <code>year</code> variable:</p>
 <div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
@@ -500,9 +501,9 @@
 </div>
 </div>
 </div>
-<div id="categorical-pub" class="section level2" number="3.13">
+<div id="categorical-pub" class="section level2" number="3.9">
 <h2>
-<span class="header-section-number">3.13</span> Publication-ready graphics<a class="anchor" aria-label="anchor" href="#categorical-pub"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.9</span> Publication-ready graphics<a class="anchor" aria-label="anchor" href="#categorical-pub"><i class="fas fa-link"></i></a>
 </h2>
 <p>Let’s go back to the first relative frequency bar chart from this chapter.</p>
 <div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
@@ -531,9 +532,9 @@
 </div>
 </div>
 </div>
-<div id="categorical-summary" class="section level2" number="3.14">
+<div id="categorical-summary" class="section level2" number="3.10">
 <h2>
-<span class="header-section-number">3.14</span> Plotting summary data<a class="anchor" aria-label="anchor" href="#categorical-summary"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.10</span> Plotting summary data<a class="anchor" aria-label="anchor" href="#categorical-summary"><i class="fas fa-link"></i></a>
 </h2>
 <p>Everything we did above was summarizing <em>raw data</em>; that is, the data consisted of all the observations for each individual penguin. Often, though, when you find data out in the wild, that data will be summarized into a table already and you may not have access to the raw data.</p>
 <p>For example, let’s suppose that you found some data online, but it looked like this:</p>
@@ -622,19 +623,18 @@
 </div>
 </div>
 </div>
-<div id="categorical-conclusion" class="section level2" number="3.15">
+<div id="categorical-conclusion" class="section level2" number="3.11">
 <h2>
-<span class="header-section-number">3.15</span> Conclusion<a class="anchor" aria-label="anchor" href="#categorical-conclusion"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.11</span> Conclusion<a class="anchor" aria-label="anchor" href="#categorical-conclusion"><i class="fas fa-link"></i></a>
 </h2>
 <p>You can summarize a single categorical variable using a frequency table. For only one categorical variable, a graph is usually overkill, but if you really want a graph, the bar chart is the best option. Both raw counts and proportions/percentages can be useful.</p>
 <p>We use contingency tables to summarize two categorical variables. Unless groups are of equal size, raw counts can be incredibly misleading here. You should include proportions/percentages to be able to compare the distributions across groups. If the proportions/percentages are roughly the same, the variables are more likely to be independent, whereas if the proportions/percentages are different, there may be an association between the variables. For graphing, the best choice is usually a side-by-side bar chart. A stacked bar chart will also work, especially if using relative frequencies on the y-axis, but it can be hard to compare across groups when the response variable has three or more categories.</p>
 <p>Sometimes we come across categorical data that is recorded using numbers. Many R commands will not work properly if they expect factors and receive numbers, so we use the <code>mutate</code> command to create a new variable along with <code>as_factor</code> to convert the numbers to categories.</p>
 <p>Sometimes we come across summary data instead of raw data. We can then manually create tibbles with that summary data and use <code>geom_col</code> instead of <code>geom_bar</code> to graph it.</p>
-</div>
-<div id="categorical-prep" class="section level2" number="3.16">
-<h2>
-<span class="header-section-number">3.16</span> Preparing and submitting your assignment<a class="anchor" aria-label="anchor" href="#categorical-prep"><i class="fas fa-link"></i></a>
-</h2>
+<div id="categorical-prep" class="section level3" number="3.11.1">
+<h3>
+<span class="header-section-number">3.11.1</span> Preparing and submitting your assignment<a class="anchor" aria-label="anchor" href="#categorical-prep"><i class="fas fa-link"></i></a>
+</h3>
 <ol style="list-style-type: decimal">
 <li>From the “Run” menu, select “Restart R and Run All Chunks”.</li>
 <li>Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.</li>
@@ -646,44 +646,38 @@
 
 </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
+</div>
 
   <div class="chapter-nav">
 <div class="prev"><a href="rmark.html"><span class="header-section-number">2</span> Using R Markdown</a></div>
-<div class="empty"></div>
+<div class="next"><a href="numerical.html"><span class="header-section-number">4</span> Numerical data</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
 <li>
-<a class="nav-link" href="#categorical"><span class="header-section-number">3</span> Categorical data</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#functions-introduced-in-this-chapter-2">Functions introduced in this chapter:</a></li></ul>
+<a class="nav-link" href="#categorical"><span class="header-section-number">3</span> Categorical data</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#functions-introduced-in-this-chapter-2">Functions introduced in this chapter</a></li></ul>
 </li>
-<li><a class="nav-link" href="#categorical-intro"><span class="header-section-number">3.1</span> Introduction</a></li>
-<li><a class="nav-link" href="#categorical-download"><span class="header-section-number">3.2</span> Download the R notebook file</a></li>
-<li><a class="nav-link" href="#categorical-restart"><span class="header-section-number">3.3</span> Restart R and run all chunks</a></li>
-<li><a class="nav-link" href="#categorical-load"><span class="header-section-number">3.4</span> Load packages</a></li>
-<li><a class="nav-link" href="#categorical-data"><span class="header-section-number">3.5</span> Categorical data</a></li>
-<li><a class="nav-link" href="#categorical-factor"><span class="header-section-number">3.6</span> Factor variables</a></li>
-<li><a class="nav-link" href="#categorical-summarizing-one"><span class="header-section-number">3.7</span> Summarizing one categorical variable</a></li>
-<li><a class="nav-link" href="#categorical-graphing-one"><span class="header-section-number">3.8</span> Graphing one categorical variable</a></li>
-<li><a class="nav-link" href="#categorical-ggplot"><span class="header-section-number">3.9</span> ggplot</a></li>
-<li><a class="nav-link" href="#categorical-summarizing-two"><span class="header-section-number">3.10</span> Summarizing two categorical variables</a></li>
-<li><a class="nav-link" href="#categorical-graphing-two"><span class="header-section-number">3.11</span> Graphing two categorical variables</a></li>
-<li><a class="nav-link" href="#categorical-recoding"><span class="header-section-number">3.12</span> Recoding factor variables</a></li>
-<li><a class="nav-link" href="#categorical-pub"><span class="header-section-number">3.13</span> Publication-ready graphics</a></li>
-<li><a class="nav-link" href="#categorical-summary"><span class="header-section-number">3.14</span> Plotting summary data</a></li>
-<li><a class="nav-link" href="#categorical-conclusion"><span class="header-section-number">3.15</span> Conclusion</a></li>
-<li><a class="nav-link" href="#categorical-prep"><span class="header-section-number">3.16</span> Preparing and submitting your assignment</a></li>
+<li>
+<a class="nav-link" href="#categorical-intro"><span class="header-section-number">3.1</span> Introduction</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#categorical-download"><span class="header-section-number">3.1.1</span> Download the R notebook file</a></li>
+<li><a class="nav-link" href="#categorical-restart"><span class="header-section-number">3.1.2</span> Restart R and run all chunks</a></li>
+<li><a class="nav-link" href="#categorical-load"><span class="header-section-number">3.1.3</span> Load packages</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#categorical-data"><span class="header-section-number">3.2</span> Categorical data</a></li>
+<li><a class="nav-link" href="#categorical-factor"><span class="header-section-number">3.3</span> Factor variables</a></li>
+<li><a class="nav-link" href="#categorical-summarizing-one"><span class="header-section-number">3.4</span> Summarizing one categorical variable</a></li>
+<li>
+<a class="nav-link" href="#categorical-graphing-one"><span class="header-section-number">3.5</span> Graphing one categorical variable</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#categorical-ggplot"><span class="header-section-number">3.5.1</span> ggplot</a></li></ul>
+</li>
+<li><a class="nav-link" href="#categorical-summarizing-two"><span class="header-section-number">3.6</span> Summarizing two categorical variables</a></li>
+<li><a class="nav-link" href="#categorical-graphing-two"><span class="header-section-number">3.7</span> Graphing two categorical variables</a></li>
+<li><a class="nav-link" href="#categorical-recoding"><span class="header-section-number">3.8</span> Recoding factor variables</a></li>
+<li><a class="nav-link" href="#categorical-pub"><span class="header-section-number">3.9</span> Publication-ready graphics</a></li>
+<li><a class="nav-link" href="#categorical-summary"><span class="header-section-number">3.10</span> Plotting summary data</a></li>
+<li>
+<a class="nav-link" href="#categorical-conclusion"><span class="header-section-number">3.11</span> Conclusion</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#categorical-prep"><span class="header-section-number">3.11.1</span> Preparing and submitting your assignment</a></li></ul>
+</li>
 </ul>
 
       <div class="book-extra">
@@ -701,7 +695,7 @@
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Introduction to Statistics: an integrated textbook and workbook using R</strong>" was written by Sean Raleigh, Westminster College (Salt Lake City, UT). It was last built on 2022-07-28.</p>
+    <p>"<strong>Introduction to Statistics: an integrated textbook and workbook using R</strong>" was written by Sean Raleigh, Westminster College (Salt Lake City, UT). It was last built on 2022-07-29.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
@@ -709,6 +703,34 @@
   </div>
 
 </div></div>
-</footer>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
 </body>
 </html>
