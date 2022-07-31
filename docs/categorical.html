@@ -78,17 +78,25 @@
 <span class="header-section-number">3.1</span> Introduction<a class="anchor" aria-label="anchor" href="#categorical-intro"><i class="fas fa-link"></i></a>
 </h2>
 <p>In this chapter, we’ll learn about categorical data and how to summarize it using tables and graphs.</p>
-<div id="categorical-download" class="section level3" number="3.1.1">
+<div id="cateogorical-install" class="section level3" number="3.1.1">
 <h3>
-<span class="header-section-number">3.1.1</span> Download the R notebook file<a class="anchor" aria-label="anchor" href="#categorical-download"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.1.1</span> Install new packages<a class="anchor" aria-label="anchor" href="#cateogorical-install"><i class="fas fa-link"></i></a>
+</h3>
+<p>If you are using RStudio Workbench, you do not need to install any packages. (Any packages you need should already be installed by the server administrators.)</p>
+<p>If you are using R and RStudio on your own machine instead of accessing RStudio Workbench through a browser, you’ll need to type the following command at the Console:</p>
+<pre><code>install.packages("janitor")</code></pre>
+</div>
+<div id="categorical-download" class="section level3" number="3.1.2">
+<h3>
+<span class="header-section-number">3.1.2</span> Download the R notebook file<a class="anchor" aria-label="anchor" href="#categorical-download"><i class="fas fa-link"></i></a>
 </h3>
 <p>Check the upper-right corner in RStudio to make sure you’re in your <code>intro_stats</code> project. Then click on the following link to download this chapter as an R notebook file (<code>.Rmd</code>).</p>
 <p><a href="https://vectorposse.github.io/intro_stats/chapter_downloads/03-categorical_data.Rmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/03-categorical_data.Rmd</a></p>
 <p>Once the file is downloaded, move it to your project folder in RStudio and open it there.</p>
 </div>
-<div id="categorical-restart" class="section level3" number="3.1.2">
+<div id="categorical-restart" class="section level3" number="3.1.3">
 <h3>
-<span class="header-section-number">3.1.2</span> Restart R and run all chunks<a class="anchor" aria-label="anchor" href="#categorical-restart"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.1.3</span> Restart R and run all chunks<a class="anchor" aria-label="anchor" href="#categorical-restart"><i class="fas fa-link"></i></a>
 </h3>
 <p>In RStudio, in the toolbar above this document, find the “Run” drop-down menu and select “Restart R and Run All Chunks.”</p>
 <p>This does two important things:</p>
@@ -98,12 +106,12 @@
 </ol>
 <p>At the end of the assignment, you will “Restart R and Run All Chunks” once again to make sure that everything works smoothly and there are no lingering errors.</p>
 </div>
-<div id="categorical-load" class="section level3" number="3.1.3">
+<div id="categorical-load" class="section level3" number="3.1.4">
 <h3>
-<span class="header-section-number">3.1.3</span> Load packages<a class="anchor" aria-label="anchor" href="#categorical-load"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.1.4</span> Load packages<a class="anchor" aria-label="anchor" href="#categorical-load"><i class="fas fa-link"></i></a>
 </h3>
 <p>We load the <code>tidyverse</code> package since it also loads the <code>ggplot2</code> package that we’ll use throughout the course to make graphs. It also loads several other packages, for example, one called <code>dplyr</code> to give us a command called <code>mutate</code>, and another called <code>forcats</code> to give us <code>as_factor</code>. (These will all be explained later.) The <code>janitor</code> package gives us the <code>tabyl</code> command for creating nice tables. Finally, We load the <code>palmerpenguins</code> package to work with the penguin data.</p>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sfirke/janitor">janitor</a></span><span class="op">)</span></span></code></pre></div>
 <pre><code>## 
@@ -111,7 +119,7 @@
 <pre><code>## The following objects are masked from 'package:stats':
 ## 
 ##     chisq.test, fisher.test</code></pre>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://allisonhorst.github.io/palmerpenguins/">palmerpenguins</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
@@ -139,7 +147,7 @@
 <span class="header-section-number">3.3</span> Factor variables<a class="anchor" aria-label="anchor" href="#categorical-factor"><i class="fas fa-link"></i></a>
 </h2>
 <p>R uses the term “factor variable” to refer to a categorical variable. Look at the structure of the <code>penguins</code> data below.</p>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## tibble [344 × 8] (S3: tbl_df/tbl/data.frame)
 ##  $ species          : Factor w/ 3 levels "Adelie","Chinstrap",..: 1 1 1 1 1 1 1 1 1 1 ...
@@ -152,7 +160,7 @@
 ##  $ year             : int [1:344] 2007 2007 2007 2007 2007 2007 2007 2007 2007 2007 ...</code></pre>
 <p>The categorical variables <code>species</code>, <code>island</code>, and <code>sex</code> are coded correctly as factor variables.</p>
 <p>The <code>tidyverse</code> package offers a function called <code>glimpse</code> that effectively does the same thing as <code>str</code>. We’ll use <code>glimpse</code> throughout the rest of the course.</p>
-<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Rows: 344
 ## Columns: 8
@@ -181,7 +189,7 @@
 </h2>
 <p>If you need to summarize a single categorical variable, a <em>frequency table</em> usually suffices. This is simply a table that counts up all the instances of each category. The word “frequency” is synonymous here with the word “count”.</p>
 <p>We can use the <code>table</code> command:</p>
-<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">$</span><span class="va">species</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## 
 ##    Adelie Chinstrap    Gentoo 
@@ -190,7 +198,7 @@
 <p>You can also generate a <em>relative frequency table</em> which is a table that uses proportions or percentages instead of counts.</p>
 <p><strong>NOTE:</strong> For purposes of this course, we’re going to be very careful about the terms <em>proportion</em> and <em>percentage</em>. For us, a proportion will always be a number between 0 and 1 whereas a percentage will be between 0 and 100. Calculating a percentage is the same as multiplying a proportion by 100.</p>
 <p>The <code>table</code> command stops being convenient if you want proportions instead of counts. Instead, we will use the <code>tabyl</code> command from the <code>janitor</code> package that was loaded near the top of the chapter. The syntax for this command is a little different. The tibble goes first, followed by a comma, followed by the variable you want to summarize:</p>
-<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/janitor/man/tabyl.html">tabyl</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="va">species</span><span class="op">)</span></span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -199,7 +207,7 @@
 </div>
 <p>Now you get both counts and proportions. Note that in the output above, it’s a little misleading to call the last column “percent”. These are actually proportions, and we would have to multiply by 100 to get percentages.</p>
 <p>If you really want percentages, we can use an <code>adorn</code> function to get them as follows:</p>
-<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/janitor/man/tabyl.html">tabyl</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="va">species</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/janitor/man/adorn_pct_formatting.html">adorn_pct_formatting</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div data-pagedtable="false">
@@ -213,7 +221,7 @@
 </h5>
 <p>Use the <code>tabyl</code> command as above to create a frequency table for the sex of the penguins. (You will also get a relative frequency table for free.)</p>
 <div class="answer">
-<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to create a frequency table for sex</span></span></code></pre></div>
 </div>
 </div>
@@ -230,7 +238,7 @@
 </h5>
 <p>Now create a relative frequency table for sex that reports percentages and not proportions.</p>
 <div class="answer">
-<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here that reports percentages instead of proportions</span></span></code></pre></div>
 </div>
 </div>
@@ -257,7 +265,7 @@
 <p>The <code>ggplot</code> command is an all-purpose graphing utility. It uses a graphing philosophy derived from a book called <em>The Grammar of Graphics</em> by Leland Wilkinson. The basic idea is that each variable you want to plot should correspond to some element or “aesthetic” component of the graph. The obvious places for data to go are along the y-axis or x-axis, but other aesthetics are important too; graphs often use color, shape, or size to illustrate different aspects of data. Once these aesthetics have been defined, we will add “layers” to the graph. These are objects like dots, boxes, lines, or bars that dictate the type of graph we want to see.</p>
 <p>In an introductory course, we won’t get too fancy with these graphs. But be aware that there’s a whole field of data visualization that studies clear and interesting ways to understand data graphically.</p>
 <p>It will be easier to explain the <code>ggplot</code> syntax in the context of specific graph types, so let’s create a bar chart for species.</p>
-<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-53-1.png" width="672"></div>
@@ -268,7 +276,7 @@
 <li>Finally, <code>ggplot</code> needs to know what kind of graph we want. Graph types are called “geoms” in the <code>ggplot</code> world, and <code><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar()</a></code> tells <code>ggplot</code> to add a “bar chart layer”. Adding a layer is accomplished by literally typing a plus sign.</li>
 </ul>
 <p>This can be modified somewhat to give proportions (relative frequencies) on the y-axis instead of counts. Unfortunately, the <code>ggplot</code> syntax is not very transparent here. My recommendation is to copy and paste the code below if you need to make a relative frequency bar chart in the future, making the necessary changes to the tibble and variable names, of course.</p>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">species</span>, y <span class="op">=</span> <span class="va">..prop..</span>, group <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-54-1.png" width="672"></div>
@@ -298,7 +306,7 @@
 <p>On the other hand, two variables that are not associated are called <em>independent</em>. Independent variables are not related. If the sex distribution were the same across all species, then knowledge of the species would not change our predictions about the sex of a penguin. It wouldn’t matter because there was no relationship between sex and species.</p>
 <p>Most research questions that involve two or more variables are fundamentally questions of whether a response variable is associated with one or more predictor variables, or whether they are independent.</p>
 <p>Let’s check the contingency table. The <code>tabyl</code> command will place the first variable listed across the rows and the second one listed down the columns. It doesn’t make any difference which variable is where, but to have a consistent rule on which we can rely, <strong>let’s always list the response variable first</strong>.</p>
-<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/janitor/man/tabyl.html">tabyl</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="va">sex</span>, <span class="va">species</span><span class="op">)</span></span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -315,7 +323,7 @@
 </div>
 <hr>
 <p>A more fair way to compare across columns is to create relative frequencies. We can do this with a slightly different <code>adorn</code> command. The following code says that we want to compute column proportions (yes, I know the command is called <code>adorn_percentages</code>, but these are proportions):</p>
-<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/janitor/man/tabyl.html">tabyl</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="va">sex</span>, <span class="va">species</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/janitor/man/adorn_percentages.html">adorn_percentages</a></span><span class="op">(</span><span class="st">"col"</span><span class="op">)</span></span></code></pre></div>
 <div data-pagedtable="false">
@@ -324,7 +332,7 @@
   </script>
 </div>
 <p>If we actually want percentages, we need one more line of code. This command—<code>adorn_pct_formatting</code>—is the same as we used before with frequency tables.</p>
-<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/janitor/man/tabyl.html">tabyl</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="va">sex</span>, <span class="va">species</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/janitor/man/adorn_percentages.html">adorn_percentages</a></span><span class="op">(</span><span class="st">"col"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/janitor/man/adorn_pct_formatting.html">adorn_pct_formatting</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -371,7 +379,7 @@
 </h5>
 <p>Create a contingency table with percentages. List <code>species</code> first, followed by <code>island</code>. (Hey, that’s hint in case you need to go back and change your answer to part (a).)</p>
 <div class=".{answer}">
-<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to create a contingency table with percentages.</span></span></code></pre></div>
 </div>
 </div>
@@ -389,7 +397,7 @@
 <span class="header-section-number">3.7</span> Graphing two categorical variables<a class="anchor" aria-label="anchor" href="#categorical-graphing-two"><i class="fas fa-link"></i></a>
 </h2>
 <p>A somewhat effective way to display two categorical variables is with a side-by-side bar chart. Here is the <code>ggplot</code> code for the relationship between <code>sex</code> and <code>species</code>.</p>
-<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">sex</span>, x <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span></span></code></pre></div>
 <div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-59-1.png" width="672"></div>
@@ -400,14 +408,14 @@
 <li>However, <code>sex</code> does not go on the y-axis! (This is a very common mistake for novices.) The y-axis of a bar chart is always a count or a proportion/percentage, so no variable should ever go on the y-axis of a bar chart. In that case, how does <code>sex</code> enter the picture? Through the use of color! The aesthetic <code>fill = sex</code> says to use the <code>sex</code> variable to shade or “fill” the bars with different colors. You’ll also notice that <code>ggplot</code> makes a legend automatically with the colors so you can see which color corresponds to which value (in this case, “female”, “male”, or “NA” for the missing data).</li>
 </ul>
 <p>Another unusual feature is the argument <code>position = "dodge"</code> in the <code>geom_bar</code> layer. Let’s see what happens if we remove it.</p>
-<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">sex</span>, x <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-60-1.png" width="672"></div>
 <p>We get a stacked bar chart! This is another popular way of displaying two categorical variables, but we don’t tend to prefer it. Notice how difficult it is to compare the number of females across species; since there is no common baseline for the red segments of each bar, it is harder to determine which ones are bigger or smaller. (In this case, it’s fairly clear, but there are plenty of data sets for which the counts might be a lot closer.)</p>
 <p>So let’s agree to use side-by-side bar charts. There is still one aspect of the side-by-side bar chart that is misleading, though. For example, the red bar for Adelie penguins is bigger than the red bar for Gentoo penguins. Does this mean Adelie penguins are more likely to be female?</p>
 <p>This is the same issue we identified in an exercise above. To fix this problem, a better option here would be to use relative frequencies (i.e., proportions/percentages within each group) instead of counts on the y-axis. This is analogous to using proportions/percentages in a contingency table. Unfortunately, it is rather difficult to do this with <code>ggplot</code>. A compromise is available: by using <code>position = fill</code>, you can create a stacked bar chart that scales every group to 100%. Making comparisons across groups can still be hard, as explained above for any kind of stacked bar chart, but it works okay if there are only two categories in the response variable (as is almost the case with <code>sex</code> here, although the missing data distorts things a little at the bottom).</p>
-<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">sex</span>, x <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"fill"</span><span class="op">)</span></span></code></pre></div>
 <div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-61-1.png" width="672"></div>
@@ -417,7 +425,7 @@
 </h5>
 <p>Using <code>species</code> and <code>island</code>, create a side-by-side bar chart. Be careful, though, to change the sample code above to make sure <code>species</code> is now the response variable (using the <code>fill</code> aesthetic) and that <code>island</code> is the explanatory variable (using <code>x</code>). (Hey, that’s another hint to go back and look at the previous exercise and make sure you got part (a) right!)</p>
 <div class="answer">
-<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to make a side-by-side bar chart.</span></span></code></pre></div>
 </div>
 </div>
@@ -435,7 +443,7 @@
 <span class="header-section-number">3.8</span> Recoding factor variables<a class="anchor" aria-label="anchor" href="#categorical-recoding"><i class="fas fa-link"></i></a>
 </h2>
 <p>As mentioned earlier, there are situations where a categorical variable is not recorded in R as a factor variable. Let’s look at the <code>year</code> variable:</p>
-<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">$</span><span class="va">year</span><span class="op">)</span></span></code></pre></div>
 <pre><code>##  int [1:344] 2007 2007 2007 2007 2007 2007 2007 2007 2007 2007 ...</code></pre>
 <p>These appear as integers. Yes, years are whole numbers, but why might this variable be treated as categorical data and not numerical data?</p>
@@ -444,7 +452,7 @@
 </h5>
 <p>Use the <code>tabyl</code> command to create a frequency table for <code>year</code>.</p>
 <div class="answer">
-<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to make a frequency table for year.</span></span></code></pre></div>
 </div>
 </div>
@@ -459,7 +467,7 @@
 <p>While the <code>tabyl</code> command seemed to work just fine with the <code>year</code> data in integer format, there are other commands that will not work so well. For example, <code>ggplot</code> often fails to do the right thing when a categorical variable is coded as a number. Therefore, we need a way to change numerically coded variables to factors.</p>
 <p>The code below uses a command called <code>mutate</code> that takes an old variable and creates a new variable. (You’ll learn more about this command in a later chapter. For now, you can just copy and paste this code if you need it again.) The name of the new variable can be anything we want; we’ll just call it <code>year_fct</code>. Then the real work is being done by the <code>as_factor</code> command that concerts the numeric <code>year</code> variable into a factor variable.</p>
 <p>Observe the effect below:</p>
-<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">penguins</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>year_fct <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html">as_factor</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">)</span></span></code></pre></div>
@@ -480,7 +488,7 @@
 </h5>
 <p>Make a contingency table of the species measured in each year using counts. Use the <code>species</code> variable first, followed by the new factor variable <code>year_fct</code>. (Think about why that order makes sense. <strong>We will always list the response variable first so that the categories of interest will be the rows and the groups will be the columns.</strong>)</p>
 <div class="answer">
-<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to make a contingency table for species and year with counts.</span></span></code></pre></div>
 </div>
 </div>
@@ -489,7 +497,7 @@
 </h5>
 <p>Make a contingency table of the species measured in each year using column percentages (<em>not</em> proportions). (Again, be sure to use the new factor variable <code>year_fct</code>, not the old variable <code>year</code>.)</p>
 <div class="answer">
-<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to make a contingency table for species and year with percentages.</span></span></code></pre></div>
 </div>
 </div>
@@ -507,12 +515,12 @@
 <span class="header-section-number">3.9</span> Publication-ready graphics<a class="anchor" aria-label="anchor" href="#categorical-pub"><i class="fas fa-link"></i></a>
 </h2>
 <p>Let’s go back to the first relative frequency bar chart from this chapter.</p>
-<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">species</span>, y <span class="op">=</span> <span class="va">..prop..</span>, group <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-68-1.png" width="672"></div>
 <p>The variable name <code>species</code> is already informative, but the y-axis is labeled with “prop”. Also note that this graph could use a title. We can do all this with <code>labs</code> (for labels). Observe:</p>
-<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">species</span>, y <span class="op">=</span> <span class="va">..prop..</span>, group <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Distribution of species"</span>,</span>
@@ -524,7 +532,7 @@
 </h5>
 <p>Modify the following side-by-side bar chart by adding a title and labels for both the fill variable and the x-axis variable. (Hint: you can use <code>fill = sex</code> inside the <code>labs</code> command just like you used <code>title</code>, <code>y</code>, and <code>x</code>.)</p>
 <div class="answer">
-<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Modify the following side-by-side bar chart by adding a title and </span></span>
 <span><span class="co"># labels for both the x-axis and the fill variable.</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">sex</span>, x <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -565,7 +573,7 @@
 <li>How would you plot the data?</li>
 </ol>
 <p>To answer the first question, we show you how to create your own tibble. Here is the syntax:</p>
-<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">penguin_species_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span></span>
 <span>    species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Adelie"</span>, <span class="st">"Chinstrap"</span>, <span class="st">"Gentoo"</span><span class="op">)</span>,</span>
 <span>    count <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">152</span>, <span class="fl">68</span>, <span class="fl">124</span><span class="op">)</span></span>
@@ -578,7 +586,7 @@
 </div>
 <p>Basically, the <code>tibble</code> command creates a new tibble. Then each column of data must be entered manually as a “vector” using the <code>c</code> to group all the data values together for each column. Be careful about the placement of quotation marks, commas, and parentheses.</p>
 <p>Once we have our summary data, we want to make a bar chart. But this won’t work:</p>
-<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguin_species_table</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-72-1.png" width="672"></div>
@@ -591,7 +599,7 @@
 </div>
 <hr>
 <p>Instead, we need to use <code>geom_col</code>. This works a lot like <code>geom_bar</code> except that it also requires a <code>y</code> value in its aesthetics to force the command to look for the counts in some other variable in the data.</p>
-<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguin_species_table</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">species</span>, y <span class="op">=</span> <span class="va">count</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_col</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-73-1.png" width="672"></div>
@@ -601,7 +609,7 @@
 </h5>
 <p>Use the <code>tabyl</code> command to create a frequency table for <code>island</code>.</p>
 <div class="answer">
-<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to create a frequency table for island</span></span></code></pre></div>
 </div>
 </div>
@@ -610,7 +618,7 @@
 </h5>
 <p>Use the <code>tibble</code> command to create a new tibble manually that contains the frequency data for the <code>island</code> variable. It should have two columns, one called <code>island</code> and the other called <code>count</code>. Name it <code>penguin_island_table</code>.</p>
 <div class="answer">
-<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to create a tibble with frequency data for island</span></span></code></pre></div>
 </div>
 </div>
@@ -619,7 +627,7 @@
 </h5>
 <p>Use <code>ggplot</code> with <code>geom_col</code> to create a bar chart for island.</p>
 <div class="answer">
-<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to create a bar chart for island</span></span></code></pre></div>
 </div>
 </div>
@@ -660,9 +668,10 @@
 </li>
 <li>
 <a class="nav-link" href="#categorical-intro"><span class="header-section-number">3.1</span> Introduction</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#categorical-download"><span class="header-section-number">3.1.1</span> Download the R notebook file</a></li>
-<li><a class="nav-link" href="#categorical-restart"><span class="header-section-number">3.1.2</span> Restart R and run all chunks</a></li>
-<li><a class="nav-link" href="#categorical-load"><span class="header-section-number">3.1.3</span> Load packages</a></li>
+<li><a class="nav-link" href="#cateogorical-install"><span class="header-section-number">3.1.1</span> Install new packages</a></li>
+<li><a class="nav-link" href="#categorical-download"><span class="header-section-number">3.1.2</span> Download the R notebook file</a></li>
+<li><a class="nav-link" href="#categorical-restart"><span class="header-section-number">3.1.3</span> Restart R and run all chunks</a></li>
+<li><a class="nav-link" href="#categorical-load"><span class="header-section-number">3.1.4</span> Load packages</a></li>
 </ul>
 </li>
 <li><a class="nav-link" href="#categorical-data"><span class="header-section-number">3.2</span> Categorical data</a></li>
@@ -696,7 +705,7 @@
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Introduction to Statistics: an integrated textbook and workbook using R</strong>" was written by Sean Raleigh, Westminster College (Salt Lake City, UT). It was last built on 2022-07-29.</p>
+    <p>"<strong>Introduction to Statistics: an integrated textbook and workbook using R</strong>" was written by Sean Raleigh, Westminster College (Salt Lake City, UT). It was last built on 2022-07-31.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
