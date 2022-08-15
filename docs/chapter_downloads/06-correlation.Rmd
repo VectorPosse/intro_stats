@@ -23,10 +23,25 @@ output:
 
 ## Introduction
 
-In this module we will learn about the concept of correlation which measures the strength of the linear relationship between two numerical variables.
+In this chapter, we will learn about the concept of correlation which measures the strength of the linear relationship between two numerical variables.
 
+### Install new packages
 
-## Load packages
+There are no new packages used in this chapter.
+
+### Download the R notebook file
+
+Check the upper-right corner in RStudio to make sure you're in your `intro_stats` project. Then click on the following link to download this chapter as an R notebook file (`.Rmd`).
+
+<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/06-correlation.Rmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/06-correlation.Rmd</a>
+
+Once the file is downloaded, move it to your project folder in RStudio and open it there.
+
+### Restart R and run all chunks
+
+In RStudio, select "Restart R and Run All Chunks" from the "Run" menu.
+
+### Load packages
 
 We load the now-standard `tidyverse` package.
 
@@ -37,16 +52,40 @@ library(tidyverse)
 
 ## Correlation
 
-The word correlation describes a linear relationship between two numerical variables. As long as certain conditions are met, we can calculate a statistic called the Pearson correlation coefficient, denoted R.^[In most places, the Pearson correlation coefficient is denoted by a lowercase r, but the OpenIntro book uses an uppercase R.] This value will be some number between -1 and 1. Coefficients close to zero indicate little or no correlation, coefficients close to 1 indicate strong positive correlation, and coefficients close to -1 indicate strong negative correlation. In between, we often use words like weak, moderately weak, moderate, and moderately strong. There are no exact cutoffs for when such words apply. You must learn from experience how to judge scatterplots and R values to make such determinations.
+The word *correlation* describes a linear relationship between two numerical variables. As long as certain conditions are met, we can calculate a statistic called the *correlation coefficient*, often denoted with a lowercase r.
 
-Let's examine a data set called `tips` from the `reshape2` package. Since there is also a `tips` data set in the `openintro` package, we'll use a trick to make sure we get the right one. The double colon is placed between the name of the package and the name of the data frame:
+There are several different ways to compute a statistic that measures correlation. The most common way, and the way we will learn in this chapter, is often attributed to an English mathematician named Karl Pearson. According to his [Wikipedia page](https://en.wikipedia.org/wiki/Karl_Pearson),
 
-```{r}
-tips <- reshape2::tips
-str(tips)
-```
+> "Pearson was also a proponent of social Darwinism, eugenics and scientific racism."
 
-These 244 observations were collected by one waiter over a period of a few months working in a restaurant. Our research question asks us to consider the variables `tip` and `total_bill`.
+##### Exercise 1
+
+Do an internet search for each of the following terms:
+
+- Social Darwinism
+- Eugenics
+- Scientific racism
+
+Consult at least two sources for each term. Then, in your own words (not copied and pasted from any of the websites you consulted), explain what these terms mean.
+
+*****
+
+While Pearson is often credited with its discovery, the so-called "Pearson correlation coefficient" was first developed by a French scientist, Auguste Bravais. Due to the misattribution of discovery, along with the desire to disassociate the useful tool of correlation from its problematic applications to racism and eugenics, we will just refer to it as the *correlation coefficient* (without a name attached).
+
+The correlation coefficient, r, has some important properties.
+
+- The correlation coefficient is a number between -1 and 1.
+- A value close to zero indicates little or no correlation.
+- A value close to 1 indicates strong positive correlation.
+- A value close to -1 indicates strong negative correlation.
+
+In between 0 and 1 (or -1), we often use words like weak, moderately weak, moderate, and moderately strong. There are no exact cutoffs for when such words apply. You must learn from experience how to judge scatterplots and r values to make such determinations.
+
+
+
+
+
+
 
 If all we wanted was the value of R, we could find it by using the `cor` command.
 
@@ -154,7 +193,7 @@ There does appear to be a moderate, positive association between these variables
 
 ##### Exercise 1
 
-There appears to be a pattern of unusual bunching into horizontal lines in the lower left part of the graph. Can you explain this pattern? (Hint: use `arrange` to sort the `tip` variable. We've used the `arrange` command several times in the modules before, but if you need a reminder, you can go back to the module "5. Manipulating data".)
+There appears to be a pattern of unusual bunching into horizontal lines in the lower left part of the graph. Can you explain this pattern? (Hint: use `arrange` to sort the `tip` variable. We've used the `arrange` command several times in the chapters before, but if you need a reminder, you can go back to the chapter "5. Manipulating data".)
 
 <div class = "answer">
 
