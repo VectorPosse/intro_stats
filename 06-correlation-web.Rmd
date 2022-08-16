@@ -1,12 +1,4 @@
----
-title: "6. Correlation"
-author: "Put your name here"
-date: "Put the date here"
-output:
-    html_notebook:
-        toc: yes
-        toc_float: yes
----
+#  Correlation {#correlation}
 
 <!-- Please don't mess with the next few lines! -->
 <style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(50,46,48))`</p>
@@ -14,18 +6,18 @@ output:
 
 ::: {.summary}
 
-### Functions introduced in this chapter
+### Functions introduced in this chapter {-}
 
 `cor`
 
 :::
 
 
-## Introduction
+## Introduction {#correlation-intro}
 
 In this chapter, we will learn about the concept of correlation, which is a way of measuring a linear relationship between two numerical variables.
 
-### Install new packages
+### Install new packages {#correlation-install}
 
 If you are using RStudio Workbench, you do not need to install any packages. (Any packages you need should already be installed by the server administrators.)
 
@@ -35,7 +27,7 @@ If you are using R and RStudio on your own machine instead of accessing RStudio 
 install.packages("faraway")
 ```
 
-### Download the R notebook file
+### Download the R notebook file {#correlation-download}
 
 Check the upper-right corner in RStudio to make sure you're in your `intro_stats` project. Then click on the following link to download this chapter as an R notebook file (`.Rmd`).
 
@@ -43,11 +35,11 @@ Check the upper-right corner in RStudio to make sure you're in your `intro_stats
 
 Once the file is downloaded, move it to your project folder in RStudio and open it there.
 
-### Restart R and run all chunks
+### Restart R and run all chunks {#correlation-restart}
 
 In RStudio, select "Restart R and Run All Chunks" from the "Run" menu.
 
-### Load packages
+### Load packages {#correlation-load}
 
 We load the now-standard `tidyverse` package. We also include the `faraway` package to access data about Chicago in the 1970s.
 
@@ -57,11 +49,11 @@ library(faraway)
 ```
 
 
-## Redlining in Chicago
+## Redlining in Chicago {#correlation-redlining}
 
 The data set we will use throughout this chapter is from Chicago in the 1970s studying the practice of "redlining".
 
-##### Exercise 1
+##### Exercise 1 {-}
 
 Do an internet search for "redlining".
 
@@ -82,7 +74,7 @@ The `chredlin` data set appears in the `faraway` package accompanying a book by 
 
 In other words, the degree to which residents obtained FAIR policies can be seen as an indirect measure of redlining. This participation in an "involuntary" market is thought to be largely driven by rejection of coverage under more traditional insurance plans.
 
-### Exploratory data analysis
+### Exploratory data analysis {#correlation-eda}
 
 Before we learn about correlation, let's get to know our data a little better.
 
@@ -94,7 +86,7 @@ Here is the data set:
 chredlin
 ```
 
-##### Exercise 2
+##### Exercise 2 {-}
 
 What do each of the rows of this data set represent? You'll need to refer to the help file. (They are *not* individual people.)
 
@@ -104,7 +96,7 @@ Please write up your answer here.
 
 :::
 
-##### Exercise 3
+##### Exercise 3 {-}
 
 The `race` variable is numeric. Why? What do these numbers represent? (Again, refer to the help file.)
 
@@ -122,7 +114,7 @@ The `glimpse` command gives a concise overview of all the variables present.
 glimpse(chredlin)
 ```
 
-##### Exercise 4(a)
+##### Exercise 4(a) {-}
 
 Which variable listed above represents participation in the FAIR plan? How is it measured? (Again, refer to the help file.)
 
@@ -132,7 +124,7 @@ Please write up your answer here.
 
 :::
 
-##### Exercise 4(b)
+##### Exercise 4(b) {-}
 
 Why is it important to analyze the number of plans *per 100 housing units* as opposed to the total number of plans across each ZIP code? (Hint: what happens if some ZIP codes are larger than others?)
 
@@ -147,7 +139,7 @@ Please write up your answer here.
 
 We are interested in the association between `race` and `involact`. If redlining plays a role in driving people toward FAIR plan policies, we would expect there to be a relationship between the racial composition of a ZIP code and the number of FAIR plan policies obtained in that ZIP code.
 
-##### Exercise 5(a)
+##### Exercise 5(a) {-}
 
 Since `race` is a numerical variable, what type of graph or chart is appropriate for visualizing it? (You may need to refer back to the "Numerical data" chapter.)
 
@@ -157,7 +149,7 @@ Please write up your answer here.
 
 :::
 
-##### Exercise 5(b)
+##### Exercise 5(b) {-}
 
 Using `ggplot` code, create the type of graph you identified above. (Again, refer back to the "Numerical data" chapter for sample code if you've forgotten.) After creating the initial plot, be sure to go back and set the `binwidth` and `boundary` to sensible values.
 
@@ -169,7 +161,7 @@ Using `ggplot` code, create the type of graph you identified above. (Again, refe
 
 :::
 
-##### Exercise 5(c)
+##### Exercise 5(c) {-}
 
 Describe the shape of the `race` variable using the three key shape descriptors (modes, symmetry, and outliers).
 
@@ -179,7 +171,7 @@ Please write up your answer here.
 
 :::
 
-##### Exercise 5(d)
+##### Exercise 5(d) {-}
 
 Create the same kind of graph as above, but for `involact`. (Again, go back and set the `binwidth` and `boundary` to sensible values.)
 
@@ -191,7 +183,7 @@ Create the same kind of graph as above, but for `involact`. (Again, go back and 
 
 :::
 
-##### Exercise 5(e)
+##### Exercise 5(e) {-}
 
 Describe the shape of the `involact` variable using the three key shape descriptors (modes, symmetry, and outliers).
 
@@ -201,7 +193,7 @@ Please write up your answer here.
 
 :::
 
-##### Exercise 5(f)
+##### Exercise 5(f) {-}
 
 Since both `race` and `involact` are numerical variables, what type of graph or chart is appropriate for visualizing the relationship between them?
 
@@ -211,7 +203,7 @@ Please write up your answer here.
 
 :::
 
-##### Exercise 5(g)
+##### Exercise 5(g) {-}
 
 For our research question, is `race` functioning as a predictor variable or as the response variable? What about `involact`? Why? Explain why it makes more sense to think of one of them as the predictor and the other as the response.
 
@@ -221,7 +213,7 @@ Please write up your answer here.
 
 :::
 
-##### Exercise 5(h)
+##### Exercise 5(h) {-}
 
 Using `ggplot` code, create the type of graph you identified above. Be sure to put `involact` on the y-axis and race` on the x-axis.
 
@@ -237,7 +229,7 @@ Using `ggplot` code, create the type of graph you identified above. Be sure to p
 *****
 
 
-## Correlation
+## Correlation {#correlation-correlation}
 
 The word *correlation* describes a linear relationship between two numerical variables. As long as certain conditions are met, we can calculate a statistic called the *correlation coefficient*, often denoted with a lowercase r.
 
@@ -245,7 +237,7 @@ There are several different ways to compute a statistic that measures correlatio
 
 > "Pearson was also a proponent of social Darwinism, eugenics and scientific racism."
 
-##### Exercise 6
+##### Exercise 6 {-}
 
 Do an internet search for each of the following terms:
 
@@ -279,7 +271,7 @@ A correlation is positive when low values of one variable are associated with lo
 A correlation is negative when low values of one variable are associated with high values of the other value, and vice versa. For example, tooth brushing is negatively correlated with cavities. Less tooth brushing may result in more cavities; more tooth brushing is associated with fewer calories, on average.
 
 
-## Assumptions for correlation
+## Assumptions for correlation {#correlation-assumptions}
 
 Two variables are considered "associated" any time there is any type of relationship between them (i.e., they are not independent). However, in statistics, we reserve the word "correlation" for situations meeting more stringent conditions:
 
@@ -292,7 +284,7 @@ For condition (2) above, keep in mind that real data in scatterplots very rarely
 - The dots are scattered completely randomly with no discernible pattern.
 - The dots have a pattern or shape to them, but that shape is curved and not linear.
 
-##### Exercise 7
+##### Exercise 7 {-}
 
 Check the three conditions for the relationship between `involact` and `race`. For conditions (2) and (3), you'll need to check the scatterplot you created above. (You did create a scatterplot for one of the exercises above, right?)
 
@@ -307,7 +299,7 @@ Please write up your answer here.
 :::
 
 
-## Calculating correlation
+## Calculating correlation {#correlation-calculating}
 
 Since the conditions are met, We calculate the correlation coefficient using the `cor` command.
 
@@ -319,7 +311,7 @@ The order of the variables doesn't matter; correlation is symmetric, so the r va
 
 Since the correlation between `involact` and `race` is a positive number and slightly closer to 1 than 0, we might call this a "moderate" positive correlation. You can tell from the scatterplot above that the relationship is not a strong relationship. The words you choose should match the graphs you create and the statistics you calculate.
 
-##### Exercise 8(a)
+##### Exercise 8(a) {-}
 
 Create a scatterplot of `income` against `race`. (Put `income` on the y-axis and `race` on the x-axis.)
 
@@ -331,7 +323,7 @@ Create a scatterplot of `income` against `race`. (Put `income` on the y-axis and
 
 :::
 
-##### Exercise 8(b)
+##### Exercise 8(b) {-}
 
 Check the three conditions for the relationship between `income` and `race`. Which condition is pretty seriously violated here?
 
@@ -345,7 +337,7 @@ Please write up your answer here.
 
 :::
 
-##### Exercise 9(a)
+##### Exercise 9(a) {-}
 
 Create a scatterplot of `theft` against `fire`. (Put `theft` on the y-axis and `fire` on the x-axis.)
 
@@ -357,7 +349,7 @@ Create a scatterplot of `theft` against `fire`. (Put `theft` on the y-axis and `
 
 :::
 
-##### Exercise 9(b)
+##### Exercise 9(b) {-}
 
 Check the three conditions for the relationship between `theft` and `fire`. Which condition is pretty seriously violated here?
 
@@ -372,7 +364,7 @@ Please write up your answer here.
 :::
 
 
-##### Exercise 9(c)
+##### Exercise 9(c) {-}
 
 Even though the conditions are not met, what if you calculated the correlation coefficient anyway? Try it.
 
@@ -385,7 +377,7 @@ Even though the conditions are not met, what if you calculated the correlation c
 :::
 
 
-##### Exercise 9(d)
+##### Exercise 9(d) {-}
 
 Suppose you hadn't looked at the scatterplot and you only saw the correlation coefficient you calculated in the previous part. What would your conclusion be about the relationship between `theft` and `fire`. Why would that conclusion be misleading?
 
@@ -398,7 +390,7 @@ Please write up your answer here.
 The lesson learned here is that you should never try to interpret a correlation coefficient without looking at a plot of the data to assure that the conditions are met and that the result is a sensible thing to interpret.
 
 
-## Correlation is not causation
+## Correlation is not causation {#correlation-causation}
 
 When two variables are correlated---indeed, associated in any way, not just in a linear relationship---that means that there is a relationship between them. However, that does not mean that one variable *causes* the other variable.
 
@@ -406,7 +398,7 @@ For example, we discovered above that there was a moderate correlation between t
 
 In the Chicago example, there is still likely a causal connection between one variable (`race`) and the other (`involact`), but it was indirect. In other cases, there is no causal connection at all. Here are a few of my favorite examples.
 
-##### Exercise 10
+##### Exercise 10 {-}
 
 Ice cream sales are positively correlated with drowning deaths. Does eating ice cream cause you to drown? (Perhaps the myth about swimming within one hour of eating is really true!) Does drowning deaths cause ice cream sales to rise? (Perhaps people are so sad about all the drownings that they have to go out for ice cream to cheer themselves up?)
 
@@ -424,7 +416,7 @@ In the Chicago example, the causal effect was indirect. In the example from the 
 
 Here's another one:
 
-##### Exercise 11
+##### Exercise 11 {-}
 
 Most studies involving children create a number of weird correlations. For example, the height of children is very strongly correlated to pretty much everything you can measure about scholastic aptitude. For example, vocabulary count (the number of words children can use fluently in a sentence) is strongly correlated to height. Are tall people just smarter than short people?
 
@@ -437,7 +429,7 @@ Please write up your answer here.
 :::
 
 
-## Observational studies versus experiments
+## Observational studies versus experiments {#correlation-obs-exp}
 
 So when is a statistical finding (like correlation, for example) evidence of a causal relationship? Before we can answer that question, we need a few more definitions.
 
@@ -445,7 +437,7 @@ A lot of data comes from "observational studies" where we simply observe or meas
 
 Another way to gather data is an *experiment*. In an experiment, we introduce a manipulation or treatment to try to ascertain its effect. For example. if we're testing a new drug, we will likely give the drug to one group of patients and a *placebo* to the other.
 
-##### Exercise 12
+##### Exercise 12 {-}
 
 Here's another internet rabbit hole for you. First, look up the definition of placebo. You do not need to write up your own version of that definition here; just familiarize yourself with the term if you're not already familiar with it. Next, find some websites about the *placebo effect* and read those.
 
@@ -475,11 +467,11 @@ The mantra of experimental design is, "Control as much as you can. Randomize to 
 There are lots of aspects of experimental design that we will not go into here (for example, blinding and blocking). But we will continue to mention the differences between observational studies and experiments in future chapters as we exercise caution in making causal claims.
 
 
-## Prediction versus explanation
+## Prediction versus explanation {#correlation=pred-exp}
 
 Even when claims are not causal, we can use associations (and correlations more specifically) for purposes of *prediction*.
 
-##### Exercise 13
+##### Exercise 13 {-}
 
 If I tell you that ice cream sales are high right now, can you make a reasonable prediction about the relative number of drowning deaths this month (high or low)? Why or why not?
 
@@ -501,7 +493,7 @@ In a properly designed and controlled experiment, we can use different language.
 Be careful, as sometimes statisticians use the term "explanatory variable" to mean any kind of variable that predicts or explains. In this course, we will try to use the term "predictor variable" exclusively.
 
 
-## Conclusion
+## Conclusion {#correlation-conclusion}
 
 If we have two numerical variables that have a linear association between them (also assuming there are no serious outliers), we can compute the correlation coefficient that measures the strength and direction of that linear association.
 
@@ -510,7 +502,7 @@ Keep in mind that in an observational study, this correlation is a measure of as
 In a properly designed experiment, the manipulation of one variable while controlling for others (and randomizing to take care of other confounders) ensures that there is a causal link between the treatment variable and the response of interest. In this case, the treatment can "explain" the response, not just predict it.
 
 
-### Preparing and submitting your assignment
+### Preparing and submitting your assignment {#correlation-prep}
 
 1. From the "Run" menu, select "Restart R and Run All Chunks".
 2. Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.
