@@ -145,18 +145,35 @@ tabyl(penguins, species)
 
 Now you get both counts and proportions. Note that in the output above, it's a little misleading to call the last column "percent". These are actually proportions, and we would have to multiply by 100 to get percentages.
 
-If you really want percentages, we can use an `adorn` function to get them as follows:
+It's usually nice to have the column totals. We can achieve that by using an `adorn` function to get them as follows:
+
+```{r}
+tabyl(penguins, species) %>%
+  adorn_totals()
+```
+
+We'll always include the totals at the bottom.
+
+If you really want percentages, we can use a different `adorn` function:
 
 ```{r}
 tabyl(penguins, species) %>%
     adorn_pct_formatting()
 ```
 
-The syntax above looks a little confusing with the unusual `%>%` there. You will learn more about that weird set of symbols in a later chapter. For now, you can just copy and paste this code and make any necessary changes to the tibble and/or variables names as needed.
+Again, we'll also include `adorn_totals` so that we get the column totals.
+
+```{r}
+tabyl(penguins, species) %>%
+    adorn_totals() %>%
+    adorn_pct_formatting()
+```
+
+The syntax above looks a little confusing with the unusual `%>%` symbols everywhere. You will learn more about that weird set of symbols in a later chapter. For now, you can just copy and paste this code and make any necessary changes to the tibble and/or variables names as needed.
 
 ##### Exercise 3(a)
 
-Use the `tabyl` command as above to create a frequency table for the sex of the penguins. (You will also get a relative frequency table for free.)
+Use the `tabyl` command as above to create a frequency table for the sex of the penguins. Include the column totals at the bottom. (You will also get a relative frequency table for free.)
 
 ::: {.answer}
 
@@ -168,7 +185,7 @@ Use the `tabyl` command as above to create a frequency table for the sex of the 
 
 ##### Exercise 3(b)
 
-In the table for sex that you just created, what does the last row mean?
+In the table for sex that you just created, what does the row labeled `<NA>` mean?
 
 ::: {.answer}
 
@@ -178,7 +195,7 @@ Please write up your answer here.
 
 ##### Exercise 3(c)
 
-Now create a relative frequency table for sex that reports percentages and not proportions.
+Now create a relative frequency table for sex that reports percentages and not proportions (still including the column totals at the bottom).
 
 ::: {.answer}
 
@@ -269,13 +286,16 @@ On the other hand, two variables that are not associated are called *independent
 
 Most research questions that involve two or more variables are fundamentally questions of whether a response variable is associated with one or more predictor variables, or whether they are independent.
 
-Let's check the contingency table. The `tabyl` command will place the first variable listed across the rows and the second one listed down the columns. It doesn't make any difference which variable is where, but to have a consistent rule on which we can rely, **let's always list the response variable first**.
+Let's check the contingency table. The `tabyl` command will place the first variable listed across the rows and the second one listed down the columns. Since we always include column totals, we want the predictor variable to be the column variable so we can see how the predictor groups are distributed in the data. **Always list the response variable first**.
 
 ```{r}
-tabyl(penguins, sex, species)
+tabyl(penguins, sex, species) %>%
+  adorn_totals()
 ```
 
 Each column is a group, and our question is whether the distribution of sexes in each column is similar.
+
+The last row of totals is called the *marginal distribution* (because it sits in the "margin" of the contingency table). It is equivalent to a frequency table for `species`.
 
 ##### Exercise 5
 
@@ -293,6 +313,7 @@ A more fair way to compare across columns is to create relative frequencies. We 
 
 ```{r}
 tabyl(penguins, sex, species) %>%
+    adorn_totals() %>%
     adorn_percentages("col")
 ```
 
@@ -300,6 +321,7 @@ If we actually want percentages, we need one more line of code. This command---`
 
 ```{r}
 tabyl(penguins, sex, species) %>%
+    adorn_totals() %>%
     adorn_percentages("col") %>%
     adorn_pct_formatting()
 ```
