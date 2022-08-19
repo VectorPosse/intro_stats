@@ -124,7 +124,7 @@
 
 \title{Introduction to Statistics: an integrated textbook and workbook using R}
 \author{Sean Raleigh, Westminster College (Salt Lake City, UT)}
-\date{2022-08-17}
+\date{2022-08-18}
 
 \begin{document}
 \maketitle
@@ -1490,7 +1490,26 @@ The \texttt{table} command stops being convenient if you want proportions instea
 
 Now you get both counts and proportions. Note that in the output above, it's a little misleading to call the last column ``percent''. These are actually proportions, and we would have to multiply by 100 to get percentages.
 
-If you really want percentages, we can use an \texttt{adorn} function to get them as follows:
+It's usually nice to have the column totals. We can achieve that by using an \texttt{adorn} function to get them as follows:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tabyl}\NormalTok{(penguins, species) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{adorn\_totals}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    species   n   percent
+##     Adelie 152 0.4418605
+##  Chinstrap  68 0.1976744
+##     Gentoo 124 0.3604651
+##      Total 344 1.0000000
+\end{verbatim}
+
+We'll always include the totals at the bottom.
+
+If you really want percentages, we can use a different \texttt{adorn} function:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1506,13 +1525,31 @@ If you really want percentages, we can use an \texttt{adorn} function to get the
 ##     Gentoo 124   36.0%
 \end{verbatim}
 
-The syntax above looks a little confusing with the unusual \texttt{\%\textgreater{}\%} there. You will learn more about that weird set of symbols in a later chapter. For now, you can just copy and paste this code and make any necessary changes to the tibble and/or variables names as needed.
+Again, we'll also include \texttt{adorn\_totals} so that we get the column totals.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tabyl}\NormalTok{(penguins, species) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_totals}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_pct\_formatting}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    species   n percent
+##     Adelie 152   44.2%
+##  Chinstrap  68   19.8%
+##     Gentoo 124   36.0%
+##      Total 344  100.0%
+\end{verbatim}
+
+The syntax above looks a little confusing with the unusual \texttt{\%\textgreater{}\%} symbols everywhere. You will learn more about that weird set of symbols in a later chapter. For now, you can just copy and paste this code and make any necessary changes to the tibble and/or variables names as needed.
 
 \hypertarget{exercise-3a}{%
 \paragraph*{Exercise 3(a)}\label{exercise-3a}}
 \addcontentsline{toc}{paragraph}{Exercise 3(a)}
 
-Use the \texttt{tabyl} command as above to create a frequency table for the sex of the penguins. (You will also get a relative frequency table for free.)
+Use the \texttt{tabyl} command as above to create a frequency table for the sex of the penguins. Include the column totals at the bottom. (You will also get a relative frequency table for free.)
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1524,7 +1561,7 @@ Use the \texttt{tabyl} command as above to create a frequency table for the sex 
 \paragraph*{Exercise 3(b)}\label{exercise-3b}}
 \addcontentsline{toc}{paragraph}{Exercise 3(b)}
 
-In the table for sex that you just created, what does the last row mean?
+In the table for sex that you just created, what does the row labeled \texttt{\textless{}NA\textgreater{}} mean?
 
 Please write up your answer here.
 
@@ -1532,7 +1569,7 @@ Please write up your answer here.
 \paragraph*{Exercise 3(c)}\label{exercise-3c}}
 \addcontentsline{toc}{paragraph}{Exercise 3(c)}
 
-Now create a relative frequency table for sex that reports percentages and not proportions.
+Now create a relative frequency table for sex that reports percentages and not proportions (still including the column totals at the bottom).
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1573,7 +1610,7 @@ It will be easier to explain the \texttt{ggplot} syntax in the context of specif
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-53-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-55-1.pdf}
 
 We'll walk through this syntax step by step.
 
@@ -1596,7 +1633,7 @@ This can be modified somewhat to give proportions (relative frequencies) on the 
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-54-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-56-1.pdf}
 
 These bar charts are the graphical analogues of a frequency table and a relative frequency table, respectively.
 
@@ -1631,11 +1668,12 @@ On the other hand, two variables that are not associated are called \emph{indepe
 
 Most research questions that involve two or more variables are fundamentally questions of whether a response variable is associated with one or more predictor variables, or whether they are independent.
 
-Let's check the contingency table. The \texttt{tabyl} command will place the first variable listed across the rows and the second one listed down the columns. It doesn't make any difference which variable is where, but to have a consistent rule on which we can rely, \textbf{let's always list the response variable first}.
+Let's check the contingency table. The \texttt{tabyl} command will place the first variable listed across the rows and the second one listed down the columns. Since we always include column totals, we want the predictor variable to be the column variable so we can see how the predictor groups are distributed in the data. \textbf{Always list the response variable first}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{tabyl}\NormalTok{(penguins, sex, species)}
+\FunctionTok{tabyl}\NormalTok{(penguins, sex, species) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{adorn\_totals}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1644,13 +1682,15 @@ Let's check the contingency table. The \texttt{tabyl} command will place the fir
 ##  female     73        34     58
 ##    male     73        34     61
 ##    <NA>      6         0      5
+##   Total    152        68    124
 \end{verbatim}
 
 Each column is a group, and our question is whether the distribution of sexes in each column is similar.
 
+The last row of totals is called the \emph{marginal distribution} (because it sits in the ``margin'' of the contingency table). It is equivalent to a frequency table for \texttt{species}.
+
 \hypertarget{exercise-5}{%
-\paragraph*{Exercise 5}\label{exercise-5}}
-\addcontentsline{toc}{paragraph}{Exercise 5}
+\paragraph{Exercise 5}\label{exercise-5}}
 
 Counts can be misleading. For example, there are 73 female Adelie penguins, but only 34 female Chinstrap penguins. Does that mean that Adelie penguins are more likely to be female than Chinstrap penguins? Why or why not?
 
@@ -1663,6 +1703,7 @@ A more fair way to compare across columns is to create relative frequencies. We 
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{tabyl}\NormalTok{(penguins, sex, species) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_totals}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
     \FunctionTok{adorn\_percentages}\NormalTok{(}\StringTok{"col"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -1672,6 +1713,7 @@ A more fair way to compare across columns is to create relative frequencies. We 
 ##  female 0.48026316       0.5 0.46774194
 ##    male 0.48026316       0.5 0.49193548
 ##    <NA> 0.03947368       0.0 0.04032258
+##   Total 1.00000000       1.0 1.00000000
 \end{verbatim}
 
 If we actually want percentages, we need one more line of code. This command---\texttt{adorn\_pct\_formatting}---is the same as we used before with frequency tables.
@@ -1679,6 +1721,7 @@ If we actually want percentages, we need one more line of code. This command---\
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{tabyl}\NormalTok{(penguins, sex, species) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_totals}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
     \FunctionTok{adorn\_percentages}\NormalTok{(}\StringTok{"col"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
     \FunctionTok{adorn\_pct\_formatting}\NormalTok{()}
 \end{Highlighting}
@@ -1689,21 +1732,20 @@ If we actually want percentages, we need one more line of code. This command---\
 ##  female  48.0%     50.0%  46.8%
 ##    male  48.0%     50.0%  49.2%
 ##    <NA>   3.9%      0.0%   4.0%
+##   Total 100.0%    100.0% 100.0%
 \end{verbatim}
 
 Now we can see that each column adds up to 100\%. In other words, each species is now on equal footing, and only the distribution of sexes within each group matters.
 
 \hypertarget{exercise-6a}{%
-\paragraph*{Exercise 6(a)}\label{exercise-6a}}
-\addcontentsline{toc}{paragraph}{Exercise 6(a)}
+\paragraph{Exercise 6(a)}\label{exercise-6a}}
 
 What percentage of Adelie penguins are male? What percentage of Chinstrap penguins are male? What percentage of Gentoo penguins are male?
 
 Please write up your answer here.
 
 \hypertarget{exercise-6b}{%
-\paragraph*{Exercise 6(b)}\label{exercise-6b}}
-\addcontentsline{toc}{paragraph}{Exercise 6(b)}
+\paragraph{Exercise 6(b)}\label{exercise-6b}}
 
 Does sex appear to be associated with species for the penguins in this data set? Or are these variables independent?
 
@@ -1714,8 +1756,7 @@ Please write up your answer here.
 The islands of Antarctica on which the penguins were observed and measured are recorded in the variable called \texttt{island}. Is the distribution of the three species of penguin the same (or similar) on the three islands?
 
 \hypertarget{exercise-7a}{%
-\paragraph*{Exercise 7(a)}\label{exercise-7a}}
-\addcontentsline{toc}{paragraph}{Exercise 7(a)}
+\paragraph{Exercise 7(a)}\label{exercise-7a}}
 
 Choosing which variables play the roles of response and predictor can be tricky. For the question above, with \texttt{species} and \texttt{island}, which is response and which is predictor?
 
@@ -1732,8 +1773,7 @@ One way to think about this is to ask the following two questions and see which 
 Please write up your answer here.
 
 \hypertarget{exercise-7b}{%
-\paragraph*{Exercise 7(b)}\label{exercise-7b}}
-\addcontentsline{toc}{paragraph}{Exercise 7(b)}
+\paragraph{Exercise 7(b)}\label{exercise-7b}}
 
 Create a contingency table with percentages. List \texttt{species} first, followed by \texttt{island}. (Hey, that's hint in case you need to go back and change your answer to part (a).)
 
@@ -1744,8 +1784,7 @@ Create a contingency table with percentages. List \texttt{species} first, follow
 \end{Shaded}
 
 \hypertarget{exercise-7c}{%
-\paragraph*{Exercise 7(c)}\label{exercise-7c}}
-\addcontentsline{toc}{paragraph}{Exercise 7(c)}
+\paragraph{Exercise 7(c)}\label{exercise-7c}}
 
 Finally, comment on the association or independence of the two variables.
 
@@ -1763,7 +1802,7 @@ A somewhat effective way to display two categorical variables is with a side-by-
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-59-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-61-1.pdf}
 
 This is somewhat different from the first \texttt{ggplot} example you saw above, so let's take a moment to go through it.
 
@@ -1786,7 +1825,7 @@ Another unusual feature is the argument \texttt{position\ =\ "dodge"} in the \te
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-60-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-62-1.pdf}
 
 We get a stacked bar chart! This is another popular way of displaying two categorical variables, but we don't tend to prefer it. Notice how difficult it is to compare the number of females across species; since there is no common baseline for the red segments of each bar, it is harder to determine which ones are bigger or smaller. (In this case, it's fairly clear, but there are plenty of data sets for which the counts might be a lot closer.)
 
@@ -1801,7 +1840,7 @@ This is the same issue we identified in an exercise above. To fix this problem, 
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-61-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-63-1.pdf}
 
 This graph does correctly show that the sexes are pretty much equally balances across all three species.
 
@@ -1936,7 +1975,7 @@ Let's go back to the first relative frequency bar chart from this chapter.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-68-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-70-1.pdf}
 
 The variable name \texttt{species} is already informative, but the y-axis is labeled with ``prop''. Also note that this graph could use a title. We can do all this with \texttt{labs} (for labels). Observe:
 
@@ -1950,7 +1989,7 @@ The variable name \texttt{species} is already informative, but the y-axis is lab
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-69-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-71-1.pdf}
 
 \hypertarget{exercise-11}{%
 \paragraph*{Exercise 11}\label{exercise-11}}
@@ -1967,7 +2006,7 @@ Modify the following side-by-side bar chart by adding a title and labels for bot
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-70-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-72-1.pdf}
 
 \hypertarget{categorical-summary}{%
 \section{Plotting summary data}\label{categorical-summary}}
@@ -2030,7 +2069,7 @@ Once we have our summary data, we want to make a bar chart. But this won't work:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-72-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-74-1.pdf}
 
 \hypertarget{exercise-12}{%
 \paragraph*{Exercise 12}\label{exercise-12}}
@@ -2051,7 +2090,7 @@ Instead, we need to use \texttt{geom\_col}. This works a lot like \texttt{geom\_
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-73-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-75-1.pdf}
 
 \hypertarget{exercise-13a}{%
 \paragraph*{Exercise 13(a)}\label{exercise-13a}}
@@ -2598,7 +2637,7 @@ The single most useful display of a single numerical variable is a histogram. He
 ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-97-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-99-1.pdf}
 
 \hypertarget{numerical-shape}{%
 \subsection{The shape of data}\label{numerical-shape}}
@@ -2675,7 +2714,7 @@ We use \texttt{binwidth} and \texttt{boundary} inside the parentheses of the \te
 ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-98-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-100-1.pdf}
 
 Even with the smoother look, it appears that there are multiple modes, maybe three? Do these correspond to the three species of penguin? Stay tuned.
 
@@ -2696,7 +2735,7 @@ Here is a histogram of the penguin bill lengths (measured in millimeters):
 ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-99-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-101-1.pdf}
 
 Write a short paragraph describing the shape of the distribution of penguin bill lengths, focusing on the three key shape features (modes, symmetry, and outliers).
 
@@ -2775,7 +2814,7 @@ Since we are plotting two variables, we have two aesthetics, one on the y-axis (
 ## Warning: Removed 2 rows containing missing values (geom_point).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-103-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-105-1.pdf}
 
 We are looking for evidence of a relationship between the two variables. This will manifest as a pattern in the data. We are interested in answering the following questions:
 
@@ -2851,7 +2890,7 @@ Here is a scatterplot of
 ## Warning: Removed 2 rows containing missing values (geom_point).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-104-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-106-1.pdf}
 
 Write a short paragraph describing the association of penguin flipper lengths and body mass, focusing on the four key features (linearity, direction, strength, and outliers).
 
@@ -2877,7 +2916,7 @@ Graphically, there are two good options here. The first is a side-by-side boxplo
 ## Warning: Removed 2 rows containing non-finite values (stat_boxplot).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-105-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-107-1.pdf}
 
 Notice the placement of the variables. The y-axis is \texttt{body\_mass\_g}, the numerical variable. The x-axis variable is \texttt{species}; the groups are placed along the x-axis. This is consistent with other graph types that place the response variable on the y-axis and the predictor variable on the x-axis.
 
@@ -2899,7 +2938,7 @@ The other possible graph is a stacked histogram. This uses a feature called ``fa
 ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-106-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-108-1.pdf}
 
 The argument \texttt{species\ \textasciitilde{}\ .} in the \texttt{facet\_grid} function means, ``Put each species on a different row.'' We'll explore this notation a little later.
 
@@ -2917,7 +2956,7 @@ As always, the default bins suck, so let's change them.
 ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-107-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-109-1.pdf}
 
 Consider the following subtle change in notation:
 
@@ -2933,7 +2972,7 @@ Consider the following subtle change in notation:
 ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-108-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-110-1.pdf}
 
 \hypertarget{exercise-9a-1}{%
 \paragraph*{Exercise 9(a)}\label{exercise-9a-1}}
@@ -2968,7 +3007,7 @@ The other thing that kind of sucks is the fact that the y-axis is showing counts
 ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-109-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-111-1.pdf}
 
 Due to some technical issues in \texttt{ggplot2}, these are not strictly proportions. (If you were to add up the heights of all the bars, they would not add up to 100\%.) Nevertheless, the graph is still useful because it does scale the groups to put them on equal footing. In other words, it treats each group as if they all had the same sample size.
 
@@ -3010,7 +3049,7 @@ Let's go back to the first histogram from this chapter.
 ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-112-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-114-1.pdf}
 
 The variable names of this data set are already pretty informative, but we can do a little better with \texttt{labs} (for labels). Observe:
 
@@ -3029,7 +3068,7 @@ The variable names of this data set are already pretty informative, but we can d
 ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-113-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-115-1.pdf}
 
 You can also see that we took the opportunity to mention the units of measurement (grams) for our variable in the x-axis label. This is good practice.
 
@@ -3045,7 +3084,7 @@ A quick note about formatting in R code chunks. Notice that I put different part
 ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-114-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-116-1.pdf}
 
 But it's much harder to read. If you find that your code is ``wrapping'' to the next line, find some spots like commas or plus signs to break the code. Be sure to break the line after the comma or plus sign.
 
@@ -3068,7 +3107,7 @@ Modify the following scatterplot by adding a title and labels for both the y-axi
 ## Warning: Removed 2 rows containing missing values (geom_point).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-115-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-117-1.pdf}
 
 \hypertarget{exercise-12-1}{%
 \paragraph*{Exercise 12}\label{exercise-12-1}}
@@ -3088,7 +3127,7 @@ The previous scatterplot looked a little funny due to some odd groupings that we
 ## Warning: Removed 2 rows containing missing values (geom_point).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-116-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-118-1.pdf}
 
 Please write up your answer here.
 
@@ -5120,7 +5159,7 @@ Recall the \texttt{chredlin} data set from the last chapter investigating the pr
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-175-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-177-1.pdf}
 
 \hypertarget{exercise-1-4}{%
 \paragraph*{Exercise 1}\label{exercise-1-4}}
@@ -5146,7 +5185,7 @@ If certain conditions are met, we can graph a regression line; just add a \textt
 ## `geom_smooth()` using formula 'y ~ x'
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-176-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-178-1.pdf}
 
 The \texttt{method\ =\ lm} argument is telling \texttt{ggplot} to use a ``linear model''. The \texttt{se\ =\ FALSE} argument tells \texttt{ggplot} to draw just the line and nothing else. (What else might it try to draw? You are encouraged to go back to the code above and take out \texttt{se\ =\ FALSE} to see for yourself. However, we are not yet in a position to be able to explain the gray band that appears. We will return to this mystery in a future chapter.)
 
@@ -5506,7 +5545,7 @@ Earlier, we promised to revisit the topic of residuals. Residuals are measured a
 ## `geom_smooth()` using formula 'y ~ x'
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-186-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-188-1.pdf}
 
 The graph above shows the regression line and two of the residuals as red line segments. (There is a residual for all 47 ZIP codes; only two are shown in this graph.) The one on the left corresponds to ZIP code with 35\% racial minority. The regression line predicts that, if the model were true, such a ZIP code would have a value of \texttt{involact} of about 0.6. But the actual data for that ZIP code has an \texttt{involact} value of 1. The residual is the difference, about 0.4. In other words, the true data point is 0.4 units higher than the model prediction. This represents a \emph{positive} residual; the actual data is 0.4 units \emph{above} the line. Data points that lie below the regression line have \emph{negative} residuals.
 
@@ -5608,7 +5647,7 @@ To check for patterns in the residuals, we'll create a \emph{residual plot}. A r
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-188-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-190-1.pdf}
 
 Pay close attention to the \texttt{ggplot} code. Notice that the tibble in the first slot is \emph{not} \texttt{chredlin} as it was before. The residuals we need to plot are not stored in the raw \texttt{chredlin} data. We had to calculate the residuals using the \texttt{augment} command, and those residuals are then stored in a different place that we named \texttt{involact\_race\_aug}. In the latter tibble, the residuals themselves are stored in a variable called \texttt{.resid}. (Don't forget the dot in \texttt{.resid}.)
 
@@ -5642,7 +5681,7 @@ What does a bad residual plot look like? The code below will run an ill-advised 
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-189-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-191-1.pdf}
 
 \hypertarget{exercise-11-3}{%
 \paragraph*{Exercise 11}\label{exercise-11-3}}
@@ -5763,7 +5802,7 @@ One easy thing we can do is incorporate a categorical variable into a graph and 
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-194-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-196-1.pdf}
 
 \hypertarget{exercise-14}{%
 \paragraph*{Exercise 14}\label{exercise-14}}
@@ -5789,7 +5828,7 @@ Does this affect the regression? We haven't checked the conditions carefully for
 ## `geom_smooth()` using formula 'y ~ x'
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-195-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-197-1.pdf}
 
 \hypertarget{exercise-15-1}{%
 \paragraph*{Exercise 15}\label{exercise-15-1}}
@@ -6327,7 +6366,7 @@ Let's look at a histogram of the number of heads we see in the simulated flips. 
 ## Warning: Removed 2 rows containing missing values (geom_bar).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-214-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-216-1.pdf}
 
 Let's do the same thing, but now let's consider the \emph{proportion} of heads.
 
@@ -6343,7 +6382,7 @@ Let's do the same thing, but now let's consider the \emph{proportion} of heads.
 ## Warning: Removed 2 rows containing missing values (geom_bar).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-215-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-217-1.pdf}
 
 \hypertarget{randomization1-bigger}{%
 \section{Bigger and better!}\label{randomization1-bigger}}
@@ -8388,7 +8427,7 @@ This is the same idea as before, but now there are 2000 rows in the data frame i
 ## Warning: Removed 2 rows containing missing values (geom_bar).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-218-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-220-1.pdf}
 
 This is helpful. In contrast with the set of simulations with twenty people, the last histogram gives us something closer to what we expect. The mode is at five heads, and every possible number of heads is represented, with decreasing counts as one moves away from five. With 2000 people flipping coins, all possible outcomes---including rare ones---are better represented.
 
@@ -8406,7 +8445,7 @@ Here is the the same histogram, but this time with the proportion of heads inste
 ## Warning: Removed 2 rows containing missing values (geom_bar).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-219-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-221-1.pdf}
 
 \hypertarget{exercise-3-4}{%
 \paragraph*{Exercise 3}\label{exercise-3-4}}
@@ -10454,7 +10493,7 @@ Now let's increase the number of coin flips each person performs. We'll still us
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-222-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-224-1.pdf}
 
 And now the same histogram, but with proportions:
 
@@ -10465,7 +10504,7 @@ And now the same histogram, but with proportions:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-223-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-225-1.pdf}
 
 \hypertarget{exercise-4-4}{%
 \paragraph*{Exercise 4}\label{exercise-4-4}}
@@ -10623,6 +10662,1054 @@ Please write up your answer here.
 \section{Conclusion}\label{randomization1-conclusion}}
 
 Simulation is a tool for understanding what happens when a statistical process is repeated many times in a randomized way. The availability of fast computer processing makes simulation easy and accessible. Eventually, the goal will be to use simulation to answer important questions about data and the processes in the world that generate data. This is possible because, despite the ubiquitous presence of randomness, a certain order emerges when the number of samples is large enough. Even though there is sampling variability (different random outcomes each time we sample), there are patterns in that variability that can be exploited to make predictions.
+
+\hypertarget{randomization2}{%
+\chapter{Introduction to randomization, Part 2}\label{randomization2}}
+
+2.0
+
+\hypertarget{functions-introduced-in-this-chapter-8}{%
+\subsection*{Functions introduced in this chapter}\label{functions-introduced-in-this-chapter-8}}
+\addcontentsline{toc}{subsection}{Functions introduced in this chapter}
+
+\texttt{sample}, \texttt{specify}, \texttt{hypothesize}, \texttt{generate}, \texttt{calculate}, \texttt{visualize}, \texttt{shade\_p\_value}, \texttt{get\_p\_value}
+
+\hypertarget{randomization2-intro}{%
+\section{Introduction}\label{randomization2-intro}}
+
+In this chapter, we'll learn more about randomization and simulation. Instead of flipping coins, though, we'll randomly shuffle data around in order to explore the effects of randomizing a predictor variable.
+
+\hypertarget{randomization2-install}{%
+\subsection{Install new packages}\label{randomization2-install}}
+
+If you are using RStudio Workbench, you do not need to install any packages. (Any packages you need should already be installed by the server administrators.)
+
+If you are using R and RStudio on your own machine instead of accessing RStudio Workbench through a browser, you'll need to type the following commands at the Console:
+
+\begin{verbatim}
+install.packages("openintro")
+install.packages("infer")
+\end{verbatim}
+
+\hypertarget{randomization2-download}{%
+\subsection{Download the R notebook file}\label{randomization2-download}}
+
+Check the upper-right corner in RStudio to make sure you're in your \texttt{intro\_stats} project. Then click on the following link to download this chapter as an R notebook file (\texttt{.Rmd}).
+
+https://vectorposse.github.io/intro\_stats/chapter\_downloads/09-intro\_to\_randomization\_2.Rmd
+
+Once the file is downloaded, move it to your project folder in RStudio and open it there.
+
+\hypertarget{randomization2-restart}{%
+\subsection{Restart R and run all chunks}\label{randomization2-restart}}
+
+In RStudio, select ``Restart R and Run All Chunks'' from the ``Run'' menu.
+
+\hypertarget{randomization2-load}{%
+\section{Load packages}\label{randomization2-load}}
+
+We'll load \texttt{tidyverse} as usual along with the \texttt{janitor} package to make tables (with \texttt{tabyl}). The \texttt{openintro} package has a data set called \texttt{sex\_discrimination} that we will explore. Finally, the \texttt{infer} package will provide tools that we will use in nearly every chapter for the remainder of the book.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(janitor)}
+\FunctionTok{library}\NormalTok{(openintro)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: airports
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: cherryblossom
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: usdata
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'openintro'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:mosaic':
+## 
+##     dotPlot
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:lattice':
+## 
+##     ethanol, lsegments
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:faraway':
+## 
+##     orings
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(infer)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'infer'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:mosaic':
+## 
+##     prop_test, t_test
+\end{verbatim}
+
+\hypertarget{randomization2-question}{%
+\section{Our research question}\label{randomization2-question}}
+
+An interesting study was conducted in the 1970s that investigated gender discrimination in hiring.\footnote{Rosen B and Jerdee T. 1974. Influence of sex role stereotypes on personnel decisions. \emph{Journal of Applied Psychology} 59(1):9-14.} The researchers brought in 48 male bank supervisors and asked them to evaluate personnel files. Based on their review, they were to determine if the person was qualified for promotion to branch manager. The trick is that all the files were identical, but half listed the candidate as male and half listed the candidate as female. The files were randomly assigned to the 48 supervisors.
+
+The research question is whether the files supposedly belonging to males were recommended for promotion more than the files supposedly belonging to females.
+
+\hypertarget{exercise-1-6}{%
+\paragraph*{Exercise 1}\label{exercise-1-6}}
+\addcontentsline{toc}{paragraph}{Exercise 1}
+
+Is the study described above an observational study or an experiment? How do you know?
+
+Please write up your answer here.
+
+\hypertarget{exercise-2a-1}{%
+\paragraph*{Exercise 2(a)}\label{exercise-2a-1}}
+\addcontentsline{toc}{paragraph}{Exercise 2(a)}
+
+Identify the sample in the study. In other words, how many people were in the sample and what are the important characteristics common to those people.
+
+Please write up your answer here.
+
+\hypertarget{exercise-2b-1}{%
+\paragraph*{Exercise 2(b)}\label{exercise-2b-1}}
+\addcontentsline{toc}{paragraph}{Exercise 2(b)}
+
+Identify the population of interest in the study. In other words, who is the sample supposed to represent? That is, what group of people that this study is trying to learn about?
+
+Please write up your answer here.
+
+\hypertarget{exercise-2c-1}{%
+\paragraph*{Exercise 2(c)}\label{exercise-2c-1}}
+\addcontentsline{toc}{paragraph}{Exercise 2(c)}
+
+In your opinion, does the sample from this study truly represent the population you identified above?
+
+Please write up your answer here.
+
+\hypertarget{randomization2-eda}{%
+\section{Exploratory data analysis}\label{randomization2-eda}}
+
+Here is the data:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sex\_discrimination}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 48 x 2
+##    sex   decision
+##    <fct> <fct>   
+##  1 male  promoted
+##  2 male  promoted
+##  3 male  promoted
+##  4 male  promoted
+##  5 male  promoted
+##  6 male  promoted
+##  7 male  promoted
+##  8 male  promoted
+##  9 male  promoted
+## 10 male  promoted
+## # ... with 38 more rows
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{glimpse}\NormalTok{(sex\_discrimination)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rows: 48
+## Columns: 2
+## $ sex      <fct> male, male, male, male, male, male, male, male, male, male, m~
+## $ decision <fct> promoted, promoted, promoted, promoted, promoted, promoted, p~
+\end{verbatim}
+
+\hypertarget{exercise-3-5}{%
+\paragraph*{Exercise 3}\label{exercise-3-5}}
+\addcontentsline{toc}{paragraph}{Exercise 3}
+
+Which variable is the response variable and which variable is the predictor variable?
+
+Please write up your answer here.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+Here is a contingency table with \texttt{decision} as the row variable and \texttt{sex} as the column variable. (Recall that we always list the response variable first. That way, the column sums will show us how many are in each of the predictor groups.)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tabyl}\NormalTok{(sex\_discrimination, decision, sex) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_totals}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      decision male female
+##      promoted   21     14
+##  not promoted    3     10
+##         Total   24     24
+\end{verbatim}
+
+\hypertarget{exercise-4-5}{%
+\paragraph*{Exercise 4}\label{exercise-4-5}}
+\addcontentsline{toc}{paragraph}{Exercise 4}
+
+Create another contingency table of \texttt{decision} and \texttt{sex}, this time with percentages (\emph{not} proportions) instead of counts. You'll probably have to go back to the ``Categorical data'' to review the syntax. (Hint: you should have three separate \texttt{adorn} functions on the lines following the \texttt{tabyl} command.)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to create a contingency table of percentages}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+Although we can read off the percentages in the contingency table, we need to do computations using the proportions. (Remember that we use percentages to communicate with other human beings, but we do math with proportions.) Fortunately, the output of \texttt{tabyl} is a tibble! So we can manipulate and grab the elements we need.
+
+Let's create and store the \texttt{tabyl} output with proportions. We don't need the marginal distribution, so we can dispense with \texttt{adorn\_totals}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{decision\_sex\_tabyl }\OtherTok{\textless{}{-}} \FunctionTok{tabyl}\NormalTok{(sex\_discrimination, decision, sex) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_percentages}\NormalTok{(}\StringTok{"col"}\NormalTok{)}
+\NormalTok{decision\_sex\_tabyl}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      decision  male    female
+##      promoted 0.875 0.5833333
+##  not promoted 0.125 0.4166667
+\end{verbatim}
+
+\hypertarget{exercise-5-5}{%
+\paragraph*{Exercise 5}\label{exercise-5-5}}
+\addcontentsline{toc}{paragraph}{Exercise 5}
+
+Interpret these proportions in the context of the data. In other words, what do these proportions say about the male files that were recommended for promotion versus the female files recommended for promotion?
+
+Please write up your answer here.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+The real statistic of interest to us is the difference between these proportions. We can use the \texttt{mutate} command from \texttt{dplyr} variable compute the difference for us.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{decision\_sex\_tabyl }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{diff =}\NormalTok{ male }\SpecialCharTok{{-}}\NormalTok{ female)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      decision  male    female       diff
+##      promoted 0.875 0.5833333  0.2916667
+##  not promoted 0.125 0.4166667 -0.2916667
+\end{verbatim}
+
+As a matter of fact, once we know the difference in promotion rates, we don't really need the individual proportions anymore. The \texttt{transmute} verb is a version of \texttt{mutate} that gives us exactly what we want. It will create a new column just like \texttt{mutate}, but then it keeps only that new column. We'll call the resulting output \texttt{decision\_sex\_diff}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{decision\_sex\_diff }\OtherTok{\textless{}{-}}\NormalTok{ decision\_sex\_tabyl }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{transmute}\NormalTok{(}\AttributeTok{diff =}\NormalTok{ male }\SpecialCharTok{{-}}\NormalTok{ female)}
+\NormalTok{decision\_sex\_diff}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        diff
+##   0.2916667
+##  -0.2916667
+\end{verbatim}
+
+We don't really need both the positive and negative values. Let's just keep the first row and keep track of which direction we subtracted to get it. (The positive difference results from the male promotion rate minus the female promotion rate.) We can use \texttt{slice} to grab the first row:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{decision\_sex\_diff }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       diff
+##  0.2916667
+\end{verbatim}
+
+This means that there is a 29\% difference between the male files that were promoted and the female files that were promoted. The difference was computed as males minus females, so the fact that the number is positive means that male files were \emph{more} likely to recommended for promotion.
+
+\hypertarget{randomization2-permuting}{%
+\section{Permuting}\label{randomization2-permuting}}
+
+One way to see if there is evidence of an association between promotion decisions and sex is to assume, temporarily, that there is no association. If there were truly no association, then the difference between the promotion rates between the male files and female files should be 0\%. Of course, the number of people promoted in the data was 35, an odd number, so the number of male files promoted and female files promoted cannot be the same. Therefore, the difference in proportions can't be exactly 0 in this data. Nevertheless, we would expect---under the assumption of no association---the number of male files promoted to be \emph{close} to the number of female files promoted, giving a difference around 0\%.
+
+Now, we saw a difference of about 29\% between the two groups in the data. Then again, non-zero differences---sometimes even large ones--- can just come about by pure chance alone. We may have accidentally sampled more bank managers who just happened to prefer the male candidates. This could happen for sexist reasons; it's possible our sample of bank managers are, by chance, more sexist than bank managers in the general population during the 1970s. Or it might be for more benign reasons; perhaps the male applications got randomly steered to bank managers who were more likely to be impressed with any application, and therefore, they were more likely to promote anyone regardless of the gender listed. We have to consider the possibility that our observed difference seems large even though there may have been no association between promotion and sex in the general population.
+
+So how do we test the range of values that could arise from just chance alone? In other words, how do we explore sampling variability?
+
+One way to force the variables to be independent is to ``permute''---in other words, shuffle---the values of \texttt{sex} in our data. If we ignore the sex listed in the file and give it a random label (independent of the \emph{actual} sex listed in the file), we know for sure that such an assignment is random and not due to any actual evidence of sexism. In that case, promotion is equally likely to occur in both groups.
+
+Let's see how permuting works in R. To begin with, look at the actual values of \texttt{sex} in our data:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sex\_discrimination}\SpecialCharTok{$}\NormalTok{sex}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] male   male   male   male   male   male   male   male   male   male  
+## [11] male   male   male   male   male   male   male   male   male   male  
+## [21] male   male   male   male   female female female female female female
+## [31] female female female female female female female female female female
+## [41] female female female female female female female female
+## Levels: male female
+\end{verbatim}
+
+All the males happen to be listed first, followed by all the females.
+
+Now we permute all the values around (using the \texttt{sample} command). As explained in an earlier chapter, we will set the seed so that our results are reproducible.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{3141593}\NormalTok{)}
+\FunctionTok{sample}\NormalTok{(sex\_discrimination}\SpecialCharTok{$}\NormalTok{sex)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] male   female male   male   female female female female female female
+## [11] female female female female male   male   female male   female male  
+## [21] female female male   male   female female male   female male   male  
+## [31] male   male   male   female male   female male   male   male   male  
+## [41] female female female male   male   male   female male  
+## Levels: male female
+\end{verbatim}
+
+Do it again without the seed, just to make sure it's truly random:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sample}\NormalTok{(sex\_discrimination}\SpecialCharTok{$}\NormalTok{sex)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] male   male   male   female male   female male   female female female
+## [11] female male   female male   female female female female male   male  
+## [21] female female female male   male   female male   male   male   female
+## [31] male   male   male   male   male   female female female female male  
+## [41] female female male   male   male   female female male  
+## Levels: male female
+\end{verbatim}
+
+\hypertarget{randomization2-randomization}{%
+\section{Randomization}\label{randomization2-randomization}}
+
+The idea here is to keep the promotion status the same for each file, but randomly permute the sex labels. There will still be the same number of male and female files, but now they will be randomly matched with promoted files and not promoted files. Since this new grouping into ``males'' and ``females'' is completely random and arbitrary, we expect the likelihood of promotion to be equal for both groups.
+
+A more precise way of saying this is that the expected difference under the assumption of independent variables is 0\%. If there were truly no association, then the percentage of people promoted would be independent of sex. However, sampling variability means that we are not likely to see an exact difference of 0\%. (Also, as we mentioned earlier, the odd number of promotions means the difference will never be exactly 0\% anyway in this data.) The real question, then, is how different could the difference be from 0\% and still be reasonably possible due to random chance.
+
+Let's perform a few random simulations. We'll walk through the steps one line at a time. The first thing we do is permute the \texttt{sex} column:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{3141593}\NormalTok{)}
+\NormalTok{sex\_discrimination }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{sex =} \FunctionTok{sample}\NormalTok{(sex))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 48 x 2
+##    sex    decision
+##    <fct>  <fct>   
+##  1 male   promoted
+##  2 female promoted
+##  3 male   promoted
+##  4 male   promoted
+##  5 female promoted
+##  6 female promoted
+##  7 female promoted
+##  8 female promoted
+##  9 female promoted
+## 10 female promoted
+## # ... with 38 more rows
+\end{verbatim}
+
+Then we follow the steps from earlier, generating a contingency table with proportions. This is accomplished by simply adding two lines of code to the previous code:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{3141593}\NormalTok{)}
+\NormalTok{sex\_discrimination }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{sex =} \FunctionTok{sample}\NormalTok{(sex)) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{tabyl}\NormalTok{(decision, sex) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_percentages}\NormalTok{(}\StringTok{"col"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      decision      male    female
+##      promoted 0.6666667 0.7916667
+##  not promoted 0.3333333 0.2083333
+\end{verbatim}
+
+Note that the proportions in this table are different from the ones in the real data.
+
+Then we calculate the difference between the male and female columns by adding a line with \texttt{transmute}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{3141593}\NormalTok{)}
+\NormalTok{sex\_discrimination }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{sex =} \FunctionTok{sample}\NormalTok{(sex)) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{tabyl}\NormalTok{(decision, sex) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_percentages}\NormalTok{(}\StringTok{"col"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{transmute}\NormalTok{(}\AttributeTok{diff =}\NormalTok{ male }\SpecialCharTok{{-}}\NormalTok{ female)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    diff
+##  -0.125
+##   0.125
+\end{verbatim}
+
+In this case, the first row happens to be negative, but that's okay. This particular random shuffling had more females promoted than males. (Remember, though, that the permuted sex labels are now meaningless.)
+
+Finally, we grab the entry in the first row with \texttt{slice}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{3141593}\NormalTok{)}
+\NormalTok{sex\_discrimination }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{sex =} \FunctionTok{sample}\NormalTok{(sex)) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{tabyl}\NormalTok{(decision, sex) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_percentages}\NormalTok{(}\StringTok{"col"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{transmute}\NormalTok{(}\AttributeTok{diff =}\NormalTok{ male }\SpecialCharTok{{-}}\NormalTok{ female) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    diff
+##  -0.125
+\end{verbatim}
+
+We'll repeat this code a few more times, but without the seed, to get new random observations.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sex\_discrimination }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{sex =} \FunctionTok{sample}\NormalTok{(sex)) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{tabyl}\NormalTok{(decision, sex) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_percentages}\NormalTok{(}\StringTok{"col"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{transmute}\NormalTok{(}\AttributeTok{diff =}\NormalTok{ male }\SpecialCharTok{{-}}\NormalTok{ female) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        diff
+##  0.04166667
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sex\_discrimination }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{sex =} \FunctionTok{sample}\NormalTok{(sex)) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{tabyl}\NormalTok{(decision, sex) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_percentages}\NormalTok{(}\StringTok{"col"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{transmute}\NormalTok{(}\AttributeTok{diff =}\NormalTok{ male }\SpecialCharTok{{-}}\NormalTok{ female) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   diff
+##  0.125
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sex\_discrimination }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{sex =} \FunctionTok{sample}\NormalTok{(sex)) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{tabyl}\NormalTok{(decision, sex) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_percentages}\NormalTok{(}\StringTok{"col"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{transmute}\NormalTok{(}\AttributeTok{diff =}\NormalTok{ male }\SpecialCharTok{{-}}\NormalTok{ female) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   diff
+##  0.125
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sex\_discrimination }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{sex =} \FunctionTok{sample}\NormalTok{(sex)) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{tabyl}\NormalTok{(decision, sex) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_percentages}\NormalTok{(}\StringTok{"col"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{transmute}\NormalTok{(}\AttributeTok{diff =}\NormalTok{ male }\SpecialCharTok{{-}}\NormalTok{ female) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        diff
+##  -0.2916667
+\end{verbatim}
+
+Think carefully about what these random numbers mean. Each time we randomize, we get a simulated difference in the proportion of promotions between male files and female files. The \texttt{sample} part ensures that there is no actual relationship between promotion and sex among these randomized values. We expect each simulated difference to be close to zero, but we also expect deviations from zero due to randomness and chance.
+
+\hypertarget{randomization2-infer}{%
+\section{\texorpdfstring{The \texttt{infer} package}{The infer package}}\label{randomization2-infer}}
+
+The above code examples show the nuts and bolts of permuting data around to break any association that might exist between two variables. However, to do a proper randomization, we need to repeat this process many, many times (just like how we flipped thousands of ``coins'' in the last chapter).
+
+Here we introduce some code from the \texttt{infer} package that will help us automate this procedure. The added benefit of introducing \texttt{infer} now is that we will continue to use it in nearly every chapter of the book that follows.
+
+Here is the code template, starting with setting the seed:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{3141593}\NormalTok{)}
+\NormalTok{sims }\OtherTok{\textless{}{-}}\NormalTok{ sex\_discrimination }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{specify}\NormalTok{(decision }\SpecialCharTok{\textasciitilde{}}\NormalTok{ sex, }\AttributeTok{success =} \StringTok{"promoted"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{hypothesize}\NormalTok{(}\AttributeTok{null =} \StringTok{"independence"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{generate}\NormalTok{(}\AttributeTok{reps =} \DecValTok{1000}\NormalTok{, }\AttributeTok{type =} \StringTok{"permute"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{calculate}\NormalTok{(}\AttributeTok{stat =} \StringTok{"diff in props"}\NormalTok{, }\AttributeTok{order =} \FunctionTok{c}\NormalTok{(}\StringTok{"male"}\NormalTok{, }\StringTok{"female"}\NormalTok{))}
+\NormalTok{sims}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Response: decision (factor)
+## Explanatory: sex (factor)
+## Null Hypothesis: independence
+## # A tibble: 1,000 x 2
+##    replicate    stat
+##        <int>   <dbl>
+##  1         1 -0.125 
+##  2         2 -0.125 
+##  3         3 -0.0417
+##  4         4  0.0417
+##  5         5  0.125 
+##  6         6 -0.0417
+##  7         7 -0.0417
+##  8         8  0.125 
+##  9         9  0.125 
+## 10        10  0.208 
+## # ... with 990 more rows
+\end{verbatim}
+
+We will learn more about all these lines of code in future chapters. By the end of the course, running this type of analysis will be second nature. For now, you can copy and paste the code chunk above and make minor changes as you need. Here are the three things you will need to look out for for doing this with different data sets in the future:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  The second line (after setting the seed) will be your new data set.
+\item
+  In the \texttt{specify} line, you will have a different response variable, predictor variable, and success condition that will depend on the context of your new data.
+\item
+  In the \texttt{calculate} line, you will have two different levels that you want to compare. Be careful to list them in the order in which you want to subtract them.
+\end{enumerate}
+
+\hypertarget{randomization2-plot}{%
+\section{Plot results}\label{randomization2-plot}}
+
+A histogram will show us the range of possible values under the assumption of independence of the two variables. We can get one from our \texttt{infer} output using \texttt{visualize}. (This is a lot easier than building a histogram with \texttt{ggplot}!)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sims }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{visualize}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-254-1.pdf}
+
+The bins aren't great in the picture above. There is no way currently to set the binwidth or boundary as we've done before, but we can experiment with the total number of bins. 9 seems to be a good number.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sims }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{visualize}\NormalTok{(}\AttributeTok{bins =} \DecValTok{9}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-255-1.pdf}
+
+\hypertarget{exercise-6-3}{%
+\paragraph*{Exercise 6}\label{exercise-6-3}}
+\addcontentsline{toc}{paragraph}{Exercise 6}
+
+Why is the mode of the graph above at 0? This has been explained several different times in this chapter, but put it into your own words to make sure you understand the logic behind the randomization.
+
+Please write up your answer here.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+Let's compare these simulated values to the observed difference in the real data. We've computed the latter already, but let's use \texttt{infer} tools to find it. We'll give the answer a name, \texttt{obs\_diff}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{obs\_diff }\OtherTok{\textless{}{-}}\NormalTok{ sex\_discrimination }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{observe}\NormalTok{(decision }\SpecialCharTok{\textasciitilde{}}\NormalTok{ sex, }\AttributeTok{success =} \StringTok{"promoted"}\NormalTok{,}
+            \AttributeTok{stat =} \StringTok{"diff in props"}\NormalTok{, }\AttributeTok{order =} \FunctionTok{c}\NormalTok{(}\StringTok{"male"}\NormalTok{, }\StringTok{"female"}\NormalTok{))}
+\NormalTok{obs\_diff}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Response: decision (factor)
+## Explanatory: sex (factor)
+## # A tibble: 1 x 1
+##    stat
+##   <dbl>
+## 1 0.292
+\end{verbatim}
+
+Now we can graph the observed difference in the data alongside the simulated values under the assumption of independent variables. The name of the function \texttt{shade\_p\_value} is a little cryptic for now, but it will become clear within a few chapters.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sims }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{visualize}\NormalTok{(}\AttributeTok{bins =} \DecValTok{9}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{shade\_p\_value}\NormalTok{(}\AttributeTok{obs\_stat =}\NormalTok{ obs\_diff, }\AttributeTok{direction =} \StringTok{"greater"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-257-1.pdf}
+
+\hypertarget{randomization2-chance}{%
+\section{By chance?}\label{randomization2-chance}}
+
+How likely is it that the observed difference (or a difference even more extreme) could have resulted from chance alone? Because \texttt{sims} contains simulated results after permuting, the values in the \texttt{stat} column assume that promotion is independent of sex. In order to assess how plausible our observed difference is under that assumption, we want to find out how many of the simulated values are at least as big, if not bigger, than the observed difference, 0.292.
+
+Look at the randomized differences sorted in decreasing order:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sims }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(stat))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Response: decision (factor)
+## Explanatory: sex (factor)
+## Null Hypothesis: independence
+## # A tibble: 1,000 x 2
+##    replicate  stat
+##        <int> <dbl>
+##  1       133 0.375
+##  2       181 0.375
+##  3       568 0.375
+##  4       619 0.375
+##  5        50 0.292
+##  6        68 0.292
+##  7        77 0.292
+##  8        93 0.292
+##  9       111 0.292
+## 10       119 0.292
+## # ... with 990 more rows
+\end{verbatim}
+
+Of the 1000 simulations, the most extreme difference of 37.5\% occurred four times, just by chance. That seems like a pretty extreme value when expecting a value of 0\%, but the laws of probability tell us that extreme values will be observed from time to time, even if rarely. Also recall that the observed difference in the actual data was 29.2\%. This specific value came up quite a bit in our simulated data. In fact, the 31st entry of the sorted data above is the last occurrence of the value 0.292. After that, the next higher larger value is 0.208.
+
+So let's return to the original question. How many simulated values are as large---if not larger---than the observed difference? Apparently, 31 out of 1000, which is 0.031. In other words 3\% of the simulated data is as extreme or more extreme than the actual difference in promotion rates between male files and female files in the real data. That's not very large. In other words, a difference like 29.2\% could occur just by chance---like flipping 10 out of 10 heads or something like that. But it doesn't happen very often.
+
+We can automate this calculation using the function \texttt{get\_p\_value} (similar to \texttt{shade\_p\_value} above) even though we don't yet know what ``p value'' means.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sims }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{get\_p\_value}\NormalTok{(}\AttributeTok{obs\_stat =}\NormalTok{ obs\_diff, }\AttributeTok{direction =} \StringTok{"greater"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 1
+##   p_value
+##     <dbl>
+## 1   0.031
+\end{verbatim}
+
+\textbf{COPY/PASTE WARNING}: If the observed difference were negative, then extreme values of interest would be \emph{less} than, say, -0.292, not greater than 0.292. You must note if the observed difference is positive or negative and then use ``greater'' or ``less'' as appropriate!
+
+Again, 0.031 is a small number. This shows us that if there were truly no association between promotion and sex, then our data is a rare event. (An observed difference this extreme or more extreme would only occur about 3\% of the time by chance.)
+
+Because the probability above is so small, it seems unlikely that our variables are independent. Therefore, it seems more likely that there is an association between promotion and sex. We have evidence of a statistically significant difference between the chance of getting recommended for promotion if the file indicates male versus female.
+
+Because this is an experiment, it's possible that a causal claim could be made. If everything in the application files was identical except the indication of gender, then it stands to reason that gender \emph{explains} why more male files were promoted over female files. But all that depends on the experiment being a well-designed experiment.
+
+\hypertarget{exercise-7-3}{%
+\paragraph*{Exercise 7}\label{exercise-7-3}}
+\addcontentsline{toc}{paragraph}{Exercise 7}
+
+Although we are not experts in experimental design, what concerns do you have about generalizing the results of this experiment to broad conclusions about sexism in the 1970s?
+(To be clear, I'm not saying that sexism wasn't a broad problem in the 1970s. It surely was---and still is. I'm only asking you to opine as to why the results of this one study might not be conclusive in making an overly broad statement.)
+
+Please write up your answer here.
+
+\hypertarget{randomization2-your-turn}{%
+\section{Your turn}\label{randomization2-your-turn}}
+
+In this section, you'll explore another famous data set related to the topic of gender discrimination. (Also from the 1970s!)
+
+The following code will download admissions data from the six largest graduate departments at the University of California, Berkeley in 1973. We've seen the \texttt{read\_csv} command before, but we've added some extra stuff in there to make sure all the columns get imported as factor variables (rather than having to convert them ourselves later).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ucb\_admit }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{"https://vectorposse.github.io/intro\_stats/data/ucb\_admit.csv"}\NormalTok{,}
+                      \AttributeTok{col\_types =} \FunctionTok{list}\NormalTok{(}
+                          \AttributeTok{Admit =} \FunctionTok{col\_factor}\NormalTok{(),}
+                          \AttributeTok{Gender =} \FunctionTok{col\_factor}\NormalTok{(),}
+                          \AttributeTok{Dept =} \FunctionTok{col\_factor}\NormalTok{()))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ucb\_admit}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 4,526 x 3
+##    Admit    Gender Dept 
+##    <fct>    <fct>  <fct>
+##  1 Admitted Male   A    
+##  2 Admitted Male   A    
+##  3 Admitted Male   A    
+##  4 Admitted Male   A    
+##  5 Admitted Male   A    
+##  6 Admitted Male   A    
+##  7 Admitted Male   A    
+##  8 Admitted Male   A    
+##  9 Admitted Male   A    
+## 10 Admitted Male   A    
+## # ... with 4,516 more rows
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{glimpse}\NormalTok{(ucb\_admit)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rows: 4,526
+## Columns: 3
+## $ Admit  <fct> Admitted, Admitted, Admitted, Admitted, Admitted, Admitted, Adm~
+## $ Gender <fct> Male, Male, Male, Male, Male, Male, Male, Male, Male, Male, Mal~
+## $ Dept   <fct> A, A, A, A, A, A, A, A, A, A, A, A, A, A, A, A, A, A, A, A, A, ~
+\end{verbatim}
+
+As you go through the exercises below, you should carefully copy and paste commands from earlier in the chapter, making the necessary changes.
+
+\textbf{Remember that R is case sensitive! In the \texttt{sex\_discrimination} data, all the variables and levels started with lowercase letters. In the \texttt{ucb\_admit} data, they all start with uppercase letters, so you'll need to be careful to change that after you copy and paste code examples from above.}
+
+\hypertarget{exercise-8a-2}{%
+\paragraph*{Exercise 8(a)}\label{exercise-8a-2}}
+\addcontentsline{toc}{paragraph}{Exercise 8(a)}
+
+Is this data observational or experimental? How do you know?
+
+Please write up your answer here.
+
+\hypertarget{exercise-8b-2}{%
+\paragraph*{Exercise 8(b)}\label{exercise-8b-2}}
+\addcontentsline{toc}{paragraph}{Exercise 8(b)}
+
+Exploratory data analysis: make two contingency tables with \texttt{Admit} as the response variable and \texttt{Gender} as the explanatory variable. One table should have counts and the other table should have percentages. (Both tables should include the marginal distribution at the bottom.)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to make a contingency table with counts.}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to make a contingency table with percentages.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{exercise-8c}{%
+\paragraph*{Exercise 8(c)}\label{exercise-8c}}
+\addcontentsline{toc}{paragraph}{Exercise 8(c)}
+
+Use \texttt{observe} from the \texttt{infer} package to calculate the observed difference in proportions between males who were admitted and females who were admitted. Do the subtraction in that order: males minus females. Store your output as \texttt{obs\_diff2} so that it doesn't overwrite the variable \texttt{obs\_diff} we created earlier.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to calculate the observed difference.}
+\CommentTok{\# Store this as obs\_diff2.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{exercise-8d}{%
+\paragraph*{Exercise 8(d)}\label{exercise-8d}}
+\addcontentsline{toc}{paragraph}{Exercise 8(d)}
+
+Simulate 1000 outcomes under the assumption that admission is independent of gender. Use the \texttt{specify}, \texttt{hypothesize}, \texttt{generate}, and \texttt{calculate} sequence from the \texttt{infer} package as above. Call the simulated data frame \texttt{sims2} so that it doesn't conflict with the earlier \texttt{sims}. Don't touch the \texttt{set.seed} command. That will ensure that all students get the same randomization.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{10101}\NormalTok{)}
+\CommentTok{\# Add code here to simulate 1000 outcomes}
+\CommentTok{\# under the independence assumption}
+\CommentTok{\# and store the simulations in a data frame called sims2.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{exercise-8e}{%
+\paragraph*{Exercise 8(e)}\label{exercise-8e}}
+\addcontentsline{toc}{paragraph}{Exercise 8(e)}
+
+Plot the simulated values in a histogram using the \texttt{visualize} verb from \texttt{infer}. When you first run the code, remove the \texttt{bins\ =\ 9} we had earlier and let \texttt{visualize} choose the number of bins. If you are satisfied with the graph, you don't need to specify a number of bins. If you are not satisfied, you can experiment with the number of bins until you find a number that seems reasonable.
+
+Be sure to include a vertical line at the value of the observed difference using the \texttt{shade\_p\_value} command. Don't forget that the location of that line is \texttt{obs\_diff2} now.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to plot the results.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{exercise-8f}{%
+\paragraph*{Exercise 8(f)}\label{exercise-8f}}
+\addcontentsline{toc}{paragraph}{Exercise 8(f)}
+
+Finally, comment on what you see. Based on the histogram above, is the observed difference in the data rare? In other words, under the assumption that admission and gender are independent, are we likely to see an observed difference as far away from zero as we actually see in the data? So what is your conclusion then? Do you believe there was an association between admission and gender in the UC Berkeley admissions process in 1973?
+
+Please write up your answer here.
+
+\hypertarget{randomization2-simpson}{%
+\section{Simpson's paradox}\label{randomization2-simpson}}
+
+The example above from UC Berkeley seems like an open and shut case. Male applicants were clearly admitted at a greater rate than female applicants. While we never expect the application rates to be \emph{exactly} equal---even under the assumption that admission and gender are independent---the randomization exercise showed us that the observed data was \emph{way} outside the range of possible differences that could have occurred just by chance.
+
+But we also know this is observational data. Association is not causation.
+
+\hypertarget{exercise-9-2}{%
+\paragraph*{Exercise 9}\label{exercise-9-2}}
+\addcontentsline{toc}{paragraph}{Exercise 9}
+
+Note that we didn't say ``correlation is not causation''. The latter is also true, but why does it not apply in this case? (Think about the conditions for correlation.)
+
+Please write up your answer here.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+Since we don't have data from a carefully controlled experiment, we always have to be worried about lurking variables. Could there be a third variable apart from admission and gender that could be driving the association between them? In other words, the fact that males were admitted at a higher rate than females might be sexism, or it might be spurious.
+
+Since we have access to a third variable, \texttt{Dept}, let's analyze it as well. The \texttt{tabyl} command will happily take a third variable and create a \emph{set} of contingency tables, one for each department.
+
+Here are the tables with counts:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tabyl}\NormalTok{(ucb\_admit, Admit, Gender, Dept) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_totals}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $A
+##     Admit Male Female
+##  Admitted  512     89
+##  Rejected  313     19
+##     Total  825    108
+## 
+## $B
+##     Admit Male Female
+##  Admitted  353     17
+##  Rejected  207      8
+##     Total  560     25
+## 
+## $C
+##     Admit Male Female
+##  Admitted  120    202
+##  Rejected  205    391
+##     Total  325    593
+## 
+## $D
+##     Admit Male Female
+##  Admitted  138    131
+##  Rejected  279    244
+##     Total  417    375
+## 
+## $E
+##     Admit Male Female
+##  Admitted   53     94
+##  Rejected  138    299
+##     Total  191    393
+## 
+## $F
+##     Admit Male Female
+##  Admitted   22     24
+##  Rejected  351    317
+##     Total  373    341
+\end{verbatim}
+
+And here are the tables with percentages:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tabyl}\NormalTok{(ucb\_admit, Admit, Gender, Dept) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_totals}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_percentages}\NormalTok{(}\StringTok{"col"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_pct\_formatting}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $A
+##     Admit   Male Female
+##  Admitted  62.1%  82.4%
+##  Rejected  37.9%  17.6%
+##     Total 100.0% 100.0%
+## 
+## $B
+##     Admit   Male Female
+##  Admitted  63.0%  68.0%
+##  Rejected  37.0%  32.0%
+##     Total 100.0% 100.0%
+## 
+## $C
+##     Admit   Male Female
+##  Admitted  36.9%  34.1%
+##  Rejected  63.1%  65.9%
+##     Total 100.0% 100.0%
+## 
+## $D
+##     Admit   Male Female
+##  Admitted  33.1%  34.9%
+##  Rejected  66.9%  65.1%
+##     Total 100.0% 100.0%
+## 
+## $E
+##     Admit   Male Female
+##  Admitted  27.7%  23.9%
+##  Rejected  72.3%  76.1%
+##     Total 100.0% 100.0%
+## 
+## $F
+##     Admit   Male Female
+##  Admitted   5.9%   7.0%
+##  Rejected  94.1%  93.0%
+##     Total 100.0% 100.0%
+\end{verbatim}
+
+\hypertarget{exercise-10-4}{%
+\paragraph*{Exercise 10}\label{exercise-10-4}}
+\addcontentsline{toc}{paragraph}{Exercise 10}
+
+Look at the contingency tables with percentages. Examine each department individually. What do you notice about the admit rates (as percentages) between males and females for most of the departments listed? Identify the four departments where female admission rates were higher than male admission rates.
+
+Please write up your answer here.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+This is completely counterintuitive. How can males be admitted at a higher rate overall, and yet in most departments, females were admitted at a higher rate.
+
+This phenomenon is often called \emph{Simpson's Paradox}. Like almost everything in statistics, this is named after a person (Edward H. Simpson) who got the popular credit for writing about the phenomenon, but not being the person who actually discovered the phenomenon. (There does not appear to be a primeval reference for the first person to have studied it. Similar observations had appeared in various sources more than 50 years before Simpson wrote his paper.)
+
+\hypertarget{exercise-11-4}{%
+\paragraph*{Exercise 11}\label{exercise-11-4}}
+\addcontentsline{toc}{paragraph}{Exercise 11}
+
+Look at the contingency tables with counts. Focus on the four departments you identified above. What is true of the total number of male and female applicants for those four department (and not for the other two departments)?
+
+Please write up your answer here.
+
+\hypertarget{exercise-12a-1}{%
+\paragraph*{Exercise 12(a)}\label{exercise-12a-1}}
+\addcontentsline{toc}{paragraph}{Exercise 12(a)}
+
+Now create a contingency table with percentages that uses \texttt{Admit} for the row variable and \texttt{Dept} as the column variable.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to create a contingency table with percentages}
+\CommentTok{\# for Dept and Admit}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{exercise-12b-1}{%
+\paragraph*{Exercise 12(b)}\label{exercise-12b-1}}
+\addcontentsline{toc}{paragraph}{Exercise 12(b)}
+
+In the contingency table above, what's true about the admission rates for the four departments you identified above (and not true for the other two department)?
+
+Please write up your answer here.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+Your work in the previous exercises begins to paint a picture that explains what's going on with this ``paradox''. Males applied in greater numbers to departments with high acceptance rates. As a result, more male students overall got in to graduate school. Females applied in greater numbers to departments that were more selective. Overall, then, fewer females got in to graduate school. But on a department-by-department basis, female applicants were usually more likely to get accepted.
+
+None of this suggests that sexism fails to exist. It doesn't even prove that sexism wasn't a factor in some departmental admission procedures. What it does suggest is that when we don't take into account possible lurking variables, we run the risk of oversimplifying issues that are potentially complex.
+
+In our analysis of the UC Berkeley data, we've exhausted all the variables available to us in the data set. There remains the potential for \emph{unmeasured confounders}, or variables that could still act as lurking variables, but we have no idea about them because they aren't in our data. This is an unavoidable peril of working with observational data. If we aren't careful to ``control'' for a reasonable set of possible lurking variables, we must be very careful when trying to make broad conclusions.
+
+\hypertarget{randomization2-conclusion}{%
+\section{Conclusion}\label{randomization2-conclusion}}
+
+Here we used randomization to explore the idea of two variables being independent or associated. When we assume they are independent, we can explore the sampling variability of the differences that could occur by pure chance alone. We expect the difference to be zero, but we know that randomness will cause the simulated differences to have a range of values. Is the difference in the observed data far away from zero? In that case, we can say we have evidence that the variables are not independent; in other words, it is more likely that our variables are associated.
+
+\hypertarget{randomization2-prep}{%
+\subsection{Preparing and submitting your assignment}\label{randomization2-prep}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  From the ``Run'' menu, select ``Restart R and Run All Chunks''.
+\item
+  Deal with any code errors that crop up. Repeat steps 1---2 until there are no more code errors.
+\item
+  Spell check your document by clicking the icon with ``ABC'' and a check mark.
+\item
+  Hit the ``Preview'' button one last time to generate the final draft of the \texttt{.nb.html} file.
+\item
+  Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
+\end{enumerate}
+
+If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
 
   \bibliography{book.bib,packages.bib}
 

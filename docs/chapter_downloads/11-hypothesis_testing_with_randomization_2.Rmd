@@ -1,0 +1,435 @@
+---
+title: "Hypothesis testing with simulation, Part 2"
+author: "Put your name here"
+date: "Put the date here"
+output:
+    html_notebook:
+        toc: yes
+        toc_float: yes
+---
+
+<!-- Please don't mess with the next few lines! -->
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(49,46,53))`</p>
+<!-- Please don't mess with the previous few lines! -->
+
+<div class = "summary">
+### Functions introduced in this module:
+No new R functions are introduced here.
+</div>
+
+
+## Introduction
+
+Now that we have learned about hypothesis testing, we'll explore a different example. Although the rubric for performing the hypothesis test will not change, the individual steps will be implemented in a different way due to the research question we're asking and the type of data used to answer it.
+
+
+## Load packages
+
+We load the `MASS` package to access the `Melanoma` data on patients in Denmark with malignant melanoma, and the `mosaic` package for simulation tools.
+
+```{r, warning = FALSE, message = FALSE}
+library(MASS)
+library(mosaic)
+```
+
+
+## Our research question
+
+We know that certain types of cancer are more common among females or males. Is there a sex bias among patients with malignant melanoma?
+
+Let's jump into the "Exploratory data analysis" part of the rubric first.
+
+
+## Exploratory data analysis
+
+### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
+
+You can look at the help file by typing `?Melanoma` at the Console. However, do not put that command here in a code chunk. The R Notebook has no way of displaying a help file when it's processed. Be careful: there's another data set called `melanoma` with a lower-case "m". Make sure you are using an uppercase "M".
+
+We print the data frame:
+
+```{r}
+Melanoma
+```
+
+Use `str` to examine the structure of the data:
+
+```{r}
+str(Melanoma)
+```
+
+### Prepare the data for analysis.
+
+It appears that `sex` is coded as an integer. You will recall that we need to convert it to a factor variable since it is categorical, not numerical. If we have a preconceived idea of which category is considered the "success" category, we should list it first in the `factor` command. It doesn't matter in this case, so since the first number 0 is "female", we will take that to be our "success" and measure the proportion of malignant melanoma patients who are female.
+
+Although it seems silly to create a data frame with only one variable in it, our analysis in R will work better if it's set up like that.
+
+```{r}
+sex <- factor(Melanoma$sex, levels = c(0, 1), 
+              labels = c("Female", "Male"))
+```
+
+```{r}
+sex_df <- data.frame(sex)
+sex_df
+```
+
+```{r}
+str(sex_df)
+```
+
+### Make tables or plots to explore the data visually.
+
+We only have one categorical variable, so we only need a frequency table. Since we are concerned with proportions, we'll also look at a relative frequency table.
+
+```{r}
+tally(~ sex, data = sex_df, margins = TRUE)
+```
+
+```{r}
+tally(~ sex, data = sex_df, margins = TRUE, format = "percent")
+```
+
+
+## The logic of inference and simulation
+
+This is a good place to pause and remember why statistical inference is important. There are certainly more females than males in this data set. So why don't we just show the table above, declare females are more likely to have malignant melanoma, and then go home?
+
+Think back to coin flips. Even though there was a 50% chance of seeing heads, did that mean that exactly half of our flips came up heads? No. We have to acknowledge *sampling variability*: even if the truth were 50%, when we sample, we could accidentally get more or less than 50%, just by pure chance alone. Perhaps these 205 patients just happen to have more females than average.
+
+The key, then, is to figure out if `r 100 * prop(sex, data = sex_df)`% is *significantly* larger than 50%, or if a number like `r 100 * prop(sex, data = sex_df)`% (or one even more extreme) could easily come about from random chance.
+
+As we know from Part 1 of this module, we can run a formal hypothesis test to find out. As we do so, make note of the things that are the same and the things that have changed from the last hypothesis tests you ran. For example, we are not comparing two groups anymore. We have one group of patients, and all we're doing is measuring the percentage of this group that is female. It's tempting to think that we're comparing males and females, but that's not the case. We are not using `sex` to divide our data into two groups for the purpose of exploring whether some other variable differs between men and women. We just have one sample. "Female" and "Male" are simply categories in a single categorical variable. Also, because we are only asking about one variable (`sex`), the mathematical form of the hypotheses will look a little different.
+
+Because this is no longer a question about two variables being independent or associated, the "shuffling" idea we've been using no longer makes sense. So what does make sense?
+
+It helps to start by figuring out what our null hypothesis is. Remember, our question of interest is whether there is a sex bias in malignant melanoma. In other words, are there more or fewer females than males with malignant melanoma? As this is our research question, it will be the alternative hypothesis. So what is the null? What is the "default" situation in which nothing interesting is going on? Well, there would be no sex bias. In other words, there would be the same number of females and males with malignant melanoma. Or another way of saying that---with respect to the "success" condition of being female that we discussed earlier---is that females comprise 50% of all patients with malignant melanoma.
+
+Okay, given our philosophy about the null hypothesis, let's take the skeptical position and assume that, indeed, 50% of all malignant melanoma patients in our population are female. Then let's take a sample of 205 patients. We can't get exactly 50% females from a sample of 205 (that would be 102.5 females!), so what numbers can we get?
+
+Simulation will tell us. What kind of simulation? As we come across each patient in our sample, there is a 50% chance of them being female. So instead of sampling real patients, what if we just flipped a coin? A coin flip will come up heads just as often as our patients will be female under the assumption of the null.
+
+This brings us full circle, back to the first simulation idea we explored. We can simulate coin flips (using the `mosaic` package in R with the `rflip` function), graph our results, and calculate a P-value. More specifically, we'll flip a coin 205 times to represent sampling 205 patients. Then we'll use the `do` command to do this a bunch of times and establish a range of plausible percentages that can come about by chance from this procedure.
+
+Let's dive back into the remaining steps of the formal hypothesis test.
+
+
+## Hypotheses
+
+### Identify the sample (or samples) and a reasonable population (or populations) of interest.
+
+The sample consists of 205 patients from Denmark with malignant melanoma. Our population is presumably all patients with malignant melanoma, although in checking conditions below, we'll take care to discuss whether patients in Denmark are representative of patients elsewhere.
+
+### Express the null and alternative hypotheses as contextually meaningful full sentences.
+
+$H_{0}:$ Half of malignant melanoma patients are female.
+
+$H_{A}:$ There is a sex bias among patients with malignant melanoma (meaning that females are either overrepresented or underrepresented).
+
+### Express the null and alternative hypotheses in symbols (when possible).
+
+$H_{0}: p_{female} = 0.5$
+
+$H_{A}: p_{female} \neq 0.5$
+
+
+## Model
+
+### Identify the sampling distribution model.
+
+We will simulate the sampling distribution.
+
+### Check the relevant conditions to ensure that model assumptions are met.
+
+* Random
+    - As mentioned above, these 205 patients are not a random sample of all people with malignant melanoma. We don't even have any evidence that they are a random sample of melanoma patients in Denmark. Without such evidence, we have to hope that these 205 patients are representative of all patients who have malignant melanoma. Unless there's something special about Danes in terms of their genetics or diet or something like that, one could imagine that their physiology makes them just as susceptible to melanoma as anyone else. More specifically, though, our question is about females and males getting malignant melanoma. Perhaps there are more female sunbathers in Denmark than in other countries. That might make Danes unrepresentative in terms of the gender balance among melanoma patients. We should be cautious in interpreting any conclusion we might reach in light of these doubts.
+
+* 10%
+    - Whether in Denmark or not, given that melanoma is a fairly common form of cancer, I assume 205 is less than 10% of all patients with malignant melanoma.
+
+
+## Mechanics
+
+### Compute the test statistic.
+
+```{r}
+female_prop <- prop(sex, data = sex_df)
+female_prop
+```
+
+### Report the test statistic in context (when possible).
+
+The observed percentage of females with melanoma in our sample is `r 100 * female_prop`%.
+
+### Plot the null distribution.
+
+Since this is the first step for which we need the simulated values, it will be convenient to run the simulation here. We'll need to set the seed as well.
+
+```{r}
+set.seed(42)
+sims <- do(1000) * rflip(205, prob = 0.5)
+# Strictly speaking, you don't need prob = 0.5 because
+# that's the default for rflip. However, I'm showing you
+# the syntax because your null hypothesis won't always
+# be p = 0.5.
+```
+
+Without plotting the test statistic, here's what the graph of the simulated sampling distribution looks like:
+
+```{r}
+ggplot(sims, aes(x = prop)) +
+    geom_histogram(binwidth = 0.01)
+```
+
+The value of our test statistic, `female_prop`, is 0.6146341. It appears in the right tail:
+
+
+```{r}
+ggplot(sims, aes(x = prop)) +
+    geom_histogram(binwidth = 0.01) +
+    geom_vline(xintercept = female_prop, color = "blue")
+```
+
+But since we're conducting a two-sided test, we need to plot another blue line in the other tail as well. Where would that line go?
+
+Since the null value is 0.5, the distance from the null value to the test statistic is 0.1146341:
+
+```{r}
+0.6146341 - 0.5
+```
+
+Now we need to take that distance, but move it to the *left* of the null value:
+
+```{r}
+0.5 - 0.1146341
+```
+
+In other words, if the test statistic is 11% to the right of the null value, the corrsponding value in the left tail needs to be 11% to the left of the null value. That puts us at about 39%. The exact value is 0.3853659. Here is the plot:
+
+```{r}
+ggplot(sims, aes(x = prop)) +
+    geom_histogram(binwidth = 0.01) +
+    geom_vline(xintercept = female_prop, color = "blue") +
+    geom_vline(xintercept = 0.3853659, color = "blue")
+```
+
+This final graph is the correct one to produce in this step of the rubric (at least for a two-sided test).
+
+### Calculate the P-value.
+
+```{r}
+P <- 2 * prop(sims$prop >= female_prop)
+P
+```
+
+Three observations here:
+
+1. We need "greater than or equal to" (`>=`) here because the simulated values that are more extreme than `r female_prop` are lying *above* `r female_prop`, in the right tail of the simulated sampling distribution.
+
+2. We multiplied by 2 because this is a two-sided test.
+
+3. The P-value appears to be zero. Indeed, among the 1000 simulated values, we saw none that exceeded `r female_prop` and none that were less than 0.3853659. However, a true P-value can never be zero. If you did millions or billions of simulations (please don't try!), surely there would be one or two with even more extreme values. In cases when the P-value is really, really tiny, it is traditional to report $P < 0.001$. It is **incorrect** to say $P = 0$.
+
+### Interpret the P-value as a probability given the null.
+
+$P < 0.001$. If there were no sex bias in malignant melanoma patients, there would be less than a 0.1% chance of seeing a percentage of females at least as extreme as the one we saw in our data.
+
+Note: Don't forget to interpret the P-value in a contextually meaningful way. The P-value is the probability under the assumption of the null hypothesis of seeing data at least as extreme as the data we saw. In this context, that means that if we assume 50% of patients are female, it would be extremely rare to see more than 61% or less than 39% females in a sample of size 205.
+
+
+## Conclusion
+
+### State the statistical conclusion.
+
+We reject the null hypothesis.
+
+### State (but do not overstate) a contextually meaningful conclusion.
+
+There is sufficient evidence that there is a sex bias in patients who suffer from malignant melanoma.
+
+### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+
+As we rejected the null, we run the risk of making a Type I error. If we have made such an error, that would mean that patients with malignant melanoma are equally likely to be male or female, but that we got a sample with an unusual number of female patients.
+
+
+## Your turn
+
+Determine if the percentage of patients in Denmark with malignant melanoma who also have an ulcerated tumor (measured with the `ulcer` variable) is significantly different from 50%.
+
+As before, you have the outline of the rubric for inference below. Some of the steps will be the same or similar to steps in the example above. It is perfectly okay to copy and paste R code, making the necessary changes. It is **not** okay to copy and paste text. You need to put everything into your own words.
+
+The template below is exactly the same as in the file `Rubric_for_inference` up to the part about confidence intervals which we haven't learned yet.
+
+
+##### Exploratory data analysis
+
+###### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
+
+<div class = "answer">
+
+```{r}
+# Add code here to understand the data.
+```
+
+</div>
+
+###### Prepare the data for analysis. [Not always necessary.]
+
+[When converting `ulcer` to a factor variable, be sure to use "present" as the success condition. This will require you to use `levels = c(1, 0)` and `labels = c("present", "absent")` so that the factor variable gets coded in the right order.]
+
+<div class = "answer">
+
+```{r}
+# Add code here to prepare the data for analysis.
+```
+
+</div>
+
+###### Make tables or plots to explore the data visually.
+
+<div class = "answer">
+
+```{r}
+# Add code here to make tables or plots.
+```
+
+</div>
+
+
+##### Hypotheses
+
+###### Identify the sample (or samples) and a reasonable population (or populations) of interest.
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
+
+###### Express the null and alternative hypotheses as contextually meaningful full sentences.
+
+<div class = "answer">
+
+$H_{0}:$ Null hypothesis goes here.
+
+$H_{A}:$ Alternative hypothesis goes here.
+
+</div>
+
+###### Express the null and alternative hypotheses in symbols (when possible).
+
+<div class = "answer">
+
+$H_{0}: math$
+
+$H_{A}: math$
+
+</div>
+
+
+##### Model
+
+###### Identify the sampling distribution model.
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
+
+###### Check the relevant conditions to ensure that model assumptions are met.
+
+<div class = "answer">
+
+Please write up your answer here. (Some conditions may require R code as well.)
+
+</div>
+
+
+##### Mechanics
+
+###### Compute the test statistic.
+
+<div class = "answer">
+
+```{r}
+# Add code here to compute the test statistic.
+```
+
+</div>
+
+###### Report the test statistic in context (when possible).
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
+
+###### Plot the null distribution.
+
+<div class = "answer">
+
+```{r}
+set.seed(42)
+# Add code here to simulate the null distribution.
+# Run 1000 simulations like in the earlier example.
+```
+
+```{r}
+# Add code here to plot the null distribution.
+```
+
+</div>
+
+###### Calculate the P-value.
+
+<div class = "answer">
+
+```{r}
+# Add code here to calculate the P-value.
+```
+
+</div>
+
+###### Interpret the P-value as a probability given the null.
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
+
+
+##### Conclusion
+
+###### State the statistical conclusion.
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
+
+###### State (but do not overstate) a contextually meaningful conclusion.
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
+
+###### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+
+<div class = "answer">
+
+Please write up your answer here.
+
+</div>
+
+
+##  Conclusion
+
+Now you have seen two fully-worked examples of hypothesis tests using simulation, and you have created two more examples on your own. Hopefully, the logic of inference and the process of running a formal hypothesis test are starting to make sense.
+
+Keep in mind that the outline of steps will not change. However, the way each step is carried out will vary from problem to problem. Not only does the context change (one example involved smoking mothers and the other, melanoma patients), but the statistics you compute also change (one example compared proportions from two samples and the other only had one proportion from a single sample). Pay close attention to the research question and the data that will be used to answer that question. That will be the only information you have to help you know which hypothesis test applies.
