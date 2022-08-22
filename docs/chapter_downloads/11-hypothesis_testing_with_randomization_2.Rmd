@@ -1,5 +1,5 @@
 ---
-title: "Hypothesis testing with simulation, Part 2"
+title: "11. Hypothesis testing with randomization, Part 2"
 author: "Put your name here"
 date: "Put the date here"
 output:
@@ -9,27 +9,54 @@ output:
 ---
 
 <!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(49,46,53))`</p>
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(50,46,48))`</p>
 <!-- Please don't mess with the previous few lines! -->
 
-<div class = "summary">
-### Functions introduced in this module:
+::: {.summary}
+
+
+### Functions introduced in this chapter
+
 No new R functions are introduced here.
-</div>
+
+:::
 
 
 ## Introduction
 
 Now that we have learned about hypothesis testing, we'll explore a different example. Although the rubric for performing the hypothesis test will not change, the individual steps will be implemented in a different way due to the research question we're asking and the type of data used to answer it.
 
+### Install new packages
+
+If you are using RStudio Workbench, you do not need to install any packages. (Any packages you need should already be installed by the server administrators.)
+
+If you are using R and RStudio on your own machine instead of accessing RStudio Workbench through a browser, you'll need to type the following command at the Console:
+
+```
+install.packages("MASS")
+```
+
+### Download the R notebook file
+
+Check the upper-right corner in RStudio to make sure you're in your `intro_stats` project. Then click on the following link to download this chapter as an R notebook file (`.Rmd`).
+
+<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/11-hypothesis_testing_with_randomization_2.Rmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/11-hypothesis_testing_with_randomization_2.Rmd</a>
+
+Once the file is downloaded, move it to your project folder in RStudio and open it there.
+
+### Restart R and run all chunks
+
+In RStudio, select "Restart R and Run All Chunks" from the "Run" menu.
 
 ## Load packages
 
-We load the `MASS` package to access the `Melanoma` data on patients in Denmark with malignant melanoma, and the `mosaic` package for simulation tools.
+In additional to `tidyverse` and `janitor`, we load the `MASS` package to access the `Melanoma` data on patients in Denmark with malignant melanoma, and the `infer` package for inference tools.
 
-```{r, warning = FALSE, message = FALSE}
+```{r}
+library(tidyverse)
+library(janitor)
 library(MASS)
-library(mosaic)
+library(infer)
 ```
 
 
@@ -42,9 +69,25 @@ Let's jump into the "Exploratory data analysis" part of the rubric first.
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.
 
 You can look at the help file by typing `?Melanoma` at the Console. However, do not put that command here in a code chunk. The R Notebook has no way of displaying a help file when it's processed. Be careful: there's another data set called `melanoma` with a lower-case "m". Make sure you are using an uppercase "M".
+
+There is a reference at the bottom of the help file.
+
+##### Exercise 1
+
+Using the reference in the help file, do an internet search to find the source of this data. How can you tell that this reference is not, in fact, a reference to a study of cancer patients in Denmark?
+
+::: {.answer}
+
+Please write up your answer here.
+
+:::
+
+*****
+
+From the exercise above, we can see that it will be very difficult, if not impossible, to discover anything useful about the true provenance of the data (unless you happen to have a copy of that textbook, which in theory provided another more primary source). We will not know, for example, how the data was collected and if the patients consented to having their data shared publicly. The data is suitably anonymized, though, so we don't have any serious concerns about the privacy of the data. Having said that, if a condition is rare enough, a dedicated research can often "de-anonymize" data by cross-referencing information in the data to other kinds of public records. But melanoma is not particularly rare. At any rate, all we can do is assume that the textbook authors obtained the data from a source that used proper procedures for collecting and handling the data.
 
 We print the data frame:
 
@@ -52,64 +95,69 @@ We print the data frame:
 Melanoma
 ```
 
-Use `str` to examine the structure of the data:
+Use `glimpse` to examine the structure of the data:
 
 ```{r}
-str(Melanoma)
+glimpse(Melanoma)
 ```
 
 ### Prepare the data for analysis.
 
-It appears that `sex` is coded as an integer. You will recall that we need to convert it to a factor variable since it is categorical, not numerical. If we have a preconceived idea of which category is considered the "success" category, we should list it first in the `factor` command. It doesn't matter in this case, so since the first number 0 is "female", we will take that to be our "success" and measure the proportion of malignant melanoma patients who are female.
+It appears that `sex` is coded as an integer. You will recall that we need to convert it to a factor variable since it is categorical, not numerical.
 
-Although it seems silly to create a data frame with only one variable in it, our analysis in R will work better if it's set up like that.
+##### Exercise 2
+
+According to the help file, which number corresponds to which sex?
+
+::: {.answer}
+
+Please write up your answer here.
+
+:::
+
+*****
+
+We can convert a numerical variable a couple of different ways. In Chapter 3, we used the `as_factor` command. That command works fine, but it doesn't give you a way to change the levels of the variable. In other words, if we used `as_factor` here, we would get a factor variable that still contained zeroes and ones. 
+
+Instead, we will use the `factor` command. It allows us to manually relabel the levels. The `levels` argument requires a vector (with `c`) of the current levels, and the `labels` argument requires a vector listing the new names you want to assign, as follows:
 
 ```{r}
-sex <- factor(Melanoma$sex, levels = c(0, 1), 
-              labels = c("Female", "Male"))
+Melanoma <- Melanoma %>%
+    mutate(sex_fct = factor(sex, levels = c(0, 1), labels = c("female", "male")))
+glimpse(Melanoma)
 ```
 
-```{r}
-sex_df <- data.frame(sex)
-sex_df
-```
-
-```{r}
-str(sex_df)
-```
+You should check to make sure the first few entries of `sex_fct` agree with the numbers in the `sex` variable according to the labels explained in the help file. (If not, it means that you put the `levels` in one order and the `labels` in a different order.)
 
 ### Make tables or plots to explore the data visually.
 
-We only have one categorical variable, so we only need a frequency table. Since we are concerned with proportions, we'll also look at a relative frequency table.
+We only have one categorical variable, so we only need a frequency table. Since we are concerned with proportions, we'll also look at a relative frequency table which the `tabyl` command provides for free.
 
 ```{r}
-tally(~ sex, data = sex_df, margins = TRUE)
-```
-
-```{r}
-tally(~ sex, data = sex_df, margins = TRUE, format = "percent")
+tabyl(Melanoma, sex_fct) %>%
+    adorn_totals()
 ```
 
 
-## The logic of inference and simulation
+## The logic of inference and randomization
 
 This is a good place to pause and remember why statistical inference is important. There are certainly more females than males in this data set. So why don't we just show the table above, declare females are more likely to have malignant melanoma, and then go home?
 
-Think back to coin flips. Even though there was a 50% chance of seeing heads, did that mean that exactly half of our flips came up heads? No. We have to acknowledge *sampling variability*: even if the truth were 50%, when we sample, we could accidentally get more or less than 50%, just by pure chance alone. Perhaps these 205 patients just happen to have more females than average.
+Think back to coin flips. Even though there was a 50% chance of seeing heads, did that mean that exactly half of our flips came up heads? No. We have to acknowledge *sampling variability*: even if the truth were 50%, when w sample, we could accidentally get more or less than 50%, just by pure chance alone. Perhaps these 205 patients just happen to have more females than average.
 
-The key, then, is to figure out if `r 100 * prop(sex, data = sex_df)`% is *significantly* larger than 50%, or if a number like `r 100 * prop(sex, data = sex_df)`% (or one even more extreme) could easily come about from random chance.
+The key, then, is to figure out if 61.5% is *significantly* larger than 50%, or if a number like 61.5% (or one even more extreme) could easily come about from random chance.
 
-As we know from Part 1 of this module, we can run a formal hypothesis test to find out. As we do so, make note of the things that are the same and the things that have changed from the last hypothesis tests you ran. For example, we are not comparing two groups anymore. We have one group of patients, and all we're doing is measuring the percentage of this group that is female. It's tempting to think that we're comparing males and females, but that's not the case. We are not using `sex` to divide our data into two groups for the purpose of exploring whether some other variable differs between men and women. We just have one sample. "Female" and "Male" are simply categories in a single categorical variable. Also, because we are only asking about one variable (`sex`), the mathematical form of the hypotheses will look a little different.
+As we know from the last chapter, we can run a formal hypothesis test to find out. As we do so, make note of the things that are the same and the things that have changed from the last hypothesis tests you ran. For example, we are not comparing two groups anymore. We have one group of patients, and all we're doing is measuring the percentage of this group that is female. It's tempting to think that we're comparing males and females, but that's not the case. We are not using sex to divide our data into two groups for the purpose of exploring whether some other variable differs between men and women. We just have one sample. "Female" and "Male" are simply categories in a single categorical variable. Also, because we are only asking about one variable (`sex_fct`), the mathematical form of the hypotheses will look a little different.
 
-Because this is no longer a question about two variables being independent or associated, the "shuffling" idea we've been using no longer makes sense. So what does make sense?
+Because this is no longer a question about two variables being independent or associated, the "permuting" idea we've been using no longer makes sense. So what does make sense?
 
 It helps to start by figuring out what our null hypothesis is. Remember, our question of interest is whether there is a sex bias in malignant melanoma. In other words, are there more or fewer females than males with malignant melanoma? As this is our research question, it will be the alternative hypothesis. So what is the null? What is the "default" situation in which nothing interesting is going on? Well, there would be no sex bias. In other words, there would be the same number of females and males with malignant melanoma. Or another way of saying that---with respect to the "success" condition of being female that we discussed earlier---is that females comprise 50% of all patients with malignant melanoma.
 
 Okay, given our philosophy about the null hypothesis, let's take the skeptical position and assume that, indeed, 50% of all malignant melanoma patients in our population are female. Then let's take a sample of 205 patients. We can't get exactly 50% females from a sample of 205 (that would be 102.5 females!), so what numbers can we get?
 
-Simulation will tell us. What kind of simulation? As we come across each patient in our sample, there is a 50% chance of them being female. So instead of sampling real patients, what if we just flipped a coin? A coin flip will come up heads just as often as our patients will be female under the assumption of the null.
+Randomization will tell us. What kind of randomization? As we come across each patient in our sample, there is a 50% chance of them being female. So instead of sampling real patients, what if we just flipped a coin? A simulated coin flip will come up heads just as often as our patients will be female under the assumption of the null.
 
-This brings us full circle, back to the first simulation idea we explored. We can simulate coin flips (using the `mosaic` package in R with the `rflip` function), graph our results, and calculate a P-value. More specifically, we'll flip a coin 205 times to represent sampling 205 patients. Then we'll use the `do` command to do this a bunch of times and establish a range of plausible percentages that can come about by chance from this procedure.
+This brings us full circle, back to the first randomization idea we explored. We can simulate coin flips, graph our results, and calculate a P-value. More specifically, we'll flip a coin 205 times to represent sampling 205 patients. Then we'll repeat this procedure a bunch of times and establish a range of plausible percentages that can come about by chance from this procedure. Instead of doing coin flips with the `rflip` command as we did then, however, we'll use our new favorite friend, the `infer` package.
 
 Let's dive back into the remaining steps of the formal hypothesis test.
 
@@ -124,7 +172,7 @@ The sample consists of 205 patients from Denmark with malignant melanoma. Our po
 
 $H_{0}:$ Half of malignant melanoma patients are female.
 
-$H_{A}:$ There is a sex bias among patients with malignant melanoma (meaning that females are either overrepresented or underrepresented).
+$H_{A}:$ There is a sex bias among patients with malignant melanoma (meaning that females are either over-represented or under-represented).
 
 ### Express the null and alternative hypotheses in symbols (when possible).
 
@@ -137,7 +185,7 @@ $H_{A}: p_{female} \neq 0.5$
 
 ### Identify the sampling distribution model.
 
-We will simulate the sampling distribution.
+We will randomize to simulate the sampling distribution.
 
 ### Check the relevant conditions to ensure that model assumptions are met.
 
@@ -153,13 +201,19 @@ We will simulate the sampling distribution.
 ### Compute the test statistic.
 
 ```{r}
-female_prop <- prop(sex, data = sex_df)
+female_prop <- Melanoma %>%
+    observe(response = sex_fct, success = "female",
+            stat = "prop")
 female_prop
 ```
 
+Note: Pay close attention to the difference in the `observe` command above. Unlike in the last chapter, we don't have any tildes. That's because there are not two variables involved. There is only one variable, which `observe` needs to see as the "response" variable. (Don't forget to use the factor version `sex_fct` and not `sex`!) We still have to specify a "success" condition. Since the hypotheses are about measuring females, we have to tell `observe` to calculate the proportion of females. Finally, the `stat` is no longer "diff in props" There are not two proportions with which to find a difference. There is just one proportion, hence, "prop".
+
 ### Report the test statistic in context (when possible).
 
-The observed percentage of females with melanoma in our sample is `r 100 * female_prop`%.
+The observed percentage of females with melanoma in our sample is `r 100 * female_prop %>% pull(1)`%.
+
+Note: As explained in the last chapter, we have to use `pull` to pull out the number from the `female_prop` tibble.
 
 ### Plot the null distribution.
 
@@ -167,74 +221,52 @@ Since this is the first step for which we need the simulated values, it will be 
 
 ```{r}
 set.seed(42)
-sims <- do(1000) * rflip(205, prob = 0.5)
-# Strictly speaking, you don't need prob = 0.5 because
-# that's the default for rflip. However, I'm showing you
-# the syntax because your null hypothesis won't always
-# be p = 0.5.
+melanoma_test <- Melanoma %>%
+    specify(response = sex_fct, success = "female") %>%
+    hypothesize(null = "point", p = 0.5) %>%
+    generate(reps = 1000, type = "draw") %>%
+    calculate(stat = "prop")
+melanoma_test
 ```
 
-Without plotting the test statistic, here's what the graph of the simulated sampling distribution looks like:
+This list of proportions is the sampling distribution. It represents possible sample proportions of females with melanoma **under the assumption that the null is true**. In other words, even if the "true" proportion of female melanoma patients were 0.5, these are all values that can result from random samples.
 
-```{r}
-ggplot(sims, aes(x = prop)) +
-    geom_histogram(binwidth = 0.01)
-```
+In the `hypothesize` command, we use "point" to tell `infer` that we want the null to be centered at the point 0.5. In the `generate` command, we need to specify the `type` as "draw" instead of "permute". We are not shuffling any values here; we are "drawing" values from a probability distribution like coin flips. Everything else in the command is pretty self-explanatory.
 
 The value of our test statistic, `female_prop`, is 0.6146341. It appears in the right tail:
 
-
 ```{r}
-ggplot(sims, aes(x = prop)) +
-    geom_histogram(binwidth = 0.01) +
-    geom_vline(xintercept = female_prop, color = "blue")
+melanoma_test %>%
+    visualize() +
+    shade_p_value(obs_stat = female_prop, direction = "two-sided")
 ```
 
-But since we're conducting a two-sided test, we need to plot another blue line in the other tail as well. Where would that line go?
+Although the line only appears on the right, keep in mind that we are conducting a two-sided test, so we are interested in values more extreme than the red line on the right, but also more extreme than a similarly placed line on the left.
 
-Since the null value is 0.5, the distance from the null value to the test statistic is 0.1146341:
+##### Exercise 3
 
-```{r}
-0.6146341 - 0.5
-```
+The red line sits at about 0.615. If you were to draw a red line on the above histogram that represented a value equally distant from 0.5, but on the left instead of the right, where would that line be? Do a little arithmetic to figure it out and show your work.
 
-Now we need to take that distance, but move it to the *left* of the null value:
+::: {.answer}
 
-```{r}
-0.5 - 0.1146341
-```
+Please write up your answer here.
 
-In other words, if the test statistic is 11% to the right of the null value, the corrsponding value in the left tail needs to be 11% to the left of the null value. That puts us at about 39%. The exact value is 0.3853659. Here is the plot:
-
-```{r}
-ggplot(sims, aes(x = prop)) +
-    geom_histogram(binwidth = 0.01) +
-    geom_vline(xintercept = female_prop, color = "blue") +
-    geom_vline(xintercept = 0.3853659, color = "blue")
-```
-
-This final graph is the correct one to produce in this step of the rubric (at least for a two-sided test).
+:::
 
 ### Calculate the P-value.
 
 ```{r}
-P <- 2 * prop(sims$prop >= female_prop)
-P
+melanoma_test %>%
+    get_p_value(obs_stat = female_prop, direction = "two-sided")
 ```
 
-Three observations here:
-
-1. We need "greater than or equal to" (`>=`) here because the simulated values that are more extreme than `r female_prop` are lying *above* `r female_prop`, in the right tail of the simulated sampling distribution.
-
-2. We multiplied by 2 because this is a two-sided test.
-
-3. The P-value appears to be zero. Indeed, among the 1000 simulated values, we saw none that exceeded `r female_prop` and none that were less than 0.3853659. However, a true P-value can never be zero. If you did millions or billions of simulations (please don't try!), surely there would be one or two with even more extreme values. In cases when the P-value is really, really tiny, it is traditional to report $P < 0.001$. It is **incorrect** to say $P = 0$.
+The P-value appears to be zero. Indeed, among the 1000 simulated values, we saw none that exceeded 0.615 and none that were less than 0.385. However, a true P-value can never be zero. If you did millions or billions of simulations (please don't try!), surely there would be one or two with even more extreme values. In cases when the P-value is really, really tiny, it is traditional to report $P < 0.001$. It is **incorrect** to say $P = 0$.
 
 ### Interpret the P-value as a probability given the null.
 
 $P < 0.001$. If there were no sex bias in malignant melanoma patients, there would be less than a 0.1% chance of seeing a percentage of females at least as extreme as the one we saw in our data.
 
-Note: Don't forget to interpret the P-value in a contextually meaningful way. The P-value is the probability under the assumption of the null hypothesis of seeing data at least as extreme as the data we saw. In this context, that means that if we assume 50% of patients are female, it would be extremely rare to see more than 61% or less than 39% females in a sample of size 205.
+Note: Don't forget to interpret the P-value in a contextually meaningful way. The P-value is the probability under the assumption of the null hypothesis of seeing data at least as extreme as the data we saw. In this context, that means that if we assume 50% of patients are female, it would be extremely rare to see more than 61.5% or less than 38.5% females in a sample of size 205.
 
 
 ## Conclusion
@@ -247,6 +279,20 @@ We reject the null hypothesis.
 
 There is sufficient evidence that there is a sex bias in patients who suffer from malignant melanoma.
 
+### Express reservations or uncertainty about the generalizability of the conclusion
+
+We have no idea how these patients were sampled. Are these all the patients in Denmark with malignant melanoma over a certain period of time? Were they part of a convenience sample? As a result of our uncertainly about the sampling process, we can't be sure if the results generalize to a larger population, either in Denmark or especially outside of Denmark.
+
+##### Exercise 4
+
+Can you find on the internet any evidence that females do indeed suffer from malignant melanoma more often than males (not just in Denmark, but anywhere)?
+
+::: {.answer}
+
+Please write up your answer here.
+
+:::
+
 ### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
 As we rejected the null, we run the risk of making a Type I error. If we have made such an error, that would mean that patients with malignant melanoma are equally likely to be male or female, but that we got a sample with an unusual number of female patients.
@@ -258,117 +304,115 @@ Determine if the percentage of patients in Denmark with malignant melanoma who a
 
 As before, you have the outline of the rubric for inference below. Some of the steps will be the same or similar to steps in the example above. It is perfectly okay to copy and paste R code, making the necessary changes. It is **not** okay to copy and paste text. You need to put everything into your own words.
 
-The template below is exactly the same as in the file `Rubric_for_inference` up to the part about confidence intervals which we haven't learned yet.
+The template below is exactly the same as in the appendix ([Rubric for inference](#appendix-rubric)) up to the part about confidence intervals which we haven't learned yet.
 
 
 ##### Exploratory data analysis
 
-###### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
+###### Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.
 
-<div class = "answer">
+::: {.answer}
 
 ```{r}
 # Add code here to understand the data.
 ```
 
-</div>
+:::
 
 ###### Prepare the data for analysis. [Not always necessary.]
 
-[When converting `ulcer` to a factor variable, be sure to use "present" as the success condition. This will require you to use `levels = c(1, 0)` and `labels = c("present", "absent")` so that the factor variable gets coded in the right order.]
-
-<div class = "answer">
+::: {.answer}
 
 ```{r}
 # Add code here to prepare the data for analysis.
 ```
 
-</div>
+:::
 
 ###### Make tables or plots to explore the data visually.
 
-<div class = "answer">
+::: {.answer}
 
 ```{r}
 # Add code here to make tables or plots.
 ```
 
-</div>
+:::
 
 
 ##### Hypotheses
 
 ###### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
-<div class = "answer">
+::: {.answer}
 
 Please write up your answer here.
 
-</div>
+:::
 
 ###### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
-<div class = "answer">
+::: {.answer}
 
 $H_{0}:$ Null hypothesis goes here.
 
 $H_{A}:$ Alternative hypothesis goes here.
 
-</div>
+:::
 
 ###### Express the null and alternative hypotheses in symbols (when possible).
 
-<div class = "answer">
+::: {.answer}
 
 $H_{0}: math$
 
 $H_{A}: math$
 
-</div>
+:::
 
 
 ##### Model
 
 ###### Identify the sampling distribution model.
 
-<div class = "answer">
+::: {.answer}
 
 Please write up your answer here.
 
-</div>
+:::
 
 ###### Check the relevant conditions to ensure that model assumptions are met.
 
-<div class = "answer">
+::: {.answer}
 
 Please write up your answer here. (Some conditions may require R code as well.)
 
-</div>
+:::
 
 
 ##### Mechanics
 
 ###### Compute the test statistic.
 
-<div class = "answer">
+::: {.answer}
 
 ```{r}
 # Add code here to compute the test statistic.
 ```
 
-</div>
+:::
 
 ###### Report the test statistic in context (when possible).
 
-<div class = "answer">
+::: {.answer}
 
 Please write up your answer here.
 
-</div>
+:::
 
 ###### Plot the null distribution.
 
-<div class = "answer">
+::: {.answer}
 
 ```{r}
 set.seed(42)
@@ -380,56 +424,77 @@ set.seed(42)
 # Add code here to plot the null distribution.
 ```
 
-</div>
+:::
 
 ###### Calculate the P-value.
 
-<div class = "answer">
+::: {.answer}
 
 ```{r}
 # Add code here to calculate the P-value.
 ```
 
-</div>
+:::
 
 ###### Interpret the P-value as a probability given the null.
 
-<div class = "answer">
+::: {.answer}
 
 Please write up your answer here.
 
-</div>
+:::
 
 
 ##### Conclusion
 
 ###### State the statistical conclusion.
 
-<div class = "answer">
+::: {.answer}
 
 Please write up your answer here.
 
-</div>
+:::
 
 ###### State (but do not overstate) a contextually meaningful conclusion.
 
-<div class = "answer">
+::: {.answer}
 
 Please write up your answer here.
 
-</div>
+:::
+
+###### Express reservations or uncertainty about the generalizability of the conclusion.
+
+::: {.answer}
+
+Please write up your answer here.
+
+:::
 
 ###### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
-<div class = "answer">
+::: {.answer}
 
 Please write up your answer here.
 
-</div>
+:::
 
 
 ##  Conclusion
 
-Now you have seen two fully-worked examples of hypothesis tests using simulation, and you have created two more examples on your own. Hopefully, the logic of inference and the process of running a formal hypothesis test are starting to make sense.
+Now you have seen two fully-worked examples of hypothesis tests using randomization, and you have created two more examples on your own. Hopefully, the logic of inference and the process of running a formal hypothesis test are starting to make sense.
 
-Keep in mind that the outline of steps will not change. However, the way each step is carried out will vary from problem to problem. Not only does the context change (one example involved smoking mothers and the other, melanoma patients), but the statistics you compute also change (one example compared proportions from two samples and the other only had one proportion from a single sample). Pay close attention to the research question and the data that will be used to answer that question. That will be the only information you have to help you know which hypothesis test applies.
+Keep in mind that the outline of steps will not change. However, the way each step is carried out will vary from problem to problem. Not only does the context change (one example involved sex discrimination, the other melanoma patients), but the statistics you compute also change (one example compared proportions from two samples and the other only had one proportion from a single sample). Pay close attention to the research question and the data that will be used to answer that question. That will be the only information you have to help you know which hypothesis test applies.
+
+### Preparing and submitting your assignment
+
+1. From the "Run" menu, select "Restart R and Run All Chunks".
+2. Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.
+3. Spell check your document by clicking the icon with "ABC" and a check mark.
+4. Hit the "Preview" button one last time to generate the final draft of the `.nb.html` file.
+5. Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
+
+If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
+
+
+
