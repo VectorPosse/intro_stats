@@ -1,12 +1,4 @@
----
-title: "12. Confidence intervals"
-author: "Put your name here"
-date: "Put the date here"
-output:
-    html_notebook:
-        toc: yes
-        toc_float: yes
----
+# Confidence intervals {#ci}
 
 <!-- Please don't mess with the next few lines! -->
 <style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(50,46,48))`</p>
@@ -15,19 +7,19 @@ output:
 ::: {.summary}
 
 
-### Functions introduced in this chapter
+### Functions introduced in this chapter {-}
 
 `get_confidence_interval`, `shade_confidence_interval`, `fct_collapse`
 
 :::
 
 
-## Introduction
+## Introduction {#ci-intro}
 
 Sampling variability means that we can never trust a single sample to identify a population parameter exactly. Instead of simply trusting a point estimate, we can look at the entire sampling distribution to create an interval of plausible values called a confidence interval. By making our intervals wide enough, we hope to have some chance of capturing the true population value. Like hypothesis tests, confidence intervals are a form of inference because they use a sample to deduce something about the population. Along the way, we will also learn about a new form of randomization called *bootstrapping*. 
 
 
-## Load packages
+## Load packages {#ci-load}
 
 We load the standard `tidyverse`, `janitor`, and `infer` packages. We'll also need the `openintro` package later in the chapter for the `hsb2` and the `smoking` data set.
 
@@ -39,7 +31,7 @@ library(openintro)
 ```
 
 
-## Bootstrapping
+## Bootstrapping {#ci-boot}
 
 Imagine you obtain a random sample of 200 high school seniors from across the U.S. Suppose 32 of them attend private school. As a sample statistic, we have
 
@@ -145,7 +137,7 @@ Now we're getting some sampling variability!
 If we do this many, many times, we get a whole collection of sample proportions. The distribution of all those sample proportions, obtained with bootstrap samples (samples drawn with replacement), is called the *bootstrap sampling distribution*.
 
 
-## Computing a bootstrap sampling distribution
+## Computing a bootstrap sampling distribution {#ci-computing-boot}
 
 The `infer` package can compute bootstrap samples and, hence, produce a bootstrap sampling distribution. The code looks a whole like the code you already know for hypothesis testing:
 
@@ -169,7 +161,7 @@ private_boot %>%
 (We can change the number of bins if we want, but this number looks pretty good.)
 
 
-## Confidence intervals
+## Confidence intervals {#ci-ci}
 
 The histogram above simulates what might happen if we took many samples from our infinite "fake" population consisting of many copies of our original, actual sample data. On the lower end, we might see something like 8% private school students. On the upper end, we could see 25% or more private school students.
 
@@ -221,7 +213,7 @@ private_boot %>%
 
 The interpretation is that when you go collect many samples, the confidence intervals you produce using the bootstrap procedure described above will capture the true population proportion 95% of the time.
 
-##### Exercise 1
+##### Exercise 1 {-}
 
 Why is a 95% confidence interval wider than a 50% confidence interval? In other words, why should our desire to be 95% confident in capturing the true value of $p$ result in an interval that is wider than if we only wanted to be 50% confident?
 
@@ -231,7 +223,7 @@ Please write up your answer here.
 
 :::
 
-##### Exercise 2
+##### Exercise 2 {-}
 
 Being more confident seems like a good thing. In fact, we might want a 99% confidence interval. Compute and visualize a 99% confidence interval for proportion of private school students.
 
@@ -247,7 +239,7 @@ Being more confident seems like a good thing. In fact, we might want a 99% confi
 
 :::
 
-##### Exercise 3
+##### Exercise 3 {-}
 
 Can you think of any downside to using higher and higher confidence levels? As a hint, think about the following completely true sentence: "I am 100% confident that the true proportion of high school seniors attending private school is somewhere between 0% and 100%."
 
@@ -264,7 +256,7 @@ Please write up your answer here.
 While 50% is clearly too low for a confidence level, as seen above, there is no particular reason that we need to compute a 95% confidence interval either. There is some consensus in the scientific community here: 95% has evolved to become a generally agreed-upon standard. But we could compute a 90% confidence interval or a 99% confidence interval (as you did above), or any other type of interval. Having said that, if you choose other intervals besides these three, people might wonder if you're up to something.^[A contrary position is proffered by Richard McElreath, an evolutionary ecologist and author of the amazing book *Statistical Rethinking*. He uses 89% and 97% intervals to highlight the absurdity of regarding 95% as a magic number that has some kind of deep, special meaning.]
 
 
-## Conditions
+## Conditions {#ci-conditions}
 
 Don't forget that there are always assumptions we make when relying on any kind of statistical inference. Before computing a confidence interval for a proportion, we must verify that certain conditions are satisfied. But these conditions are not new. We already know from hypothesis testing what is required for good inference from a sample. These are the "Random" and the "10%" conditions.
 
@@ -276,7 +268,7 @@ Don't forget that there are always assumptions we make when relying on any kind 
 Both conditions are met for the data in the High School and Beyond survey.
 
 
-## Rubric for confidence intervals
+## Rubric for confidence intervals {#ci-rubric}
 
 Typically, you will be asked to report a confidence interval after performing a hypothesis test. Whereas a hypothesis test gives you a "decision criterion" (using data to make a decision to reject the null or fail to reject the null), a confidence interval gives you an estimate of the "effect size" (a range of plausible values for the population parameter).
 
@@ -289,7 +281,7 @@ As such, there is a section in the [Rubric for inference](#appendix-rubric) that
 5.  When comparing two groups, comment on the effect size and the practical significance of the result.
 
 
-## Example
+## Example {#ci-ex}
 
 Here is a worked example. (Unless otherwise stated, we always use a 95% confidence level.)
 
@@ -307,14 +299,14 @@ glimpse(hsb2)
 
 Inspect the variables `prog` and `prog2` above to make sure that the recoding was successful. Then be sure to use `prog2` and not `prog` everywhere.
 
-### Check the relevant conditions to ensure that model assumptions are met.
+### Check the relevant conditions to ensure that model assumptions are met. {#ci-ex-conditions}
 
 - Random
   - The sample is a random sample of high school seniors from the U.S. as the survey was conducted by the National Center of Education Statistics, a reputable government organization.
 - 10%
   - The sample size is 200, which is much less than 10% of the population of all U.S. high school seniors.
 
-### Calculate and graph the confidence interval.
+### Calculate and graph the confidence interval. {#ci-ex-calcaulte}
 
 ```{r}
 vocational_boot <- hsb2 %>%
@@ -336,26 +328,26 @@ vocational_boot %>%
     shade_confidence_interval(endpoints = vocational_ci)
 ```
 
-### State (but do not overstate) a contextually meaningful interpretation.
+### State (but do not overstate) a contextually meaningful interpretation. {#ci-ex-interpret}
 
 We are 95% confident that the true percentage of U.S. high school seniors who attend a vocational program is captured in the interval (`r 100 * vocational_ci$lower_ci`%, `r 100 * vocational_ci$upper_ci`%).
 
 Note: we use inline code to grab the values of the endpoints of the confidence interval. We also multiply by 100 to report percentages instead of proportions.
 
-### If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.
+### If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test. {#ci-ex-ci-ht}
 
 In this chapter, we haven't run a hypothesis test, so this step is irrelevant for us here. However, in future chapters, we will incorporate this step into the rubric and see how the confidence interval relates to the conclusion of a hypothesis test.
 
-### When comparing two groups, comment on the effect size and the practical significance of the result.
+### When comparing two groups, comment on the effect size and the practical significance of the result. {#ci-ex-effect}
 
 This step will also become more clear in future chapters. It only applies to situations where you are attempting to find a difference between two groups. In this example, we're simply using a sample statistic to estimate a single population parameter.
 
 
-## Your turn
+## Your turn {#ci-your-turn}
 
 Use the `smoking` data set from the `openintro` package. What percentage of the population of the U.K. smokes tobacco? (The information you need is in the `smoke` variable.) Use a 95% confidence interval.
 
-###### Check the relevant conditions to ensure that model assumptions are met.
+###### Check the relevant conditions to ensure that model assumptions are met. {-}
 
 ::: {.answer}
 
@@ -370,7 +362,7 @@ Use the `smoking` data set from the `openintro` package. What percentage of the 
     
 :::
 
-###### Calculate the confidence interval.
+###### Calculate the confidence interval. {-}
 
 ::: {.answer}
 
@@ -380,7 +372,7 @@ Use the `smoking` data set from the `openintro` package. What percentage of the 
 
 :::
 
-######  State (but do not overstate) a contextually meaningful interpretation.
+######  State (but do not overstate) a contextually meaningful interpretation. {-}
 
 ::: {.answer}
 
@@ -393,7 +385,7 @@ Please write up your answer here.
 (We will ignore the last two last steps in the rubric. We haven't run a hypothesis test and we're not comparing smoking between two groups.)
 
 
-## Interpreting confidence intervals
+## Interpreting confidence intervals {#ci-interpret}
 
 Confidence intervals are notoriously difficult to interpret.^[Several studies have given surveys to statistics students, teachers, and researchers, and find that even these people often misinterpret confidence intervals. See, for example, this paper: http://www.ejwagenmakers.com/inpress/HoekstraEtAlPBR.pdf]
 
@@ -480,11 +472,11 @@ So let's revisit the erroneous statements from the beginning of this section and
     - This is wrong in a more subtle way. The problem here as that it takes our interval as being fixed and special, and then tries to declare that of all possible population parameters, we have a 95% chance of the true one landing in our interval. The logic is backwards. The population parameter is the fixed truth. It doesn't wander around and land in our interval sometimes and not at other times. It is our confidence interval that wanders; it is just one of many intervals we could have obtained from random sampling. When we say, "We are 95% confident that...," we are just using a convenient shorthand for, "If we were to repeat the process of sampling and creating confidence intervals many times, about 95% of those times would produce an interval that happens to capture the actual population proportion." But we're lazy and we don't want to say that every time.
 
 
-## Conclusion
+## Conclusion {#ci-conclusion}
 
 A confidence interval is a form of statistical inference that gives us a range of numbers in which we hope to capture the true population parameter. Of course, we can't be certain of that. If we repeatedly collect samples, the expectation is that 95% of those samples will produce confidence intervals that capture the true population parameter, but that also means that 5% will not. We'll never know if our sample was one of the 95% that worked, or one of the 5% that did not. And even if we get one of the intervals that worked, all we have is a range of values and it's impossible to determine which of those values is the true population parameter. Because it's statistics, we just have to live with that uncertainty.
 
-### Preparing and submitting your assignment
+### Preparing and submitting your assignment {#ci-prep}
 
 1. From the "Run" menu, select "Restart R and Run All Chunks".
 2. Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.
