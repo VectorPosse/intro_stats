@@ -13352,6 +13352,25 @@ If you have completed this chapter as part of a statistics course, follow the di
 
 Sampling variability means that we can never trust a single sample to identify a population parameter exactly. Instead of simply trusting a point estimate, we can look at the entire sampling distribution to create an interval of plausible values called a confidence interval. By making our intervals wide enough, we hope to have some chance of capturing the true population value. Like hypothesis tests, confidence intervals are a form of inference because they use a sample to deduce something about the population. Along the way, we will also learn about a new form of randomization called \emph{bootstrapping}.
 
+\hypertarget{ci-install}{%
+\subsection{Install new packages}\label{ci-install}}
+
+There are no new packages used in this chapter.
+
+\hypertarget{ci-download}{%
+\subsection{Download the R notebook file}\label{ci-download}}
+
+Check the upper-right corner in RStudio to make sure you're in your \texttt{intro\_stats} project. Then click on the following link to download this chapter as an R notebook file (\texttt{.Rmd}).
+
+https://vectorposse.github.io/intro\_stats/chapter\_downloads/12-confidence\_intervals.Rmd
+
+Once the file is downloaded, move it to your project folder in RStudio and open it there.
+
+\hypertarget{ci-restart}{%
+\subsection{Restart R and run all chunks}\label{ci-restart}}
+
+In RStudio, select ``Restart R and Run All Chunks'' from the ``Run'' menu.
+
 \hypertarget{ci-load}{%
 \section{Load packages}\label{ci-load}}
 
@@ -14188,6 +14207,688 @@ A confidence interval is a form of statistical inference that gives us a range o
 
 \hypertarget{ci-prep}{%
 \subsection{Preparing and submitting your assignment}\label{ci-prep}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  From the ``Run'' menu, select ``Restart R and Run All Chunks''.
+\item
+  Deal with any code errors that crop up. Repeat steps 1---2 until there are no more code errors.
+\item
+  Spell check your document by clicking the icon with ``ABC'' and a check mark.
+\item
+  Hit the ``Preview'' button one last time to generate the final draft of the \texttt{.nb.html} file.
+\item
+  Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
+\end{enumerate}
+
+If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
+
+\hypertarget{normal}{%
+\chapter{Normal models}\label{normal}}
+
+2.0
+
+\hypertarget{functions-introduced-in-this-chapter-12}{%
+\subsection*{Functions introduced in this chapter}\label{functions-introduced-in-this-chapter-12}}
+\addcontentsline{toc}{subsection}{Functions introduced in this chapter}
+
+\texttt{pdist}, \texttt{diff}, \texttt{qdist}, \texttt{scale}, \texttt{geom\_qq}
+
+\hypertarget{normal-intro}{%
+\section{Introduction}\label{normal-intro}}
+
+In this chapter we will learn how to work with normal models. In addition to learning about theoretical normal distributions, we will also develop QQ plots to assess the normality of data.
+
+\hypertarget{normal-install}{%
+\subsection{Install new packages}\label{normal-install}}
+
+There are no new packages used in this chapter.
+
+\hypertarget{normal-download}{%
+\subsection{Download the R notebook file}\label{normal-download}}
+
+Check the upper-right corner in RStudio to make sure you're in your \texttt{intro\_stats} project. Then click on the following link to download this chapter as an R notebook file (\texttt{.Rmd}).
+
+https://vectorposse.github.io/intro\_stats/chapter\_downloads/13-normal\_models.Rmd
+
+Once the file is downloaded, move it to your project folder in RStudio and open it there.
+
+\hypertarget{normal-restart}{%
+\subsection{Restart R and run all chunks}\label{normal-restart}}
+
+In RStudio, select ``Restart R and Run All Chunks'' from the ``Run'' menu.
+
+\hypertarget{normal-load}{%
+\section{Load packages}\label{normal-load}}
+
+In addition to \texttt{tidyverse}, we return to the \texttt{mosaic} package to produce some nice visualizations of normal models.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(mosaic)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{normal-clt}{%
+\section{The Central Limit Theorem}\label{normal-clt}}
+
+An important aspect of all the simulations that we've done so far---assuming that we've run a large enough number of them---is that their histograms all look like bell curves. This fact is known as the ``Central Limit Theorem''. Under some basic assumptions that we'll discuss in a later chapter, this will be typical of many of our simulated null distributions.
+
+So rather than running a simulation each time we want to conduct a hypothesis test, we could also assume that the null distribution \emph{is} a bell curve. The rest of this chapter will teach you how to work with the ``normal distribution,'' which is just the mathematically correct term for a bell curve.
+
+\hypertarget{normal-normal}{%
+\section{Normal models}\label{normal-normal}}
+
+The normal distribution looks like this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Don\textquotesingle{}t worry about the syntax here.}
+\CommentTok{\# You won\textquotesingle{}t need to know how to do this on your own.}
+\FunctionTok{ggplot}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{x =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{)), }\FunctionTok{aes}\NormalTok{(x)) }\SpecialCharTok{+}
+    \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dnorm) }\SpecialCharTok{+}
+    \FunctionTok{scale\_x\_continuous}\NormalTok{(}\AttributeTok{breaks =} \SpecialCharTok{{-}}\DecValTok{3}\SpecialCharTok{:}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-335-1.pdf}
+
+The curve pictured above is called the \emph{standard normal distribution}. It has a mean of 0 and a standard deviation of 1. Mathematically, this is written as
+
+\[
+N(\mu = 0, \sigma = 1),
+\]
+
+or usually just
+
+\[
+N(0, 1).
+\]
+
+We use this bell curve shape to model data that is unimodal, symmetric, and without outliers. A statistical ``model'' is a simplification or an idealization. Reality is, of course, never perfectly bell-shaped. Real data is not exactly symmetric with one clear peak in the middle. Nevertheless, an abstract model can give us good answers if used properly.
+
+As an example of this, systolic blood pressure (SBP, measured in millimeters of mercury, or mmHg) is more-or-less normally distributed in women ages 30--44 in the U.S. and Canada, with a mean of 114 and a standard deviation of 14.\footnote{Statistics from the World Health Organization: \url{http://www.who.int/publications/cra/chapters/volume1/0281-0390.pdf}}
+
+If we were to plot a histogram with the SBP of every woman between the ages of 30 and 44 in the U.S. and Canada, it would have the shape of a normal distribution, but instead of being centered at 0 like the graph above, this one would be centered at 114. Mathematically, we write
+
+\[
+N(\mu = 114, \sigma = 14),
+\]
+
+or
+
+\[
+N(114, 14).
+\]
+
+The graph now looks like this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Again, don\textquotesingle{}t worry about the syntax here.}
+\FunctionTok{ggplot}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{x =} \FunctionTok{c}\NormalTok{(}\DecValTok{58}\NormalTok{, }\DecValTok{170}\NormalTok{)), }\FunctionTok{aes}\NormalTok{(x)) }\SpecialCharTok{+}
+    \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dnorm, }\AttributeTok{args =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mean =} \DecValTok{114}\NormalTok{, }\AttributeTok{sd =} \DecValTok{14}\NormalTok{)) }\SpecialCharTok{+}
+    \FunctionTok{scale\_x\_continuous}\NormalTok{(}\AttributeTok{breaks =} \FunctionTok{c}\NormalTok{(}\DecValTok{72}\NormalTok{, }\DecValTok{86}\NormalTok{, }\DecValTok{100}\NormalTok{, }\DecValTok{114}\NormalTok{, }\DecValTok{128}\NormalTok{, }\DecValTok{142}\NormalTok{, }\DecValTok{156}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-336-1.pdf}
+
+\hypertarget{normal-predictions}{%
+\section{Predictions using normal models}\label{normal-predictions}}
+
+Using this information, we can estimate the percentage of such women who are expected to have any range of SBP without having access to all such data.
+
+For example, what percentage of women ages 30--44 in the U.S. and Canada are expected to have SBP under 130 mmHg? The \texttt{pdist} command from the \texttt{mosaic} package will not only help us with this calculation, but it also offers a nice visual representation depending on the arguments we supply to the function:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pdist}\NormalTok{(}\StringTok{"norm"}\NormalTok{, }\AttributeTok{q =} \DecValTok{130}\NormalTok{, }\AttributeTok{mean =} \DecValTok{114}\NormalTok{, }\AttributeTok{sd =} \DecValTok{14}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-337-1.pdf}
+
+\begin{verbatim}
+## [1] 0.873451
+\end{verbatim}
+
+In the notebook view, you have to switch back and forth between the two boxes below the code chunk (above the graph) to see the number versus the graph. In the HTML output, however, both the number and the plot are visible.
+
+For situations where we really just want to see the number, we can always add \texttt{plot\ =\ FALSE} to the function:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pdist}\NormalTok{(}\StringTok{"norm"}\NormalTok{, }\AttributeTok{q =} \DecValTok{130}\NormalTok{, }\AttributeTok{mean =} \DecValTok{114}\NormalTok{, }\AttributeTok{sd =} \DecValTok{14}\NormalTok{, }\AttributeTok{plot =} \ConstantTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.873451
+\end{verbatim}
+
+The other pieces of the \texttt{pdist} function are pretty intuitive: \texttt{"norm"} (and it has to be in quotes) indicates that we want a normal model, \texttt{q} is the value of interest to us, and \texttt{mean} and \texttt{sd} are self-evident. The numerical output gives the area under the curve to the left of our value of interest. This area is 0.873451; in other words, about 87.3\% of women are expected to have SBP less than 130.
+
+If you use this command inline, the pretty picture is not generated, just the value. For example, look at the following sentence (remembering that you can click anywhere inside the inline R code and hit Ctrl-Enter or Cmd-Enter):
+
+\begin{quote}
+The model predicts that 87.3451046\% of women ages 30--44 in the U.S. and Canada will have systolic blood pressure under 130 mmHg.
+\end{quote}
+
+Note that the above code multiplied the result of the \texttt{pdist} command by 100. This is important because the full sentence interpretation is meant to be read by human beings, and human beings tend to report these kinds of numbers as percentages and not decimals.\footnote{When you preview this in HTML, you'll see a ridiculous number of decimal places that R reports. It's a bit of a hassle to try to change it, so we'll just ignore the issue.}
+
+It's also important that you include the phrase, ``The model predicts\ldots{}'' or something like that. Without that part, the claim is likely false. It would be too definitive. Remember that a model is just an approximation or simplification of reality. We're not claiming we've found the ``True'' number. All we know is that if the model is roughly correct, we can predict the true value.
+
+Here's another question: how many women are predicted to have SBP \emph{greater} than 130? If 87.3\% of women have SBP under 130, then 12.7\% must have SBP over 130. Why? Because all women have to add up to 100\%!
+
+Therefore, all we have to do to solve this problem is subtract the number we obtained in the previous question from 1. (Remember that 1 = 100\%.)
+
+\begin{quote}
+The model predicts that 12.6548954\% of women ages 30--44 in the U.S. and Canada will have systolic blood pressure over 130 mmHg.
+\end{quote}
+
+Don't forget to include parentheses. We need to multiply the whole expression by 100.
+
+Now, here's a more complicated question: what percentage of women are predicted to have SBP between 110 mmHg and 130 mmHg?
+
+Recall that the proportion of women predicted to have SBP less than 130 mmHg was 0.873. But this is also counting women with SBP under 110 mmHg, whom we now want to exclude. The proportion of women with SBP under 110 is found with the following code:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pdist}\NormalTok{(}\StringTok{"norm"}\NormalTok{, }\AttributeTok{q =} \DecValTok{110}\NormalTok{, }\AttributeTok{mean =} \DecValTok{114}\NormalTok{, }\AttributeTok{sd =} \DecValTok{14}\NormalTok{, }\AttributeTok{plot =} \ConstantTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.3875485
+\end{verbatim}
+
+Therefore, all we have to do is calculate 0.873 minus 0.388:
+
+\begin{quote}
+The model predicts that 48.5902564\% of women ages 30--44 in the U.S. and Canada will have systolic blood pressure between 110 mmHg and 130 mmHg.
+\end{quote}
+
+(Again, don't forget the parentheses.)
+
+What about the pretty picture? Unfortunately, this doesn't work so well:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pdist}\NormalTok{(}\StringTok{"norm"}\NormalTok{, }\AttributeTok{q =} \DecValTok{130}\NormalTok{, }\AttributeTok{mean =} \DecValTok{114}\NormalTok{, }\AttributeTok{sd =} \DecValTok{14}\NormalTok{) }\SpecialCharTok{{-}} 
+    \FunctionTok{pdist}\NormalTok{(}\StringTok{"norm"}\NormalTok{, }\AttributeTok{q =} \DecValTok{110}\NormalTok{, }\AttributeTok{mean =} \DecValTok{114}\NormalTok{, }\AttributeTok{sd =} \DecValTok{14}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-340-1.pdf} \includegraphics{intro_stats_files/figure-latex/unnamed-chunk-340-2.pdf}
+
+\begin{verbatim}
+## [1] 0.4859026
+\end{verbatim}
+
+The code is bulky and it prints two pictures, neither of which are quite right for our question.
+
+Instead, let's observe that the \texttt{pdist} command can include both values (110 and 130) using the vector notation \texttt{c}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pdist}\NormalTok{(}\StringTok{"norm"}\NormalTok{, }\AttributeTok{q =} \FunctionTok{c}\NormalTok{(}\DecValTok{110}\NormalTok{, }\DecValTok{130}\NormalTok{), }\AttributeTok{mean =} \DecValTok{114}\NormalTok{, }\AttributeTok{sd =} \DecValTok{14}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-341-1.pdf}
+
+\begin{verbatim}
+## [1] 0.3875485 0.8734510
+\end{verbatim}
+
+Now the picture looks great and you can see the proportion you desire in the area between the two lines at 110 and 130.
+
+This doesn't work so well for the numerical output though. Observe:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pdist}\NormalTok{(}\StringTok{"norm"}\NormalTok{, }\AttributeTok{q =} \FunctionTok{c}\NormalTok{(}\DecValTok{110}\NormalTok{, }\DecValTok{130}\NormalTok{), }\AttributeTok{mean =} \DecValTok{114}\NormalTok{, }\AttributeTok{sd =} \DecValTok{14}\NormalTok{, }\AttributeTok{plot =} \ConstantTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.3875485 0.8734510
+\end{verbatim}
+
+There are two numbers shown, but neither is the correct answer. This command shows the percentages below 110 and below 130, respectively, but not the area in between 110 and 130. We still have to subtract. However, R can do this for us easily with the \texttt{diff} command:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pdist}\NormalTok{(}\StringTok{"norm"}\NormalTok{, }\AttributeTok{q =} \FunctionTok{c}\NormalTok{(}\DecValTok{110}\NormalTok{, }\DecValTok{130}\NormalTok{), }\AttributeTok{mean =} \DecValTok{114}\NormalTok{, }\AttributeTok{sd =} \DecValTok{14}\NormalTok{, }\AttributeTok{plot =} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{diff}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.4859026
+\end{verbatim}
+
+Again, for inline R code, you don't need to specify \texttt{plot\ =\ FALSE}:
+
+\begin{quote}
+The model predicts that 48.5902564\% of women ages 30--44 in the U.S. and Canada will have systolic blood pressure between 110 mmHg and 130 mmHg.
+\end{quote}
+
+For the following exercises, we'll use a running example of IQ scores. Keep in mind that, at best, IQ scores fail to measure anything like ``intelligence'' (\url{https://www.sciencedaily.com/releases/2012/12/121219133334.htm}). At worse, IQ tests (and other forms of standardized testing) have been used to perpetuate systemic racism and inequality (\url{https://www.nea.org/advocating-for-change/new-from-nea/racist-beginnings-standardized-testing}).
+
+IQ scores---whatever they actually measure---are standardized so that they have a mean of 100 and a standard deviation of 16. For each exercise, use the \texttt{pdist} to draw the right picture and then state your answer in a contextually meaningful full sentence using inline R code. Don't forget to use the phrase ``The model predicts\ldots{}'' and report numbers as percentages, not decimals.
+
+\hypertarget{exercise-1a}{%
+\paragraph*{Exercise 1(a)}\label{exercise-1a}}
+\addcontentsline{toc}{paragraph}{Exercise 1(a)}
+
+What percentage of people would you expect to have IQ scores over 80?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to draw the model.}
+\end{Highlighting}
+\end{Shaded}
+
+Please write up your answer here.
+
+\hypertarget{exercise-1b}{%
+\paragraph*{Exercise 1(b)}\label{exercise-1b}}
+\addcontentsline{toc}{paragraph}{Exercise 1(b)}
+
+What percentage of people would you expect to have IQ scores under 90?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to draw the model.}
+\end{Highlighting}
+\end{Shaded}
+
+Please write up your answer here.
+
+\hypertarget{exercise-1c}{%
+\paragraph*{Exercise 1(c)}\label{exercise-1c}}
+\addcontentsline{toc}{paragraph}{Exercise 1(c)}
+
+What percentage of people would you expect to have IQ scores between 112 and 132?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to draw the model.}
+\end{Highlighting}
+\end{Shaded}
+
+Please write up your answer here.
+
+\hypertarget{normal-percentiles}{%
+\section{Percentiles}\label{normal-percentiles}}
+
+Often, the question is reversed: instead of getting a value and being asked what percentage of the population falls above or below it, we are given a percentile and asked about the value to which it corresponds.
+
+Here is an example using systolic blood pressure: what is the cutoff value of SBP for the lowest 25\% of women ages 30--44 in the U.S. and Canada? In other words, what is the 25th percentile of SBP for this group of women?
+
+The command we need is \texttt{qdist}. It looks a lot like \texttt{pdist}. Observe:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{qdist}\NormalTok{(}\StringTok{"norm"}\NormalTok{, }\AttributeTok{p =} \FloatTok{0.25}\NormalTok{, }\AttributeTok{mean =} \DecValTok{114}\NormalTok{, }\AttributeTok{sd =} \DecValTok{14}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-347-1.pdf}
+
+\begin{verbatim}
+## [1] 104.5571
+\end{verbatim}
+
+The only change here is that one of the arguments is \texttt{p} instead of \texttt{q}, and the value of \texttt{p} is a proportion (between 0 and 1) instead of a value of SBP. The \emph{output} is now an SBP value.
+
+Here it is inline:
+
+\begin{quote}
+The model predicts that the 25th percentile for SBP in women ages 30--44 in the U.S. and Canada is 104.5571435 mmHg.
+\end{quote}
+
+What if we asked about the highest 10\% of women? All you have to do is remember that the top 10\% is actually the 90th percentile.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{qdist}\NormalTok{(}\StringTok{"norm"}\NormalTok{, }\AttributeTok{p =} \FloatTok{0.9}\NormalTok{, }\AttributeTok{mean =} \DecValTok{114}\NormalTok{, }\AttributeTok{sd =} \DecValTok{14}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-348-1.pdf}
+
+\begin{verbatim}
+## [1] 131.9417
+\end{verbatim}
+
+\begin{quote}
+The model predicts that the top 10\% of SBP in women ages 30--44 in the U.S. and Canada have SBP higher than 131.9417219 mmHg.
+\end{quote}
+
+Finally, what if we want the middle 50\%? This is trickier. The middle 50\% lies between the 25th percentile and the 75th percentile. Observe the syntax below:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{qdist}\NormalTok{(}\StringTok{"norm"}\NormalTok{, }\AttributeTok{p =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.25}\NormalTok{, }\FloatTok{0.75}\NormalTok{), }\AttributeTok{mean =} \DecValTok{114}\NormalTok{, }\AttributeTok{sd =} \DecValTok{14}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-349-1.pdf}
+
+\begin{verbatim}
+## [1] 104.5571 123.4429
+\end{verbatim}
+
+\begin{quote}
+Therefore, the model predicts that the middle 50\% of SBP for women ages 30--44 in the U.S. and Canada lies between 104.5571435 mmHg and 123.4428565 mmHg.
+\end{quote}
+
+We did something tricky in the inline code above. Because the \texttt{qdist} command produces two values (one at the 25th percentile and one at the 75th percentile), we can grab each value separately by appending \texttt{{[}1{]}} or \texttt{{[}2{]}} to the end of the command.
+
+For the exercises below, we'll continue to use IQ scores (mean of 100 and standard deviation of 16). Use the \texttt{qdist} command to draw the right picture and then state your answer in a contextually meaningful full sentence. Don't forget to use the phrase ``The model predicts\ldots{}''
+
+\hypertarget{exercise-2a-2}{%
+\paragraph*{Exercise 2(a)}\label{exercise-2a-2}}
+\addcontentsline{toc}{paragraph}{Exercise 2(a)}
+
+What cutoff value bounds the highest 5\% of IQ scores?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to draw the model.}
+\end{Highlighting}
+\end{Shaded}
+
+Please write up your answer here.
+
+\hypertarget{exercise-2b-2}{%
+\paragraph*{Exercise 2(b)}\label{exercise-2b-2}}
+\addcontentsline{toc}{paragraph}{Exercise 2(b)}
+
+What cutoff value bounds the lowest 30\% of IQ scores?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to draw the model.}
+\end{Highlighting}
+\end{Shaded}
+
+Please write up your answer here.
+
+\hypertarget{exercise-2c-2}{%
+\paragraph*{Exercise 2(c)}\label{exercise-2c-2}}
+\addcontentsline{toc}{paragraph}{Exercise 2(c)}
+
+What cutoff values bound the middle 80\% of IQ scores?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to draw the model.}
+\end{Highlighting}
+\end{Shaded}
+
+Please write up your answer here.
+
+\hypertarget{normal-z}{%
+\section{Z scores}\label{normal-z}}
+
+Sometimes it is easier to refer to a value in terms of how many standard deviations it lies from the mean. For example, a systolic blood pressure of 100 is 14 mmHg below the mean, but since the standard deviation is 14 mmHg, this means that 100 is one standard deviation below the mean. This distance from the mean in terms of standard deviations is called a \emph{z score}.
+
+We calculate z scores using the following formula:
+
+\[
+z = \frac{x - \mu}{\sigma}.
+\]
+
+In our example, if we wanted to know the z score for an SBP of 100, we just plug all the numbers into the formula above:
+
+\[
+z = \frac{100 - 114}{14} = -1.
+\]
+
+What is the z score for an SBP of 132? Look at the graph of the normal model \(N(114, 14)\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Don\textquotesingle{}t worry about the syntax here.}
+\CommentTok{\# You won\textquotesingle{}t need to know how to do this on your own.}
+\FunctionTok{ggplot}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{x =} \FunctionTok{c}\NormalTok{(}\DecValTok{58}\NormalTok{, }\DecValTok{170}\NormalTok{)), }\FunctionTok{aes}\NormalTok{(x)) }\SpecialCharTok{+}
+    \FunctionTok{stat\_function}\NormalTok{(}\AttributeTok{fun =}\NormalTok{ dnorm, }\AttributeTok{args =} \FunctionTok{list}\NormalTok{(}\AttributeTok{mean =} \DecValTok{114}\NormalTok{, }\AttributeTok{sd =} \DecValTok{14}\NormalTok{)) }\SpecialCharTok{+}
+    \FunctionTok{scale\_x\_continuous}\NormalTok{(}\AttributeTok{breaks =} \FunctionTok{c}\NormalTok{(}\DecValTok{72}\NormalTok{, }\DecValTok{86}\NormalTok{, }\DecValTok{100}\NormalTok{, }\DecValTok{114}\NormalTok{, }\DecValTok{128}\NormalTok{, }\DecValTok{142}\NormalTok{, }\DecValTok{156}\NormalTok{)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \DecValTok{132}\NormalTok{, }\AttributeTok{color =} \StringTok{"blue"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-353-1.pdf}
+
+We can see that 132 lies between 128 and 142, which are 1 and 2 standard deviations above the mean, respectively. The exact z score is
+
+\[
+z = \frac{132 - 114}{14} = 1.285714.
+\]
+
+The \texttt{scale} function from R also computes z scores. Just note that the function takes arguments \texttt{center} and \texttt{scale}, not \texttt{mean} and \texttt{sd}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{scale}\NormalTok{(}\AttributeTok{x =} \DecValTok{100}\NormalTok{, }\AttributeTok{center =} \DecValTok{114}\NormalTok{, }\AttributeTok{scale =} \DecValTok{14}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      [,1]
+## [1,]   -1
+## attr(,"scaled:center")
+## [1] 114
+## attr(,"scaled:scale")
+## [1] 14
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{scale}\NormalTok{(}\AttributeTok{x =} \DecValTok{132}\NormalTok{, }\AttributeTok{center =} \DecValTok{114}\NormalTok{, }\AttributeTok{scale =} \DecValTok{14}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##          [,1]
+## [1,] 1.285714
+## attr(,"scaled:center")
+## [1] 114
+## attr(,"scaled:scale")
+## [1] 14
+\end{verbatim}
+
+Also note that the function spits about a bunch of extra crap we don't care about. This goes away for inline code. Go ahead and preview the HTML file now so you can see the effect in the following sentence:
+
+\begin{quote}
+The z score for 100 is -1 and the z score for 132 is 1.2857143.
+\end{quote}
+
+\hypertarget{exercise-3-8}{%
+\paragraph*{Exercise 3}\label{exercise-3-8}}
+\addcontentsline{toc}{paragraph}{Exercise 3}
+
+If IQ scores have a mean of 100 and a standard deviation of 16, what are the z scores for the following IQ scores? Write up your answers as full sentences using inline R code.
+
+\begin{itemize}
+\tightlist
+\item
+  80
+\end{itemize}
+
+Please write up your answer here.
+
+\begin{itemize}
+\tightlist
+\item
+  102
+\end{itemize}
+
+Please write up your answer here.
+
+\begin{itemize}
+\tightlist
+\item
+  130
+\end{itemize}
+
+Please write up your answer here.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+Working with z scores also makes it easier to work with normal models. The default settings for \texttt{pdist} and \texttt{qdist} are \texttt{mean\ =\ 0} and \texttt{sd\ =\ 1}. That saves you some typing. So, for example, we calculated above that an SBP of 100 has a z score of -1. What percentage of women are expected to have SBP lower than 100?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pdist}\NormalTok{(}\StringTok{"norm"}\NormalTok{, }\AttributeTok{q =} \SpecialCharTok{{-}}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-356-1.pdf}
+
+\begin{verbatim}
+## [1] 0.1586553
+\end{verbatim}
+
+\begin{quote}
+The model predicts that 15.8655254\% of women ages 30--44 in the U.S. and Canada will have SBP less than 100.
+\end{quote}
+
+\hypertarget{exercise-4-7}{%
+\paragraph*{Exercise 4}\label{exercise-4-7}}
+\addcontentsline{toc}{paragraph}{Exercise 4}
+
+Albert Einstein supposedly had an IQ of 160. Calculate the z score for his IQ and then use that z score to figure out what percentage of the population is predicted to have higher IQ than Einstein. Use full sentences and inline R code to express your answer.
+
+Please write up your answer here.
+
+\hypertarget{normal-qq}{%
+\section{QQ plots}\label{normal-qq}}
+
+All of the work we do with normal models assumes that a normal model is appropriate. When we want to summarize data using a normal model, this means that the data distribution should be reasonably unimodal, symmetric, and with no serious outliers.
+
+We can, of course, use a histogram to check this. But a histogram can be highly sensitive to the choice of bins. Furthermore, for small sample sizes, histograms look ``chunky'', making it hard to test this assumption.
+
+An easier way to check normality is to use a \emph{quantile-quantile plot}, typically called a \emph{QQ plot} or sometimes a \emph{normal probability plot}. We won't get into the technicalities of how this plot works. Suffice it to say that if data is normally distributed, the points of a QQ plot should lie along a diagonal line.
+
+Here is an example. The total snowfall in Grand Rapids, Michigan has been recorded every year since 1893. This data is included with the \texttt{mosaic} package in the data frame \texttt{SnowGR}. A histogram (with reasonable binning) shows that the data is nearly normal.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(SnowGR, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Total)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{binwidth =} \DecValTok{10}\NormalTok{, }\AttributeTok{boundary =} \DecValTok{50}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 1 rows containing non-finite values (stat_bin).
+\end{verbatim}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-357-1.pdf}
+
+Here is the QQ plot for the same data. Notice that the aesthetics are a little different; instead of \texttt{x}, we have to use \texttt{sample}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(SnowGR, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{sample =}\NormalTok{ Total)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_qq}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{geom\_qq\_line}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 1 rows containing non-finite values (stat_qq).
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 1 rows containing non-finite values (stat_qq_line).
+\end{verbatim}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-358-1.pdf}
+
+(The warning is because there is one missing value in the data.)
+
+The \texttt{geom\_qq()} layer plots the dots and the \texttt{geom\_qq\_line()} layer plots a diagonal line that the dots should more or less follow.
+
+Other than a few points here and there, the bulk of the data is lined up nicely. There's a minor outlier, and that can be seen in both the histogram and the QQ plot.
+
+Contrast that with skewed data. For example, the \texttt{Alcohol} data set contains per capita consumption (in liters) of alcohol for various countries over several years. The alcohol consumption variable is highly skewed, as one can see in the histogram.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(Alcohol, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ alcohol)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{binwidth =} \DecValTok{2}\NormalTok{, }\AttributeTok{boundary =} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-359-1.pdf}
+
+It is also apparent in the QQ plot that the data is not normally distributed.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(Alcohol, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{sample =}\NormalTok{ alcohol)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_qq}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{geom\_qq\_line}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-360-1.pdf}
+
+The path of dots is sharply curved, indicating a lack of normality.
+
+\hypertarget{exercise-5a-1}{%
+\paragraph*{Exercise 5(a)}\label{exercise-5a-1}}
+\addcontentsline{toc}{paragraph}{Exercise 5(a)}
+
+Find a data set with a numerical variable that is nearly normal in its distribution. (It can be something we've already seen in a past chapter, or if you're really ambitious, you're welcome to find a new data set.) Plot both a histogram and a QQ plot to demonstrate that the data is nearly normal. No need for a written response. Just plot the graphs.
+
+Be aware that if you use a data set from a package, you may have to add \texttt{library(PACKAGE)} to your code. (You replace the word \texttt{PACKAGE} with whatever package you need.)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to plot a histogram.}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to plot a QQ plot.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{exercise-5b-1}{%
+\paragraph*{Exercise 5(b)}\label{exercise-5b-1}}
+\addcontentsline{toc}{paragraph}{Exercise 5(b)}
+
+Now find a data set with a numerical variable that is skewed in its distribution. Plot both a histogram and a QQ plot to demonstrate that the data is not normal. Again, no need for a written response. Just plot the graphs.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to plot a histogram.}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to plot a QQ plot.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{normal-conclusion}{%
+\section{Conclusion}\label{normal-conclusion}}
+
+The normal model is ubiquitous in statistics, so understanding how to use it to make predictions is critical. When certain assumptions are met (that will be discussed in a future chapter), we can use the normal model to make predictions. The use of z scores allows us to measure distances from the mean in terms of standard deviations, giving us a scale in which data from different contexts are comparable as long as such measurements are normally distributed. A QQ plot helps us check that assumption.
+
+\hypertarget{normal-prep}{%
+\subsection{Preparing and submitting your assignment}\label{normal-prep}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
