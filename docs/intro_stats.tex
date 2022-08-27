@@ -96,6 +96,7 @@
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
+\usepackage[normalem]{ulem}
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -124,7 +125,7 @@
 
 \title{Introduction to Statistics: an integrated textbook and workbook using R}
 \author{Sean Raleigh, Westminster College (Salt Lake City, UT)}
-\date{2022-08-22}
+\date{2022-08-27}
 
 \begin{document}
 \maketitle
@@ -12513,7 +12514,7 @@ If you have completed this chapter as part of a statistics course, follow the di
 \subsection*{Functions introduced in this chapter}\label{functions-introduced-in-this-chapter-10}}
 \addcontentsline{toc}{subsection}{Functions introduced in this chapter}
 
-No new R functions are introduced here.
+\texttt{factor}
 
 \hypertarget{hypothesis2-intro}{%
 \section{Introduction}\label{hypothesis2-intro}}
@@ -13335,192 +13336,717 @@ Keep in mind that the outline of steps will not change. However, the way each st
 
 If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
 
-\hypertarget{appendix-appendix}{%
-\appendix}
-
+\hypertarget{ci}{%
+\chapter{Confidence intervals}\label{ci}}
 
 2.0
 
-\hypertarget{appendix-rubric}{%
-\chapter{Rubric for inference}\label{appendix-rubric}}
+\hypertarget{functions-introduced-in-this-chapter-11}{%
+\subsection*{Functions introduced in this chapter}\label{functions-introduced-in-this-chapter-11}}
+\addcontentsline{toc}{subsection}{Functions introduced in this chapter}
 
-This is the R Markdown outline for running inference, both a hypothesis test and a confidence interval.
+\texttt{get\_confidence\_interval}, \texttt{shade\_confidence\_interval}, \texttt{fct\_collapse}
 
-\hypertarget{exploratory-data-analysis-2}{%
-\paragraph*{Exploratory data analysis}\label{exploratory-data-analysis-2}}
-\addcontentsline{toc}{paragraph}{Exploratory data analysis}
+\hypertarget{ci-intro}{%
+\section{Introduction}\label{ci-intro}}
 
-\hypertarget{use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-2}{%
-\subparagraph*{Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.}\label{use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-2}}
-\addcontentsline{toc}{subparagraph}{Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.}
+Sampling variability means that we can never trust a single sample to identify a population parameter exactly. Instead of simply trusting a point estimate, we can look at the entire sampling distribution to create an interval of plausible values called a confidence interval. By making our intervals wide enough, we hope to have some chance of capturing the true population value. Like hypothesis tests, confidence intervals are a form of inference because they use a sample to deduce something about the population. Along the way, we will also learn about a new form of randomization called \emph{bootstrapping}.
 
-Please write up your answer here
+\hypertarget{ci-load}{%
+\section{Load packages}\label{ci-load}}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# Add code here to print the data}
-\end{Highlighting}
-\end{Shaded}
+We load the standard \texttt{tidyverse}, \texttt{janitor}, and \texttt{infer} packages. We'll also need the \texttt{openintro} package later in the chapter for the \texttt{hsb2} and the \texttt{smoking} data set.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# Add code here to glimpse the variables}
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(janitor)}
+\FunctionTok{library}\NormalTok{(infer)}
+\FunctionTok{library}\NormalTok{(openintro)}
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{prepare-the-data-for-analysis.-not-always-necessary.-2}{%
-\subparagraph*{Prepare the data for analysis. {[}Not always necessary.{]}}\label{prepare-the-data-for-analysis.-not-always-necessary.-2}}
-\addcontentsline{toc}{subparagraph}{Prepare the data for analysis. {[}Not always necessary.{]}}
+\hypertarget{ci-boot}{%
+\section{Bootstrapping}\label{ci-boot}}
+
+Imagine you obtain a random sample of 200 high school seniors from across the U.S. Suppose 32 of them attend private school. As a sample statistic, we have
+
+\[
+\hat{p} = 32/200 = 0.16
+\]
+In other words, 16\% of the students in the sample attended private school.
+
+If our sample is representative, we might guess that the true population parameter \(p\) is also close to 0.16, but we're not really sure:
+
+\[
+p \approx 0.16?
+\]
+
+And what about the sampling variability? A few chapters ago, we flipped coins. A ``weighted'' coin flipped 200 times can give us a ``new'' (fake) sample, and doing that a thousand times (or even more) can give us a lot of new samples to see what range of values is possible. But what would we use as the probability of heads for the weighted coin? It would be a bad idea to use 0.16 because that would assume that the population proportion agreed exactly with the one sample we happen to have. It worked in a hypothesis test because we had a value of \(p\) we assumed was true in the guise of a null hypothesis. But in general, if I simply want to estimate a population parameter with a sample statistic, I have no such information to use. So coin flipping is out.
+
+An alternative that is available to us is a procedure called \emph{bootstrapping}. The idea sounds weird, but it's pretty simple: instead of building fake samples, what if we tried to build a fake population? And then, what if we took repeated samples from it?
+
+How would we build a fake population? Imagine making many, many copies of our sample until we had thousands or even millions of students. In fact, we can think of an infinite number of copies of our sample if we want. Sure, this fake population isn't exactly like the real population of all high school seniors. But if our sample is representative, we might hope that lots of copies of our sample would approximate the population we care about.
+
+Computationally, it's a lot of work to copy our sample thousands or millions of times. And we certainly can't work with an infinite number of copies. Fortunately, we can use a shortcut. It's called \emph{sampling with replacement}.
+
+Normal sampling is usually \emph{without replacement}, meaning that once we have sampled an individual, they are not eligible to be sampled again. We don't want to survey Billy and then later in our study, survey Billy again.
+
+In sampling \emph{with} replacement, we put Billy back in the pool and make him eligible to be sampled again. This is the same thing as having access to an infinite population. Remember that our fake population is just many, many copies of our sample. So in that fake population, there are many, many Billy clones that could end up in our sample. So rather than cloning Billy many, many times, let's just put Billy back in the group any time he's sampled.
+
+We need to see this in action. We have a random sample of 200 students obtained by the National Center of Education Statistics in their ``High School and Beyond'' survey. This is stored in the \texttt{hsb2} data set from the \texttt{openintro} package. Here are the school types for these students, stored in the variable \texttt{schtyp}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# Add code here to prepare the data for analysis.}
+\NormalTok{hsb2}\SpecialCharTok{$}\NormalTok{schtyp}
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{make-tables-or-plots-to-explore-the-data-visually.-2}{%
-\subparagraph*{Make tables or plots to explore the data visually.}\label{make-tables-or-plots-to-explore-the-data-visually.-2}}
-\addcontentsline{toc}{subparagraph}{Make tables or plots to explore the data visually.}
+\begin{verbatim}
+##   [1] public  public  public  public  public  public  public  public  public 
+##  [10] public  public  public  public  public  public  public  public  private
+##  [19] public  public  public  public  public  public  public  public  public 
+##  [28] private private public  public  public  private public  private public 
+##  [37] private public  public  public  private private public  public  public 
+##  [46] public  public  public  private public  public  public  public  private
+##  [55] public  public  public  public  private public  private public  public 
+##  [64] public  private public  public  public  public  public  public  public 
+##  [73] public  public  public  public  public  public  public  public  public 
+##  [82] public  private public  public  public  public  public  public  public 
+##  [91] public  public  public  public  public  public  public  public  public 
+## [100] private public  public  public  public  public  public  public  public 
+## [109] private private public  public  public  public  private public  public 
+## [118] public  public  public  private public  public  public  public  public 
+## [127] public  public  public  public  public  public  public  public  public 
+## [136] public  private public  public  private public  public  public  public 
+## [145] public  private public  private public  public  public  public  public 
+## [154] public  public  public  public  public  public  public  public  public 
+## [163] private public  public  public  public  public  private public  public 
+## [172] public  public  public  public  public  public  public  public  public 
+## [181] public  private public  public  public  public  public  public  private
+## [190] public  public  private private public  private private public  private
+## [199] public  public 
+## Levels: public private
+\end{verbatim}
+
+Let's sample an individual from our sample:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# Add code here to make tables or plots.}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{6}\NormalTok{)}
+\FunctionTok{sample}\NormalTok{(hsb2}\SpecialCharTok{$}\NormalTok{schtyp, }\AttributeTok{size =} \DecValTok{1}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{hypotheses-2}{%
-\paragraph*{Hypotheses}\label{hypotheses-2}}
-\addcontentsline{toc}{paragraph}{Hypotheses}
+\begin{verbatim}
+## [1] public
+## Levels: public private
+\end{verbatim}
 
-\hypertarget{identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-2}{%
-\subparagraph*{Identify the sample (or samples) and a reasonable population (or populations) of interest.}\label{identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-2}}
-\addcontentsline{toc}{subparagraph}{Identify the sample (or samples) and a reasonable population (or populations) of interest.}
+That was one of the public school students from among the 200 students in our sample. Here's another one:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{7}\NormalTok{)}
+\FunctionTok{sample}\NormalTok{(hsb2}\SpecialCharTok{$}\NormalTok{schtyp, }\AttributeTok{size =} \DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] private
+## Levels: public private
+\end{verbatim}
+
+That was one of the private school students.
+
+We can do this 200 times. Now, if we sample \emph{without} replacement, all we get back are the original students, just listed in a different order. Think about why: we're just picking one student at a time. But since they don't get replaced, eventually, every student will get chosen. We're choosing 200 students, but there are only 200 students from which to choose.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{8}\NormalTok{)}
+\NormalTok{sample\_without\_replacement1 }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(hsb2}\SpecialCharTok{$}\NormalTok{schtyp, }\AttributeTok{size =} \DecValTok{200}\NormalTok{)}
+\NormalTok{sample\_without\_replacement1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   [1] public  public  public  public  public  public  public  public  public 
+##  [10] public  public  public  public  public  public  public  private public 
+##  [19] public  public  public  public  public  public  public  public  public 
+##  [28] public  public  private public  public  public  public  public  public 
+##  [37] public  public  public  public  public  public  public  private public 
+##  [46] public  public  public  public  private private private public  public 
+##  [55] private private public  public  public  public  public  public  private
+##  [64] public  public  private public  public  public  public  public  public 
+##  [73] public  public  public  public  public  public  public  public  public 
+##  [82] public  public  public  public  public  public  public  public  public 
+##  [91] public  public  public  public  public  public  public  public  public 
+## [100] public  public  private public  public  public  public  public  public 
+## [109] public  public  public  public  public  public  public  public  public 
+## [118] public  public  public  private public  public  private public  public 
+## [127] private private public  public  public  public  private public  private
+## [136] private public  public  public  public  public  public  public  public 
+## [145] public  public  public  public  public  public  public  public  private
+## [154] public  public  public  public  public  private public  private private
+## [163] public  public  public  public  private public  public  private public 
+## [172] private private public  public  public  public  public  public  public 
+## [181] public  private public  private public  public  public  private private
+## [190] public  public  public  public  public  public  public  public  private
+## [199] public  private
+## Levels: public private
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tabyl}\NormalTok{(sample\_without\_replacement1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  sample_without_replacement1   n percent
+##                       public 168    0.84
+##                      private  32    0.16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{9}\NormalTok{)}
+\NormalTok{sample\_without\_replacement2 }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(hsb2}\SpecialCharTok{$}\NormalTok{schtyp, }\AttributeTok{size =} \DecValTok{200}\NormalTok{)}
+\NormalTok{sample\_without\_replacement2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   [1] public  public  public  private public  private public  private public 
+##  [10] public  public  private private private private private public  public 
+##  [19] private public  public  public  public  public  public  public  public 
+##  [28] public  public  public  public  public  public  public  public  public 
+##  [37] public  public  public  public  public  public  public  private public 
+##  [46] public  public  public  public  private public  private public  public 
+##  [55] public  private public  public  public  public  public  public  public 
+##  [64] private public  public  public  public  public  public  public  public 
+##  [73] public  public  public  public  private public  public  public  public 
+##  [82] private private public  public  public  public  public  public  private
+##  [91] public  private public  public  public  private public  public  public 
+## [100] public  public  private private public  public  public  public  public 
+## [109] public  private public  public  private public  private public  public 
+## [118] public  public  public  public  public  private public  public  public 
+## [127] public  public  public  public  public  public  public  public  public 
+## [136] public  public  public  public  public  public  private public  public 
+## [145] public  private public  public  public  public  public  public  public 
+## [154] public  public  public  public  public  public  public  public  private
+## [163] private public  public  public  public  public  public  public  public 
+## [172] public  public  public  public  public  public  public  public  public 
+## [181] private public  public  public  public  public  private public  public 
+## [190] public  public  public  public  public  public  public  public  public 
+## [199] public  public 
+## Levels: public private
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tabyl}\NormalTok{(sample\_without\_replacement2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  sample_without_replacement2   n percent
+##                       public 168    0.84
+##                      private  32    0.16
+\end{verbatim}
+
+The two lists above consist of the same 200 students, just drawn in a different order.
+
+On the other hand, if we sample \emph{with} replacement, then students can get chosen more than once. (Remember, we're equating ``getting chosen more than once'' with ``sampling from an infinite population and choosing a clone''.) Now, the number of private school students we see might not be 32.
+
+Each of the following samples is called a \emph{bootstrap sample}. Notice that we've added the argument \texttt{replace\ =\ TRUE} to the \texttt{sample} function:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{10}\NormalTok{)}
+\NormalTok{sample\_with\_replacement1 }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(hsb2}\SpecialCharTok{$}\NormalTok{schtyp, }\AttributeTok{size =} \DecValTok{200}\NormalTok{, }\AttributeTok{replace =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{sample\_with\_replacement1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   [1] private public  public  public  public  private public  public  public 
+##  [10] public  public  public  public  public  public  public  public  public 
+##  [19] private public  public  public  public  private private private public 
+##  [28] public  private public  public  public  private public  public  public 
+##  [37] public  public  public  public  public  public  private public  public 
+##  [46] public  public  public  public  public  public  private public  public 
+##  [55] public  public  public  public  public  public  public  public  public 
+##  [64] public  public  private public  private public  public  public  private
+##  [73] public  public  public  public  public  public  public  public  public 
+##  [82] public  public  public  public  private public  public  public  public 
+##  [91] public  private public  private public  private public  public  public 
+## [100] public  public  public  private private public  public  public  public 
+## [109] public  public  public  public  public  private private public  public 
+## [118] private public  public  private public  public  private public  public 
+## [127] public  public  public  private private private public  public  private
+## [136] public  public  public  public  public  public  public  public  public 
+## [145] public  public  public  public  public  public  public  public  public 
+## [154] public  public  public  public  public  public  public  private public 
+## [163] public  public  public  private private public  private private private
+## [172] public  public  public  public  public  public  private public  public 
+## [181] public  public  public  public  public  public  private public  public 
+## [190] public  public  public  public  public  public  public  public  public 
+## [199] public  public 
+## Levels: public private
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tabyl}\NormalTok{(sample\_with\_replacement1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  sample_with_replacement1   n percent
+##                    public 164    0.82
+##                   private  36    0.18
+\end{verbatim}
+
+That bootstrap sample proportion is 0.18, not 0.16.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{11}\NormalTok{)}
+\NormalTok{sample\_with\_replacement2 }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(hsb2}\SpecialCharTok{$}\NormalTok{schtyp, }\AttributeTok{size =} \DecValTok{200}\NormalTok{, }\AttributeTok{replace =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{sample\_with\_replacement2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   [1] public  public  public  public  public  private public  public  private
+##  [10] public  public  private public  public  public  public  public  public 
+##  [19] public  public  public  public  public  public  public  public  public 
+##  [28] public  public  public  public  public  public  public  public  public 
+##  [37] public  public  public  public  public  public  public  public  public 
+##  [46] public  public  public  public  public  public  public  private public 
+##  [55] public  public  public  public  public  public  public  public  public 
+##  [64] public  public  public  public  public  public  public  public  public 
+##  [73] public  public  public  public  private public  public  public  public 
+##  [82] public  private private public  public  private public  public  public 
+##  [91] public  private public  public  public  public  private public  private
+## [100] public  public  private public  public  public  public  public  public 
+## [109] public  public  private public  public  private public  public  public 
+## [118] private private public  public  public  public  private public  private
+## [127] public  private public  private public  public  public  private public 
+## [136] private public  public  public  private private private public  private
+## [145] public  public  private public  public  private public  public  public 
+## [154] private private public  public  public  public  public  public  private
+## [163] private public  public  public  public  public  private public  private
+## [172] public  public  public  private private public  private public  public 
+## [181] public  public  public  public  public  public  public  public  public 
+## [190] public  private public  private public  public  public  private public 
+## [199] public  public 
+## Levels: public private
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tabyl}\NormalTok{(sample\_with\_replacement2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  sample_with_replacement2   n percent
+##                    public 160     0.8
+##                   private  40     0.2
+\end{verbatim}
+
+That bootstrap sample proportion is 0.2.
+
+Now we're getting some sampling variability!
+
+If we do this many, many times, we get a whole collection of sample proportions. The distribution of all those sample proportions, obtained with bootstrap samples (samples drawn with replacement), is called the \emph{bootstrap sampling distribution}.
+
+\hypertarget{ci-computing-boot}{%
+\section{Computing a bootstrap sampling distribution}\label{ci-computing-boot}}
+
+The \texttt{infer} package can compute bootstrap samples and, hence, produce a bootstrap sampling distribution. The code looks a whole like the code you already know for hypothesis testing:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{private\_boot }\OtherTok{\textless{}{-}}\NormalTok{ hsb2 }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{specify}\NormalTok{(}\AttributeTok{response =}\NormalTok{ schtyp, }\AttributeTok{success =} \StringTok{"private"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{generate}\NormalTok{(}\AttributeTok{reps =} \DecValTok{1000}\NormalTok{, }\AttributeTok{type =} \StringTok{"bootstrap"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{calculate}\NormalTok{(}\AttributeTok{stat =} \StringTok{"prop"}\NormalTok{)}
+\NormalTok{private\_boot}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Response: schtyp (factor)
+## # A tibble: 1,000 x 2
+##    replicate  stat
+##        <int> <dbl>
+##  1         1 0.185
+##  2         2 0.185
+##  3         3 0.15 
+##  4         4 0.135
+##  5         5 0.145
+##  6         6 0.175
+##  7         7 0.15 
+##  8         8 0.195
+##  9         9 0.18 
+## 10        10 0.185
+## # ... with 990 more rows
+\end{verbatim}
+
+We simply changed the \texttt{type} to ``bootstrap''.
+
+Now we visualize like normal:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{private\_boot }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{visualize}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-321-1.pdf}
+
+(We can change the number of bins if we want, but this number looks pretty good.)
+
+\hypertarget{ci-ci}{%
+\section{Confidence intervals}\label{ci-ci}}
+
+The histogram above simulates what might happen if we took many samples from our infinite ``fake'' population consisting of many copies of our original, actual sample data. On the lower end, we might see something like 8\% private school students. On the upper end, we could see 25\% or more private school students.
+
+In the chapter about numerical data, we computed the IQR (interquartile range), which was the difference between the 25th percentile and the 75th percentile. The IQR was then the range of the middle 50\% of the data. Let's use \texttt{infer} tools to calculate the middle 50\% of the above distribution:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{private\_50 }\OtherTok{\textless{}{-}}\NormalTok{ private\_boot }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{get\_confidence\_interval}\NormalTok{(}\AttributeTok{level =} \FloatTok{0.5}\NormalTok{)}
+\NormalTok{private\_50}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 2
+##   lower_ci upper_ci
+##      <dbl>    <dbl>
+## 1     0.14    0.175
+\end{verbatim}
+
+The middle 50\% ranges from 14\% up to 17.5\%. We can also visualize this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{private\_boot }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{visualise}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{shade\_confidence\_interval}\NormalTok{(}\AttributeTok{endpoints =}\NormalTok{ private\_50)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-323-1.pdf}
+
+In other words, when we go out to gather a sample from our (fake infinite) population of high school seniors, about half of the time, we expect the percentage of private students to be somewhere between 14\% and 17.5\%. The other half of the time, we will sample a value outside that range.
+
+This is a confidence interval. More specifically, this is a 50\% confidence interval. This is the range of values we expect sample proportions to be in approximately half of the samples we might gather from our (fake infinite) population.
+
+Now don't forget the goal. What we are really trying to find is the value \(p\), the true population parameter. We want to know what proportion of high school seniors attend private school in the whole population of all high school seniors in the U.S.
+
+For mathematical reasons that are outside the scope of this course, it turns out that the sampling variability in the bootstrap distribution around \(\hat{p}\) is very similar to the sampling variability of the sample proportion \(\hat{p}\) around the true value \(p\). We bootstrapped our way to the picture above using one actual sample with about 16\% private school students. A different sample of high school seniors would give us different bootstrap samples, producing a slightly different bootstrap distribution from the one above. But it, too, will have a shaded region like the histogram above. Every actual sample we might obtain in the real world would give us a bootstrap distribution with a different shaded region. But the amazing fact is this: about half of those shaded regions will actually contain the true population parameter \(p\).
+
+Think about the value \(p\) like a fish hidden in a murky lake. The sample proportion \(\hat{p}\) is our attempt at fishing. We drop a hook down at the value \(\hat{p}\) and pull it right back up. It's not very likely that we caught the fish, although we hope that we were close. Alas, the sample proportion is almost never exactly equal to the true proportion \(p\). But what if we cast a net instead? That net is the shaded range of values in our confidence interval. That range of values might catch the fish.
+
+The difference between statistics and fishing is that, in the latter, when we pull up the net, we can see if we successfully caught the fish. In the former, all we can say is that there is some probability that the net caught the fish, but you're not able to look inside the net to know for sure.
+
+So the confidence interval we created above might have caught the true value \(p\). But then again, it might not have. There's only a 50\% chance we captured the true value in the range 14\% to 17.5\% that we computed from our specific sample with its accompanying bootstrap samples. Most researchers would be displeased with only a 50\% success rate. So can we do better?
+
+How much better do we want to do? This is a subjective question with no definitive answer. Many people say they want to be 95\% confident that the confidence interval they build will capture the true population parameter. Let's modify our code to do that:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{private\_95 }\OtherTok{\textless{}{-}}\NormalTok{ private\_boot }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{get\_confidence\_interval}\NormalTok{(}\AttributeTok{level =} \FloatTok{0.95}\NormalTok{)}
+\NormalTok{private\_95}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 2
+##   lower_ci upper_ci
+##      <dbl>    <dbl>
+## 1     0.11    0.215
+\end{verbatim}
+
+The middle 95\% ranges from 11\% up to 21.5\%. We can also visualize this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{private\_boot }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{visualise}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{shade\_confidence\_interval}\NormalTok{(}\AttributeTok{endpoints =}\NormalTok{ private\_95)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-325-1.pdf}
+
+The interpretation is that when you go collect many samples, the confidence intervals you produce using the bootstrap procedure described above will capture the true population proportion 95\% of the time.
+
+\hypertarget{exercise-1-9}{%
+\paragraph*{Exercise 1}\label{exercise-1-9}}
+\addcontentsline{toc}{paragraph}{Exercise 1}
+
+Why is a 95\% confidence interval wider than a 50\% confidence interval? In other words, why should our desire to be 95\% confident in capturing the true value of \(p\) result in an interval that is wider than if we only wanted to be 50\% confident?
 
 Please write up your answer here.
 
-\hypertarget{express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-2}{%
-\subparagraph*{Express the null and alternative hypotheses as contextually meaningful full sentences.}\label{express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-2}}
-\addcontentsline{toc}{subparagraph}{Express the null and alternative hypotheses as contextually meaningful full sentences.}
+\hypertarget{exercise-2-6}{%
+\paragraph*{Exercise 2}\label{exercise-2-6}}
+\addcontentsline{toc}{paragraph}{Exercise 2}
 
-\(H_{0}:\) Null hypothesis goes here.
+Being more confident seems like a good thing. In fact, we might want a 99\% confidence interval. Compute and visualize a 99\% confidence interval for proportion of private school students.
 
-\(H_{A}:\) Alternative hypothesis goes here.
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to compute a 99\% confidence interval}
+\end{Highlighting}
+\end{Shaded}
 
-\hypertarget{express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-2}{%
-\subparagraph*{Express the null and alternative hypotheses in symbols (when possible).}\label{express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-2}}
-\addcontentsline{toc}{subparagraph}{Express the null and alternative hypotheses in symbols (when possible).}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to visualize a 99\% confidence interval}
+\end{Highlighting}
+\end{Shaded}
 
-\(H_{0}: math\)
+\hypertarget{exercise-3-7}{%
+\paragraph*{Exercise 3}\label{exercise-3-7}}
+\addcontentsline{toc}{paragraph}{Exercise 3}
 
-\(H_{A}: math\)
-
-\hypertarget{model-2}{%
-\paragraph*{Model}\label{model-2}}
-\addcontentsline{toc}{paragraph}{Model}
-
-\hypertarget{identify-the-sampling-distribution-model.-2}{%
-\subparagraph*{Identify the sampling distribution model.}\label{identify-the-sampling-distribution-model.-2}}
-\addcontentsline{toc}{subparagraph}{Identify the sampling distribution model.}
+Can you think of any downside to using higher and higher confidence levels? As a hint, think about the following completely true sentence: ``I am 100\% confident that the true proportion of high school seniors attending private school is somewhere between 0\% and 100\%.''
 
 Please write up your answer here.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+While 50\% is clearly too low for a confidence level, as seen above, there is no particular reason that we need to compute a 95\% confidence interval either. There is some consensus in the scientific community here: 95\% has evolved to become a generally agreed-upon standard. But we could compute a 90\% confidence interval or a 99\% confidence interval (as you did above), or any other type of interval. Having said that, if you choose other intervals besides these three, people might wonder if you're up to something.\footnote{A contrary position is proffered by Richard McElreath, an evolutionary ecologist and author of the amazing book \emph{Statistical Rethinking}. He uses 89\% and 97\% intervals to highlight the absurdity of regarding 95\% as a magic number that has some kind of deep, special meaning.}
+
+\hypertarget{ci-conditions}{%
+\section{Conditions}\label{ci-conditions}}
+
+Don't forget that there are always assumptions we make when relying on any kind of statistical inference. Before computing a confidence interval for a proportion, we must verify that certain conditions are satisfied. But these conditions are not new. We already know from hypothesis testing what is required for good inference from a sample. These are the ``Random'' and the ``10\%'' conditions.
+
+\begin{itemize}
+\tightlist
+\item
+  Random
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The sample must be random (or hopefully representative).
+  \end{itemize}
+\item
+  10\%
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The sample size must be less than 10\% of the size of the population.
+  \end{itemize}
+\end{itemize}
+
+Both conditions are met for the data in the High School and Beyond survey.
+
+\hypertarget{ci-rubric}{%
+\section{Rubric for confidence intervals}\label{ci-rubric}}
+
+Typically, you will be asked to report a confidence interval after performing a hypothesis test. Whereas a hypothesis test gives you a ``decision criterion'' (using data to make a decision to reject the null or fail to reject the null), a confidence interval gives you an estimate of the ``effect size'' (a range of plausible values for the population parameter).
+
+As such, there is a section in the \protect\hyperlink{appendix-rubric}{Rubric for inference} that shows the steps of calculating and reporting a confidence interval. They are as follows:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Check the relevant conditions to ensure that model assumptions are met.
+\item
+  Calculate and graph the confidence interval.
+\item
+  State (but do not overstate) a contextually meaningful interpretation.
+\item
+  If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.
+\item
+  When comparing two groups, comment on the effect size and the practical significance of the result.
+\end{enumerate}
+
+\hypertarget{ci-ex}{%
+\section{Example}\label{ci-ex}}
+
+Here is a worked example. (Unless otherwise stated, we always use a 95\% confidence level.)
+
+Some of the students in the ``High School and Beyond'' survey attended vocational programs. This data is stored in the \texttt{prog} variable. Using a confidence interval, estimate what percentage of all high school seniors attend vocational programs.
+
+We will need to do a little data cleaning before we can address this question. There are actually three types of programs: ``general'', ``academic'', and ``vocational''. The \texttt{infer} commands will only work when a categorical variable has two levels. We are thinking of ``general'' and ``academic'' together as more like a combined ``other'' category. We can fix this by creating a new factor variable with \texttt{mutate}. Inside that \texttt{mutate}, we will use the \texttt{fct\_collapse} function to collapse two of the levels into one as follows:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hsb2 }\OtherTok{\textless{}{-}}\NormalTok{ hsb2 }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{prog2 =} \FunctionTok{fct\_collapse}\NormalTok{(prog,}
+                                \AttributeTok{vocational =} \StringTok{"vocational"}\NormalTok{,}
+                                \AttributeTok{other =} \FunctionTok{c}\NormalTok{(}\StringTok{"general"}\NormalTok{, }\StringTok{"academic"}\NormalTok{)))}
+\FunctionTok{glimpse}\NormalTok{(hsb2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rows: 200
+## Columns: 12
+## $ id      <int> 70, 121, 86, 141, 172, 113, 50, 11, 84, 48, 75, 60, 95, 104, 3~
+## $ gender  <chr> "male", "female", "male", "male", "male", "male", "male", "mal~
+## $ race    <chr> "white", "white", "white", "white", "white", "white", "african~
+## $ ses     <fct> low, middle, high, high, middle, middle, middle, middle, middl~
+## $ schtyp  <fct> public, public, public, public, public, public, public, public~
+## $ prog    <fct> general, vocational, general, vocational, academic, academic, ~
+## $ read    <int> 57, 68, 44, 63, 47, 44, 50, 34, 63, 57, 60, 57, 73, 54, 45, 42~
+## $ write   <int> 52, 59, 33, 44, 52, 52, 59, 46, 57, 55, 46, 65, 60, 63, 57, 49~
+## $ math    <int> 41, 53, 54, 47, 57, 51, 42, 45, 54, 52, 51, 51, 71, 57, 50, 43~
+## $ science <int> 47, 63, 58, 53, 53, 63, 53, 39, 58, 50, 53, 63, 61, 55, 31, 50~
+## $ socst   <int> 57, 61, 31, 56, 61, 61, 61, 36, 51, 51, 61, 61, 71, 46, 56, 56~
+## $ prog2   <fct> other, vocational, other, vocational, other, other, other, oth~
+\end{verbatim}
+
+Inspect the variables \texttt{prog} and \texttt{prog2} above to make sure that the recoding was successful. Then be sure to use \texttt{prog2} and not \texttt{prog} everywhere.
+
+\hypertarget{ci-ex-conditions}{%
+\subsection{Check the relevant conditions to ensure that model assumptions are met.}\label{ci-ex-conditions}}
+
+\begin{itemize}
+\tightlist
+\item
+  Random
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The sample is a random sample of high school seniors from the U.S. as the survey was conducted by the National Center of Education Statistics, a reputable government organization.
+  \end{itemize}
+\item
+  10\%
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The sample size is 200, which is much less than 10\% of the population of all U.S. high school seniors.
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{ci-ex-calcaulte}{%
+\subsection{Calculate and graph the confidence interval.}\label{ci-ex-calcaulte}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vocational\_boot }\OtherTok{\textless{}{-}}\NormalTok{ hsb2 }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{specify}\NormalTok{(}\AttributeTok{response =}\NormalTok{ prog2, }\AttributeTok{success =} \StringTok{"vocational"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{generate}\NormalTok{(}\AttributeTok{reps =} \DecValTok{1000}\NormalTok{, }\AttributeTok{type =} \StringTok{"bootstrap"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{calculate}\NormalTok{(}\AttributeTok{stat =} \StringTok{"prop"}\NormalTok{)}
+\NormalTok{vocational\_boot}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Response: prog2 (factor)
+## # A tibble: 1,000 x 2
+##    replicate  stat
+##        <int> <dbl>
+##  1         1 0.335
+##  2         2 0.25 
+##  3         3 0.17 
+##  4         4 0.24 
+##  5         5 0.245
+##  6         6 0.245
+##  7         7 0.2  
+##  8         8 0.24 
+##  9         9 0.265
+## 10        10 0.25 
+## # ... with 990 more rows
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vocational\_ci }\OtherTok{\textless{}{-}}\NormalTok{ vocational\_boot }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{get\_confidence\_interval}\NormalTok{(}\AttributeTok{level =} \FloatTok{0.95}\NormalTok{)}
+\NormalTok{vocational\_ci}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 2
+##   lower_ci upper_ci
+##      <dbl>    <dbl>
+## 1     0.19     0.31
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vocational\_boot }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{visualize}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{shade\_confidence\_interval}\NormalTok{(}\AttributeTok{endpoints =}\NormalTok{ vocational\_ci)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-331-1.pdf}
+
+\hypertarget{ci-ex-interpret}{%
+\subsection{State (but do not overstate) a contextually meaningful interpretation.}\label{ci-ex-interpret}}
+
+We are 95\% confident that the true percentage of U.S. high school seniors who attend a vocational program is captured in the interval (19\%, 31\%).
+
+Note: we use inline code to grab the values of the endpoints of the confidence interval. We also multiply by 100 to report percentages instead of proportions.
+
+\hypertarget{ci-ex-ci-ht}{%
+\subsection{If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.}\label{ci-ex-ci-ht}}
+
+In this chapter, we haven't run a hypothesis test, so this step is irrelevant for us here. However, in future chapters, we will incorporate this step into the rubric and see how the confidence interval relates to the conclusion of a hypothesis test.
+
+\hypertarget{ci-ex-effect}{%
+\subsection{When comparing two groups, comment on the effect size and the practical significance of the result.}\label{ci-ex-effect}}
+
+This step will also become more clear in future chapters. It only applies to situations where you are attempting to find a difference between two groups. In this example, we're simply using a sample statistic to estimate a single population parameter.
+
+\hypertarget{ci-your-turn}{%
+\section{Your turn}\label{ci-your-turn}}
+
+Use the \texttt{smoking} data set from the \texttt{openintro} package. What percentage of the population of the U.K. smokes tobacco? (The information you need is in the \texttt{smoke} variable.) Use a 95\% confidence interval.
 
 \hypertarget{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-2}{%
 \subparagraph*{Check the relevant conditions to ensure that model assumptions are met.}\label{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-2}}
 \addcontentsline{toc}{subparagraph}{Check the relevant conditions to ensure that model assumptions are met.}
 
-Please write up your answer here. (Some conditions may require R code as well.)
+\begin{itemize}
+\tightlist
+\item
+  Random
 
-\hypertarget{mechanics-2}{%
-\paragraph*{Mechanics}\label{mechanics-2}}
-\addcontentsline{toc}{paragraph}{Mechanics}
+  \begin{itemize}
+  \tightlist
+  \item
+    {[}Check condition here.{]}
+  \end{itemize}
+\item
+  10\%
 
-\hypertarget{compute-the-test-statistic.-2}{%
-\subparagraph*{Compute the test statistic.}\label{compute-the-test-statistic.-2}}
-\addcontentsline{toc}{subparagraph}{Compute the test statistic.}
+  \begin{itemize}
+  \tightlist
+  \item
+    {[}Check condition here.{]}
+  \end{itemize}
+\item
+  Success/failure
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# Add code here to compute the test statistic.}
-\end{Highlighting}
-\end{Shaded}
-
-\hypertarget{report-the-test-statistic-in-context-when-possible.-2}{%
-\subparagraph*{Report the test statistic in context (when possible).}\label{report-the-test-statistic-in-context-when-possible.-2}}
-\addcontentsline{toc}{subparagraph}{Report the test statistic in context (when possible).}
-
-Please write up your answer here.
-
-\hypertarget{plot-the-null-distribution.-2}{%
-\subparagraph*{Plot the null distribution.}\label{plot-the-null-distribution.-2}}
-\addcontentsline{toc}{subparagraph}{Plot the null distribution.}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\CommentTok{\# Add code here to simulate the null distribution.}
-\CommentTok{\# Run 1000 reps like in the earlier example.}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# Add code here to plot the null distribution.}
-\end{Highlighting}
-\end{Shaded}
-
-\hypertarget{calculate-the-p-value.-2}{%
-\subparagraph*{Calculate the P-value.}\label{calculate-the-p-value.-2}}
-\addcontentsline{toc}{subparagraph}{Calculate the P-value.}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# Add code here to calculate the P{-}value.}
-\end{Highlighting}
-\end{Shaded}
-
-\hypertarget{interpret-the-p-value-as-a-probability-given-the-null.-2}{%
-\subparagraph*{Interpret the P-value as a probability given the null.}\label{interpret-the-p-value-as-a-probability-given-the-null.-2}}
-\addcontentsline{toc}{subparagraph}{Interpret the P-value as a probability given the null.}
-
-Please write up your answer here.
-
-\hypertarget{conclusion-2}{%
-\paragraph*{Conclusion}\label{conclusion-2}}
-\addcontentsline{toc}{paragraph}{Conclusion}
-
-\hypertarget{state-the-statistical-conclusion.-2}{%
-\subparagraph*{State the statistical conclusion.}\label{state-the-statistical-conclusion.-2}}
-\addcontentsline{toc}{subparagraph}{State the statistical conclusion.}
-
-Please write up your answer here.
-
-\hypertarget{state-but-do-not-overstate-a-contextually-meaningful-conclusion.-2}{%
-\subparagraph*{State (but do not overstate) a contextually meaningful conclusion.}\label{state-but-do-not-overstate-a-contextually-meaningful-conclusion.-2}}
-\addcontentsline{toc}{subparagraph}{State (but do not overstate) a contextually meaningful conclusion.}
-
-Please write up your answer here.
-
-\hypertarget{express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-2}{%
-\subparagraph*{Express reservations or uncertainty about the generalizability of the conclusion.}\label{express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-2}}
-\addcontentsline{toc}{subparagraph}{Express reservations or uncertainty about the generalizability of the conclusion.}
-
-Please write up your answer here.
-
-\hypertarget{identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-2}{%
-\subparagraph*{Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.}\label{identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-2}}
-\addcontentsline{toc}{subparagraph}{Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.}
-
-Please write up your answer here.
-
-\hypertarget{confidence-interval}{%
-\paragraph*{Confidence interval}\label{confidence-interval}}
-\addcontentsline{toc}{paragraph}{Confidence interval}
-
-\hypertarget{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-3}{%
-\subparagraph*{Check the relevant conditions to ensure that model assumptions are met.}\label{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-3}}
-\addcontentsline{toc}{subparagraph}{Check the relevant conditions to ensure that model assumptions are met.}
-
-Please write up your answer here. (Some conditions may require R code as well.)
+  \begin{itemize}
+  \tightlist
+  \item
+    {[}Check condition here.{]}
+  \end{itemize}
+\end{itemize}
 
 \hypertarget{calculate-the-confidence-interval.}{%
 \subparagraph*{Calculate the confidence interval.}\label{calculate-the-confidence-interval.}}
@@ -13538,15 +14064,360 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 Please write up your answer here.
 
-\hypertarget{if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.}{%
-\subparagraph*{If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.}\label{if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.}}
-\addcontentsline{toc}{subparagraph}{If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.}
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+(We will ignore the last two last steps in the rubric. We haven't run a hypothesis test and we're not comparing smoking between two groups.)
+
+\hypertarget{ci-interpret}{%
+\section{Interpreting confidence intervals}\label{ci-interpret}}
+
+Confidence intervals are notoriously difficult to interpret.\footnote{Several studies have given surveys to statistics students, teachers, and researchers, and find that even these people often misinterpret confidence intervals. See, for example, this paper: \url{http://www.ejwagenmakers.com/inpress/HoekstraEtAlPBR.pdf}}
+
+Here are several \emph{wrong} interpretations of a 95\% confidence interval:
+
+\begin{itemize}
+\item
+  95\% of the data lies in the interval.
+\item
+  There is a 95\% chance that the sample proportion lies in the interval.
+\item
+  There is a 95\% chance that the population parameter lies in the interval.
+\end{itemize}
+
+We'll take a closer look at these incorrect claims in a moment. First, let's see how confidence intervals work using simulation.
+
+In order to simulate, we'll have to pretend temporarily that we know a true population parameter. Let's use the example of a candidate who has the support of 64\% of voters. In other words, \(p = 0.64\). We go out and get a sample of voters, let's say 50. From that sample we construct a 95\% confidence interval by bootstrapping. Most of the time, 64\% (the true value!) should be in our interval. But sometimes it won't be. We can get an unusual sample that is far away from 64\%, just by pure chance alone. (Perhaps we accidentally run into a bunch of people who oppose our candidate.)
+
+Okay, let's do it again. Get a new sample and calculate a new confidence interval. This sample will likely result in a different sample proportion than the first sample. Therefore, the confidence interval will be located in a different place. Does it contain 64\%? Most of the time, we expect it to. Occasionally, it will not.
+
+We can do this over and over again through the magic of simulation! Here's what this simulation looks like in R. The following code is quite technical, although you will recognize bits and pieces of it. Don't worry about it. You won't need to generate code like this on your own. Just look at the pretty picture in the output below below the code.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{11111}\NormalTok{)}
+
+\CommentTok{\# The true population proportion is 0.64}
+\NormalTok{true\_val }\OtherTok{\textless{}{-}} \FloatTok{0.64}
+\CommentTok{\# The sample size is 50}
+\NormalTok{sample\_size }\OtherTok{\textless{}{-}} \DecValTok{50}
+\CommentTok{\# Set confidence level}
+\NormalTok{our\_level }\OtherTok{\textless{}{-}} \FloatTok{0.95}
+\CommentTok{\# Set number of intervals to simulate}
+\NormalTok{sim\_num }\OtherTok{\textless{}{-}} \DecValTok{100}
+
+\CommentTok{\# Get a random sample of size n.}
+\CommentTok{\# Compute the test statistic and the bootstrap confidence interval.}
+\CommentTok{\# Put both into a single tibble.}
+\NormalTok{simulate\_ci }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(n, }\AttributeTok{level =} \FloatTok{0.95}\NormalTok{) \{}
+\NormalTok{    sample\_data }\OtherTok{\textless{}{-}}
+        \FunctionTok{factor}\NormalTok{(}\FunctionTok{rbinom}\NormalTok{(n , }\AttributeTok{size =} \DecValTok{1}\NormalTok{, }\AttributeTok{prob =}\NormalTok{ true\_val)) }\SpecialCharTok{\%\textgreater{}\%}
+        \FunctionTok{tibble}\NormalTok{(}\AttributeTok{data =}\NormalTok{ .)}
+\NormalTok{    stat }\OtherTok{\textless{}{-}}\NormalTok{ sample\_data }\SpecialCharTok{\%\textgreater{}\%}
+        \FunctionTok{observe}\NormalTok{(}\AttributeTok{response =}\NormalTok{ data, }\AttributeTok{success =} \StringTok{"1"}\NormalTok{, }\AttributeTok{stat =} \StringTok{"prop"}\NormalTok{)}
+\NormalTok{    ci }\OtherTok{\textless{}{-}}\NormalTok{ sample\_data }\SpecialCharTok{\%\textgreater{}\%}
+        \FunctionTok{specify}\NormalTok{(}\AttributeTok{response =}\NormalTok{ data, }\AttributeTok{success =} \StringTok{"1"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+        \FunctionTok{generate}\NormalTok{(}\AttributeTok{reps =} \DecValTok{1000}\NormalTok{, }\AttributeTok{type =} \StringTok{"bootstrap"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+        \FunctionTok{calculate}\NormalTok{(}\AttributeTok{stat =} \StringTok{"prop"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+        \FunctionTok{get\_confidence\_interval}\NormalTok{(}\AttributeTok{level =}\NormalTok{ our\_level)}
+    \FunctionTok{bind\_cols}\NormalTok{(stat, ci) }\SpecialCharTok{\%\textgreater{}\%}
+        \FunctionTok{return}\NormalTok{()}
+\NormalTok{\}}
+
+\CommentTok{\# Simulate 100 random samples (each of size 50)}
+\CommentTok{\# Assign a color based on whether the intervals contain the true proportion}
+\NormalTok{ci }\OtherTok{\textless{}{-}} \FunctionTok{map\_dfr}\NormalTok{(}\FunctionTok{rep}\NormalTok{(sample\_size, }\AttributeTok{times =}\NormalTok{ sim\_num), simulate\_ci, }\AttributeTok{level =}\NormalTok{ our\_level) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{row\_num =} \FunctionTok{row\_number}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{color =} \FunctionTok{ifelse}\NormalTok{(lower\_ci }\SpecialCharTok{\textless{}=}\NormalTok{ true\_val }\SpecialCharTok{\&}\NormalTok{ true\_val }\SpecialCharTok{\textless{}=}\NormalTok{ upper\_ci,}
+                          \StringTok{"black"}\NormalTok{, }\StringTok{"red"}\NormalTok{),}
+           \AttributeTok{alpha =} \FunctionTok{ifelse}\NormalTok{(color }\SpecialCharTok{==} \StringTok{"black"}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+
+\CommentTok{\# Plot all the simulated intervals}
+\FunctionTok{ggplot}\NormalTok{(ci, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ stat, }\AttributeTok{y =}\NormalTok{ row\_num,}
+                   \AttributeTok{color =}\NormalTok{ color, }\AttributeTok{alpha =}\NormalTok{ alpha)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{scale\_color\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\StringTok{"red"}\NormalTok{), }\AttributeTok{guide =} \StringTok{"none"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{geom\_segment}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ lower\_ci, }\AttributeTok{xend =}\NormalTok{ upper\_ci, }\AttributeTok{yend =}\NormalTok{ row\_num)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =}\NormalTok{ true\_val, }\AttributeTok{color =} \StringTok{"blue"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{scale\_alpha\_identity}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}\AttributeTok{y =} \StringTok{"Simulation"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Estimates with confidence intervals"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-333-1.pdf}
+
+Each sample gives us a slightly different estimate, and therefore, a different confidence interval as well.
+
+For each of the 100 simulated intervals, most of them (the black ones) do capture the true value of 0.64 (the blue vertical line). Occasionally they don't (the red ones). We expect 5 red intervals, but since randomness is involved, it won't necessarily be exactly 5. (Here there were only 3 bad intervals.)
+
+This is the key to interpreting confidence intervals. The ``95\%'' in a 95\% confidence interval means that if we were to collect many random samples, about 95\% of them would contain the true population parameter and about 5\% would not.
+
+So let's revisit the erroneous statements from the beginning of this section and correct the misconceptions.
+
+\begin{itemize}
+\tightlist
+\item
+  \sout{95\% of the data lies in the interval.}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    This doesn't even make sense. Our data is categorical. The confidence interval is a range of plausible values for the proportion of successes in the sample.
+  \end{itemize}
+\item
+  \sout{There is a 95\% chance that the sample proportion lies in the interval.}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    No.~There is essentially a 100\% chance that the sample proportion lies in the interval. Most of the time, the sample proportion is very close to the center of the interval. When we bootstrap, the ``infinite population'' we are simulating has the same population proportion as the sample we started with. (After all, the infinite population is just many copies of the sample we started with.) Therefore, samples from that infinite population should be more or less centered around the sample proportion.
+  \end{itemize}
+\item
+  \sout{There is a 95\% chance that the population parameter lies in the interval.}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    This is wrong in a more subtle way. The problem here as that it takes our interval as being fixed and special, and then tries to declare that of all possible population parameters, we have a 95\% chance of the true one landing in our interval. The logic is backwards. The population parameter is the fixed truth. It doesn't wander around and land in our interval sometimes and not at other times. It is our confidence interval that wanders; it is just one of many intervals we could have obtained from random sampling. When we say, ``We are 95\% confident that\ldots,'' we are just using a convenient shorthand for, ``If we were to repeat the process of sampling and creating confidence intervals many times, about 95\% of those times would produce an interval that happens to capture the actual population proportion.'' But we're lazy and we don't want to say that every time.
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{ci-conclusion}{%
+\section{Conclusion}\label{ci-conclusion}}
+
+A confidence interval is a form of statistical inference that gives us a range of numbers in which we hope to capture the true population parameter. Of course, we can't be certain of that. If we repeatedly collect samples, the expectation is that 95\% of those samples will produce confidence intervals that capture the true population parameter, but that also means that 5\% will not. We'll never know if our sample was one of the 95\% that worked, or one of the 5\% that did not. And even if we get one of the intervals that worked, all we have is a range of values and it's impossible to determine which of those values is the true population parameter. Because it's statistics, we just have to live with that uncertainty.
+
+\hypertarget{ci-prep}{%
+\subsection{Preparing and submitting your assignment}\label{ci-prep}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  From the ``Run'' menu, select ``Restart R and Run All Chunks''.
+\item
+  Deal with any code errors that crop up. Repeat steps 1---2 until there are no more code errors.
+\item
+  Spell check your document by clicking the icon with ``ABC'' and a check mark.
+\item
+  Hit the ``Preview'' button one last time to generate the final draft of the \texttt{.nb.html} file.
+\item
+  Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
+\end{enumerate}
+
+If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
+
+\hypertarget{appendix-appendix}{%
+\appendix}
+
+
+2.0
+
+\hypertarget{appendix-rubric}{%
+\chapter{Rubric for inference}\label{appendix-rubric}}
+
+This is the R Markdown outline for running inference, both a hypothesis test and a confidence interval.
+
+\hypertarget{exploratory-data-analysis-2}{%
+\section*{Exploratory data analysis}\label{exploratory-data-analysis-2}}
+\addcontentsline{toc}{section}{Exploratory data analysis}
+
+\hypertarget{use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-2}{%
+\subsection*{Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.}\label{use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-2}}
+\addcontentsline{toc}{subsection}{Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.}
+
+Please write up your answer here
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to print the data}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to glimpse the variables}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{prepare-the-data-for-analysis.-not-always-necessary.-2}{%
+\subsection*{Prepare the data for analysis. {[}Not always necessary.{]}}\label{prepare-the-data-for-analysis.-not-always-necessary.-2}}
+\addcontentsline{toc}{subsection}{Prepare the data for analysis. {[}Not always necessary.{]}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to prepare the data for analysis.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{make-tables-or-plots-to-explore-the-data-visually.-2}{%
+\subsection*{Make tables or plots to explore the data visually.}\label{make-tables-or-plots-to-explore-the-data-visually.-2}}
+\addcontentsline{toc}{subsection}{Make tables or plots to explore the data visually.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to make tables or plots.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{hypotheses-2}{%
+\section*{Hypotheses}\label{hypotheses-2}}
+\addcontentsline{toc}{section}{Hypotheses}
+
+\hypertarget{identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-2}{%
+\subsection*{Identify the sample (or samples) and a reasonable population (or populations) of interest.}\label{identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-2}}
+\addcontentsline{toc}{subsection}{Identify the sample (or samples) and a reasonable population (or populations) of interest.}
 
 Please write up your answer here.
 
-\hypertarget{if-the-p-value-is-statistically-significant-and-the-confidence-interval-does-not-contain-zero-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-not-always-relevant.}{%
-\subparagraph*{If the P-value is statistically significant and the confidence interval does not contain zero, comment on the effect size and the practical significance of the result. {[}Not always relevant.{]}}\label{if-the-p-value-is-statistically-significant-and-the-confidence-interval-does-not-contain-zero-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-not-always-relevant.}}
-\addcontentsline{toc}{subparagraph}{If the P-value is statistically significant and the confidence interval does not contain zero, comment on the effect size and the practical significance of the result. {[}Not always relevant.{]}}
+\hypertarget{express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-2}{%
+\subsection*{Express the null and alternative hypotheses as contextually meaningful full sentences.}\label{express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-2}}
+\addcontentsline{toc}{subsection}{Express the null and alternative hypotheses as contextually meaningful full sentences.}
+
+\(H_{0}:\) Null hypothesis goes here.
+
+\(H_{A}:\) Alternative hypothesis goes here.
+
+\hypertarget{express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-2}{%
+\subsection*{Express the null and alternative hypotheses in symbols (when possible).}\label{express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-2}}
+\addcontentsline{toc}{subsection}{Express the null and alternative hypotheses in symbols (when possible).}
+
+\(H_{0}: math\)
+
+\(H_{A}: math\)
+
+\hypertarget{model-2}{%
+\section*{Model}\label{model-2}}
+\addcontentsline{toc}{section}{Model}
+
+\hypertarget{identify-the-sampling-distribution-model.-2}{%
+\subsection*{Identify the sampling distribution model.}\label{identify-the-sampling-distribution-model.-2}}
+\addcontentsline{toc}{subsection}{Identify the sampling distribution model.}
+
+Please write up your answer here.
+
+\hypertarget{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-3}{%
+\subsection*{Check the relevant conditions to ensure that model assumptions are met.}\label{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-3}}
+\addcontentsline{toc}{subsection}{Check the relevant conditions to ensure that model assumptions are met.}
+
+Please write up your answer here. (Some conditions may require R code as well.)
+
+\hypertarget{mechanics-2}{%
+\section*{Mechanics}\label{mechanics-2}}
+\addcontentsline{toc}{section}{Mechanics}
+
+\hypertarget{compute-the-test-statistic.-2}{%
+\subsection*{Compute the test statistic.}\label{compute-the-test-statistic.-2}}
+\addcontentsline{toc}{subsection}{Compute the test statistic.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to compute the test statistic.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{report-the-test-statistic-in-context-when-possible.-2}{%
+\subsection*{Report the test statistic in context (when possible).}\label{report-the-test-statistic-in-context-when-possible.-2}}
+\addcontentsline{toc}{subsection}{Report the test statistic in context (when possible).}
+
+Please write up your answer here.
+
+\hypertarget{plot-the-null-distribution.-2}{%
+\subsection*{Plot the null distribution.}\label{plot-the-null-distribution.-2}}
+\addcontentsline{toc}{subsection}{Plot the null distribution.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\CommentTok{\# Add code here to simulate the null distribution.}
+\CommentTok{\# Run 1000 reps like in the earlier example.}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to plot the null distribution.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{calculate-the-p-value.-2}{%
+\subsection*{Calculate the P-value.}\label{calculate-the-p-value.-2}}
+\addcontentsline{toc}{subsection}{Calculate the P-value.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to calculate the P{-}value.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{interpret-the-p-value-as-a-probability-given-the-null.-2}{%
+\subsection*{Interpret the P-value as a probability given the null.}\label{interpret-the-p-value-as-a-probability-given-the-null.-2}}
+\addcontentsline{toc}{subsection}{Interpret the P-value as a probability given the null.}
+
+Please write up your answer here.
+
+\hypertarget{conclusion-2}{%
+\section*{Conclusion}\label{conclusion-2}}
+\addcontentsline{toc}{section}{Conclusion}
+
+\hypertarget{state-the-statistical-conclusion.-2}{%
+\subsection*{State the statistical conclusion.}\label{state-the-statistical-conclusion.-2}}
+\addcontentsline{toc}{subsection}{State the statistical conclusion.}
+
+Please write up your answer here.
+
+\hypertarget{state-but-do-not-overstate-a-contextually-meaningful-conclusion.-2}{%
+\subsection*{State (but do not overstate) a contextually meaningful conclusion.}\label{state-but-do-not-overstate-a-contextually-meaningful-conclusion.-2}}
+\addcontentsline{toc}{subsection}{State (but do not overstate) a contextually meaningful conclusion.}
+
+Please write up your answer here.
+
+\hypertarget{express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-2}{%
+\subsection*{Express reservations or uncertainty about the generalizability of the conclusion.}\label{express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-2}}
+\addcontentsline{toc}{subsection}{Express reservations or uncertainty about the generalizability of the conclusion.}
+
+Please write up your answer here.
+
+\hypertarget{identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-2}{%
+\subsection*{Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.}\label{identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-2}}
+\addcontentsline{toc}{subsection}{Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.}
+
+Please write up your answer here.
+
+\hypertarget{confidence-interval}{%
+\section*{Confidence interval}\label{confidence-interval}}
+\addcontentsline{toc}{section}{Confidence interval}
+
+\hypertarget{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-4}{%
+\subsection*{Check the relevant conditions to ensure that model assumptions are met.}\label{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-4}}
+\addcontentsline{toc}{subsection}{Check the relevant conditions to ensure that model assumptions are met.}
+
+Please write up your answer here. (Some conditions may require R code as well.)
+
+\hypertarget{calculate-and-graph-the-confidence-interval.}{%
+\subsection*{Calculate and graph the confidence interval.}\label{calculate-and-graph-the-confidence-interval.}}
+\addcontentsline{toc}{subsection}{Calculate and graph the confidence interval.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to calculate the confidence interval.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-1}{%
+\subsection*{State (but do not overstate) a contextually meaningful interpretation.}\label{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-1}}
+\addcontentsline{toc}{subsection}{State (but do not overstate) a contextually meaningful interpretation.}
+
+Please write up your answer here.
+
+\hypertarget{if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.}{%
+\subsection*{If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.}\label{if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.}}
+\addcontentsline{toc}{subsection}{If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.}
+
+Please write up your answer here.
+
+\hypertarget{when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-not-always-applicable.}{%
+\subsection*{When comparing two groups, comment on the effect size and the practical significance of the result. {[}Not always applicable.{]}}\label{when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-not-always-applicable.}}
+\addcontentsline{toc}{subsection}{When comparing two groups, comment on the effect size and the practical significance of the result. {[}Not always applicable.{]}}
 
 Please write up your answer here.
 
