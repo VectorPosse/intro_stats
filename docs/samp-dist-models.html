@@ -60,6 +60,7 @@
 <li><a class="" href="ci.html"><span class="header-section-number">12</span> Confidence intervals</a></li>
 <li><a class="" href="normal.html"><span class="header-section-number">13</span> Normal models</a></li>
 <li><a class="active" href="samp-dist-models.html"><span class="header-section-number">14</span> Sampling distribution models</a></li>
+<li><a class="" href="one-prop.html"><span class="header-section-number">15</span> Inference for one proportion</a></li>
 <li class="book-part">Appendix</li>
 <li><a class="" href="appendix-rubric.html"><span class="header-section-number">A</span> Rubric for inference</a></li>
 </ul>
@@ -115,7 +116,7 @@
 <span class="header-section-number">14.2</span> Load packages<a class="anchor" aria-label="anchor" href="#samp-dist-models-load"><i class="fas fa-link"></i></a>
 </h2>
 <p>We load the standard <code>tidyvese</code> package. The <code>mosaic</code> package will provide coin flips.</p>
-<div class="sourceCode" id="cb521"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb522"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ProjectMOSAIC/mosaic">mosaic</a></span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -127,7 +128,7 @@
 <p>Let’s explore this idea a little further, this time considering how sample size plays a role in sampling variability.</p>
 <p>Suppose that a certain candidate in an election actually has 64% of the support of registered voters. We conduct a poll of 10 random people, gathering a representative (though not very large) sample of voters.</p>
 <p>We can simulate this task in R by using the <code>rflip</code> command from the <code>mosaic</code> package. Remember that the default for a coin flip is a 50% probability of heads, so we have to change that if we want to model a candidate with 64% support.</p>
-<div class="sourceCode" id="cb522"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb523"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">13579</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">10</span>, prob <span class="op">=</span> <span class="fl">0.64</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## 
@@ -138,7 +139,7 @@
 ## Number of Heads: 6 [Proportion Heads: 0.6]</code></pre>
 <p>You can think of the above command as taking one random sample of size 10 and getting a certain number of “successes”, where a “success” is a person who votes for our candidate—here encoded as “heads”. In other words, of the 10 people in this particular sample, we surveyed 6 people who said they were voting for our candidate and 4 people who were not.</p>
 <p>Using the <code>do</code> command, we can simulate many samples, all of size 10. Let’s take 1000 samples and store them in a variable called <code>sims_1000_10</code>.</p>
-<div class="sourceCode" id="cb524"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb525"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">13579</span><span class="op">)</span></span>
 <span><span class="va">sims_1000_10</span> <span class="op">&lt;-</span> <span class="fu">do</span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">10</span>, prob <span class="op">=</span> <span class="fl">0.64</span><span class="op">)</span></span>
 <span><span class="va">sims_1000_10</span></span></code></pre></div>
@@ -149,25 +150,25 @@
 </div>
 <p>Note that with 10 people, it is impossible to get a 64% success rate in any given sample. (That would be 6.4 people!) Nevertheless, we can see that many of the samples gave us around 5–8 successes, as we’d expect when the true population rate is 64%. Also, the mean number of successes across all simulations is 6.414, which is very close to 6.4.</p>
 <p>Instead of focusing on the total number of successes, let’s use the proportion of successes in each sample. We can graph our simulated proportions, just as we’ve done in previous chapters. (The fancy stuff in <code>scale_x_continuous</code> is just making sure that the x-axis goes from 0 to 1 and that the tick marks appear as multiples of 0.1.)</p>
-<div class="sourceCode" id="cb525"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb526"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">sims_1000_10</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">prop</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1.1</span><span class="op">)</span>,</span>
 <span>                       breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: Removed 2 rows containing missing values (geom_bar).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-368-1.png" width="672"></div>
+<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-369-1.png" width="672"></div>
 <p>Because each sample has size 10, the proportion of successes can only be multiples of 0.1. Although the distribution is somewhat normally shaped, it is discrete (no values in between the bars) and there is an appreciable left skew.</p>
 <p>What happens if we increase the sample size to 20? (The binwidth has to change to see the discrete bars.)</p>
-<div class="sourceCode" id="cb527"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb528"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">13579</span><span class="op">)</span></span>
 <span><span class="va">sims_1000_20</span> <span class="op">&lt;-</span> <span class="fu">do</span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">20</span>, prob <span class="op">=</span> <span class="fl">0.64</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb528"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb529"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">sims_1000_20</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">prop</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">0.025</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1.1</span><span class="op">)</span>,</span>
 <span>                       breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: Removed 2 rows containing missing values (geom_bar).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-370-1.png" width="672"></div>
+<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-371-1.png" width="672"></div>
 <div id="exercise-1-10" class="section level5 unnumbered">
 <h5>Exercise 1<a class="anchor" aria-label="anchor" href="#exercise-1-10"><i class="fas fa-link"></i></a>
 </h5>
@@ -181,7 +182,7 @@
 </h5>
 <p>Run a set of simulations yourself, this time with samples of size 50. Use the same number of simulations (1000) and the same <code>ggplot</code> code from above (especially the <code>scale_x_continuous</code> option) so that the x-axis is scaled identically to the previous cases, but change the binwidth to 0.01.</p>
 <div class="answer">
-<div class="sourceCode" id="cb530"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb531"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">13579</span><span class="op">)</span></span>
 <span><span class="co"># Add code here to simulate 1000 random samples of size 50 and plot them.</span></span></code></pre></div>
 </div>
@@ -265,16 +266,16 @@ n(1 - p) = 10(1 - 0.64) = 10(0.36) = 3.6.
 <p>Neither of these numbers is bigger than 10.</p>
 <p>Notice that when <span class="math inline">\(n\)</span> is large, the quantities <span class="math inline">\(np\)</span> and <span class="math inline">\(n(1 - p)\)</span> will also tend to be large. This is the content of the Central Limit Theorem: when sample sizes grow, the sampling distribution model becomes more and more normal.</p>
 <p>There is something else going on too. Suppose that <span class="math inline">\(n = 100\)</span> but <span class="math inline">\(p = 0.01\)</span>. The sample seems quite large, but let’s look at the sampling distribution through a simulation.</p>
-<div class="sourceCode" id="cb531"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb532"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">13579</span><span class="op">)</span></span>
 <span><span class="va">sims_1000_100</span> <span class="op">&lt;-</span> <span class="fu">do</span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">100</span>, prob <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb532"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb533"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">sims_1000_100</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">prop</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">0.005</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.01</span>, <span class="fl">0.1</span><span class="op">)</span>,</span>
 <span>                       breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.1</span>, <span class="fl">0.01</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: Removed 2 rows containing missing values (geom_bar).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-373-1.png" width="672"></div>
+<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-374-1.png" width="672"></div>
 <p>(Note that the x-axis scale is much smaller than it was before.)</p>
 <div id="exercise-5-6" class="section level5 unnumbered">
 <h5>Exercise 5<a class="anchor" aria-label="anchor" href="#exercise-5-6"><i class="fas fa-link"></i></a>
@@ -307,14 +308,14 @@ np = (100)(0.01) = 1 \ngeq 10.
 <p>For example, we know that samples can be “wrong” due to sampling variability. Even though we know the candidate has 64% support, most surveys are not going to give us back that exact number.</p>
 <p>Could a survey of 50 random voters accidentally predict defeat for the candidate even though the candidate will actually win with 64% support?</p>
 <p>Let’s simulate:</p>
-<div class="sourceCode" id="cb534"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb535"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">13579</span><span class="op">)</span></span>
 <span><span class="va">survey_sim</span> <span class="op">&lt;-</span> <span class="fu">do</span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">50</span>, prob <span class="op">=</span> <span class="fl">0.64</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb535"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb536"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">survey_sim</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">prop</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">0.5</span>, color <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-375-1.png" width="672"></div>
+<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-376-1.png" width="672"></div>
 <p>It looks like there are at least a few simulated samples that could come in less than 50% by chance.</p>
 <p>Let’s check the conditions to see if we can use a normal model:</p>
 <ul>
@@ -339,10 +340,10 @@ np = (100)(0.01) = 1 \ngeq 10.
 N(0.64, 0.068).
 \]</span></p>
 <p>Back to our original question. How likely is it that a random survey of 50 voters predicts defeat for the candidate? Well, any survey that comes in less than 50% will make it look like the candidate is going to lose. So we simply need to figure out how much of the sampling distribution lies below 50%. This is made simple with the <code>pdist</code> command. Note that we’ll get a more accurate answer if we include the formula for the standard error, rather than rounding it off as 0.068.</p>
-<div class="sourceCode" id="cb536"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb537"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/pdist.html">pdist</a></span><span class="op">(</span><span class="st">"norm"</span>, q <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>      mean <span class="op">=</span> <span class="fl">0.64</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fl">0.64</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fl">0.64</span><span class="op">)</span> <span class="op">/</span> <span class="fl">50</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-376-1.png" width="672"></div>
+<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-377-1.png" width="672"></div>
 <pre><code>## [1] 0.01958508</code></pre>
 <p>From the picture, we can see that there is only about a 2% chance that one of our surveys of 50 voters could predict defeat. Using inline code, we calculate it as 1.9585083%. The vast majority of the time, then, when we go out and take such a survey, the results will show the candidate in the lead. It will likely not say exactly 64%; there is still a relatively wide range of values that seem to be possible outcomes of such surveys. Nevertheless, this range of values is mostly above 50%. Nevertheless, there is a small chance that the survey will give us the “wrong” answer and predict defeat for the candidate.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Most polls in the 2016 presidential election predicted a win for Hillary Clinton, so they also gave the wrong answer. It’s possible that some of them were accidentally wrong due to sampling variability, but a much more likely explanation for their overall failure was bias.&lt;/p&gt;"><sup>19</sup></a></p>
 <div id="exercise-7a-3" class="section level5 unnumbered">
@@ -351,7 +352,7 @@ N(0.64, 0.068).
 <p>Suppose we are testing a new drug that is intended to reduce cholesterol levels in patients with high cholesterol. Also suppose that the drug works for 83% of such patients. When testing our drug, we use a suitably random sample of 143 individuals with high cholesterol.</p>
 <p>First, simulate the sampling distribution using 1000 samples, each of size 143. Plot the resulting sampling distribution.</p>
 <div class="answer">
-<div class="sourceCode" id="cb538"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb539"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">13579</span><span class="op">)</span></span>
 <span><span class="co"># Add code here to simulate 1000 samples of size 143</span></span>
 <span><span class="co"># and plot the resulting distribution.</span></span></code></pre></div>
@@ -421,16 +422,9 @@ N(0.64, 0.068).
 </div>
 </div>
 
-
-
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>
-<p style="color:#ffffff">
-2.0
-</p>
-<!-- Please don't mess with the previous few lines! -->
-<div class="chapter-nav">
+  <div class="chapter-nav">
 <div class="prev"><a href="normal.html"><span class="header-section-number">13</span> Normal models</a></div>
-<div class="next"><a href="appendix-rubric.html"><span class="header-section-number">A</span> Rubric for inference</a></div>
+<div class="next"><a href="one-prop.html"><span class="header-section-number">15</span> Inference for one proportion</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
@@ -462,19 +456,14 @@ N(0.64, 0.068).
 </div>
     </nav>
 </div>
-</div>
-
-  
-
-  
 
 </div>
- <!-- .container -->
+</div> <!-- .container -->
 
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Introduction to Statistics: an integrated textbook and workbook using R</strong>" was written by Sean Raleigh, Westminster College (Salt Lake City, UT). It was last built on 2022-08-27.</p>
+    <p>"<strong>Introduction to Statistics: an integrated textbook and workbook using R</strong>" was written by Sean Raleigh, Westminster College (Salt Lake City, UT). It was last built on 2022-09-06.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
