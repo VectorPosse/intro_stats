@@ -1,12 +1,4 @@
----
-title: "15. Inference for one proportion"
-author: "Put your name here"
-date: "Put the date here"
-output:
-    html_notebook:
-        toc: yes
-        toc_float: yes
----
+# Inference for one proportion {#one-prop}
 
 <!-- Please don't mess with the next few lines! -->
 <style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(50,46,48))`</p>
@@ -15,14 +7,14 @@ output:
 
 ::: {.summary}
 
-### Functions introduced in this chapter
+### Functions introduced in this chapter {-}
 
 No new R functions are introduced here.
 
 :::
 
 
-## Introduction
+## Introduction {#one-prop-intro}
 
 Our earlier work with simulations showed us that when the number of successes and failures is large enough, we can use a normal model as our sampling distribution model.
 
@@ -30,11 +22,11 @@ We revisit hypothesis tests for a single proportion, but now, instead of running
 
 There are no new concepts here. All we are doing is revisiting the rubric for inference and making the necessary changes.
 
-### Install new packages
+### Install new packages {#one-prop-install}
 
 There are no new packages used in this chapter.
 
-### Download the R notebook file
+### Download the R notebook file {#one-prop-download}
 
 Check the upper-right corner in RStudio to make sure you're in your `intro_stats` project. Then click on the following link to download this chapter as an R notebook file (`.Rmd`).
 
@@ -42,12 +34,12 @@ Check the upper-right corner in RStudio to make sure you're in your `intro_stats
 
 Once the file is downloaded, move it to your project folder in RStudio and open it there.
 
-### Restart R and run all chunks
+### Restart R and run all chunks {#one-prop-restart}
 
 In RStudio, select "Restart R and Run All Chunks" from the "Run" menu.
 
 
-## Load packages
+## Load packages {#one-prop-load}
 
 We load the standard `tidyverse`, `janitor` and `infer` packages as well as the `openintro` package to access data on heart transplant candidates. We'll include `mosaic` for one spot below when we compare the results of `infer` to the results of graphing a normal distribution using `qdist`.
 
@@ -60,7 +52,7 @@ library(mosaic)
 ```
 
 
-## Revisiting the rubric for inference
+## Revisiting the rubric for inference {#one-prop-rubric}
 
 Instead of running a simulation, we are going to assume that the sampling distribution can be modeled with a normal model as long as the conditions for using a normal model are met.
 
@@ -71,18 +63,18 @@ What follows is a fully-worked example of inference for one proportion. After th
 The example below will pause frequently for commentary on the steps, especially where their execution will be different from what you've seen before when you used simulation. When it's your turn to work through another example on your own, you should follow the outline of the rubric, but you should **not** copy and paste the commentary that accompanies it.
 
 
-## Research question
+## Research question {#one-prop-question}
 
 Data from the Stanford University Heart Transplant Study is located in the `openintro` package in a data frame called `heart_transplant`. From the help file we learn, "Each patient entering the program was designated officially a heart transplant candidate, meaning that he was gravely ill and would most likely benefit from a new heart." Survival rates are not good for this population, although they are better for those who receive a heart transplant. Do heart transplant recipients still have less than a 50% chance of survival?
 
 
-## Exploratory data analysis
+## Exploratory data analysis {#one-prop-ex-eda}
 
-### Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.
+### Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure. {#one-prop}
 
 Start by typing `?heart_transplant` at the Console or searching for `heart_translplant` in the Help tab to read the help file.
 
-##### Exercise 1
+##### Exercise 1 {-}
 
 Click on the link under "Source" in the help file. Why is this not helpful for determining the provenance of the data?
 
@@ -115,7 +107,7 @@ tabyl(heart_transplant, transplant) %>%
     adorn_totals()
 ```
 
-### Prepare the data for analysis.
+### Prepare the data for analysis. {#one-prop-ex-prepare}
 
 **CAUTION: If you are copying and pasting from this example to use for another research question, the following code chunk is specific to this research question and not applicable in other contexts.**
 
@@ -132,7 +124,7 @@ Commentary: don't forget the double equal sign (`==`) that checks whether the `t
 
 Again, this step isn't something you need to do for other research questions. This question is peculiar because it asks only about patients who received a heart transplant, and that only involves a subset of the data we have in the `heart_transplant` data frame.
 
-### Make tables or plots to explore the data visually.
+### Make tables or plots to explore the data visually. {#one-prop-ex-plots}
 
 Making sure that we refer from now on to the `heart_transplant2` data frame and not the original `heart_transplant` data frame:
 
@@ -142,13 +134,13 @@ tabyl(heart_transplant2, survived) %>%
 ```
 
 
-## Hypotheses
+## Hypotheses {#one-prop-ex-hypotheses}
 
-### Identify the sample (or samples) and a reasonable population (or populations) of interest.
+### Identify the sample (or samples) and a reasonable population (or populations) of interest. {#one-prop-ex-sample-pop}
 
 The sample consists of `r NROW(heart_transplant2)` heart transplant recipients in a study at Stanford University. The population of interest is presumably all heart transplants recipients.
 
-### Express the null and alternative hypotheses as contextually meaningful full sentences.
+### Express the null and alternative hypotheses as contextually meaningful full sentences. {#one-prop-ex-express-words}
 
 $H_{0}:$ Heart transplant recipients have a 50% chance of survival.
 
@@ -156,22 +148,22 @@ $H_{A}:$ Heart transplant recipients have less than a 50% chance of survival.
 
 Commentary: It is slightly unusual that we are conducting a one-sided test. The standard default is typically a two-sided test. However, it is not for us to choose: the proposed research question is unequivocal in hypothesizing "less than 50%" survival.
 
-### Express the null and alternative hypotheses in symbols (when possible).
+### Express the null and alternative hypotheses in symbols (when possible). {#one-prop-ex-express-math}
 
 $H_{0}: p_{alive} = 0.5$
 
 $H_{A}: p_{alive} < 0.5$
 
 
-## Model
+## Model {#one-prop-ex-model}
 
-### Identify the sampling distribution model.
+### Identify the sampling distribution model. {#one-prop-ex-sampling-dist-model}
 
 We will use a normal model.
 
 Commentary: In past chapters, we have simulated the sampling distribution or applied some kind of randomization to simulate the effect of the null hypothesis. The point of this chapter is that we can---when the conditions are met---substitute a normal model to replace the unimodal and symmetric histogram that resulted from randomization and simulation.
 
-### Check the relevant conditions to ensure that model assumptions are met.
+### Check the relevant conditions to ensure that model assumptions are met. {#one-prop-ex-ht-conditions}
 
 * Random
     - Since the `r NROW(heart_transplant2)` patients are from a study at Stanford, we do not have a random sample of all heart transplant recipients. We hope that the patients recruited to this study were physiologically similar to other heart patients so that they are a representative sample. Without more information, we have no real way of knowing.
@@ -198,9 +190,9 @@ Therefore, under the assumption of the null, the sampling distribution is the *n
 That's also why the numbers don't have to be whole numbers. If the null states that of the 69 patients, 50% are expected to survive, then we expect 50% of 69, or 34.5, to survive. Of course, you can't have half of a survivor. But these are not *actual* survivors. Rather, they are the expected number of survivors in a group of 69 patients *on average* under the assumption of the null.
 
 
-## Mechanics
+## Mechanics {#one-prop-ex-mechanics}
 
-### Compute the test statistic.
+### Compute the test statistic. {#one-prop-ex-compute-test-stat}
 
 ```{r}
 alive_prop <- heart_transplant2 %>%
@@ -263,14 +255,14 @@ $$
 
 The standard normal model is more intuitive and easier to work with, both conceptually and in R. Generally, then, we will consider z as the test statistic so that we can consider our null model to be the standard normal model. For example, knowing that our test statistic is two and a half standard deviations to the left of the null value already tells us a lot. We can anticipate a small P-value leading to rejection of the null. Nevertheless, for this type of hypothesis test, we'll compute both in this section of the rubric.
 
-### Report the test statistic in context (when possible).
+### Report the test statistic in context (when possible). {#one-prop-ex-report-test-stat}
 
 The test statistic is `r alive_prop %>% pull(1)`. In other words, `r 100 * (alive_prop %>% pull(1))`% of heart transplant recipients were alive at the end of the study.
 
 The z score is `r alive_z %>% pull(1)`. The proportion of survivors is about 2.5 standard errors below the null value.
 
 
-### Plot the null distribution.
+### Plot the null distribution. {#one-prop-ex-plot_null}
 
 ```{r}
 alive_test <- heart_transplant2 %>%
@@ -309,7 +301,7 @@ alive_test_draw %>%
 This is essentially the same picture, although the model above is centered on the null value 0.5 instead of the z score of 0. This also means that the `obs_stat` had to be the sample proportion `alive_prop` and not the z score `alive_z`.
 
 
-### Calculate the P-value.
+### Calculate the P-value. {#one-prop-ex-calculate-p}
 
 ```{r}
 alive_test_p <- alive_test %>%
@@ -326,33 +318,33 @@ alive_test_draw %>%
 
 The values are not exactly the same. And a new simulation with a different seed would likely give another slightly different P-value. The takeaway here is that the P-value itself has some uncertainty, so you should never take the value too seriously.
 
-### Interpret the P-value as a probability given the null.
+### Interpret the P-value as a probability given the null. {#one-prop-ex-interpret-p}
 
 The P-value is `r alive_test_p %>% pull(1)`. If there were truly a 50% chance of survival among heart transplant patients, there would only be a `r 100 * (alive_test_p %>% pull(1))`% chance of seeing data at least as extreme as we saw.
 
 
-## Conclusion
+## Conclusion {#one-prop-ex-ht-conclusion}
 
-### State the statistical conclusion.
+### State the statistical conclusion. {#one-prop-ex-stat-conclusion}
 
 We reject the null hypothesis.
 
-### State (but do not overstate) a contextually meaningful conclusion.
+### State (but do not overstate) a contextually meaningful conclusion. {#one-prop-ex-context-conclusion}
 
 We have sufficient evidence that heart transplant recipients have less than a 50% chance of survival.
 
-### Express reservations or uncertainty about the generalizability of the conclusion.
+### Express reservations or uncertainty about the generalizability of the conclusion. {#one-prop-ex-reservations}
 
 Because we know nearly nothing about the provenance of the data, it's hard to generalize the conclusion. We know the data is from 1974, so it's also very likely that survival rates for heart transplant patients then are not the same as they are today. The most we could hope for is that the Stanford data was representative for heart transplant patients in 1974. Our sample size (69) is also quite small.
 
-### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses. {#one-prop-ex-errors}
 
 As we rejected the null, we run the risk of making a Type I error. It is possible that the null is true and that there is a 50% chance of survival for these patients, but we got an unusual sample that appears to have a much smaller chance of survival.
 
 
-## Confidence interval
+## Confidence interval {#one-prop-ex-ci}
 
-### Check the relevant conditions to ensure that model assumptions are met.
+### Check the relevant conditions to ensure that model assumptions are met. {#one-prop-ex-ci-conditions}
 
 - Random
     - Same as above.
@@ -369,7 +361,7 @@ Keep in mind that in a hypothesis test, we temporarily assume the null is true. 
 
 By contrast, a confidence interval is making no assumption about the "true" value of $p$. The inferential goal of a confidence interval is to try to capture the true value of $p$, so we certainly cannot make any assumptions about it. Therefore, we go back to the original way we learned about the success/failure condition. That is, we check the actual number of successes and failures.
 
-### Calculate and graph the confidence interval.
+### Calculate and graph the confidence interval. {#one-prop-ex-ci-calculate}
 
 ```{r}
 alive_ci <- alive_test %>%
@@ -418,22 +410,22 @@ qdist("norm", p = c(0.025, 0.975), mean = 0.3478261, sd = 0.05733743, plot = FAL
 
 The numbers above are identical to the ones computed by the `infer` commands.
 
-### State (but do not overstate) a contextually meaningful interpretation.
+### State (but do not overstate) a contextually meaningful interpretation. {#one-prop-ex-ci-interpret}
 
 We are 95% confident that the true percentage of heart transplant recipients who survive is captured in the interval (`r 100 * alive_ci$lower_ci`%, `r 100 * alive_ci$upper_ci`%).
 
 Commentary: Note that when we state our contextually meaningful conclusion, we also convert the decimal proportions to percentages. Humans like percentages a lot better.
 
-### If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.
+### If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test. {#one-prop-ex-two-sided}
 
 We are not running a two-sided test, so this step is not applicable.
 
-### When comparing two groups, comment on the effect size and the practical significance of the result.
+### When comparing two groups, comment on the effect size and the practical significance of the result. {#one-prop-ex-effect}
 
 This is not applicable here because we are not comparing two groups. We are looking at the survival percentage in only one group of patients, those who had a heart transplant.
 
 
-## Your turn
+## Your turn {#one-prop-your-turn}
 
 Follow the rubric to answer the following research question:
 
@@ -445,9 +437,9 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 
 **Also, so that your answers here don't mess up the code chunks above, use new variable names everywhere. In particular, you should use `prior_test`(instead of `alive_test`) to store the results of your hypothesis test. Make other corresponding changes as necessary, like `prior_test_p` instead of `alive_test_p`, for example.**
 
-##### Exploratory data analysis
+##### Exploratory data analysis {-}
 
-###### Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.
+###### Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure. {-}
 
 ::: {.answer}
 
@@ -463,7 +455,7 @@ Please write up your answer here.
 
 :::
 
-###### Prepare the data for analysis. [Not always necessary.]
+###### Prepare the data for analysis. [Not always necessary.] {-}
 
 ::: {.answer}
 
@@ -473,7 +465,7 @@ Please write up your answer here.
 
 :::
 
-###### Make tables or plots to explore the data visually.
+###### Make tables or plots to explore the data visually. {-}
 
 ::: {.answer}
 
@@ -484,9 +476,9 @@ Please write up your answer here.
 :::
 
 
-##### Hypotheses
+##### Hypotheses {-}
 
-###### Identify the sample (or samples) and a reasonable population (or populations) of interest.
+###### Identify the sample (or samples) and a reasonable population (or populations) of interest. {-}
 
 [Remember that you are using the full `heart_transplant` data, so your sample size should be larger here than in the example above.]
 
@@ -496,7 +488,7 @@ Please write up your answer here.
 
 :::
 
-###### Express the null and alternative hypotheses as contextually meaningful full sentences.
+###### Express the null and alternative hypotheses as contextually meaningful full sentences. {-}
 
 ::: {.answer}
 
@@ -506,7 +498,7 @@ $H_{A}:$ Alternative hypothesis goes here.
 
 :::
 
-###### Express the null and alternative hypotheses in symbols (when possible).
+###### Express the null and alternative hypotheses in symbols (when possible). {-}
 
 ::: {.answer}
 
@@ -517,9 +509,9 @@ $H_{A}: math$
 :::
 
 
-##### Model
+##### Model {-}
 
-###### Identify the sampling distribution model.
+###### Identify the sampling distribution model. {-}
 
 ::: {.answer}
 
@@ -527,7 +519,7 @@ Please write up your answer here.
 
 :::
 
-###### Check the relevant conditions to ensure that model assumptions are met.
+###### Check the relevant conditions to ensure that model assumptions are met. {-}
 
 [Remember that you are using the full `heart_transplant` data, so the number of successes and failures will be different here than in the example above.]
 
@@ -538,11 +530,11 @@ Please write up your answer here. (Some conditions may require R code as well.)
 :::
 
 
-##### Mechanics
+##### Mechanics {-}
 
 [Be sure to use `heart_transplant` everywhere and not `heart_transplant2`!]
 
-###### Compute the test statistic.
+###### Compute the test statistic. {-}
 
 ::: {.answer}
 
@@ -552,7 +544,7 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 :::
 
-###### Report the test statistic in context (when possible).
+###### Report the test statistic in context (when possible). {-}
 
 ::: {.answer}
 
@@ -560,7 +552,7 @@ Please write up your answer here.
 
 :::
 
-###### Plot the null distribution.
+###### Plot the null distribution. {-}
 
 ::: {.answer}
 
@@ -570,7 +562,7 @@ Please write up your answer here.
 
 :::
 
-###### Calculate the P-value.
+###### Calculate the P-value. {-}
 
 ::: {.answer}
 
@@ -580,7 +572,7 @@ Please write up your answer here.
 
 :::
 
-###### Interpret the P-value as a probability given the null.
+###### Interpret the P-value as a probability given the null. {-}
 
 ::: {.answer}
 
@@ -589,17 +581,9 @@ Please write up your answer here.
 :::
 
 
-##### Conclusion
+##### Conclusion {-}
 
-###### State the statistical conclusion.
-
-::: {.answer}
-
-Please write up your answer here.
-
-:::
-
-###### State (but do not overstate) a contextually meaningful conclusion.
+###### State the statistical conclusion. {-}
 
 ::: {.answer}
 
@@ -607,7 +591,7 @@ Please write up your answer here.
 
 :::
 
-###### Express reservations or uncertainty about the generalizability of the conclusion.
+###### State (but do not overstate) a contextually meaningful conclusion. {-}
 
 ::: {.answer}
 
@@ -615,7 +599,15 @@ Please write up your answer here.
 
 :::
 
-###### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+###### Express reservations or uncertainty about the generalizability of the conclusion. {-}
+
+::: {.answer}
+
+Please write up your answer here.
+
+:::
+
+###### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses. {-}
 
 ::: {.answer}
 
@@ -625,9 +617,9 @@ Please write up your answer here.
 
 
 
-##### Confidence interval
+##### Confidence interval {-}
 
-###### Check the relevant conditions to ensure that model assumptions are met.
+###### Check the relevant conditions to ensure that model assumptions are met. {-}
 
 ::: {.answer}
 
@@ -635,7 +627,7 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 :::
 
-###### Calculate the confidence interval.
+###### Calculate the confidence interval. {-}
 
 ::: {.answer}
 
@@ -645,7 +637,7 @@ Please write up your answer here. (Some conditions may require R code as well.)
 
 :::
 
-###### State (but do not overstate) a contextually meaningful interpretation.
+###### State (but do not overstate) a contextually meaningful interpretation. {-}
 
 ::: {.answer}
 
@@ -653,7 +645,7 @@ Please write up your answer here.
 
 :::
 
-###### If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test. [Not always applicable.]
+###### If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test. [Not always applicable.] {-}
 
 ::: {.answer}
 
@@ -661,7 +653,7 @@ Please write up your answer here.
 
 :::
 
-###### When comparing two groups, comment on the effect size and the practical significance of the result. [Not always applicable.]
+###### When comparing two groups, comment on the effect size and the practical significance of the result. [Not always applicable.] {-}
 
 ::: {.answer}
 
