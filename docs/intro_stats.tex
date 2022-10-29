@@ -125,7 +125,7 @@
 
 \title{Introduction to Statistics: an integrated textbook and workbook using R}
 \author{Sean Raleigh, Westminster College (Salt Lake City, UT)}
-\date{2022-09-07}
+\date{2022-10-29}
 
 \begin{document}
 \maketitle
@@ -5906,7 +5906,7 @@ Then use \texttt{tidy}, \texttt{augment}, and \texttt{glance} respectively on th
 \paragraph*{Exercise 16(d)}\label{exercise-16d}}
 \addcontentsline{toc}{paragraph}{Exercise 16(d)}
 
-Use the \texttt{glance} output from above to create a residual plot with a blue horizontal reference line.
+Use the \texttt{augment} output from above to create a residual plot with a blue horizontal reference line.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -5964,7 +5964,7 @@ Please write up your answer here.
 \paragraph*{Exercise 16(j)}\label{exercise-16j}}
 \addcontentsline{toc}{paragraph}{Exercise 16(j)}
 
-Use the equation of the regression line to predict the FAIR policy rate per 100 housing units for a ZIP code with 80\% racial minorities. Show your work. Then put that prediction into a full, contextually meaningful sentence.
+Use the equation of the regression line to predict the flipper length of a penguin with body mass 4200 grams. Show your work. Then put that prediction into a full, contextually meaningful sentence.
 
 Please write up your answer here.
 
@@ -5972,7 +5972,7 @@ Please write up your answer here.
 \paragraph*{Exercise 16(k)}\label{exercise-16k}}
 \addcontentsline{toc}{paragraph}{Exercise 16(k)}
 
-Using the value of \(R^2\) from the \texttt{glance} output, write a full, contextually meaningful sentence interpreting that value.
+Using the value of \(R^2\) from the \texttt{glance} output for the model of flipper length by body mass, write a full, contextually meaningful sentence interpreting that value.
 
 Please write up your answer here.
 
@@ -10950,7 +10950,9 @@ As a matter of fact, once we know the difference in promotion rates, we don't re
 ##  -0.2916667
 \end{verbatim}
 
-We don't really need both the positive and negative values. Let's just keep the first row and keep track of which direction we subtracted to get it. (The positive difference results from the male promotion rate minus the female promotion rate.) We can use \texttt{slice} to grab the first row:
+Notice the order of subtraction: we're doing the men's rates minus the women's rates.
+
+This computes both the difference in promotion rates (in the first row) and the difference in not-promoted rates (in the second row). Let's just keep the first row, since we care more about promotion rates. (That's our success category.) We can use \texttt{slice} to grab the first row:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -14057,19 +14059,17 @@ Use the \texttt{smoking} data set from the \texttt{openintro} package. What perc
   \item
     {[}Check condition here.{]}
   \end{itemize}
-\item
-  Success/failure
-
-  \begin{itemize}
-  \tightlist
-  \item
-    {[}Check condition here.{]}
-  \end{itemize}
 \end{itemize}
 
 \hypertarget{calculate-and-graph-the-confidence-interval.}{%
 \subparagraph*{Calculate and graph the confidence interval.}\label{calculate-and-graph-the-confidence-interval.}}
 \addcontentsline{toc}{subparagraph}{Calculate and graph the confidence interval.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to create the bootstrap sampling distribution.}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -14079,7 +14079,7 @@ Use the \texttt{smoking} data set from the \texttt{openintro} package. What perc
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# Add code here to calculate the confidence interval.}
+\CommentTok{\# Add code here to graph the confidence interval.}
 \end{Highlighting}
 \end{Shaded}
 
@@ -14168,7 +14168,7 @@ We can do this over and over again through the magic of simulation! Here's what 
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-334-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-335-1.pdf}
 
 Each sample gives us a slightly different estimate, and therefore, a different confidence interval as well.
 
@@ -14300,7 +14300,7 @@ The normal distribution looks like this:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-336-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-337-1.pdf}
 
 The curve pictured above is called the \emph{standard normal distribution}. It has a mean of 0 and a standard deviation of 1. Mathematically, this is written as
 
@@ -14341,7 +14341,7 @@ The graph now looks like this:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-337-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-338-1.pdf}
 
 \hypertarget{normal-predictions}{%
 \section{Predictions using normal models}\label{normal-predictions}}
@@ -14356,7 +14356,7 @@ For example, what percentage of women ages 30--44 in the U.S. and Canada are exp
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-338-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-339-1.pdf}
 
 \begin{verbatim}
 ## [1] 0.873451
@@ -14429,7 +14429,7 @@ What about the pretty picture? Unfortunately, this doesn't work so well:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-341-1.pdf} \includegraphics{intro_stats_files/figure-latex/unnamed-chunk-341-2.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-342-1.pdf} \includegraphics{intro_stats_files/figure-latex/unnamed-chunk-342-2.pdf}
 
 \begin{verbatim}
 ## [1] 0.4859026
@@ -14445,7 +14445,7 @@ Instead, let's observe that the \texttt{pdist} command can include both values (
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-342-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-343-1.pdf}
 
 \begin{verbatim}
 ## [1] 0.3875485 0.8734510
@@ -14545,7 +14545,7 @@ The command we need is \texttt{qdist}. It looks a lot like \texttt{pdist}. Obser
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-348-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-349-1.pdf}
 
 \begin{verbatim}
 ## [1] 104.5571
@@ -14567,7 +14567,7 @@ What if we asked about the highest 10\% of women? All you have to do is remember
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-349-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-350-1.pdf}
 
 \begin{verbatim}
 ## [1] 131.9417
@@ -14585,7 +14585,7 @@ Finally, what if we want the middle 50\%? This is trickier. The middle 50\% lies
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-350-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-351-1.pdf}
 
 \begin{verbatim}
 ## [1] 104.5571 123.4429
@@ -14671,7 +14671,7 @@ What is the z score for an SBP of 132? Look at the graph of the normal model \(N
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-354-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-355-1.pdf}
 
 We can see that 132 lies between 128 and 142, which are 1 and 2 standard deviations above the mean, respectively. The exact z score is
 
@@ -14757,7 +14757,7 @@ Working with z scores also makes it easier to work with normal models. The defau
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-357-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-358-1.pdf}
 
 \begin{verbatim}
 ## [1] 0.1586553
@@ -14797,7 +14797,7 @@ Here is an example. The total snowfall in Grand Rapids, Michigan has been record
 ## Warning: Removed 1 rows containing non-finite values (stat_bin).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-358-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-359-1.pdf}
 
 Here is the QQ plot for the same data. Notice that the aesthetics are a little different; instead of \texttt{x}, we have to use \texttt{sample}.
 
@@ -14817,7 +14817,7 @@ Here is the QQ plot for the same data. Notice that the aesthetics are a little d
 ## Warning: Removed 1 rows containing non-finite values (stat_qq_line).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-359-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-360-1.pdf}
 
 (The warning is because there is one missing value in the data.)
 
@@ -14834,7 +14834,7 @@ Contrast that with skewed data. For example, the \texttt{Alcohol} data set conta
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-360-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-361-1.pdf}
 
 It is also apparent in the QQ plot that the data is not normally distributed.
 
@@ -14846,7 +14846,7 @@ It is also apparent in the QQ plot that the data is not normally distributed.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-361-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-362-1.pdf}
 
 The path of dots is sharply curved, indicating a lack of normality.
 
@@ -16020,7 +16020,7 @@ Instead of focusing on the total number of successes, let's use the proportion o
 ## Warning: Removed 2 rows containing missing values (geom_bar).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-369-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-370-1.pdf}
 
 Because each sample has size 10, the proportion of successes can only be multiples of 0.1. Although the distribution is somewhat normally shaped, it is discrete (no values in between the bars) and there is an appreciable left skew.
 
@@ -16046,7 +16046,7 @@ What happens if we increase the sample size to 20? (The binwidth has to change t
 ## Warning: Removed 2 rows containing missing values (geom_bar).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-371-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-372-1.pdf}
 
 \hypertarget{exercise-1-10}{%
 \paragraph*{Exercise 1}\label{exercise-1-10}}
@@ -16195,7 +16195,7 @@ There is something else going on too. Suppose that \(n = 100\) but \(p = 0.01\).
 ## Warning: Removed 2 rows containing missing values (geom_bar).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-374-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-375-1.pdf}
 
 (Note that the x-axis scale is much smaller than it was before.)
 
@@ -16251,7 +16251,7 @@ Let's simulate:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-376-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-377-1.pdf}
 
 It looks like there are at least a few simulated samples that could come in less than 50\% by chance.
 
@@ -16300,7 +16300,7 @@ Back to our original question. How likely is it that a random survey of 50 voter
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-377-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-378-1.pdf}
 
 \begin{verbatim}
 ## [1] 0.01958508
@@ -16817,7 +16817,7 @@ The z score is -2.5281029. The proportion of survivors is about 2.5 standard err
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-390-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-391-1.pdf}
 
 Commentary: In past chapters, we have used the \texttt{generate} verb to get many repetitions (usually 1000) of some kind of random process to simulate the sampling distribution model. In this chapter, we have used the verb \texttt{assume} instead to assume that the sampling distribution is a normal model. As long as the conditions hold, this is a reasonable assumption. This also means that we don't have to use \texttt{set.seed} as there is no random process to reproduce.
 
@@ -16862,7 +16862,7 @@ Compare the graph above to what we would see if we simulated the sampling distri
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-392-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-393-1.pdf}
 
 This is essentially the same picture, although the model above is centered on the null value 0.5 instead of the z score of 0. This also means that the \texttt{obs\_stat} had to be the sample proportion \texttt{alive\_prop} and not the z score \texttt{alive\_z}.
 
@@ -16998,7 +16998,7 @@ By contrast, a confidence interval is making no assumption about the ``true'' va
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-396-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-397-1.pdf}
 
 Commentary: when we use a theoretical normal distribution, we have to compute the confidence interval a different way.
 
@@ -17305,24 +17305,751 @@ When certain conditions are met, we can use a theoretical normal model---a perfe
 
 If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
 
-\hypertarget{appendix-appendix}{%
-\appendix}
-
+\hypertarget{two-prop}{%
+\chapter{Inference for two proportions}\label{two-prop}}
 
 2.0
 
-\hypertarget{appendix-rubric}{%
-\chapter{Rubric for inference}\label{appendix-rubric}}
+\hypertarget{functions-introduced-in-this-chapter-15}{%
+\subsection*{Functions introduced in this chapter}\label{functions-introduced-in-this-chapter-15}}
+\addcontentsline{toc}{subsection}{Functions introduced in this chapter}
 
-This is the R Markdown outline for running inference, both a hypothesis test and a confidence interval.
+No new R functions are introduced here.
+
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+In this chapter, we revisit the idea of inference for two proportions, but this time using a normal model as the sampling distribution model.
+
+\hypertarget{install-new-packages-1}{%
+\subsection{Install new packages}\label{install-new-packages-1}}
+
+There are no new packages used in this chapter.
+
+\hypertarget{download-the-r-notebook-file}{%
+\subsection{Download the R notebook file}\label{download-the-r-notebook-file}}
+
+Check the upper-right corner in RStudio to make sure you're in your \texttt{intro\_stats} project. Then click on the following link to download this chapter as an R notebook file (\texttt{.Rmd}).
+
+https://vectorposse.github.io/intro\_stats/chapter\_downloads/16-inference\_for\_two\_proportions.Rmd
+
+Once the file is downloaded, move it to your project folder in RStudio and open it there.
+
+\hypertarget{restart-r-and-run-all-chunks}{%
+\subsection{Restart R and run all chunks}\label{restart-r-and-run-all-chunks}}
+
+In RStudio, select ``Restart R and Run All Chunks'' from the ``Run'' menu.
+
+\hypertarget{load-packages}{%
+\section{Load packages}\label{load-packages}}
+
+We load the standard \texttt{tidyverse}, \texttt{janitor} and \texttt{infer} packages as well as the \texttt{MASS} package for the \texttt{Melanoma} data.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(janitor)}
+\FunctionTok{library}\NormalTok{(infer)}
+\FunctionTok{library}\NormalTok{(MASS)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{research-question}{%
+\section{Research question}\label{research-question}}
+
+In an earlier chapter, we used the data set \texttt{Melanoma} from the \texttt{MASS} package to explore the possibility of a sex bias among patients with melanoma. A related question is whether male or females are more likely to die from melanoma. In this case, we are thinking of \texttt{status} as the response variable and \texttt{sex} as the predictor variable.
+
+\hypertarget{the-sampling-distribution-model-for-two-proportions}{%
+\section{The sampling distribution model for two proportions}\label{the-sampling-distribution-model-for-two-proportions}}
+
+When we simulated a sampling distribution using randomization (shuffling the values of the predictor variable), it looked like the simulated sampling distribution was roughly normal. Therefore, we should be able to use a normal model in place of randomization when we want to perform statistical inference.
+
+The question is, ``Which normal model?'' In other words, what is the mean and standard deviation we should use?
+
+Since we have two groups, let's call the true proportion of success \(p_{1}\) for group 1 and \(p_{2}\) for group 2. Therefore, the true difference between groups 1 and 2 in the population is \(p_{1} - p_{2}\). If we sample repeatedly from groups 1 and 2 and form many sample differences \(\hat{p}_{1} - \hat{p}_{2}\), we should expect most of the values \(\hat{p}_{1} - \hat{p}_{2}\) to be close to the true difference \(p_{1} - p_{2}\). In other words, the sampling distribution is centered at a mean of \(p_{1} - p_{2}\).
+
+What about the standard error? This is much more technical and complicated. Here is the formula, whose derivation is outside the scope of the course:
+
+\[
+\sqrt{\frac{p_{1} (1 - p_{1})}{n_{1}} + \frac{p_{2} (1 - p_{2})}{n_{2}}}.
+\]
+
+So the somewhat complicated normal model is
+
+\[
+N\left( p_{1} - p_{2}, \sqrt{\frac{p_{1} (1 - p_{1})}{n_{1}} + \frac{p_{2} (1 - p_{2})}{n_{2}}} \right).
+\]
+
+When we ran hypothesis tests for one proportion, the true proportion \(p\) was assumed to be known, set equal to some null value. Therefore, we could calculate the standard error \(\sqrt{\frac{p(1 - p)}{n}}\) under the assumption of the null.
+
+We also have a null hypothesis for two proportions. When comparing two groups, the default assumption is that the two groups are the same. This translates into the mathematical statement \(p_{1} - p_{2} = 0\) (i.e., there is no difference between \(p_{1}\) and \(p_{2}\)).
+
+But there is a problem here. Although we are assuming something about the difference \(p_{1} - p_{2}\), we are not assuming anything about the actual values of \(p_{1}\) and \(p_{2}\). For example, both groups could be 0.3, or 0.6, or 0.92, or whatever, and the difference between the groups would still be zero.
+
+Without values of \(p_{1}\) and \(p_{2}\), we cannot plug anything into the standard error formula above. One easy ``cheat'' is to just use the sample values \(\hat{p}_{1}\) and \(\hat{p}_{2}\):
+
+\[
+SE = \sqrt{\frac{\hat{p}_{1} (1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2} (1 - \hat{p}_{2})}{n_{2}}}.
+\]
+
+There is a more sophisticated way to address this called ``pooling''. This more advanced concept is covered in an optional appendix to this chapter.
+
+\hypertarget{inference-for-two-proportions}{%
+\section{Inference for two proportions}\label{inference-for-two-proportions}}
+
+Below is a fully-worked example of inference (hypothesis test and confidence interval) for two proportions. When you work your own example, you can thoughtfully copy and paste the R code, making changes as necessary.
+
+The example below will pause frequently for commentary on the steps, especially where their execution will be different from what you've seen before when you used randomization. When it's your turn to work through another example on your own, you should follow the outline of the rubric, but you should \textbf{not} copy and paste the commentary that accompanies it.
 
 \hypertarget{exploratory-data-analysis-3}{%
-\section*{Exploratory data analysis}\label{exploratory-data-analysis-3}}
-\addcontentsline{toc}{section}{Exploratory data analysis}
+\section{Exploratory data analysis}\label{exploratory-data-analysis-3}}
 
 \hypertarget{use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-3}{%
-\subsection*{Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.}\label{use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-3}}
-\addcontentsline{toc}{subsection}{Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.}
+\subsection{Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.}\label{use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-3}}
+
+Type \texttt{?Melanoma} at the Console to read the help file. We discussed this data back in Chapter 11 and determined that it was difficult, if not impossible, to discover anything useful about the true provenance of the data. We can, at least, print the data out and examine the variables
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Melanoma}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     time status sex age year thickness ulcer sex_fct
+## 1     10      3   1  76 1972      6.76     1    male
+## 2     30      3   1  56 1968      0.65     0    male
+## 3     35      2   1  41 1977      1.34     0    male
+## 4     99      3   0  71 1968      2.90     0  female
+## 5    185      1   1  52 1965     12.08     1    male
+## 6    204      1   1  28 1971      4.84     1    male
+## 7    210      1   1  77 1972      5.16     1    male
+## 8    232      3   0  60 1974      3.22     1  female
+## 9    232      1   1  49 1968     12.88     1    male
+## 10   279      1   0  68 1971      7.41     1  female
+## 11   295      1   0  53 1969      4.19     1  female
+## 12   355      3   0  64 1972      0.16     1  female
+## 13   386      1   0  68 1965      3.87     1  female
+## 14   426      1   1  63 1970      4.84     1    male
+## 15   469      1   0  14 1969      2.42     1  female
+## 16   493      3   1  72 1971     12.56     1    male
+## 17   529      1   1  46 1971      5.80     1    male
+## 18   621      1   1  72 1972      7.06     1    male
+## 19   629      1   1  95 1968      5.48     1    male
+## 20   659      1   1  54 1972      7.73     1    male
+## 21   667      1   0  89 1968     13.85     1  female
+## 22   718      1   1  25 1967      2.34     1    male
+## 23   752      1   1  37 1973      4.19     1    male
+## 24   779      1   1  43 1967      4.04     1    male
+## 25   793      1   1  68 1970      4.84     1    male
+## 26   817      1   0  67 1966      0.32     0  female
+## 27   826      3   0  86 1965      8.54     1  female
+## 28   833      1   0  56 1971      2.58     1  female
+## 29   858      1   0  16 1967      3.56     0  female
+## 30   869      1   0  42 1965      3.54     0  female
+## 31   872      1   0  65 1968      0.97     0  female
+## 32   967      1   1  52 1970      4.83     1    male
+## 33   977      1   1  58 1967      1.62     1    male
+## 34   982      1   0  60 1970      6.44     1  female
+## 35  1041      1   1  68 1967     14.66     0    male
+## 36  1055      1   0  75 1967      2.58     1  female
+## 37  1062      1   1  19 1966      3.87     1    male
+## 38  1075      1   1  66 1971      3.54     1    male
+## 39  1156      1   0  56 1970      1.34     1  female
+## 40  1228      1   1  46 1973      2.24     1    male
+## 41  1252      1   0  58 1971      3.87     1  female
+## 42  1271      1   0  74 1971      3.54     1  female
+## 43  1312      1   0  65 1970     17.42     1  female
+## 44  1427      3   1  64 1972      1.29     0    male
+## 45  1435      1   1  27 1969      3.22     0    male
+## 46  1499      2   1  73 1973      1.29     0    male
+## 47  1506      1   1  56 1970      4.51     1    male
+## 48  1508      2   1  63 1973      8.38     1    male
+## 49  1510      2   0  69 1973      1.94     0  female
+## 50  1512      2   0  77 1973      0.16     0  female
+## 51  1516      1   1  80 1968      2.58     1    male
+## 52  1525      3   0  76 1970      1.29     1  female
+## 53  1542      2   0  65 1973      0.16     0  female
+## 54  1548      1   0  61 1972      1.62     0  female
+## 55  1557      2   0  26 1973      1.29     0  female
+## 56  1560      1   0  57 1973      2.10     0  female
+## 57  1563      2   0  45 1973      0.32     0  female
+## 58  1584      1   1  31 1970      0.81     0    male
+## 59  1605      2   0  36 1973      1.13     0  female
+## 60  1621      1   0  46 1972      5.16     1  female
+## 61  1627      2   0  43 1973      1.62     0  female
+## 62  1634      2   0  68 1973      1.37     0  female
+## 63  1641      2   1  57 1973      0.24     0    male
+## 64  1641      2   0  57 1973      0.81     0  female
+## 65  1648      2   0  55 1973      1.29     0  female
+## 66  1652      2   0  58 1973      1.29     0  female
+## 67  1654      2   1  20 1973      0.97     0    male
+## 68  1654      2   0  67 1973      1.13     0  female
+## 69  1667      1   0  44 1971      5.80     1  female
+## 70  1678      2   0  59 1973      1.29     0  female
+## 71  1685      2   0  32 1973      0.48     0  female
+## 72  1690      1   1  83 1971      1.62     0    male
+## 73  1710      2   0  55 1973      2.26     0  female
+## 74  1710      2   1  15 1973      0.58     0    male
+## 75  1726      1   0  58 1970      0.97     1  female
+## 76  1745      2   0  47 1973      2.58     1  female
+## 77  1762      2   0  54 1973      0.81     0  female
+## 78  1779      2   1  55 1973      3.54     1    male
+## 79  1787      2   1  38 1973      0.97     0    male
+## 80  1787      2   0  41 1973      1.78     1  female
+## 81  1793      2   0  56 1973      1.94     0  female
+## 82  1804      2   0  48 1973      1.29     0  female
+## 83  1812      2   1  44 1973      3.22     1    male
+## 84  1836      2   0  70 1972      1.53     0  female
+## 85  1839      2   0  40 1972      1.29     0  female
+## 86  1839      2   1  53 1972      1.62     1    male
+## 87  1854      2   0  65 1972      1.62     1  female
+## 88  1856      2   1  54 1972      0.32     0    male
+## 89  1860      3   1  71 1969      4.84     1    male
+## 90  1864      2   0  49 1972      1.29     0  female
+## 91  1899      2   0  55 1972      0.97     0  female
+## 92  1914      2   0  69 1972      3.06     0  female
+## 93  1919      2   1  83 1972      3.54     0    male
+## 94  1920      2   1  60 1972      1.62     1    male
+## 95  1927      2   1  40 1972      2.58     1    male
+## 96  1933      1   0  77 1972      1.94     0  female
+## 97  1942      2   0  35 1972      0.81     0  female
+## 98  1955      2   0  46 1972      7.73     1  female
+## 99  1956      2   0  34 1972      0.97     0  female
+## 100 1958      2   0  69 1972     12.88     0  female
+## 101 1963      2   0  60 1972      2.58     0  female
+## 102 1970      2   1  84 1972      4.09     1    male
+## 103 2005      2   0  66 1972      0.64     0  female
+## 104 2007      2   1  56 1972      0.97     0    male
+## 105 2011      2   0  75 1972      3.22     1  female
+## 106 2024      2   0  36 1972      1.62     0  female
+## 107 2028      2   1  52 1972      3.87     1    male
+## 108 2038      2   0  58 1972      0.32     1  female
+## 109 2056      2   0  39 1972      0.32     0  female
+## 110 2059      2   1  68 1972      3.22     1    male
+## 111 2061      1   1  71 1968      2.26     0    male
+## 112 2062      1   0  52 1965      3.06     0  female
+## 113 2075      2   1  55 1972      2.58     1    male
+## 114 2085      3   0  66 1970      0.65     0  female
+## 115 2102      2   1  35 1972      1.13     0    male
+## 116 2103      1   1  44 1966      0.81     0    male
+## 117 2104      2   0  72 1972      0.97     0  female
+## 118 2108      1   0  58 1969      1.76     1  female
+## 119 2112      2   0  54 1972      1.94     1  female
+## 120 2150      2   0  33 1972      0.65     0  female
+## 121 2156      2   0  45 1972      0.97     0  female
+## 122 2165      2   1  62 1972      5.64     0    male
+## 123 2209      2   0  72 1971      9.66     0  female
+## 124 2227      2   0  51 1971      0.10     0  female
+## 125 2227      2   1  77 1971      5.48     1    male
+## 126 2256      1   0  43 1971      2.26     1  female
+## 127 2264      2   0  65 1971      4.83     1  female
+## 128 2339      2   0  63 1971      0.97     0  female
+## 129 2361      2   1  60 1971      0.97     0    male
+## 130 2387      2   0  50 1971      5.16     1  female
+## 131 2388      1   1  40 1966      0.81     0    male
+## 132 2403      2   0  67 1971      2.90     1  female
+## 133 2426      2   0  69 1971      3.87     0  female
+## 134 2426      2   0  74 1971      1.94     1  female
+## 135 2431      2   0  49 1971      0.16     0  female
+## 136 2460      2   0  47 1971      0.64     0  female
+## 137 2467      1   0  42 1965      2.26     1  female
+## 138 2492      2   0  54 1971      1.45     0  female
+## 139 2493      2   1  72 1971      4.82     1    male
+## 140 2521      2   0  45 1971      1.29     1  female
+## 141 2542      2   1  67 1971      7.89     1    male
+## 142 2559      2   0  48 1970      0.81     1  female
+## 143 2565      1   1  34 1970      3.54     1    male
+## 144 2570      2   0  44 1970      1.29     0  female
+## 145 2660      2   0  31 1970      0.64     0  female
+## 146 2666      2   0  42 1970      3.22     1  female
+## 147 2676      2   0  24 1970      1.45     1  female
+## 148 2738      2   0  58 1970      0.48     0  female
+## 149 2782      1   1  78 1969      1.94     0    male
+## 150 2787      2   1  62 1970      0.16     0    male
+## 151 2984      2   1  70 1969      0.16     0    male
+## 152 3032      2   0  35 1969      1.29     0  female
+## 153 3040      2   0  61 1969      1.94     0  female
+## 154 3042      1   0  54 1967      3.54     1  female
+## 155 3067      2   0  29 1969      0.81     0  female
+## 156 3079      2   1  64 1969      0.65     0    male
+## 157 3101      2   1  47 1969      7.09     0    male
+## 158 3144      2   1  62 1969      0.16     0    male
+## 159 3152      2   0  32 1969      1.62     0  female
+## 160 3154      3   1  49 1969      1.62     0    male
+## 161 3180      2   0  25 1969      1.29     0  female
+## 162 3182      3   1  49 1966      6.12     0    male
+## 163 3185      2   0  64 1969      0.48     0  female
+## 164 3199      2   0  36 1969      0.64     0  female
+## 165 3228      2   0  58 1969      3.22     1  female
+## 166 3229      2   0  37 1969      1.94     0  female
+## 167 3278      2   1  54 1969      2.58     0    male
+## 168 3297      2   0  61 1968      2.58     1  female
+## 169 3328      2   1  31 1968      0.81     0    male
+## 170 3330      2   1  61 1968      0.81     1    male
+## 171 3338      1   0  60 1967      3.22     1  female
+## 172 3383      2   0  43 1968      0.32     0  female
+## 173 3384      2   0  68 1968      3.22     1  female
+## 174 3385      2   0   4 1968      2.74     0  female
+## 175 3388      2   1  60 1968      4.84     1    male
+## 176 3402      2   1  50 1968      1.62     0    male
+## 177 3441      2   0  20 1968      0.65     0  female
+## 178 3458      3   0  54 1967      1.45     0  female
+## 179 3459      2   0  29 1968      0.65     0  female
+## 180 3459      2   1  56 1968      1.29     1    male
+## 181 3476      2   0  60 1968      1.62     0  female
+## 182 3523      2   0  46 1968      3.54     0  female
+## 183 3667      2   0  42 1967      3.22     0  female
+## 184 3695      2   0  34 1967      0.65     0  female
+## 185 3695      2   0  56 1967      1.03     0  female
+## 186 3776      2   1  12 1967      7.09     1    male
+## 187 3776      2   0  21 1967      1.29     1  female
+## 188 3830      2   1  46 1967      0.65     0    male
+## 189 3856      2   0  49 1967      1.78     0  female
+## 190 3872      2   0  35 1967     12.24     1  female
+## 191 3909      2   1  42 1967      8.06     1    male
+## 192 3968      2   0  47 1967      0.81     0  female
+## 193 4001      2   0  69 1967      2.10     0  female
+## 194 4103      2   0  52 1966      3.87     0  female
+## 195 4119      2   1  52 1966      0.65     0    male
+## 196 4124      2   0  30 1966      1.94     1  female
+## 197 4207      2   1  22 1966      0.65     0    male
+## 198 4310      2   1  55 1966      2.10     0    male
+## 199 4390      2   0  26 1965      1.94     1  female
+## 200 4479      2   0  19 1965      1.13     1  female
+## 201 4492      2   1  29 1965      7.06     1    male
+## 202 4668      2   0  40 1965      6.12     0  female
+## 203 4688      2   0  42 1965      0.48     0  female
+## 204 4926      2   0  50 1964      2.26     0  female
+## 205 5565      2   0  41 1962      2.90     0  female
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{glimpse}\NormalTok{(Melanoma)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rows: 205
+## Columns: 8
+## $ time      <int> 10, 30, 35, 99, 185, 204, 210, 232, 232, 279, 295, 355, 386,~
+## $ status    <int> 3, 3, 2, 3, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 1, ~
+## $ sex       <int> 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, ~
+## $ age       <int> 76, 56, 41, 71, 52, 28, 77, 60, 49, 68, 53, 64, 68, 63, 14, ~
+## $ year      <int> 1972, 1968, 1977, 1968, 1965, 1971, 1972, 1974, 1968, 1971, ~
+## $ thickness <dbl> 6.76, 0.65, 1.34, 2.90, 12.08, 4.84, 5.16, 3.22, 12.88, 7.41~
+## $ ulcer     <int> 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ~
+## $ sex_fct   <fct> male, male, male, female, male, male, male, female, male, fe~
+\end{verbatim}
+
+\hypertarget{prepare-the-data-for-analysis.}{%
+\subsection{Prepare the data for analysis.}\label{prepare-the-data-for-analysis.}}
+
+The two variables of interest are \texttt{status} and \texttt{sex}. We are considering them as categorical variables, but they are recorded numerically in the data frame. We convert them to proper factor variables and put them in their own data frame using the help file to identify the levels and labels we need.
+
+There is a minor hitch with \texttt{status}. The help file shows three categories: 1. died from melanoma, 2. alive, 3. dead from other causes. For two-proportion inference, it would be better to have two categories only, a success category and a failure category. Since our research question asks about deaths due to melanoma, the ``success'' condition is the one numbered 1 in the help file, ``died from melanoma''. That means we need to combine the other two categories into a single failure category. Perhaps we should call it ``other''. You can accomplish this by simply repeating the ``other'' label more than once in the \texttt{factor} command:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Melanoma }\OtherTok{\textless{}{-}}\NormalTok{ Melanoma }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{sex\_fct =} \FunctionTok{factor}\NormalTok{(sex,}
+                            \AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{),}
+                            \AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"female"}\NormalTok{, }\StringTok{"male"}\NormalTok{)),}
+           \AttributeTok{status\_fct =} \FunctionTok{factor}\NormalTok{(status,}
+                               \AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{),}
+                               \AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"died from melanoma"}\NormalTok{, }\StringTok{"other"}\NormalTok{, }\StringTok{"other"}\NormalTok{)))}
+\FunctionTok{glimpse}\NormalTok{(Melanoma)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rows: 205
+## Columns: 9
+## $ time       <int> 10, 30, 35, 99, 185, 204, 210, 232, 232, 279, 295, 355, 386~
+## $ status     <int> 3, 3, 2, 3, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 1,~
+## $ sex        <int> 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1,~
+## $ age        <int> 76, 56, 41, 71, 52, 28, 77, 60, 49, 68, 53, 64, 68, 63, 14,~
+## $ year       <int> 1972, 1968, 1977, 1968, 1965, 1971, 1972, 1974, 1968, 1971,~
+## $ thickness  <dbl> 6.76, 0.65, 1.34, 2.90, 12.08, 4.84, 5.16, 3.22, 12.88, 7.4~
+## $ ulcer      <int> 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,~
+## $ sex_fct    <fct> male, male, male, female, male, male, male, female, male, f~
+## $ status_fct <fct> other, other, other, other, died from melanoma, died from m~
+\end{verbatim}
+
+\hypertarget{exercise-1-12}{%
+\paragraph*{Exercise 1}\label{exercise-1-12}}
+\addcontentsline{toc}{paragraph}{Exercise 1}
+
+Observe the new variables \texttt{sex\_fct} and \texttt{status\_fct} in the \texttt{glimpse} output above. How can we check that the categories got assigned correctly and match the original \texttt{sex} and \texttt{status} variables?
+
+Please write up your answer here.
+
+\hypertarget{make-tables-or-plots-to-explore-the-data-visually.-3}{%
+\subsection{Make tables or plots to explore the data visually.}\label{make-tables-or-plots-to-explore-the-data-visually.-3}}
+
+As these are two categorical variables, we should look at contingency tables (both counts and percentages). The variable \texttt{status} is the response and \texttt{sex} is the predictor.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tabyl}\NormalTok{(Melanoma, status\_fct, sex\_fct) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_totals}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##          status_fct female male
+##  died from melanoma     28   29
+##               other     98   50
+##               Total    126   79
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tabyl}\NormalTok{(Melanoma, status\_fct, sex\_fct) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_totals}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_percentages}\NormalTok{(}\StringTok{"col"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{adorn\_pct\_formatting}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##          status_fct female   male
+##  died from melanoma  22.2%  36.7%
+##               other  77.8%  63.3%
+##               Total 100.0% 100.0%
+\end{verbatim}
+
+Commentary: You can see why column percentages are necessary in a contingency table. There are 28 females and 29 males who died from melanoma, almost a tie. However, there are more females (126) than there are males (79) who have melanoma in this data set. So the \emph{proportion} of males who died from melanoma is quite a bit larger.
+
+\hypertarget{hypotheses-3}{%
+\section{Hypotheses}\label{hypotheses-3}}
+
+\hypertarget{identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-3}{%
+\subsection{Identify the sample (or samples) and a reasonable population (or populations) of interest.}\label{identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-3}}
+
+There are two samples: 126 female patients and 79 male patients in Denmark with malignant melanoma. In order for these samples to be representative of their respective populations, we should probably restrict our conclusions to the population of all females and males in Denmark with malignant melanoma, although we might be able to make the case that these females and males could be representative of people in other countries who have malignant melanoma.
+
+\hypertarget{express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-3}{%
+\subsection{Express the null and alternative hypotheses as contextually meaningful full sentences.}\label{express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-3}}
+
+\(H_{0}:\) There is no difference between the rate at which women and men in Denmark die from malignant melanoma.
+
+\(H_{A}:\) There is a difference between the rate at which women and men in Denmark die from malignant melanoma.
+
+OR
+
+\(H_{0}:\) In Denmark, death from malignant melanoma is independent of sex.
+
+\(H_{A}:\) In Denmark, death from malignant melanoma is associated with sex.
+
+Commentary: Either of these forms is correct. The former makes it a little easier to figure out how to express the hypotheses mathematically in the next step. The latter reminds us that the \texttt{hypothesize} step of the \texttt{infer} pipeline will require a null of \texttt{independence}.
+
+\hypertarget{express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-3}{%
+\subsection{Express the null and alternative hypotheses in symbols (when possible).}\label{express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-3}}
+
+\(H_{0}: p_{died, F} - p_{died, M} = 0\)
+
+\(H_{A}: p_{died, F} - p_{died, M} \neq 0\)
+
+Commentary: The order in which you subtract is irrelevant to the inferential process. However, you should be sure that any future steps respect the order you choose here. To be on the safe side, it's always best to subtract in the order in which the factor was created. So in the contingency tables above, females are listed first, and that's because ``female'' was the first label we used when we created the \texttt{sex\_fct} variable. So we'll subtract females minus males throughout the remaining steps.
+
+\hypertarget{model-3}{%
+\section{Model}\label{model-3}}
+
+\hypertarget{identify-the-sampling-distribution-model.-3}{%
+\subsection{Identify the sampling distribution model.}\label{identify-the-sampling-distribution-model.-3}}
+
+We will use a normal model.
+
+\hypertarget{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-5}{%
+\subsection{Check the relevant conditions to ensure that model assumptions are met.}\label{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-5}}
+
+\begin{itemize}
+\tightlist
+\item
+  Random
+
+  \begin{itemize}
+  \tightlist
+  \item
+    As observed in a previous chapter when we used this data set before, We have no information about how these samples were obtained. We hope the 126 female patients and 79 male patients are representative of other Danish patients with malignant melanoma.
+  \end{itemize}
+\item
+  10\%
+
+  \begin{itemize}
+  \tightlist
+  \item
+    We don't know exactly how many people in Denmark suffer from malignant melanoma, but we could imagine over time it's more than 1260 females and 790 males.
+  \end{itemize}
+\item
+  Success/Failure
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Checking the contingency table above (the one with counts), we see the numbers 28 and 98 (the successes and failures among females), and 29 and 50 (the successes and failures among males). These are all larger than 10.
+  \end{itemize}
+\end{itemize}
+
+Commentary: Ideally, for the success/failure condition we would like to check \(n_{1} p_{1}\), \(n_{1} (1 - p_{1})\), \(n_{2} p_{2}\), and \(n_{2} (1 - p_{2})\); however, the null makes no claim about the values of \(p_{1}\) and \(p_{2}\). We do the next best thing and estimate these by substituting the sample proportions \(\hat{p}_{1}\) and \(\hat{p}_{2}\). But \(n_{1} \hat{p}_{1}\) and \(n_{2} \hat{p}_{2}\) are just the raw counts of successes in each group. Likewise, \(n_{1} (1 - \hat{p}_{1})\) and \(n_{2} (1 - \hat{p}_{2})\) are just the raw counts of failures in each group. That's why we can just read them off the contingency table.
+
+For a more sophisticated approach, one could also use ``pooled proportions''. See the optional appendix to this chapter for more information.
+
+\hypertarget{mechanics-3}{%
+\section{Mechanics}\label{mechanics-3}}
+
+\hypertarget{compute-the-test-statistic.-3}{%
+\subsection{Compute the test statistic.}\label{compute-the-test-statistic.-3}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{obs\_diff }\OtherTok{\textless{}{-}}\NormalTok{ Melanoma }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{observe}\NormalTok{(status\_fct }\SpecialCharTok{\textasciitilde{}}\NormalTok{ sex\_fct, }\AttributeTok{success =} \StringTok{"died from melanoma"}\NormalTok{,}
+            \AttributeTok{stat =} \StringTok{"diff in props"}\NormalTok{, }\AttributeTok{order =} \FunctionTok{c}\NormalTok{(}\StringTok{"female"}\NormalTok{, }\StringTok{"male"}\NormalTok{))}
+\NormalTok{obs\_diff}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Response: status_fct (factor)
+## Explanatory: sex_fct (factor)
+## # A tibble: 1 x 1
+##     stat
+##    <dbl>
+## 1 -0.145
+\end{verbatim}
+
+The test statistic is the difference of proportions in the sample, \(\hat{p}_{died, F} - \hat{p}_{died, M}\):
+
+\[
+\hat{p}_{died, F} - \hat{p}_{died, M} = 0.222 - 0.367 = -0.145
+\]
+
+As a z-score:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{obs\_diff\_z }\OtherTok{\textless{}{-}}\NormalTok{ Melanoma }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{observe}\NormalTok{(status\_fct }\SpecialCharTok{\textasciitilde{}}\NormalTok{ sex\_fct, }\AttributeTok{success =} \StringTok{"died from melanoma"}\NormalTok{,}
+            \AttributeTok{stat =} \StringTok{"z"}\NormalTok{, }\AttributeTok{order =} \FunctionTok{c}\NormalTok{(}\StringTok{"female"}\NormalTok{, }\StringTok{"male"}\NormalTok{))}
+\NormalTok{obs\_diff\_z}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Response: status_fct (factor)
+## Explanatory: sex_fct (factor)
+## # A tibble: 1 x 1
+##    stat
+##   <dbl>
+## 1 -2.25
+\end{verbatim}
+
+Commentary: We can confirm the value of the z-score manually just to make sure we understand where it comes from.
+
+The standard error looks like the following:
+
+\[
+SE = \sqrt{\frac{\hat{p}_{died, F} (1 - \hat{p}_{died, F})}{n_{F}} + \frac{\hat{p}_{died, M} (1 - \hat{p}_{died, M})}{n_M}}
+\]
+
+Plugging in the numbers from the exploratory data analysis output:
+
+\[
+SE = \sqrt{\frac{0.222 (1 - 0.222)}{126} + \frac{0.367 (1 - 0.367)}{79}}
+\]
+
+In R,
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sqrt}\NormalTok{(}\FloatTok{0.222} \SpecialCharTok{*}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{{-}} \FloatTok{0.222}\NormalTok{) }\SpecialCharTok{/} \DecValTok{126} \SpecialCharTok{+} \FloatTok{0.367} \SpecialCharTok{*}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{{-}} \FloatTok{0.367}\NormalTok{) }\SpecialCharTok{/} \DecValTok{79}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.06566131
+\end{verbatim}
+
+Now our z-score formula is
+
+\[
+z = \frac{(\hat{p}_{died, F} - \hat{p}_{died, M}) - (p_{died, F} - p_{died, M})}{SE}
+\]
+
+The first term in the numerator \((\hat{p}_{died, F} - \hat{p}_{died, M})\) is our test statistic, -0.145. The second term in the numerator \((p_{died, F} - p_{died, M})\) is zero according to the null hypothesis. Plugging all that in, along with the value of SE, gives
+
+\[
+z = \frac{-0.145 - 0}{0.066} \approx -2.2
+\]
+
+Other than a little rounding error (since we rounded everything in sight to three decimal places instead of keeping more precision), this is what the \texttt{infer} output also reported.
+
+\hypertarget{report-the-test-statistic-in-context-when-possible.-3}{%
+\subsection{Report the test statistic in context (when possible).}\label{report-the-test-statistic-in-context-when-possible.-3}}
+
+In our sample, there is a -14.4866385\% difference between the rate at which women and men in Denmark die from malignant melanoma (meaning that males died at a higher rate).
+
+The test statistic has a z score of -2.2530721. The difference in proportions between the rate at which women and men in Denmark die from malignant melanoma lies a bit more than 2 standard errors to the left of the null value.
+
+Commentary: Note the phrase ``meaning that males died at a higher rate''. If you are looking at a difference, you must indicate the direction of the difference. Without that, we would know that there was a difference, but we would have no idea whether women or men die more from malignant melanoma. Once we know that we are subtracting female minus male, then given the values are negative, we can infer that males die from malignant melanoma more often than females in these samples.
+
+\hypertarget{plot-the-null-distribution.-3}{%
+\subsection{Plot the null distribution.}\label{plot-the-null-distribution.-3}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{status\_sex\_test }\OtherTok{\textless{}{-}}\NormalTok{ Melanoma }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{specify}\NormalTok{(status\_fct }\SpecialCharTok{\textasciitilde{}}\NormalTok{ sex\_fct, }\AttributeTok{success =} \StringTok{"died from melanoma"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{hypothesize}\NormalTok{(}\AttributeTok{null =} \StringTok{"independence"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{assume}\NormalTok{(}\AttributeTok{distribution =} \StringTok{"z"}\NormalTok{)}
+\NormalTok{status\_sex\_test}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## A Z distribution.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{status\_sex\_test }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{visualize}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{shade\_p\_value}\NormalTok{(}\AttributeTok{obs\_stat =}\NormalTok{ obs\_diff\_z, }\AttributeTok{direction =} \StringTok{"two{-}sided"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-418-1.pdf}
+
+Commentary: Remember that this is a two-sided test.The red line above is the location of the test statistic, but both tails are shaded and count toward the P-value.
+
+\hypertarget{calculate-the-p-value.-3}{%
+\subsection{Calculate the P-value.}\label{calculate-the-p-value.-3}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{status\_sex\_test\_p }\OtherTok{\textless{}{-}}\NormalTok{ status\_sex\_test }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{get\_p\_value}\NormalTok{(}\AttributeTok{obs\_stat =}\NormalTok{ obs\_diff\_z, }\AttributeTok{direction =} \StringTok{"two{-}sided"}\NormalTok{)}
+\NormalTok{status\_sex\_test\_p}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 1
+##   p_value
+##     <dbl>
+## 1  0.0243
+\end{verbatim}
+
+\hypertarget{interpret-the-p-value-as-a-probability-given-the-null.-3}{%
+\subsection{Interpret the P-value as a probability given the null.}\label{interpret-the-p-value-as-a-probability-given-the-null.-3}}
+
+The P-value is 0.0242546. If there were truly no difference between the rate at which women and men in Denmark die from malignant melanoma, there is only a 2.4254604\% chance of seeing a difference in our data at least as extreme as what we saw.
+
+\hypertarget{conclusion-3}{%
+\section{Conclusion}\label{conclusion-3}}
+
+\hypertarget{state-the-statistical-conclusion.-3}{%
+\subsection{State the statistical conclusion.}\label{state-the-statistical-conclusion.-3}}
+
+We reject the null hypothesis.
+
+\hypertarget{state-but-do-not-overstate-a-contextually-meaningful-conclusion.-3}{%
+\subsection{State (but do not overstate) a contextually meaningful conclusion.}\label{state-but-do-not-overstate-a-contextually-meaningful-conclusion.-3}}
+
+We have sufficient evidence to suggest that there is a difference between the rate at which women and men in Denmark die from malignant melanoma.
+
+\hypertarget{express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-3}{%
+\subsection{Express reservations or uncertainty about the generalizability of the conclusion.}\label{express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-3}}
+
+We echo the same concerns we had back in Chapter 11 when we first saw this data. We have no idea how these patients were sampled. Are these all the patients in Denmark with malignant melanoma over a certain period of time? Were they part of a convenience sample? As a result of our uncertainly about the sampling process, we can't be sure if the results generalize to a larger population, either in Denmark or especially outside of Denmark.
+
+\hypertarget{identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-3}{%
+\subsection{Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.}\label{identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-3}}
+
+If we have made a Type I error, then there would actually be no difference between the rate at which women and men in Denmark die from malignant melanoma, but our samples showed a significant difference.
+
+\hypertarget{confidence-interval-1}{%
+\section{Confidence interval}\label{confidence-interval-1}}
+
+\hypertarget{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-6}{%
+\subsection{Check the relevant conditions to ensure that model assumptions are met.}\label{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-6}}
+
+None of the conditions have changed, so they don't need to be rechecked.
+
+\hypertarget{calculate-the-confidence-interval.-1}{%
+\subsection{Calculate the confidence interval.}\label{calculate-the-confidence-interval.-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{status\_sex\_ci }\OtherTok{\textless{}{-}}\NormalTok{ status\_sex\_test }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{get\_confidence\_interval}\NormalTok{(}\AttributeTok{point\_estimate =}\NormalTok{ obs\_diff, }\AttributeTok{level =} \FloatTok{0.95}\NormalTok{)}
+\NormalTok{status\_sex\_ci}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 2
+##   lower_ci upper_ci
+##      <dbl>    <dbl>
+## 1   -0.274  -0.0162
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{status\_sex\_test }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{visualize}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{shade\_confidence\_interval}\NormalTok{(}\AttributeTok{endpoints =}\NormalTok{ status\_sex\_ci)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-421-1.pdf}
+
+\hypertarget{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-2}{%
+\subsection{State (but do not overstate) a contextually meaningful interpretation.}\label{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-2}}
+
+We are 95\% confident that the true difference between the rate at which women and men die from malignant melanoma is captured in the interval (-27.3579265\%, -1.6153506\%). (This difference is measured by calculating female minus male.)
+
+Commentary: Note the addition of that last sentence. As we mentioned before, if you are looking at a difference, you must indicate the direction of the difference. We know that we are subtracting female minus male, So given that the values are negative, we can infer that males die from malignant melanoma more often than females---at least according to this confidence interval.
+
+\hypertarget{if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.}{%
+\subsection{If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.}\label{if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.}}
+
+The confidence interval does not contain the null value of zero. Since zero is not a plausible value for the true difference between the rate at which women and men die from malignant melanoma, it makes sense that we rejected the null hypothesis.
+
+\hypertarget{when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.}{%
+\subsection{When comparing two groups, comment on the effect size and the practical significance of the result.}\label{when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.}}
+
+At the most extreme end of the confidence interval, -27.3579265\% is a very large difference between females and males. If this outer value is close to the truth, males are at much more risk of melanoma than females (at least in Denmark at the time of the study). The other end of the confidence interval, -1.6153506\%, is a negligible difference. If that number were close to the truth, it's not clear that the true difference would have practical significance in the real world.
+
+Commentary: The P-value for the hypothesis test indicated that the results are \emph{statistically significant}. But what does that really mean? It means that if the null were true, the probability of getting samples of females and males whose melanoma rates differed by -14.4866385\%---or something more extreme in either direction---would be quite small. Our conclusion to reject the null follows as a logical consequence.
+
+So we can be somewhat confident that there is a difference between females and males. But how much of a difference? A small difference can be statistically significant, and yet be completely irrelevant in the real world. A 1\% difference in melanoma rates might not be enough to enact extra preventative measures for men, for example. On the other hand, a 27\% difference is huge, and might result in a campaign targeted at men specifically due to the extra risk.
+
+In other words, we cannot just rest on a conclusion of statistical significance. A difference might exist, but so what? We also need to know if that difference is \emph{practically significant}? Are there any practical, real-world consequences due to the magnitude of the difference? There is no cutoff for practical significance. This is determined in the context of the problem, preferably using expert guidance. There are policy considerations, cost-benefit analyses, risk assessments, and a host of other considerations that are made when determining if a result is practically significant.
+
+A big part of this process that is often neglected is the role of uncertainty. Our point estimate was -14.4866385\%. But that number, by itself, is not that meaningful. That is but one estimate coming from one set of samples. The range of plausible values, according to the confidence interval, is -27.3579265\% to -1.6153506\% . This is a huge range, and there are very different consequences to society is the difference is -27.3579265\% versus -1.6153506\%.
+
+\hypertarget{your-turn}{%
+\section{Your turn}\label{your-turn}}
+
+Go through the rubric to determine if females and males in Denmark who are diagnosed with malignant melanoma suffer from ulcerated tumors at different rates.
+
+The rubric outline is reproduced below. You may refer to the worked example above and modify it accordingly. Remember to strip out all the commentary. That is just exposition for your benefit in understanding the steps, but is not meant to form part of the formal inference process.
+
+Another word of warning: the copy/paste process is not a substitute for your brain. You will often need to modify more than just the names of the data frames and variables to adapt the worked examples to your own work. Do not blindly copy and paste code without understanding what it does. And you should \textbf{never} copy and paste text. All the sentences and paragraphs you write are expressions of your own analysis. They must reflect your own understanding of the inferential process.
+
+\textbf{Also, so that your answers here don't mess up the code chunks above, use new variable names everywhere. In particular, you should use \texttt{ulcer\_sex} everywhere instead of \texttt{status\_sex}}
+
+\hypertarget{exploratory-data-analysis-4}{%
+\paragraph*{Exploratory data analysis}\label{exploratory-data-analysis-4}}
+\addcontentsline{toc}{paragraph}{Exploratory data analysis}
+
+\hypertarget{use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-4}{%
+\subparagraph*{Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.}\label{use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-4}}
+\addcontentsline{toc}{subparagraph}{Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.}
 
 Please write up your answer here
 
@@ -17339,7 +18066,279 @@ Please write up your answer here
 \end{Shaded}
 
 \hypertarget{prepare-the-data-for-analysis.-not-always-necessary.-3}{%
-\subsection*{Prepare the data for analysis. {[}Not always necessary.{]}}\label{prepare-the-data-for-analysis.-not-always-necessary.-3}}
+\subparagraph*{Prepare the data for analysis. {[}Not always necessary.{]}}\label{prepare-the-data-for-analysis.-not-always-necessary.-3}}
+\addcontentsline{toc}{subparagraph}{Prepare the data for analysis. {[}Not always necessary.{]}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to prepare the data for analysis.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{make-tables-or-plots-to-explore-the-data-visually.-4}{%
+\subparagraph*{Make tables or plots to explore the data visually.}\label{make-tables-or-plots-to-explore-the-data-visually.-4}}
+\addcontentsline{toc}{subparagraph}{Make tables or plots to explore the data visually.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to make tables or plots.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{hypotheses-4}{%
+\paragraph*{Hypotheses}\label{hypotheses-4}}
+\addcontentsline{toc}{paragraph}{Hypotheses}
+
+\hypertarget{identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-4}{%
+\subparagraph*{Identify the sample (or samples) and a reasonable population (or populations) of interest.}\label{identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-4}}
+\addcontentsline{toc}{subparagraph}{Identify the sample (or samples) and a reasonable population (or populations) of interest.}
+
+Please write up your answer here.
+
+\hypertarget{express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-4}{%
+\subparagraph*{Express the null and alternative hypotheses as contextually meaningful full sentences.}\label{express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-4}}
+\addcontentsline{toc}{subparagraph}{Express the null and alternative hypotheses as contextually meaningful full sentences.}
+
+\(H_{0}:\) Null hypothesis goes here.
+
+\(H_{A}:\) Alternative hypothesis goes here.
+
+\hypertarget{express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-4}{%
+\subparagraph*{Express the null and alternative hypotheses in symbols (when possible).}\label{express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-4}}
+\addcontentsline{toc}{subparagraph}{Express the null and alternative hypotheses in symbols (when possible).}
+
+\(H_{0}: math\)
+
+\(H_{A}: math\)
+
+\hypertarget{model-4}{%
+\paragraph*{Model}\label{model-4}}
+\addcontentsline{toc}{paragraph}{Model}
+
+\hypertarget{identify-the-sampling-distribution-model.-4}{%
+\subparagraph*{Identify the sampling distribution model.}\label{identify-the-sampling-distribution-model.-4}}
+\addcontentsline{toc}{subparagraph}{Identify the sampling distribution model.}
+
+Please write up your answer here.
+
+\hypertarget{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-7}{%
+\subparagraph*{Check the relevant conditions to ensure that model assumptions are met.}\label{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-7}}
+\addcontentsline{toc}{subparagraph}{Check the relevant conditions to ensure that model assumptions are met.}
+
+Please write up your answer here. (Some conditions may require R code as well.)
+
+\hypertarget{mechanics-4}{%
+\paragraph*{Mechanics}\label{mechanics-4}}
+\addcontentsline{toc}{paragraph}{Mechanics}
+
+\hypertarget{compute-the-test-statistic.-4}{%
+\subparagraph*{Compute the test statistic.}\label{compute-the-test-statistic.-4}}
+\addcontentsline{toc}{subparagraph}{Compute the test statistic.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to compute the test statistic.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{report-the-test-statistic-in-context-when-possible.-4}{%
+\subparagraph*{Report the test statistic in context (when possible).}\label{report-the-test-statistic-in-context-when-possible.-4}}
+\addcontentsline{toc}{subparagraph}{Report the test statistic in context (when possible).}
+
+Please write up your answer here.
+
+\hypertarget{plot-the-null-distribution.-4}{%
+\subparagraph*{Plot the null distribution.}\label{plot-the-null-distribution.-4}}
+\addcontentsline{toc}{subparagraph}{Plot the null distribution.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to plot the null distribution.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{calculate-the-p-value.-4}{%
+\subparagraph*{Calculate the P-value.}\label{calculate-the-p-value.-4}}
+\addcontentsline{toc}{subparagraph}{Calculate the P-value.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to calculate the P{-}value.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{interpret-the-p-value-as-a-probability-given-the-null.-4}{%
+\subparagraph*{Interpret the P-value as a probability given the null.}\label{interpret-the-p-value-as-a-probability-given-the-null.-4}}
+\addcontentsline{toc}{subparagraph}{Interpret the P-value as a probability given the null.}
+
+Please write up your answer here.
+
+\hypertarget{conclusion-4}{%
+\paragraph*{Conclusion}\label{conclusion-4}}
+\addcontentsline{toc}{paragraph}{Conclusion}
+
+\hypertarget{state-the-statistical-conclusion.-4}{%
+\subparagraph*{State the statistical conclusion.}\label{state-the-statistical-conclusion.-4}}
+\addcontentsline{toc}{subparagraph}{State the statistical conclusion.}
+
+Please write up your answer here.
+
+\hypertarget{state-but-do-not-overstate-a-contextually-meaningful-conclusion.-4}{%
+\subparagraph*{State (but do not overstate) a contextually meaningful conclusion.}\label{state-but-do-not-overstate-a-contextually-meaningful-conclusion.-4}}
+\addcontentsline{toc}{subparagraph}{State (but do not overstate) a contextually meaningful conclusion.}
+
+Please write up your answer here.
+
+\hypertarget{express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-4}{%
+\subparagraph*{Express reservations or uncertainty about the generalizability of the conclusion.}\label{express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-4}}
+\addcontentsline{toc}{subparagraph}{Express reservations or uncertainty about the generalizability of the conclusion.}
+
+Please write up your answer here.
+
+\hypertarget{identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-4}{%
+\subparagraph*{Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.}\label{identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-4}}
+\addcontentsline{toc}{subparagraph}{Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.}
+
+Please write up your answer here.
+
+\hypertarget{confidence-interval-2}{%
+\paragraph*{Confidence interval}\label{confidence-interval-2}}
+\addcontentsline{toc}{paragraph}{Confidence interval}
+
+\hypertarget{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-8}{%
+\subparagraph*{Check the relevant conditions to ensure that model assumptions are met.}\label{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-8}}
+\addcontentsline{toc}{subparagraph}{Check the relevant conditions to ensure that model assumptions are met.}
+
+Please write up your answer here. (Some conditions may require R code as well.)
+
+\hypertarget{calculate-and-graph-the-confidence-interval.-1}{%
+\subparagraph*{Calculate and graph the confidence interval.}\label{calculate-and-graph-the-confidence-interval.-1}}
+\addcontentsline{toc}{subparagraph}{Calculate and graph the confidence interval.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to calculate the confidence interval.}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to graph the confidence interval.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-3}{%
+\subparagraph*{State (but do not overstate) a contextually meaningful interpretation.}\label{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-3}}
+\addcontentsline{toc}{subparagraph}{State (but do not overstate) a contextually meaningful interpretation.}
+
+Please write up your answer here.
+
+\hypertarget{if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.-not-always-applicable.-1}{%
+\subparagraph*{If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test. {[}Not always applicable.{]}}\label{if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.-not-always-applicable.-1}}
+\addcontentsline{toc}{subparagraph}{If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test. {[}Not always applicable.{]}}
+
+Please write up your answer here.
+
+\hypertarget{when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-not-always-applicable.-1}{%
+\subparagraph*{When comparing two groups, comment on the effect size and the practical significance of the result. {[}Not always applicable.{]}}\label{when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-not-always-applicable.-1}}
+\addcontentsline{toc}{subparagraph}{When comparing two groups, comment on the effect size and the practical significance of the result. {[}Not always applicable.{]}}
+
+Please write up your answer here.
+
+\hypertarget{conclusion-5}{%
+\section{Conclusion}\label{conclusion-5}}
+
+Just like with one proportion, when certain conditions are met, the difference between two proportions follow a normal model. Rather than simulating a bunch of different sample differences under the assumption of independent variables, we can just replace all that with a relatively simple normal model with mean zero and a standard error based on the sample proportions of successes and failures in the two samples. From that normal model, we obtain P-values and confidence intervals as before.
+
+\hypertarget{preparing-and-submitting-your-assignment}{%
+\subsection{Preparing and submitting your assignment}\label{preparing-and-submitting-your-assignment}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  From the ``Run'' menu, select ``Restart R and Run All Chunks''.
+\item
+  Deal with any code errors that crop up. Repeat steps 1---2 until there are no more code errors.
+\item
+  Spell check your document by clicking the icon with ``ABC'' and a check mark.
+\item
+  Hit the ``Preview'' button one last time to generate the final draft of the \texttt{.nb.html} file.
+\item
+  Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
+\end{enumerate}
+
+If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
+
+\hypertarget{pooling}{%
+\section{Optional appendix: Pooling}\label{pooling}}
+
+Earlier, we mentioned that that we cannot calculate the ``true'' standard error directly because the null hypothesis does not give us \(p_{1}\) and \(p_{2}\). (The null only addresses the value of the difference \(p_{1} - p_{2}\).) We dealt with this by simply substituting \(\hat{p}_{1}\) for \(p_{1}\) and \(\hat{p}_{2}\) for \(p_{2}\).
+
+There is, however, one assumption from the null we can still salvage that will improve our test. Since the null hypothesis assumes that the two groups are the same, let's compute a single overall success rate for both samples together. In other words, if the two groups aren't different, let's just pool them into one single group and calculate the successes for the whole group.
+
+This is called a \emph{pooled proportion}. It's straightforward to compute: just take the total number of successes in both groups and divide by the total size of both groups. Here is the formula:
+
+\[\hat{p}_{pooled} = \frac{successes_{1} + successes_{2}}{n_{1} + n_{2}}.\]
+
+Occasionally, we are not given the raw number of successes in each group, but rather, the proportion of successes in each group, \(\hat{p}_{1}\) and \(\hat{p}_{2}\). The simple fix is to recompute the raw count of successes as \(n_{1} \hat{p}_{1}\) and \(n_{2} \hat{p}_{2}\). Here is what it looks like in the formula:
+
+\[\hat{p}_{pooled} = \frac{n_{1} \hat{p}_{1} + n_{2} \hat{p}_{2}}{n_{1} + n_{2}}.\]
+The normal model can still have a mean of \(p_{1} - p_{2}\). (We usually assume this is 0 in the null hypothesis.) But its standard error will use the pooled proportion:
+
+\[N\left( p_{1} - p_{2}, \sqrt{\frac{\hat{p}_{pooled} (1 - \hat{p}_{pooled})}{n_{1}} + \frac{\hat{p}_{pooled} (1 - \hat{p}_{pooled})}{n_{2}}} \right).\]
+
+Not only can we use the pooled proportion in the standard error, but in fact we can use it anywhere we assume the null. For example, the success/failure condition is also subject to the assumption of the null, so we could use the pooled proportion there too.
+
+For a confidence interval, things are different. There is no null hypothesis in effect while computing a confidence interval, so there is no assumption that would justify pooling.
+
+The standard error in the one-proportion interval is
+
+\[
+\sqrt{\frac{\hat{p}(1 - \hat{p})}{n}}
+\]
+
+which just substitutes \(\hat{p}\) for \(p\). We do the same for the standard error in the two-proportion case:
+
+\[
+SE = \sqrt{\frac{\hat{p}_{1} (1 - \hat{p}_{1})}{n_{1}} + \frac{\hat{p}_{2} (1 - \hat{p}_{2})}{n_{2}}}.
+\]
+
+\hypertarget{appendix-appendix}{%
+\appendix}
+
+
+2.0
+
+\hypertarget{appendix-rubric}{%
+\chapter{Rubric for inference}\label{appendix-rubric}}
+
+This is the R Markdown outline for running inference, both a hypothesis test and a confidence interval.
+
+\hypertarget{exploratory-data-analysis-5}{%
+\section*{Exploratory data analysis}\label{exploratory-data-analysis-5}}
+\addcontentsline{toc}{section}{Exploratory data analysis}
+
+\hypertarget{use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-5}{%
+\subsection*{Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.}\label{use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-5}}
+\addcontentsline{toc}{subsection}{Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.}
+
+Please write up your answer here
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to print the data}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to glimpse the variables}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{prepare-the-data-for-analysis.-not-always-necessary.-4}{%
+\subsection*{Prepare the data for analysis. {[}Not always necessary.{]}}\label{prepare-the-data-for-analysis.-not-always-necessary.-4}}
 \addcontentsline{toc}{subsection}{Prepare the data for analysis. {[}Not always necessary.{]}}
 
 \begin{Shaded}
@@ -17348,8 +18347,8 @@ Please write up your answer here
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{make-tables-or-plots-to-explore-the-data-visually.-3}{%
-\subsection*{Make tables or plots to explore the data visually.}\label{make-tables-or-plots-to-explore-the-data-visually.-3}}
+\hypertarget{make-tables-or-plots-to-explore-the-data-visually.-5}{%
+\subsection*{Make tables or plots to explore the data visually.}\label{make-tables-or-plots-to-explore-the-data-visually.-5}}
 \addcontentsline{toc}{subsection}{Make tables or plots to explore the data visually.}
 
 \begin{Shaded}
@@ -17358,54 +18357,54 @@ Please write up your answer here
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{hypotheses-3}{%
-\section*{Hypotheses}\label{hypotheses-3}}
+\hypertarget{hypotheses-5}{%
+\section*{Hypotheses}\label{hypotheses-5}}
 \addcontentsline{toc}{section}{Hypotheses}
 
-\hypertarget{identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-3}{%
-\subsection*{Identify the sample (or samples) and a reasonable population (or populations) of interest.}\label{identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-3}}
+\hypertarget{identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-5}{%
+\subsection*{Identify the sample (or samples) and a reasonable population (or populations) of interest.}\label{identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-5}}
 \addcontentsline{toc}{subsection}{Identify the sample (or samples) and a reasonable population (or populations) of interest.}
 
 Please write up your answer here.
 
-\hypertarget{express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-3}{%
-\subsection*{Express the null and alternative hypotheses as contextually meaningful full sentences.}\label{express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-3}}
+\hypertarget{express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-5}{%
+\subsection*{Express the null and alternative hypotheses as contextually meaningful full sentences.}\label{express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-5}}
 \addcontentsline{toc}{subsection}{Express the null and alternative hypotheses as contextually meaningful full sentences.}
 
 \(H_{0}:\) Null hypothesis goes here.
 
 \(H_{A}:\) Alternative hypothesis goes here.
 
-\hypertarget{express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-3}{%
-\subsection*{Express the null and alternative hypotheses in symbols (when possible).}\label{express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-3}}
+\hypertarget{express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-5}{%
+\subsection*{Express the null and alternative hypotheses in symbols (when possible).}\label{express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-5}}
 \addcontentsline{toc}{subsection}{Express the null and alternative hypotheses in symbols (when possible).}
 
 \(H_{0}: math\)
 
 \(H_{A}: math\)
 
-\hypertarget{model-3}{%
-\section*{Model}\label{model-3}}
+\hypertarget{model-5}{%
+\section*{Model}\label{model-5}}
 \addcontentsline{toc}{section}{Model}
 
-\hypertarget{identify-the-sampling-distribution-model.-3}{%
-\subsection*{Identify the sampling distribution model.}\label{identify-the-sampling-distribution-model.-3}}
+\hypertarget{identify-the-sampling-distribution-model.-5}{%
+\subsection*{Identify the sampling distribution model.}\label{identify-the-sampling-distribution-model.-5}}
 \addcontentsline{toc}{subsection}{Identify the sampling distribution model.}
 
 Please write up your answer here.
 
-\hypertarget{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-5}{%
-\subsection*{Check the relevant conditions to ensure that model assumptions are met.}\label{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-5}}
+\hypertarget{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-9}{%
+\subsection*{Check the relevant conditions to ensure that model assumptions are met.}\label{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-9}}
 \addcontentsline{toc}{subsection}{Check the relevant conditions to ensure that model assumptions are met.}
 
 Please write up your answer here. (Some conditions may require R code as well.)
 
-\hypertarget{mechanics-3}{%
-\section*{Mechanics}\label{mechanics-3}}
+\hypertarget{mechanics-5}{%
+\section*{Mechanics}\label{mechanics-5}}
 \addcontentsline{toc}{section}{Mechanics}
 
-\hypertarget{compute-the-test-statistic.-3}{%
-\subsection*{Compute the test statistic.}\label{compute-the-test-statistic.-3}}
+\hypertarget{compute-the-test-statistic.-5}{%
+\subsection*{Compute the test statistic.}\label{compute-the-test-statistic.-5}}
 \addcontentsline{toc}{subsection}{Compute the test statistic.}
 
 \begin{Shaded}
@@ -17414,14 +18413,14 @@ Please write up your answer here. (Some conditions may require R code as well.)
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{report-the-test-statistic-in-context-when-possible.-3}{%
-\subsection*{Report the test statistic in context (when possible).}\label{report-the-test-statistic-in-context-when-possible.-3}}
+\hypertarget{report-the-test-statistic-in-context-when-possible.-5}{%
+\subsection*{Report the test statistic in context (when possible).}\label{report-the-test-statistic-in-context-when-possible.-5}}
 \addcontentsline{toc}{subsection}{Report the test statistic in context (when possible).}
 
 Please write up your answer here.
 
-\hypertarget{plot-the-null-distribution.-3}{%
-\subsection*{Plot the null distribution.}\label{plot-the-null-distribution.-3}}
+\hypertarget{plot-the-null-distribution.-5}{%
+\subsection*{Plot the null distribution.}\label{plot-the-null-distribution.-5}}
 \addcontentsline{toc}{subsection}{Plot the null distribution.}
 
 \begin{Shaded}
@@ -17438,8 +18437,8 @@ Please write up your answer here.
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{calculate-the-p-value.-3}{%
-\subsection*{Calculate the P-value.}\label{calculate-the-p-value.-3}}
+\hypertarget{calculate-the-p-value.-5}{%
+\subsection*{Calculate the P-value.}\label{calculate-the-p-value.-5}}
 \addcontentsline{toc}{subsection}{Calculate the P-value.}
 
 \begin{Shaded}
@@ -17448,52 +18447,52 @@ Please write up your answer here.
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{interpret-the-p-value-as-a-probability-given-the-null.-3}{%
-\subsection*{Interpret the P-value as a probability given the null.}\label{interpret-the-p-value-as-a-probability-given-the-null.-3}}
+\hypertarget{interpret-the-p-value-as-a-probability-given-the-null.-5}{%
+\subsection*{Interpret the P-value as a probability given the null.}\label{interpret-the-p-value-as-a-probability-given-the-null.-5}}
 \addcontentsline{toc}{subsection}{Interpret the P-value as a probability given the null.}
 
 Please write up your answer here.
 
-\hypertarget{conclusion-3}{%
-\section*{Conclusion}\label{conclusion-3}}
+\hypertarget{conclusion-6}{%
+\section*{Conclusion}\label{conclusion-6}}
 \addcontentsline{toc}{section}{Conclusion}
 
-\hypertarget{state-the-statistical-conclusion.-3}{%
-\subsection*{State the statistical conclusion.}\label{state-the-statistical-conclusion.-3}}
+\hypertarget{state-the-statistical-conclusion.-5}{%
+\subsection*{State the statistical conclusion.}\label{state-the-statistical-conclusion.-5}}
 \addcontentsline{toc}{subsection}{State the statistical conclusion.}
 
 Please write up your answer here.
 
-\hypertarget{state-but-do-not-overstate-a-contextually-meaningful-conclusion.-3}{%
-\subsection*{State (but do not overstate) a contextually meaningful conclusion.}\label{state-but-do-not-overstate-a-contextually-meaningful-conclusion.-3}}
+\hypertarget{state-but-do-not-overstate-a-contextually-meaningful-conclusion.-5}{%
+\subsection*{State (but do not overstate) a contextually meaningful conclusion.}\label{state-but-do-not-overstate-a-contextually-meaningful-conclusion.-5}}
 \addcontentsline{toc}{subsection}{State (but do not overstate) a contextually meaningful conclusion.}
 
 Please write up your answer here.
 
-\hypertarget{express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-3}{%
-\subsection*{Express reservations or uncertainty about the generalizability of the conclusion.}\label{express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-3}}
+\hypertarget{express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-5}{%
+\subsection*{Express reservations or uncertainty about the generalizability of the conclusion.}\label{express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-5}}
 \addcontentsline{toc}{subsection}{Express reservations or uncertainty about the generalizability of the conclusion.}
 
 Please write up your answer here.
 
-\hypertarget{identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-3}{%
-\subsection*{Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.}\label{identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-3}}
+\hypertarget{identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-5}{%
+\subsection*{Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.}\label{identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-5}}
 \addcontentsline{toc}{subsection}{Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.}
 
 Please write up your answer here.
 
-\hypertarget{confidence-interval-1}{%
-\section*{Confidence interval}\label{confidence-interval-1}}
+\hypertarget{confidence-interval-3}{%
+\section*{Confidence interval}\label{confidence-interval-3}}
 \addcontentsline{toc}{section}{Confidence interval}
 
-\hypertarget{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-6}{%
-\subsection*{Check the relevant conditions to ensure that model assumptions are met.}\label{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-6}}
+\hypertarget{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-10}{%
+\subsection*{Check the relevant conditions to ensure that model assumptions are met.}\label{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-10}}
 \addcontentsline{toc}{subsection}{Check the relevant conditions to ensure that model assumptions are met.}
 
 Please write up your answer here. (Some conditions may require R code as well.)
 
-\hypertarget{calculate-and-graph-the-confidence-interval.-1}{%
-\subsection*{Calculate and graph the confidence interval.}\label{calculate-and-graph-the-confidence-interval.-1}}
+\hypertarget{calculate-and-graph-the-confidence-interval.-2}{%
+\subsection*{Calculate and graph the confidence interval.}\label{calculate-and-graph-the-confidence-interval.-2}}
 \addcontentsline{toc}{subsection}{Calculate and graph the confidence interval.}
 
 \begin{Shaded}
@@ -17508,20 +18507,20 @@ Please write up your answer here. (Some conditions may require R code as well.)
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-2}{%
-\subsection*{State (but do not overstate) a contextually meaningful interpretation.}\label{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-2}}
+\hypertarget{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-4}{%
+\subsection*{State (but do not overstate) a contextually meaningful interpretation.}\label{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-4}}
 \addcontentsline{toc}{subsection}{State (but do not overstate) a contextually meaningful interpretation.}
 
 Please write up your answer here.
 
-\hypertarget{if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.-not-always-applicable.-1}{%
-\subsection*{If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test. {[}Not always applicable.{]}}\label{if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.-not-always-applicable.-1}}
+\hypertarget{if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.-not-always-applicable.-2}{%
+\subsection*{If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test. {[}Not always applicable.{]}}\label{if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.-not-always-applicable.-2}}
 \addcontentsline{toc}{subsection}{If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test. {[}Not always applicable.{]}}
 
 Please write up your answer here.
 
-\hypertarget{when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-not-always-applicable.-1}{%
-\subsection*{When comparing two groups, comment on the effect size and the practical significance of the result. {[}Not always applicable.{]}}\label{when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-not-always-applicable.-1}}
+\hypertarget{when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-not-always-applicable.-2}{%
+\subsection*{When comparing two groups, comment on the effect size and the practical significance of the result. {[}Not always applicable.{]}}\label{when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-not-always-applicable.-2}}
 \addcontentsline{toc}{subsection}{When comparing two groups, comment on the effect size and the practical significance of the result. {[}Not always applicable.{]}}
 
 Please write up your answer here.

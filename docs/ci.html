@@ -61,6 +61,7 @@
 <li><a class="" href="normal.html"><span class="header-section-number">13</span> Normal models</a></li>
 <li><a class="" href="samp-dist-models.html"><span class="header-section-number">14</span> Sampling distribution models</a></li>
 <li><a class="" href="one-prop.html"><span class="header-section-number">15</span> Inference for one proportion</a></li>
+<li><a class="" href="two-prop.html"><span class="header-section-number">16</span> Inference for two proportions</a></li>
 <li class="book-part">Appendix</li>
 <li><a class="" href="appendix-rubric.html"><span class="header-section-number">A</span> Rubric for inference</a></li>
 </ul>
@@ -577,11 +578,6 @@ p \approx 0.16?
 <li>[Check condition here.]</li>
 </ul>
 </li>
-<li>Success/failure
-<ul>
-<li>[Check condition here.]</li>
-</ul>
-</li>
 </ul>
 </div>
 </div>
@@ -590,9 +586,11 @@ p \approx 0.16?
 </h6>
 <div class="answer">
 <div class="sourceCode" id="cb472"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Add code here to calculate the confidence interval.</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Add code here to create the bootstrap sampling distribution.</span></span></code></pre></div>
 <div class="sourceCode" id="cb473"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to calculate the confidence interval.</span></span></code></pre></div>
+<div class="sourceCode" id="cb474"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Add code here to graph the confidence interval.</span></span></code></pre></div>
 </div>
 </div>
 <div id="state-but-do-not-overstate-a-contextually-meaningful-interpretation." class="section level6 unnumbered">
@@ -620,7 +618,7 @@ p \approx 0.16?
 <p>In order to simulate, we’ll have to pretend temporarily that we know a true population parameter. Let’s use the example of a candidate who has the support of 64% of voters. In other words, <span class="math inline">\(p = 0.64\)</span>. We go out and get a sample of voters, let’s say 50. From that sample we construct a 95% confidence interval by bootstrapping. Most of the time, 64% (the true value!) should be in our interval. But sometimes it won’t be. We can get an unusual sample that is far away from 64%, just by pure chance alone. (Perhaps we accidentally run into a bunch of people who oppose our candidate.)</p>
 <p>Okay, let’s do it again. Get a new sample and calculate a new confidence interval. This sample will likely result in a different sample proportion than the first sample. Therefore, the confidence interval will be located in a different place. Does it contain 64%? Most of the time, we expect it to. Occasionally, it will not.</p>
 <p>We can do this over and over again through the magic of simulation! Here’s what this simulation looks like in R. The following code is quite technical, although you will recognize bits and pieces of it. Don’t worry about it. You won’t need to generate code like this on your own. Just look at the pretty picture in the output below below the code.</p>
-<div class="sourceCode" id="cb474"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb475"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">11111</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># The true population proportion is 0.64</span></span>
@@ -667,7 +665,7 @@ p \approx 0.16?
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="va">true_val</span>, color <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_identity.html">scale_alpha_identity</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Simulation"</span>, x <span class="op">=</span> <span class="st">"Estimates with confidence intervals"</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-334-1.png" width="672"></div>
+<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-335-1.png" width="672"></div>
 <p>Each sample gives us a slightly different estimate, and therefore, a different confidence interval as well.</p>
 <p>For each of the 100 simulated intervals, most of them (the black ones) do capture the true value of 0.64 (the blue vertical line). Occasionally they don’t (the red ones). We expect 5 red intervals, but since randomness is involved, it won’t necessarily be exactly 5. (Here there were only 3 bad intervals.)</p>
 <p>This is the key to interpreting confidence intervals. The “95%” in a 95% confidence interval means that if we were to collect many random samples, about 95% of them would contain the true population parameter and about 5% would not.</p>
@@ -768,7 +766,7 @@ p \approx 0.16?
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Introduction to Statistics: an integrated textbook and workbook using R</strong>" was written by Sean Raleigh, Westminster College (Salt Lake City, UT). It was last built on 2022-09-07.</p>
+    <p>"<strong>Introduction to Statistics: an integrated textbook and workbook using R</strong>" was written by Sean Raleigh, Westminster College (Salt Lake City, UT). It was last built on 2022-10-29.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
