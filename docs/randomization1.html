@@ -62,6 +62,7 @@
 <li><a class="" href="samp-dist-models.html"><span class="header-section-number">14</span> Sampling distribution models</a></li>
 <li><a class="" href="one-prop.html"><span class="header-section-number">15</span> Inference for one proportion</a></li>
 <li><a class="" href="two-prop.html"><span class="header-section-number">16</span> Inference for two proportions</a></li>
+<li><a class="" href="inference-for-one-mean.html"><span class="header-section-number">17</span> Inference for one mean</a></li>
 <li class="book-part">Appendix</li>
 <li><a class="" href="appendix-rubric.html"><span class="header-section-number">A</span> Rubric for inference</a></li>
 </ul>
@@ -166,23 +167,23 @@
 <span class="header-section-number">8.3</span> Flipping a coin<a class="anchor" aria-label="anchor" href="#randomization1-coin"><i class="fas fa-link"></i></a>
 </h2>
 <p>Before we talk about how samples are obtained from populations in the real world, we’re going to perform some simulations.</p>
-<p>One of the simplest acts to simulate is flipping a coin. We could get an actual coin and physically flip it over and over again, but that is time-consuming and annoying. It is much easier to flip a “virtual” coin inside the computer. One way to accomplish this in R is to use the <code>rflip</code> command from the <code>mosaic</code> package.</p>
+<p>One of the simplest acts to simulate is flipping a coin. We could get an actual coin and physically flip it over and over again, but that is time-consuming and annoying. It is much easier to flip a “virtual” coin inside the computer. One way to accomplish this in R is to use the <code>rflip</code> command from the <code>mosaic</code> package. To make sure we’re flipping a fair coin, we’ll say that we want a 50% chance of heads by including the parameter <code>prob = 0.5</code>.</p>
 <p>One more bit of technical detail. Since there will be some randomness involved here, we will need to include an R command to ensure that we all get the same results every time this code runs. This is called “setting the seed”. Don’t worry too much about what this is doing under the hood. The basic idea is that two people who start with the same seed will generate the same sequence of “random” numbers.</p>
 <p>The seed <code>1234</code> in the chunk below is totally arbitrary. It could have been any number at all. (And, in fact, we’ll use different numbers just for fun.) If you change the seed, you will get different output, so we all need to use the same seed. But the actual common value we all use for the seed is irrelevant.</p>
-<p>Here is one coin flip:</p>
+<p>Here is one coin flip with a 50% chance of coming up heads:</p>
 <div class="sourceCode" id="cb297"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">1</span>, prob <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## 
 ## Flipping 1 coin [ Prob(Heads) = 0.5 ] ...
 ## 
 ## T
 ## 
 ## Number of Heads: 0 [Proportion Heads: 0]</code></pre>
-<p>Here are ten coin flips:</p>
+<p>Here are ten coin flips, each with a 50% chance of coming up heads:</p>
 <div class="sourceCode" id="cb299"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">10</span>, prob <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## 
 ## Flipping 10 coins [ Prob(Heads) = 0.5 ] ...
 ## 
@@ -191,7 +192,7 @@
 ## Number of Heads: 7 [Proportion Heads: 0.7]</code></pre>
 <p>Just to confirm that this is a random process, let’s flip ten coins again (but without setting the seed again):</p>
 <div class="sourceCode" id="cb301"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">10</span>, prob <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## 
 ## Flipping 10 coins [ Prob(Heads) = 0.5 ] ...
 ## 
@@ -201,7 +202,7 @@
 <p>If we return to the previous seed of 1234, we should obtain the same ten coin flips we did at first:</p>
 <div class="sourceCode" id="cb303"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">10</span>, prob <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## 
 ## Flipping 10 coins [ Prob(Heads) = 0.5 ] ...
 ## 
@@ -211,7 +212,7 @@
 <p>And just to see the effect of setting a different seed:</p>
 <div class="sourceCode" id="cb305"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">9999</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">10</span>, prob <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## 
 ## Flipping 10 coins [ Prob(Heads) = 0.5 ] ...
 ## 
@@ -233,10 +234,10 @@
 </h2>
 <p>Suppose now that you are not the only person flipping coins. Suppose a bunch of people in a room are all flipping coins. We’ll start with ten coin flips per person, a task that could be reasonably done even without a computer.</p>
 <p>You might observe three heads in ten flips. Fine, but what about everyone else in the room? What numbers of heads will they see?</p>
-<p>The <code>do</code> command from <code>mosaic</code> is a way of doing something multiple times. Imagine there are twenty people in the room, each flipping a coin ten times. Observe:</p>
+<p>The <code>do</code> command from <code>mosaic</code> is a way of doing something multiple times. Imagine there are twenty people in the room, each flipping a coin ten times, each time with a 50% probability of coming up heads. Observe:</p>
 <div class="sourceCode" id="cb307"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">12345</span><span class="op">)</span></span>
-<span><span class="fu">do</span><span class="op">(</span><span class="fl">20</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">do</span><span class="op">(</span><span class="fl">20</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">10</span>, prob <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["n"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["heads"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["tails"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["prop"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"10","2":"2","3":"8","4":"0.2"},{"1":"10","2":"5","3":"5","4":"0.5"},{"1":"10","2":"5","3":"5","4":"0.5"},{"1":"10","2":"4","3":"6","4":"0.4"},{"1":"10","2":"4","3":"6","4":"0.4"},{"1":"10","2":"7","3":"3","4":"0.7"},{"1":"10","2":"6","3":"4","4":"0.6"},{"1":"10","2":"5","3":"5","4":"0.5"},{"1":"10","2":"7","3":"3","4":"0.7"},{"1":"10","2":"7","3":"3","4":"0.7"},{"1":"10","2":"6","3":"4","4":"0.6"},{"1":"10","2":"7","3":"3","4":"0.7"},{"1":"10","2":"7","3":"3","4":"0.7"},{"1":"10","2":"6","3":"4","4":"0.6"},{"1":"10","2":"7","3":"3","4":"0.7"},{"1":"10","2":"6","3":"4","4":"0.6"},{"1":"10","2":"7","3":"3","4":"0.7"},{"1":"10","2":"3","3":"7","4":"0.3"},{"1":"10","2":"4","3":"6","4":"0.4"},{"1":"10","2":"7","3":"3","4":"0.7"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -247,7 +248,7 @@
 <p>Looking at the above rows and columns, we see that the output of our little coin-flipping experiment is actually stored in a data frame! Let’s give it a name and work with it.</p>
 <div class="sourceCode" id="cb308"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">12345</span><span class="op">)</span></span>
-<span><span class="va">coin_flips_20_10</span> <span class="op">&lt;-</span> <span class="fu">do</span><span class="op">(</span><span class="fl">20</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="va">coin_flips_20_10</span> <span class="op">&lt;-</span> <span class="fu">do</span><span class="op">(</span><span class="fl">20</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">10</span>, prob <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="va">coin_flips_20_10</span></span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -293,7 +294,7 @@
 <p>Instead, let’s imagine that we recruited way more people to flip coins with us. Let’s try it again with 2000 people:</p>
 <div class="sourceCode" id="cb316"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
-<span><span class="va">coin_flips_2000_10</span> <span class="op">&lt;-</span> <span class="fu">do</span><span class="op">(</span><span class="fl">2000</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="va">coin_flips_2000_10</span> <span class="op">&lt;-</span> <span class="fu">do</span><span class="op">(</span><span class="fl">2000</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">10</span>, prob <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="va">coin_flips_2000_10</span></span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -336,7 +337,7 @@
 <p>Now let’s increase the number of coin flips each person performs. We’ll still use 2000 simulations (imagine 2000 people all flipping coins), but this time, each person will flip the coin 1000 times instead of only 10 times. The first code chunk below accounts for a substantial amount of the time it takes to run the code in this document.</p>
 <div class="sourceCode" id="cb323"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
-<span><span class="va">coin_flips_2000_1000</span> <span class="op">&lt;-</span> <span class="fu">do</span><span class="op">(</span><span class="fl">2000</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span></span>
+<span><span class="va">coin_flips_2000_1000</span> <span class="op">&lt;-</span> <span class="fu">do</span><span class="op">(</span><span class="fl">2000</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/rflip.html">rflip</a></span><span class="op">(</span><span class="fl">1000</span>, prob <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="va">coin_flips_2000_1000</span></span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -459,7 +460,7 @@
 <div id="exercise-7-2" class="section level5 unnumbered">
 <h5>Exercise 7<a class="anchor" aria-label="anchor" href="#exercise-7-2"><i class="fas fa-link"></i></a>
 </h5>
-<p>Go back and look at all the examples above. What do you notice about the range of values on the x-axis when the sample size is small versus large? (In other words, in what way are the histograms different when using <code>rflip(10)</code> or <code>rflip(100)</code> versus <code>rflip(1000)</code>? It’s easier to compare histograms one to another when looking at the proportions instead of the raw head counts because proportions are always on the same scale from 0 to 1.)</p>
+<p>Go back and look at all the examples above. What do you notice about the range of values on the x-axis when the sample size is small versus large? (In other words, in what way are the histograms different when using <code>rflip(10, prob = ...)</code> or <code>rflip(100, prob = ...)</code> versus <code>rflip(1000, prob = ...)</code>? It’s easier to compare histograms one to another when looking at the proportions instead of the raw head counts because proportions are always on the same scale from 0 to 1.)</p>
 <div class="answer">
 <p>Please write up your answer here.</p>
 </div>
@@ -516,7 +517,7 @@
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Introduction to Statistics: an integrated textbook and workbook using R</strong>" was written by Sean Raleigh, Westminster College (Salt Lake City, UT). It was last built on 2022-10-29.</p>
+    <p>"<strong>Introduction to Statistics: an integrated textbook and workbook using R</strong>" was written by Sean Raleigh, Westminster College (Salt Lake City, UT). It was last built on 2022-11-05.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
