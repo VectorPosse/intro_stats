@@ -63,44 +63,44 @@ Populations are usually inaccessible in their entirety. It is impossible to surv
 
 Before we talk about how samples are obtained from populations in the real world, we're going to perform some simulations.
 
-One of the simplest acts to simulate is flipping a coin. We could get an actual coin and physically flip it over and over again, but that is time-consuming and annoying. It is much easier to flip a "virtual" coin inside the computer. One way to accomplish this in R is to use the `rflip` command from the `mosaic` package.
+One of the simplest acts to simulate is flipping a coin. We could get an actual coin and physically flip it over and over again, but that is time-consuming and annoying. It is much easier to flip a "virtual" coin inside the computer. One way to accomplish this in R is to use the `rflip` command from the `mosaic` package. To make sure we're flipping a fair coin, we'll say that we want a 50% chance of heads by including the parameter `prob = 0.5`.
 
 One more bit of technical detail. Since there will be some randomness involved here, we will need to include an R command to ensure that we all get the same results every time this code runs. This is called "setting the seed". Don't worry too much about what this is doing under the hood. The basic idea is that two people who start with the same seed will generate the same sequence of "random" numbers.
 
 The seed `1234` in the chunk below is totally arbitrary. It could have been any number at all. (And, in fact, we'll use different numbers just for fun.) If you change the seed, you will get different output, so we all need to use the same seed. But the actual common value we all use for the seed is irrelevant.
 
-Here is one coin flip:
+Here is one coin flip with a 50% chance of coming up heads:
 
 ```{r}
 set.seed(1234)
-rflip(1)
+rflip(1, prob = 0.5)
 ```
 
-Here are ten coin flips:
+Here are ten coin flips, each with a 50% chance of coming up heads:
 
 ```{r}
 set.seed(1234)
-rflip(10)
+rflip(10, prob = 0.5)
 ```
 
 Just to confirm that this is a random process, let's flip ten coins again (but without setting the seed again):
 
 ```{r}
-rflip(10)
+rflip(10, prob = 0.5)
 ```
 
 If we return to the previous seed of 1234, we should obtain the same ten coin flips we did at first:
 
 ```{r}
 set.seed(1234)
-rflip(10)
+rflip(10, prob = 0.5)
 ```
 
 And just to see the effect of setting a different seed:
 
 ```{r}
 set.seed(9999)
-rflip(10)
+rflip(10, prob = 0.5)
 ```
 
 ##### Exercise 1 {-}
@@ -120,11 +120,11 @@ Suppose now that you are not the only person flipping coins. Suppose a bunch of 
 
 You might observe three heads in ten flips. Fine, but what about everyone else in the room? What numbers of heads will they see?
 
-The `do` command from `mosaic` is a way of doing something multiple times. Imagine there are twenty people in the room, each flipping a coin ten times. Observe:
+The `do` command from `mosaic` is a way of doing something multiple times. Imagine there are twenty people in the room, each flipping a coin ten times, each time with a 50% probability of coming up heads. Observe:
 
 ```{r}
 set.seed(12345)
-do(20) * rflip(10)
+do(20) * rflip(10, prob = 0.5)
 ```
 
 The syntax could not be any simpler: `do(20) *` means, literally, "do twenty times." In other words, this command is telling R to repeat an action twenty times, where the action is flipping a single coin ten times.
@@ -135,7 +135,7 @@ Looking at the above rows and columns, we see that the output of our little coin
 
 ```{r}
 set.seed(12345)
-coin_flips_20_10 <- do(20) * rflip(10)
+coin_flips_20_10 <- do(20) * rflip(10, prob = 0.5)
 coin_flips_20_10
 ```
 
@@ -188,7 +188,7 @@ Instead, let's imagine that we recruited way more people to flip coins with us. 
 
 ```{r}
 set.seed(1234)
-coin_flips_2000_10 <- do(2000) * rflip(10)
+coin_flips_2000_10 <- do(2000) * rflip(10, prob = 0.5)
 coin_flips_2000_10
 ```
 
@@ -235,7 +235,7 @@ Now let's increase the number of coin flips each person performs. We'll still us
 
 ```{r}
 set.seed(1234)
-coin_flips_2000_1000 <- do(2000) * rflip(1000)
+coin_flips_2000_1000 <- do(2000) * rflip(1000, prob = 0.5)
 coin_flips_2000_1000
 ```
 
@@ -367,7 +367,7 @@ But despite this randomness, there is an interesting pattern that we can observe
 
 ##### Exercise 7 {-}
 
-Go back and look at all the examples above. What do you notice about the range of values on the x-axis when the sample size is small versus large? (In other words, in what way are the histograms different when using `rflip(10)` or `rflip(100)` versus `rflip(1000)`? It's easier to compare histograms one to another when looking at the proportions instead of the raw head counts because proportions are always on the same scale from 0 to 1.)
+Go back and look at all the examples above. What do you notice about the range of values on the x-axis when the sample size is small versus large? (In other words, in what way are the histograms different when using `rflip(10, prob = ...)` or `rflip(100, prob = ...)` versus `rflip(1000, prob = ...)`? It's easier to compare histograms one to another when looking at the proportions instead of the raw head counts because proportions are always on the same scale from 0 to 1.)
 
 ::: {.answer}
 
