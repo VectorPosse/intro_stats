@@ -23312,24 +23312,499 @@ What makes it possible for a small effect like this to be statistically signific
 
 Please write up your answer here.
 
-\hypertarget{appendix-appendix}{%
-\appendix}
+\hypertarget{conclusion-8}{%
+\section{Conclusion}\label{conclusion-8}}
 
+When working with numerical data, we have to estimate a mean and a standard deviation. The extra variability in estimating both gives rise to a sampling distribution model with thicker tails called the Student t distribution. Using this distribution gives us a way to calculate P-values and confidence intervals that take this variation into account.
+
+\hypertarget{preparing-and-submitting-your-assignment-1}{%
+\subsection{Preparing and submitting your assignment}\label{preparing-and-submitting-your-assignment-1}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  From the ``Run'' menu, select ``Restart R and Run All Chunks''.
+\item
+  Deal with any code errors that crop up. Repeat steps 1---2 until there are no more code errors.
+\item
+  Spell check your document by clicking the icon with ``ABC'' and a check mark.
+\item
+  Hit the ``Preview'' button one last time to generate the final draft of the \texttt{.nb.html} file.
+\item
+  Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
+\end{enumerate}
+
+If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
+
+\hypertarget{inference-for-paired-data}{%
+\chapter{Inference for paired data}\label{inference-for-paired-data}}
 
 2.0
 
-\hypertarget{appendix-rubric}{%
-\chapter{Rubric for inference}\label{appendix-rubric}}
+\hypertarget{functions-introduced-in-this-chapter-17}{%
+\subsection*{Functions introduced in this chapter}\label{functions-introduced-in-this-chapter-17}}
+\addcontentsline{toc}{subsection}{Functions introduced in this chapter}
 
-This is the R Markdown outline for running inference, both a hypothesis test and a confidence interval.
+No new R functions are introduced here.
+
+\hypertarget{introduction-2}{%
+\section{Introduction}\label{introduction-2}}
+
+In this chapter we will learn how to run inference for two paired numerical variables.
+
+\hypertarget{install-new-packages-3}{%
+\subsection{Install new packages}\label{install-new-packages-3}}
+
+There are no new packages used in this chapter.
+
+\hypertarget{download-the-r-notebook-file-2}{%
+\subsection{Download the R notebook file}\label{download-the-r-notebook-file-2}}
+
+Check the upper-right corner in RStudio to make sure you're in your \texttt{intro\_stats} project. Then click on the following link to download this chapter as an R notebook file (\texttt{.Rmd}).
+
+https://vectorposse.github.io/intro\_stats/chapter\_downloads/18-inference\_for\_paired\_data.Rmd
+
+Once the file is downloaded, move it to your project folder in RStudio and open it there.
+
+\hypertarget{restart-r-and-run-all-chunks-2}{%
+\subsection{Restart R and run all chunks}\label{restart-r-and-run-all-chunks-2}}
+
+In RStudio, select ``Restart R and Run All Chunks'' from the ``Run'' menu.
+
+\hypertarget{load-packages-2}{%
+\section{Load packages}\label{load-packages-2}}
+
+We load the standard \texttt{tidyverse} and \texttt{infer} packages. The \texttt{openintro} package will give access to the \texttt{textbooks} data and the \texttt{hsb2} data.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(infer)}
+\FunctionTok{library}\NormalTok{(openintro)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{paired-data}{%
+\section{Paired data}\label{paired-data}}
+
+Sometimes data sets have two numerical variables that are related to each other. For example, a diet study might include a pre-weight and a post-weight. The research question is not about either of these variables directly, but rather the difference between the variables, for example how much weight was lost during the diet.
+
+When this is the case, we run inference for paired data. The procedure involves calculating a new variable \texttt{d} that represents the difference of the two paired variables. The null hypothesis is almost always that there is no difference between the paired variables, and that translates into the statement that the average value of \texttt{d} is zero.
+
+\hypertarget{research-question-2}{%
+\section{Research question}\label{research-question-2}}
+
+The \texttt{textbooks} data frame (from the \texttt{openintro} package) has data on the price of books at the UCLA bookstore versus Amazon.com. The question of interest here is whether the campus bookstore charges more than Amazon.
+
+\hypertarget{inference-for-paired-data-1}{%
+\section{Inference for paired data}\label{inference-for-paired-data-1}}
+
+The key idea is that we don't actually care about the book prices themselves. All we care about is if there is a difference between the prices for each book. These are not two independent variables because each row represents a single book. Therefore, the two measurements are ``paired'' and should be treated as a single numerical variable of interest, representing the difference between \texttt{ucla\_new} and \texttt{amaz\_new}.
+
+Since we're only interested in analyzing the one numerical variable \texttt{d}, this process is nothing more than a one-sample t test. Therefore, there is really nothing new in this chapter.
+
+Let's go through the rubric.
 
 \hypertarget{exploratory-data-analysis-7}{%
-\section*{Exploratory data analysis}\label{exploratory-data-analysis-7}}
-\addcontentsline{toc}{section}{Exploratory data analysis}
+\section{Exploratory data analysis}\label{exploratory-data-analysis-7}}
 
 \hypertarget{use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-7}{%
-\subsection*{Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.}\label{use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-7}}
-\addcontentsline{toc}{subsection}{Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.}
+\subsection{Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.}\label{use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-7}}
+
+You should type \texttt{textbooks} at the Console to read the help file. The data was collected by a person, David Diez. A quick Google search reveals that he is a statistician who graduated from UCLA. We presume he had access to accurate information about the prices of books at the UCLA bookstore and from Amazon.com at the time the data was collected.
+
+Here is the data set:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{textbooks}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 73 x 7
+##    dept_abbr course  isbn           ucla_new amaz_new more   diff
+##    <fct>     <fct>   <fct>             <dbl>    <dbl> <fct> <dbl>
+##  1 Am Ind    " C170" 978-0803272620     27.7     28.0 Y     -0.28
+##  2 Anthro    "9"     978-0030119194     40.6     31.1 Y      9.45
+##  3 Anthro    "135T"  978-0300080643     31.7     32   Y     -0.32
+##  4 Anthro    "191HB" 978-0226206813     16       11.5 Y      4.48
+##  5 Art His   "M102K" 978-0892365999     19.0     14.2 Y      4.74
+##  6 Art His   "118E"  978-0394723693     15.0     10.2 Y      4.78
+##  7 Asia Am   "187B"  978-0822338437     24.7     20.1 Y      4.64
+##  8 Asia Am   "191E"  978-0816646135     19.5     16.7 N      2.84
+##  9 Ch Engr   "C125"  978-0195123401    124.     106.  N     17.6 
+## 10 Chicano   "M145B" 978-0896086265     17       13.3 Y      3.74
+## # ... with 63 more rows
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{glimpse}\NormalTok{(textbooks)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rows: 73
+## Columns: 7
+## $ dept_abbr <fct> Am Ind, Anthro, Anthro, Anthro, Art His, Art His, Asia Am, A~
+## $ course    <fct>  C170, 9, 135T, 191HB, M102K, 118E, 187B, 191E, C125, M145B,~
+## $ isbn      <fct> 978-0803272620, 978-0030119194, 978-0300080643, 978-02262068~
+## $ ucla_new  <dbl> 27.67, 40.59, 31.68, 16.00, 18.95, 14.95, 24.70, 19.50, 123.~
+## $ amaz_new  <dbl> 27.95, 31.14, 32.00, 11.52, 14.21, 10.17, 20.06, 16.66, 106.~
+## $ more      <fct> Y, Y, Y, Y, Y, Y, Y, N, N, Y, Y, N, Y, Y, N, N, N, N, N, N, ~
+## $ diff      <dbl> -0.28, 9.45, -0.32, 4.48, 4.74, 4.78, 4.64, 2.84, 17.59, 3.7~
+\end{verbatim}
+
+The two paired variables are \texttt{ucla\_new} and \texttt{amaz\_new}.
+
+\hypertarget{prepare-the-data-for-analysis.-2}{%
+\subsection{Prepare the data for analysis.}\label{prepare-the-data-for-analysis.-2}}
+
+Generally, we will need to create a new variable \texttt{d} that represents the difference between the two paired variables of interest. This uses the \texttt{mutate} command that adds an extra column to our data frame. The order of subtraction usually does not matter, but we will want to keep track of that order so that we can interpret our test statistic correctly. In the case of a one-sided test (which this is), it is especially important to keep track of the order of subtraction. Since we suspect the bookstore will charge more than Amazon, let's subtract in that order. Our hunch is that it will be a positive number, on average.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{textbooks\_d }\OtherTok{\textless{}{-}}\NormalTok{ textbooks }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{d =}\NormalTok{ ucla\_new }\SpecialCharTok{{-}}\NormalTok{ amaz\_new)}
+\NormalTok{textbooks\_d}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 73 x 8
+##    dept_abbr course  isbn           ucla_new amaz_new more   diff      d
+##    <fct>     <fct>   <fct>             <dbl>    <dbl> <fct> <dbl>  <dbl>
+##  1 Am Ind    " C170" 978-0803272620     27.7     28.0 Y     -0.28 -0.280
+##  2 Anthro    "9"     978-0030119194     40.6     31.1 Y      9.45  9.45 
+##  3 Anthro    "135T"  978-0300080643     31.7     32   Y     -0.32 -0.320
+##  4 Anthro    "191HB" 978-0226206813     16       11.5 Y      4.48  4.48 
+##  5 Art His   "M102K" 978-0892365999     19.0     14.2 Y      4.74  4.74 
+##  6 Art His   "118E"  978-0394723693     15.0     10.2 Y      4.78  4.78 
+##  7 Asia Am   "187B"  978-0822338437     24.7     20.1 Y      4.64  4.64 
+##  8 Asia Am   "191E"  978-0816646135     19.5     16.7 N      2.84  2.84 
+##  9 Ch Engr   "C125"  978-0195123401    124.     106.  N     17.6  17.6  
+## 10 Chicano   "M145B" 978-0896086265     17       13.3 Y      3.74  3.74 
+## # ... with 63 more rows
+\end{verbatim}
+
+If you look closely at the tibble above, you will see that there is a column already in our data called \texttt{diff}. It is the same as the column \texttt{d} we just created. So in this case, we didn't really need to create a new difference variable. However, since most data sets do not come pre-prepared with such a difference variable, it is good to know how to make one if needed.
+
+\hypertarget{make-tables-or-plots-to-explore-the-data-visually.-7}{%
+\subsection{Make tables or plots to explore the data visually.}\label{make-tables-or-plots-to-explore-the-data-visually.-7}}
+
+Here are summary statistics, a histogram, and a QQ plot for \texttt{d}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(textbooks\_d}\SpecialCharTok{$}\NormalTok{d)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   -9.53    3.80    8.23   12.76   17.59   66.00
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(textbooks\_d, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ d)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{binwidth =} \DecValTok{10}\NormalTok{, }\AttributeTok{boundary =} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-475-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(textbooks\_d, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{sample =}\NormalTok{ d)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_qq}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{geom\_qq\_line}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-476-1.pdf}
+
+The data is somewhat skewed to the right with one observation that might be a bit of an outlier. If the sample size were much smaller, we might be concerned about this point However, it's not much higher than other points in that right tail, and it doesn't appear that its inclusion or exclusion will change the overall conclusion much. If you are concerned that the point might alter the conclusion, run the hypothesis test twice, once with and once without the outlier present to see if the main conclusion changes.
+
+\hypertarget{hypotheses-7}{%
+\section{Hypotheses}\label{hypotheses-7}}
+
+\hypertarget{identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-7}{%
+\subsection{Identify the sample (or samples) and a reasonable population (or populations) of interest.}\label{identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-7}}
+
+The sample consists of 73 textbooks. The population is all textbooks that might be sold both at the UCLA bookstore and on Amazon.
+
+\hypertarget{express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-7}{%
+\subsection{Express the null and alternative hypotheses as contextually meaningful full sentences.}\label{express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-7}}
+
+\(H_{0}:\) There is no difference in textbooks prices between the UCLA bookstore and Amazon.
+
+\(H_{A}:\) Textbook prices at the UCLA bookstore are higher on average than on Amazon.
+
+Commentary: Note we are performing a one-sided test. If we are conducting our own research with our own data, we can decide whether we want to run a two-sided or one-sided test. Remember that we only do the latter when we have a strong hypothesis in advance that the difference should be clearly in one direction and not the other. In this case, it's not up to us. We have to respect the research question as it was given to us: ``The question of interest here is whether the campus bookstore charges more than Amazon.''
+
+\hypertarget{exercise-1-14}{%
+\paragraph*{Exercise 1}\label{exercise-1-14}}
+\addcontentsline{toc}{paragraph}{Exercise 1}
+
+What would the research question say if we were supposed to run a two-sided test instead? In other words, write down a slightly different research question about textbook prices that would prompt us to run a two-sided test.
+
+Please write up your answer here.
+
+\hypertarget{express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-7}{%
+\subsection{Express the null and alternative hypotheses in symbols (when possible).}\label{express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-7}}
+
+\(H_{0}: \mu_{d} = 0\)
+
+\(H_{A}: \mu_{d} > 0\)
+
+Commentary: Since we're really just doing a one-sample t test, we could just call this parameter \(\mu\), but the subscript \(d\) is a good reminder that it's the mean of the difference variable we care about (as opposed to the mean price of all the books at the UCLA bookstore or the mean price of all the same books on Amazon).
+
+\hypertarget{model-7}{%
+\section{Model}\label{model-7}}
+
+\hypertarget{identify-the-sampling-distribution-model.-7}{%
+\subsection{Identify the sampling distribution model.}\label{identify-the-sampling-distribution-model.-7}}
+
+We use a t model with 72 degrees of freedom.
+
+\hypertarget{exercise-2-8}{%
+\paragraph*{Exercise 2}\label{exercise-2-8}}
+\addcontentsline{toc}{paragraph}{Exercise 2}
+
+Explain how we got 72 degrees of freedom.
+
+Please write up your answer here.
+
+\hypertarget{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-13}{%
+\subsection{Check the relevant conditions to ensure that model assumptions are met.}\label{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-13}}
+
+\begin{itemize}
+\tightlist
+\item
+  Random
+
+  \begin{itemize}
+  \tightlist
+  \item
+    We do not know how exactly how David Diez obtained this sample, but the help file claims it is a random sample.
+  \end{itemize}
+\item
+  10\%
+
+  \begin{itemize}
+  \tightlist
+  \item
+    We do not know how many total textbooks were available at the UCLA bookstore at the time the sample was taken, so we do not know if this condition is met. As long as there were at least 730 books, we are okay. We suspect that, based on the size of UCLA and the number of course offerings there, this is a reasonable assumption.
+  \end{itemize}
+\item
+  Nearly normal
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Although the sample distribution is skewed (with a possible mild outlier), the sample size is more than 30.
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{mechanics-7}{%
+\section{Mechanics}\label{mechanics-7}}
+
+\hypertarget{compute-the-test-statistic.-7}{%
+\subsection{Compute the test statistic.}\label{compute-the-test-statistic.-7}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{d\_mean }\OtherTok{\textless{}{-}}\NormalTok{ textbooks\_d }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{specify}\NormalTok{(}\AttributeTok{response =}\NormalTok{ d) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{calculate}\NormalTok{(}\AttributeTok{stat =} \StringTok{"mean"}\NormalTok{)}
+\NormalTok{d\_mean}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Response: d (numeric)
+## # A tibble: 1 x 1
+##    stat
+##   <dbl>
+## 1  12.8
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{d\_t }\OtherTok{\textless{}{-}}\NormalTok{ textbooks\_d }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{specify}\NormalTok{(}\AttributeTok{response =}\NormalTok{ d) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{hypothesize}\NormalTok{(}\AttributeTok{null =} \StringTok{"point"}\NormalTok{, }\AttributeTok{mu =} \DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{calculate}\NormalTok{(}\AttributeTok{stat =} \StringTok{"t"}\NormalTok{)}
+\NormalTok{d\_t}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Response: d (numeric)
+## Null Hypothesis: point
+## # A tibble: 1 x 1
+##    stat
+##   <dbl>
+## 1  7.65
+\end{verbatim}
+
+\hypertarget{report-the-test-statistic-in-context-when-possible.-7}{%
+\subsection{Report the test statistic in context (when possible).}\label{report-the-test-statistic-in-context-when-possible.-7}}
+
+The mean difference in textbook prices is 12.7616438.
+
+The value of t is 7.6487711. The mean difference in textbook prices is more than 7 standard errors above a difference of zero.
+
+\hypertarget{plot-the-null-distribution.-7}{%
+\subsection{Plot the null distribution.}\label{plot-the-null-distribution.-7}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{price\_test }\OtherTok{\textless{}{-}}\NormalTok{ textbooks\_d }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{specify}\NormalTok{(}\AttributeTok{response =}\NormalTok{ d) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{assume}\NormalTok{(}\StringTok{"t"}\NormalTok{)}
+\NormalTok{price\_test}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## A T distribution with 72 degrees of freedom.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{price\_test }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{visualize}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{shade\_p\_value}\NormalTok{(}\AttributeTok{obs\_stat =}\NormalTok{ d\_t, }\AttributeTok{direction =} \StringTok{"greater"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-480-1.pdf}
+
+\hypertarget{calculate-the-p-value.-7}{%
+\subsection{Calculate the P-value.}\label{calculate-the-p-value.-7}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{price\_test\_p }\OtherTok{\textless{}{-}}\NormalTok{ price\_test }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{get\_p\_value}\NormalTok{(}\AttributeTok{obs\_stat =}\NormalTok{ d\_t, }\AttributeTok{direction =} \StringTok{"greater"}\NormalTok{)}
+\NormalTok{price\_test\_p}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 1
+##    p_value
+##      <dbl>
+## 1 3.46e-11
+\end{verbatim}
+
+\hypertarget{interpret-the-p-value-as-a-probability-given-the-null.-7}{%
+\subsection{Interpret the P-value as a probability given the null.}\label{interpret-the-p-value-as-a-probability-given-the-null.-7}}
+
+\(P < 0.001\). If there were no difference in textbook prices between the UCLA bookstore and Amazon, there is only a 0\% chance of seeing data at least as extreme as what we saw. (Note that the number is so small that it rounds to zero in the inline code above. That zero is technically incorrect. The P-value is never exactly zero. That's why why also are clear to state \(P < 0.001\).)
+
+\hypertarget{conclusion-9}{%
+\section{Conclusion}\label{conclusion-9}}
+
+\hypertarget{state-the-statistical-conclusion.-7}{%
+\subsection{State the statistical conclusion.}\label{state-the-statistical-conclusion.-7}}
+
+We reject the null hypothesis.
+
+\hypertarget{state-but-do-not-overstate-a-contextually-meaningful-conclusion.-7}{%
+\subsection{State (but do not overstate) a contextually meaningful conclusion.}\label{state-but-do-not-overstate-a-contextually-meaningful-conclusion.-7}}
+
+We have sufficient evidence that UCLA prices are higher than Amazon prices.
+
+Commentary: Note that because we performed a one-sided test, our conclusion is also one-sided in the hypothesized direction.
+
+\hypertarget{express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-7}{%
+\subsection{Express reservations or uncertainty about the generalizability of the conclusion.}\label{express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-7}}
+
+We can be confident about the validity of this data, and therefore the conclusion drawn. We should be careful to limit our conclusion to the UCLA bookstore (and not extrapolate the findings, say, to other campus bookstores.) Depending on when this data was collected, we may not be able to say anything about current prices at the UCLA bookstore either.
+
+\hypertarget{identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-7}{%
+\subsection{Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.}\label{identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-7}}
+
+If we made a Type I error, that would mean there was actually no difference in textbook prices, but that we got an unusual sample that detected a difference.
+
+\hypertarget{confidence-interval-5}{%
+\section{Confidence interval}\label{confidence-interval-5}}
+
+\hypertarget{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-14}{%
+\subsection{Check the relevant conditions to ensure that model assumptions are met.}\label{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-14}}
+
+All necessary conditions have already been checked.
+
+\hypertarget{calculate-and-graph-the-confidence-interval.-5}{%
+\subsection{Calculate and graph the confidence interval.}\label{calculate-and-graph-the-confidence-interval.-5}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{price\_ci }\OtherTok{\textless{}{-}}\NormalTok{ price\_test }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{get\_confidence\_interval}\NormalTok{(}\AttributeTok{point\_estimate =}\NormalTok{ d\_mean, }\AttributeTok{level =} \FloatTok{0.95}\NormalTok{)}
+\NormalTok{price\_ci}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 2
+##   lower_ci upper_ci
+##      <dbl>    <dbl>
+## 1     9.44     16.1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{price\_test }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{visualize}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{shade\_confidence\_interval}\NormalTok{(}\AttributeTok{endpoints =}\NormalTok{ price\_ci)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-483-1.pdf}
+
+\hypertarget{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-6}{%
+\subsection{State (but do not overstate) a contextually meaningful interpretation.}\label{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-6}}
+
+We are 95\% confident that the true difference in textbook prices between the UCLA bookstore and Amazon is captured in the interval (9.4356361, 16.0876516). This was obtained by subtracting the Amazon price minus the UCLA bookstore. (In other words, since all differences in the confidence interval are positive, all plausible differences indicate that the UCLA prices are higher than the Amazon prices.)
+
+Commentary: Don't forget that any time we find a number that represents a difference, we have to be clear in the conclusion about the direction of subtraction. Otherwise, we have no idea how to interpret positive and negative values.
+
+\hypertarget{if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.-2}{%
+\subsection{If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.}\label{if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.-2}}
+
+The confidence interval does not contain zero, which means that zero is not a plausible value for the difference textbook prices.
+
+\hypertarget{when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-2}{%
+\subsection{When comparing two groups, comment on the effect size and the practical significance of the result.}\label{when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-2}}
+
+To think about the practical significance, imagine that you were a student at UCLA and that every textbook you needed was (on average) \$10 to \$15 more expensive in the bookstore than purchasing on Amazon. Multiplied across the number of textbooks you need, that could amount to a significant increase in expenses. In other words, that dollar figure is not likely a trivial amount of money for many students who require multiple textbooks each semester.
+
+\hypertarget{your-turn-2}{%
+\section{Your turn}\label{your-turn-2}}
+
+The \texttt{hsb2} data set contains data from a random sample of 200 high school seniors from the ``High School and Beyond'' survey conducted by the National Center of Education Statistics. It contains, among other things, students' scores on standardized tests in math, reading, writing, science, and social studies. We want to know if students do better on the math test or on the reading test.
+
+Run inference to determine if there is a difference between math scores and reading scores.
+
+The rubric outline is reproduced below. You may refer to the worked example above and modify it accordingly. Remember to strip out all the commentary. That is just exposition for your benefit in understanding the steps, but is not meant to form part of the formal inference process.
+
+Another word of warning: the copy/paste process is not a substitute for your brain. You will often need to modify more than just the names of the data frames and variables to adapt the worked examples to your own work. Do not blindly copy and paste code without understanding what it does. And you should \textbf{never} copy and paste text. All the sentences and paragraphs you write are expressions of your own analysis. They must reflect your own understanding of the inferential process.
+
+\textbf{Also, so that your answers here don't mess up the code chunks above, use new variable names everywhere.}
+
+\hypertarget{exploratory-data-analysis-8}{%
+\paragraph*{Exploratory data analysis}\label{exploratory-data-analysis-8}}
+\addcontentsline{toc}{paragraph}{Exploratory data analysis}
+
+\hypertarget{use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-8}{%
+\subparagraph*{Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.}\label{use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-8}}
+\addcontentsline{toc}{subparagraph}{Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.}
 
 Please write up your answer here
 
@@ -23346,7 +23821,253 @@ Please write up your answer here
 \end{Shaded}
 
 \hypertarget{prepare-the-data-for-analysis.-not-always-necessary.-5}{%
-\subsection*{Prepare the data for analysis. {[}Not always necessary.{]}}\label{prepare-the-data-for-analysis.-not-always-necessary.-5}}
+\subparagraph*{Prepare the data for analysis. {[}Not always necessary.{]}}\label{prepare-the-data-for-analysis.-not-always-necessary.-5}}
+\addcontentsline{toc}{subparagraph}{Prepare the data for analysis. {[}Not always necessary.{]}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to prepare the data for analysis.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{make-tables-or-plots-to-explore-the-data-visually.-8}{%
+\subparagraph*{Make tables or plots to explore the data visually.}\label{make-tables-or-plots-to-explore-the-data-visually.-8}}
+\addcontentsline{toc}{subparagraph}{Make tables or plots to explore the data visually.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to make tables or plots.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{hypotheses-8}{%
+\paragraph*{Hypotheses}\label{hypotheses-8}}
+\addcontentsline{toc}{paragraph}{Hypotheses}
+
+\hypertarget{identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-8}{%
+\subparagraph*{Identify the sample (or samples) and a reasonable population (or populations) of interest.}\label{identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-8}}
+\addcontentsline{toc}{subparagraph}{Identify the sample (or samples) and a reasonable population (or populations) of interest.}
+
+Please write up your answer here.
+
+\hypertarget{express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-8}{%
+\subparagraph*{Express the null and alternative hypotheses as contextually meaningful full sentences.}\label{express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-8}}
+\addcontentsline{toc}{subparagraph}{Express the null and alternative hypotheses as contextually meaningful full sentences.}
+
+\(H_{0}:\) Null hypothesis goes here.
+
+\(H_{A}:\) Alternative hypothesis goes here.
+
+\hypertarget{express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-8}{%
+\subparagraph*{Express the null and alternative hypotheses in symbols (when possible).}\label{express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-8}}
+\addcontentsline{toc}{subparagraph}{Express the null and alternative hypotheses in symbols (when possible).}
+
+\(H_{0}: math\)
+
+\(H_{A}: math\)
+
+\hypertarget{model-8}{%
+\paragraph*{Model}\label{model-8}}
+\addcontentsline{toc}{paragraph}{Model}
+
+\hypertarget{identify-the-sampling-distribution-model.-8}{%
+\subparagraph*{Identify the sampling distribution model.}\label{identify-the-sampling-distribution-model.-8}}
+\addcontentsline{toc}{subparagraph}{Identify the sampling distribution model.}
+
+Please write up your answer here.
+
+\hypertarget{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-15}{%
+\subparagraph*{Check the relevant conditions to ensure that model assumptions are met.}\label{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-15}}
+\addcontentsline{toc}{subparagraph}{Check the relevant conditions to ensure that model assumptions are met.}
+
+Please write up your answer here. (Some conditions may require R code as well.)
+
+\hypertarget{mechanics-8}{%
+\paragraph*{Mechanics}\label{mechanics-8}}
+\addcontentsline{toc}{paragraph}{Mechanics}
+
+\hypertarget{compute-the-test-statistic.-8}{%
+\subparagraph*{Compute the test statistic.}\label{compute-the-test-statistic.-8}}
+\addcontentsline{toc}{subparagraph}{Compute the test statistic.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to compute the test statistic.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{report-the-test-statistic-in-context-when-possible.-8}{%
+\subparagraph*{Report the test statistic in context (when possible).}\label{report-the-test-statistic-in-context-when-possible.-8}}
+\addcontentsline{toc}{subparagraph}{Report the test statistic in context (when possible).}
+
+Please write up your answer here.
+
+\hypertarget{plot-the-null-distribution.-8}{%
+\subparagraph*{Plot the null distribution.}\label{plot-the-null-distribution.-8}}
+\addcontentsline{toc}{subparagraph}{Plot the null distribution.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# IF CONDUCTING A SIMULATION...}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\CommentTok{\# Add code here to simulate the null distribution.}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to plot the null distribution.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{calculate-the-p-value.-8}{%
+\subparagraph*{Calculate the P-value.}\label{calculate-the-p-value.-8}}
+\addcontentsline{toc}{subparagraph}{Calculate the P-value.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to calculate the P{-}value.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{interpret-the-p-value-as-a-probability-given-the-null.-8}{%
+\subparagraph*{Interpret the P-value as a probability given the null.}\label{interpret-the-p-value-as-a-probability-given-the-null.-8}}
+\addcontentsline{toc}{subparagraph}{Interpret the P-value as a probability given the null.}
+
+Please write up your answer here.
+
+\hypertarget{conclusion-10}{%
+\paragraph*{Conclusion}\label{conclusion-10}}
+\addcontentsline{toc}{paragraph}{Conclusion}
+
+\hypertarget{state-the-statistical-conclusion.-8}{%
+\subparagraph*{State the statistical conclusion.}\label{state-the-statistical-conclusion.-8}}
+\addcontentsline{toc}{subparagraph}{State the statistical conclusion.}
+
+Please write up your answer here.
+
+\hypertarget{state-but-do-not-overstate-a-contextually-meaningful-conclusion.-8}{%
+\subparagraph*{State (but do not overstate) a contextually meaningful conclusion.}\label{state-but-do-not-overstate-a-contextually-meaningful-conclusion.-8}}
+\addcontentsline{toc}{subparagraph}{State (but do not overstate) a contextually meaningful conclusion.}
+
+Please write up your answer here.
+
+\hypertarget{express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-8}{%
+\subparagraph*{Express reservations or uncertainty about the generalizability of the conclusion.}\label{express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-8}}
+\addcontentsline{toc}{subparagraph}{Express reservations or uncertainty about the generalizability of the conclusion.}
+
+Please write up your answer here.
+
+\hypertarget{identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-8}{%
+\subparagraph*{Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.}\label{identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-8}}
+\addcontentsline{toc}{subparagraph}{Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.}
+
+Please write up your answer here.
+
+\hypertarget{confidence-interval-6}{%
+\paragraph*{Confidence interval}\label{confidence-interval-6}}
+\addcontentsline{toc}{paragraph}{Confidence interval}
+
+\hypertarget{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-16}{%
+\subparagraph*{Check the relevant conditions to ensure that model assumptions are met.}\label{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-16}}
+\addcontentsline{toc}{subparagraph}{Check the relevant conditions to ensure that model assumptions are met.}
+
+Please write up your answer here. (Some conditions may require R code as well.)
+
+\hypertarget{calculate-and-graph-the-confidence-interval.-6}{%
+\subparagraph*{Calculate and graph the confidence interval.}\label{calculate-and-graph-the-confidence-interval.-6}}
+\addcontentsline{toc}{subparagraph}{Calculate and graph the confidence interval.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to calculate the confidence interval.}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to graph the confidence interval.}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-7}{%
+\subparagraph*{State (but do not overstate) a contextually meaningful interpretation.}\label{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-7}}
+\addcontentsline{toc}{subparagraph}{State (but do not overstate) a contextually meaningful interpretation.}
+
+Please write up your answer here.
+
+\hypertarget{if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.-not-always-applicable.-3}{%
+\subparagraph*{If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test. {[}Not always applicable.{]}}\label{if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.-not-always-applicable.-3}}
+\addcontentsline{toc}{subparagraph}{If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test. {[}Not always applicable.{]}}
+
+Please write up your answer here.
+
+\hypertarget{when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-not-always-applicable.-3}{%
+\subparagraph*{When comparing two groups, comment on the effect size and the practical significance of the result. {[}Not always applicable.{]}}\label{when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-not-always-applicable.-3}}
+\addcontentsline{toc}{subparagraph}{When comparing two groups, comment on the effect size and the practical significance of the result. {[}Not always applicable.{]}}
+
+Please write up your answer here.
+
+\hypertarget{conclusion-11}{%
+\section{Conclusion}\label{conclusion-11}}
+
+Paired data occurs whenever we have two numerical measurements that are related to each other, whether because they come from the same observational units or from closely related ones. When our data is structured as pairs of measurements in this way, we can subtract the two columns and obtain a difference. That difference variable is the object of our study, and now that it is represented as a single numerical variable, we can apply the one-sample t test from the last chapter.
+
+\hypertarget{preparing-and-submitting-your-assignment-2}{%
+\subsection{Preparing and submitting your assignment}\label{preparing-and-submitting-your-assignment-2}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  From the ``Run'' menu, select ``Restart R and Run All Chunks''.
+\item
+  Deal with any code errors that crop up. Repeat steps 1---2 until there are no more code errors.
+\item
+  Spell check your document by clicking the icon with ``ABC'' and a check mark.
+\item
+  Hit the ``Preview'' button one last time to generate the final draft of the \texttt{.nb.html} file.
+\item
+  Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
+\end{enumerate}
+
+If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
+
+\hypertarget{appendix-appendix}{%
+\appendix}
+
+
+2.0
+
+\hypertarget{appendix-rubric}{%
+\chapter{Rubric for inference}\label{appendix-rubric}}
+
+This is the R Markdown outline for running inference, both a hypothesis test and a confidence interval.
+
+\hypertarget{exploratory-data-analysis-9}{%
+\section*{Exploratory data analysis}\label{exploratory-data-analysis-9}}
+\addcontentsline{toc}{section}{Exploratory data analysis}
+
+\hypertarget{use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-9}{%
+\subsection*{Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.}\label{use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-9}}
+\addcontentsline{toc}{subsection}{Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.}
+
+Please write up your answer here
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to print the data}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to glimpse the variables}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{prepare-the-data-for-analysis.-not-always-necessary.-6}{%
+\subsection*{Prepare the data for analysis. {[}Not always necessary.{]}}\label{prepare-the-data-for-analysis.-not-always-necessary.-6}}
 \addcontentsline{toc}{subsection}{Prepare the data for analysis. {[}Not always necessary.{]}}
 
 \begin{Shaded}
@@ -23355,8 +24076,8 @@ Please write up your answer here
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{make-tables-or-plots-to-explore-the-data-visually.-7}{%
-\subsection*{Make tables or plots to explore the data visually.}\label{make-tables-or-plots-to-explore-the-data-visually.-7}}
+\hypertarget{make-tables-or-plots-to-explore-the-data-visually.-9}{%
+\subsection*{Make tables or plots to explore the data visually.}\label{make-tables-or-plots-to-explore-the-data-visually.-9}}
 \addcontentsline{toc}{subsection}{Make tables or plots to explore the data visually.}
 
 \begin{Shaded}
@@ -23365,54 +24086,54 @@ Please write up your answer here
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{hypotheses-7}{%
-\section*{Hypotheses}\label{hypotheses-7}}
+\hypertarget{hypotheses-9}{%
+\section*{Hypotheses}\label{hypotheses-9}}
 \addcontentsline{toc}{section}{Hypotheses}
 
-\hypertarget{identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-7}{%
-\subsection*{Identify the sample (or samples) and a reasonable population (or populations) of interest.}\label{identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-7}}
+\hypertarget{identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-9}{%
+\subsection*{Identify the sample (or samples) and a reasonable population (or populations) of interest.}\label{identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-9}}
 \addcontentsline{toc}{subsection}{Identify the sample (or samples) and a reasonable population (or populations) of interest.}
 
 Please write up your answer here.
 
-\hypertarget{express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-7}{%
-\subsection*{Express the null and alternative hypotheses as contextually meaningful full sentences.}\label{express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-7}}
+\hypertarget{express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-9}{%
+\subsection*{Express the null and alternative hypotheses as contextually meaningful full sentences.}\label{express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-9}}
 \addcontentsline{toc}{subsection}{Express the null and alternative hypotheses as contextually meaningful full sentences.}
 
 \(H_{0}:\) Null hypothesis goes here.
 
 \(H_{A}:\) Alternative hypothesis goes here.
 
-\hypertarget{express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-7}{%
-\subsection*{Express the null and alternative hypotheses in symbols (when possible).}\label{express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-7}}
+\hypertarget{express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-9}{%
+\subsection*{Express the null and alternative hypotheses in symbols (when possible).}\label{express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-9}}
 \addcontentsline{toc}{subsection}{Express the null and alternative hypotheses in symbols (when possible).}
 
 \(H_{0}: math\)
 
 \(H_{A}: math\)
 
-\hypertarget{model-7}{%
-\section*{Model}\label{model-7}}
+\hypertarget{model-9}{%
+\section*{Model}\label{model-9}}
 \addcontentsline{toc}{section}{Model}
 
-\hypertarget{identify-the-sampling-distribution-model.-7}{%
-\subsection*{Identify the sampling distribution model.}\label{identify-the-sampling-distribution-model.-7}}
+\hypertarget{identify-the-sampling-distribution-model.-9}{%
+\subsection*{Identify the sampling distribution model.}\label{identify-the-sampling-distribution-model.-9}}
 \addcontentsline{toc}{subsection}{Identify the sampling distribution model.}
 
 Please write up your answer here.
 
-\hypertarget{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-13}{%
-\subsection*{Check the relevant conditions to ensure that model assumptions are met.}\label{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-13}}
+\hypertarget{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-17}{%
+\subsection*{Check the relevant conditions to ensure that model assumptions are met.}\label{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-17}}
 \addcontentsline{toc}{subsection}{Check the relevant conditions to ensure that model assumptions are met.}
 
 Please write up your answer here. (Some conditions may require R code as well.)
 
-\hypertarget{mechanics-7}{%
-\section*{Mechanics}\label{mechanics-7}}
+\hypertarget{mechanics-9}{%
+\section*{Mechanics}\label{mechanics-9}}
 \addcontentsline{toc}{section}{Mechanics}
 
-\hypertarget{compute-the-test-statistic.-7}{%
-\subsection*{Compute the test statistic.}\label{compute-the-test-statistic.-7}}
+\hypertarget{compute-the-test-statistic.-9}{%
+\subsection*{Compute the test statistic.}\label{compute-the-test-statistic.-9}}
 \addcontentsline{toc}{subsection}{Compute the test statistic.}
 
 \begin{Shaded}
@@ -23421,14 +24142,14 @@ Please write up your answer here. (Some conditions may require R code as well.)
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{report-the-test-statistic-in-context-when-possible.-7}{%
-\subsection*{Report the test statistic in context (when possible).}\label{report-the-test-statistic-in-context-when-possible.-7}}
+\hypertarget{report-the-test-statistic-in-context-when-possible.-9}{%
+\subsection*{Report the test statistic in context (when possible).}\label{report-the-test-statistic-in-context-when-possible.-9}}
 \addcontentsline{toc}{subsection}{Report the test statistic in context (when possible).}
 
 Please write up your answer here.
 
-\hypertarget{plot-the-null-distribution.-7}{%
-\subsection*{Plot the null distribution.}\label{plot-the-null-distribution.-7}}
+\hypertarget{plot-the-null-distribution.-9}{%
+\subsection*{Plot the null distribution.}\label{plot-the-null-distribution.-9}}
 \addcontentsline{toc}{subsection}{Plot the null distribution.}
 
 \begin{Shaded}
@@ -23445,8 +24166,8 @@ Please write up your answer here.
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{calculate-the-p-value.-7}{%
-\subsection*{Calculate the P-value.}\label{calculate-the-p-value.-7}}
+\hypertarget{calculate-the-p-value.-9}{%
+\subsection*{Calculate the P-value.}\label{calculate-the-p-value.-9}}
 \addcontentsline{toc}{subsection}{Calculate the P-value.}
 
 \begin{Shaded}
@@ -23455,52 +24176,52 @@ Please write up your answer here.
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{interpret-the-p-value-as-a-probability-given-the-null.-7}{%
-\subsection*{Interpret the P-value as a probability given the null.}\label{interpret-the-p-value-as-a-probability-given-the-null.-7}}
+\hypertarget{interpret-the-p-value-as-a-probability-given-the-null.-9}{%
+\subsection*{Interpret the P-value as a probability given the null.}\label{interpret-the-p-value-as-a-probability-given-the-null.-9}}
 \addcontentsline{toc}{subsection}{Interpret the P-value as a probability given the null.}
 
 Please write up your answer here.
 
-\hypertarget{conclusion-8}{%
-\section*{Conclusion}\label{conclusion-8}}
+\hypertarget{conclusion-12}{%
+\section*{Conclusion}\label{conclusion-12}}
 \addcontentsline{toc}{section}{Conclusion}
 
-\hypertarget{state-the-statistical-conclusion.-7}{%
-\subsection*{State the statistical conclusion.}\label{state-the-statistical-conclusion.-7}}
+\hypertarget{state-the-statistical-conclusion.-9}{%
+\subsection*{State the statistical conclusion.}\label{state-the-statistical-conclusion.-9}}
 \addcontentsline{toc}{subsection}{State the statistical conclusion.}
 
 Please write up your answer here.
 
-\hypertarget{state-but-do-not-overstate-a-contextually-meaningful-conclusion.-7}{%
-\subsection*{State (but do not overstate) a contextually meaningful conclusion.}\label{state-but-do-not-overstate-a-contextually-meaningful-conclusion.-7}}
+\hypertarget{state-but-do-not-overstate-a-contextually-meaningful-conclusion.-9}{%
+\subsection*{State (but do not overstate) a contextually meaningful conclusion.}\label{state-but-do-not-overstate-a-contextually-meaningful-conclusion.-9}}
 \addcontentsline{toc}{subsection}{State (but do not overstate) a contextually meaningful conclusion.}
 
 Please write up your answer here.
 
-\hypertarget{express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-7}{%
-\subsection*{Express reservations or uncertainty about the generalizability of the conclusion.}\label{express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-7}}
+\hypertarget{express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-9}{%
+\subsection*{Express reservations or uncertainty about the generalizability of the conclusion.}\label{express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-9}}
 \addcontentsline{toc}{subsection}{Express reservations or uncertainty about the generalizability of the conclusion.}
 
 Please write up your answer here.
 
-\hypertarget{identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-7}{%
-\subsection*{Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.}\label{identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-7}}
+\hypertarget{identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-9}{%
+\subsection*{Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.}\label{identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-9}}
 \addcontentsline{toc}{subsection}{Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.}
 
 Please write up your answer here.
 
-\hypertarget{confidence-interval-5}{%
-\section*{Confidence interval}\label{confidence-interval-5}}
+\hypertarget{confidence-interval-7}{%
+\section*{Confidence interval}\label{confidence-interval-7}}
 \addcontentsline{toc}{section}{Confidence interval}
 
-\hypertarget{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-14}{%
-\subsection*{Check the relevant conditions to ensure that model assumptions are met.}\label{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-14}}
+\hypertarget{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-18}{%
+\subsection*{Check the relevant conditions to ensure that model assumptions are met.}\label{check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-18}}
 \addcontentsline{toc}{subsection}{Check the relevant conditions to ensure that model assumptions are met.}
 
 Please write up your answer here. (Some conditions may require R code as well.)
 
-\hypertarget{calculate-and-graph-the-confidence-interval.-5}{%
-\subsection*{Calculate and graph the confidence interval.}\label{calculate-and-graph-the-confidence-interval.-5}}
+\hypertarget{calculate-and-graph-the-confidence-interval.-7}{%
+\subsection*{Calculate and graph the confidence interval.}\label{calculate-and-graph-the-confidence-interval.-7}}
 \addcontentsline{toc}{subsection}{Calculate and graph the confidence interval.}
 
 \begin{Shaded}
@@ -23515,20 +24236,20 @@ Please write up your answer here. (Some conditions may require R code as well.)
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-6}{%
-\subsection*{State (but do not overstate) a contextually meaningful interpretation.}\label{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-6}}
+\hypertarget{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-8}{%
+\subsection*{State (but do not overstate) a contextually meaningful interpretation.}\label{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-8}}
 \addcontentsline{toc}{subsection}{State (but do not overstate) a contextually meaningful interpretation.}
 
 Please write up your answer here.
 
-\hypertarget{if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.-not-always-applicable.-3}{%
-\subsection*{If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test. {[}Not always applicable.{]}}\label{if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.-not-always-applicable.-3}}
+\hypertarget{if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.-not-always-applicable.-4}{%
+\subsection*{If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test. {[}Not always applicable.{]}}\label{if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.-not-always-applicable.-4}}
 \addcontentsline{toc}{subsection}{If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test. {[}Not always applicable.{]}}
 
 Please write up your answer here.
 
-\hypertarget{when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-not-always-applicable.-3}{%
-\subsection*{When comparing two groups, comment on the effect size and the practical significance of the result. {[}Not always applicable.{]}}\label{when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-not-always-applicable.-3}}
+\hypertarget{when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-not-always-applicable.-4}{%
+\subsection*{When comparing two groups, comment on the effect size and the practical significance of the result. {[}Not always applicable.{]}}\label{when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-not-always-applicable.-4}}
 \addcontentsline{toc}{subsection}{When comparing two groups, comment on the effect size and the practical significance of the result. {[}Not always applicable.{]}}
 
 Please write up your answer here.
