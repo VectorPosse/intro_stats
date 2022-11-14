@@ -1,0 +1,508 @@
+---
+title: "18. Chi-square test for independence"
+author: "Put your name here"
+date: "Put the date here"
+output:
+    html_notebook:
+        toc: yes
+        toc_float: yes
+---
+
+<!-- Please don't mess with the next few lines! -->
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(50,46,48))`</p>
+<!-- Please don't mess with the previous few lines! -->
+
+
+::: {.summary}
+
+### Functions introduced in this chapter:
+
+No new R functions are introduced here.
+
+:::
+
+
+## Introduction
+
+In this chapter we will learn how to run the chi-square test for independence.
+
+A chi-square test for independence tests the relationship between two categorical variables. This is an extension of the test for two proportions, except now applied in situations where either the predictor or response variables (or both) have three or more categories.
+
+### Install new packages
+
+There are no new packages used in this chapter.
+
+### Download the R notebook file
+
+Check the upper-right corner in RStudio to make sure you're in your `intro_stats` project. Then click on the following link to download this chapter as an R notebook file (`.Rmd`).
+
+<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/18-chi_square_test_for_independence.Rmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/18-chi_square_test_for_independence.Rmd</a>
+
+Once the file is downloaded, move it to your project folder in RStudio and open it there.
+
+### Restart R and run all chunks
+
+In RStudio, select "Restart R and Run All Chunks" from the "Run" menu.
+
+## Load packages
+
+We load the standard `tideverse`, `janitor`, and `infer` packages. We also use the `MASS` package for the `birthwt` data, and the `openintro` package for the `smoking` data.
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(infer)
+library(MASS)
+library(openintro)
+```
+
+
+## Research question
+
+Are mothers from certain racial groups more or less likely to have low birth weight babies? In other words, are low birth weight and race associated?
+
+Let's look at the data. The `birthwt` data was collected at Baystate Medical Center, Springfield, Mass during 1986. In terms of addressing the research question, we are, of course, limited to conclusions about women in that area of the country in the mid-1980s.
+
+```{r}
+birthwt
+```
+
+```{r}
+glimpse(birthwt)
+```
+
+The `low` variable is an indicator of birth weight less than 2.5 kg. So even though birth weight is numerical, we have a convenient categorical variable that serves as a marker of low birth weight, gathering all low birth weight babies into a single group. The `race` variable is categorical, coded as 1 = white, 2 = black, 3 = other.
+
+Neither variable appears in the data frame as a factor variable, so we will need to change that. The new tibble will be called `birthwt2`.
+
+```{r}
+birthwt2 <- birthwt %>%
+  mutate(low_fct = factor(low, levels = c(0, 1),
+                          labels = c("no", "yes")),
+         race_fct = factor(race, levels = c(1, 2, 3),
+                           labels = c("white", "black", "other")))
+birthwt2
+```
+
+```{r}
+glimpse(birthwt2)
+```
+
+
+## Chi-square test for independence
+
+In a previous chapter, we learned about the chi-square goodness-of-fit test. With a single categorical variable, we summarized data in a frequency table. Each cell of the table had an observed count from the data that we compared to an expected count from the assumption of a null hypothesis. The chi-square statistic measured the discrepancy between observed and expected.
+
+With two categorical variables, we use a contingency table instead of a frequency table. But the principle of the chi-square statistic is the same: each cell in the contingency table has an observed count and an expected count. This forms the basis of a chi-square test for independence.
+
+Below is the contingency table for these two variables. Normally, we only care about column totals because we care how the response variable (here, `low_fct`) is distributed in each group of the predictor variable (i.e., each racial group). But for the calculation of chi-squared, we will need both row and column totals.
+
+```{r}
+tabyl(birthwt2, low_fct, race_fct) %>%
+    adorn_totals(where = c("row", "col"))
+```
+
+A test for independence has a simple null hypothesis: the two variables are independent. This gives us a way to compute expected counts. To see how, look at the sum of all the normal weight babies ($73 + 15 + 42 = 130$) and all the low birth weight babies ($23 + 11 + 25 = 59$). In other words, if race is ignored, there were 130 normal weight babies and 59 low birth weight babies out of 189 total babies. 59 of 189 is 0.31217 or 31.217%, and 130 of 189 is 0.68783 or 68.783%.
+
+Now, if low birth weight and race are truly independent, it shouldn't matter if the mothers were white, black, or some other race. In other words, of 96 white mothers, we should still expect 68.783% of them to have normal weight babies and 31.217% of them to have low birth weight babies. 68.783% of 96 is 66.032. **This is the expected cell count for normal birth weight babies of white women.** 31.217% of 96 is 29.968. **This is the expected cell count for low birth weight babies of white women.**  The same analysis can be done for the next two columns as well.
+
+##### Exercise 1
+
+Complete the list of expected cell counts in the table above. In other words, apply the percentages 68.783% and 31.217% to the totals of the "black" and "other" columns. Put them in the table below:
+
+::: {.answer}
+
+|     | white  | black  | other  |
+|-----|--------|--------|--------|
+| no  | 66.032 | ?      | ?      |
+| yes | 29.968 | ?      | ?      |
+
+:::
+
+*****
+
+
+Unlike the goodness-of-fit test that requires one to specify expected counts for each cell, the test for independence uses only the data to determine the expected counts. For any given cell, if $R$ is the row total, $C$ is the column total, and $n$ is the grand total (the sample size), the expected count in any cell is simply
+
+$$
+E = \frac{R C}{n}.
+$$
+
+This is equivalent to the explanation in the previous paragraph. Using low birth weight babies among white mothers as an example, $R/n$ is $59/189$ which is 0.31217. Then we multiply this by the column total $C = 96$ to get
+
+$$
+\left(\frac{R}{n}\right) C = \frac{R C}{n} = \frac{59 \times 96}{189} =  29.96825.
+$$
+
+Everything else works almost the same as it did for a chi-square goodness-of-fit test. We still compute $\chi^{2}$ by adding up deviations across all cells:
+
+$$
+\chi^{2} = \sum \frac{(O - E)^{2}}{E}.
+$$
+
+Even under the assumption of the null, there will still be some sampling variability. Like any hypothesis test, our job is to determine whether the deviations we see are possible due to pure chance alone. The random values of $\chi^{2}$ that result from sampling variability will follow a chi-square model. But how many degrees of freedom are there? This is a little different from the goodness-of-fit test. Instead of the number of cells minus one, we use the following formula:
+
+$$
+df = (\#rows - 1)(\#columns - 1).
+$$
+
+In our example we have 2 rows ("yes", "no") and 3 columns ("white", "black", "other"); therefore,
+
+$$
+df = (2 - 1)(3 - 1) = 1 \times 2 = 2
+$$
+
+and we have 2 degrees of freedom (even though there are 6 cells).
+
+Let's run through the rubric in its entirety.
+
+
+## Exploratory data analysis
+
+### Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.
+
+You should type `?birthwt` at the Console to read the help file. We don't have any information about how these mothers were selected. The "Source" at the end of the help file is a statistics textbook, so we'd have to track down that book to see where they got the data and if traced back to a primary source.
+
+```{r}
+birthwt
+```
+
+```{r}
+glimpse(birthwt)
+```
+
+### Prepare the data for analysis.
+
+```{r}
+# Although we've already done this above, 
+# we include it here again for completeness.
+birthwt2 <- birthwt %>%
+  mutate(low_fct = factor(low, levels = c(0, 1),
+                          labels = c("no", "yes")),
+         race_fct = factor(race, levels = c(1, 2, 3),
+                           labels = c("white", "black", "other")))
+birthwt2
+```
+
+### Make tables or plots to explore the data visually.
+
+```{r}
+tabyl(birthwt2, low_fct, race_fct) %>%
+    adorn_totals()
+```
+
+
+```{r}
+tabyl(birthwt2, low_fct, race_fct) %>%
+    adorn_totals() %>%
+    adorn_percentages("col") %>%
+    adorn_pct_formatting()
+```
+
+Commentary: Earlier we used row and column total to explain how expected cell counts arise. Here, however, we will revert back to our previous standard practice of generating one contingency table with counts and another with column percentages.
+
+
+## Hypotheses
+
+### Identify the sample (or samples) and a reasonable population (or populations) of interest.
+
+The sample consists of 189 mothers who gave birth at the Baystate Medical Center in Springfield, Massachusetts in 1986. The population is presumably all mothers, although it's safest to conclude only about mothers who gave birth at this hospital.
+
+### Express the null and alternative hypotheses as contextually meaningful full sentences.
+
+$H_{0}:$ Low birth weight and race are independent.
+
+$H_{A}:$ Low birth weight and race are associated.
+
+### Express the null and alternative hypotheses in symbols (when possible).
+
+For a chi-square test for independence, this section is not applicable. With multiple categories in the response and predictor variables, there are no specific parameters of interest to express symbolically.
+
+
+## Model
+
+### Identify the sampling distribution model.
+
+We will use a chi-square model with 2 degrees of freedom.
+
+### Check the relevant conditions to ensure that model assumptions are met.
+
+* Random
+    - We hope that these 189 women are representative of all women who gave birth in this hospital (or, at best, in that region) around that time.
+    
+* 10%
+    - We don't know how many women gave birth at this hospital, but perhaps over many years we might have more than 1890 women.
+
+* Expected cell counts
+    - You checked the cell counts as a part of Exercise 1. Note that all expected cell counts are larger than 5, so the condition is met.
+
+
+## Mechanics
+
+### Compute the test statistic.
+
+```{r}
+obs_chisq <- birthwt2 %>%
+  specify(response = low_fct, explanatory = race_fct) %>%
+  hypothesize(null = "independence") %>%
+  calculate(stat = "chisq")
+obs_chisq
+```
+
+### Report the test statistic in context (when possible).
+
+The value of $\chi^{2}$ is `r obs_chisq %>% pull(1)`.
+
+Commentary: As in the last chapter, there's not much context to report with a value of $\chi^{2}$, so the most we can do here is just report it in a full sentence.
+
+### Plot the null distribution.
+
+```{r}
+low_race_test <- birthwt2 %>%
+  specify(response = low_fct, explanatory = race_fct) %>%
+  assume(distribution = "chisq")
+low_race_test
+```
+
+```{r}
+low_race_test %>%
+  visualize() +
+  shade_p_value(obs_chisq, direction = "greater")
+```
+
+### Calculate the P-value.
+
+```{r}
+low_race_test_p <- low_race_test %>%
+  get_p_value(obs_chisq, direction = "greater")
+low_race_test_p
+```
+
+### Interpret the P-value as a probability given the null.
+
+The P-value is `r low_race_test_p %>% pull(1)`. If low birth weight and race were independent, there would be a `r 100 * low_race_test_p %>% pull(1)`% chance of seeing results at least as extreme as we saw in the data.
+
+
+## Conclusion
+
+### State the statistical conclusion.
+
+We fail to reject the null hypothesis.
+
+### State (but do not overstate) a contextually meaningful conclusion.
+
+There is insufficient evidence that low birth weight and race are associated.
+
+### Express reservations or uncertainty about the generalizability of the conclusion.
+
+Given our uncertainly about how the data was collected, it's not clear what our conclusion means. Also, failing to reject the null is really a "non-conclusion" in that it leaves us basically knowing nothing. We don't have evidence of such an association (and there are good reasons to believe there may not be one), but failing to reject the null does not prove anything.
+
+### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+
+It's possible that we have made a Type II error. It may be that low birth weight and race are associated, but our sample has not given enough evidence of such an association.
+
+
+## Confidence interval
+
+There are no parameters of interest in a chi-square test, so there is no confidence interval to report.
+
+
+## Your turn
+
+Use the `smoking` data set from the `openintro` package. Run a chi-square test for independence to determine if smoking status is associated with marital status.
+
+The rubric outline is reproduced below. You may refer to the worked example above and modify it accordingly. Remember to strip out all the commentary. That is just exposition for your benefit in understanding the steps, but is not meant to form part of the formal inference process.
+
+Another word of warning: the copy/paste process is not a substitute for your brain. You will often need to modify more than just the names of the data frames and variables to adapt the worked examples to your own work. Do not blindly copy and paste code without understanding what it does. And you should **never** copy and paste text. All the sentences and paragraphs you write are expressions of your own analysis. They must reflect your own understanding of the inferential process.
+
+**Also, so that your answers here don't mess up the code chunks above, use new variable names everywhere.**
+
+##### Exploratory data analysis
+
+###### Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.
+
+::: {.answer}
+
+Please write up your answer here
+
+```{r}
+# Add code here to print the data
+```
+
+```{r}
+# Add code here to glimpse the variables
+```
+
+:::
+
+###### Prepare the data for analysis. [Not always necessary.]
+
+::: {.answer}
+
+```{r}
+# Add code here to prepare the data for analysis.
+```
+
+:::
+
+###### Make tables or plots to explore the data visually.
+
+::: {.answer}
+
+```{r}
+# Add code here to make tables or plots.
+```
+
+:::
+
+
+##### Hypotheses
+
+###### Identify the sample (or samples) and a reasonable population (or populations) of interest.
+
+::: {.answer}
+
+Please write up your answer here.
+
+:::
+
+###### Express the null and alternative hypotheses as contextually meaningful full sentences.
+
+::: {.answer}
+
+$H_{0}:$ Null hypothesis goes here.
+
+$H_{A}:$ Alternative hypothesis goes here.
+
+:::
+
+###### Express the null and alternative hypotheses in symbols (when possible).
+
+::: {.answer}
+
+$H_{0}: math$
+
+$H_{A}: math$
+
+:::
+
+
+##### Model
+
+###### Identify the sampling distribution model.
+
+::: {.answer}
+
+Please write up your answer here.
+
+:::
+
+###### Check the relevant conditions to ensure that model assumptions are met.
+
+::: {.answer}
+
+Please write up your answer here. (Some conditions may require R code as well.)
+
+:::
+
+
+##### Mechanics
+
+###### Compute the test statistic.
+
+::: {.answer}
+
+```{r}
+# Add code here to compute the test statistic.
+```
+
+:::
+
+###### Report the test statistic in context (when possible).
+
+::: {.answer}
+
+Please write up your answer here.
+
+:::
+
+###### Plot the null distribution.
+
+::: {.answer}
+
+```{r}
+# Add code here to plot the null distribution.
+```
+
+:::
+
+###### Calculate the P-value.
+
+::: {.answer}
+
+```{r}
+# Add code here to calculate the P-value.
+```
+
+:::
+
+###### Interpret the P-value as a probability given the null.
+
+::: {.answer}
+
+Please write up your answer here.
+
+:::
+
+
+##### Conclusion
+
+###### State the statistical conclusion.
+
+::: {.answer}
+
+Please write up your answer here.
+
+:::
+
+###### State (but do not overstate) a contextually meaningful conclusion.
+
+::: {.answer}
+
+Please write up your answer here.
+
+:::
+
+###### Express reservations or uncertainty about the generalizability of the conclusion.
+
+::: {.answer}
+
+Please write up your answer here.
+
+:::
+
+###### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
+
+::: {.answer}
+
+Please write up your answer here.
+
+:::
+
+
+## Conclusion
+
+With two categorical variables, we can run a chi-square test for independence to test the null hypothesis that the two variables are independent. While technically we can run this test for any two categorical variables, if both variables have only two levels, we would usually choose to run a test for two proportions. The chi-square test for independence is useful when one or both of the response and predictor variables have three or more levels. The expected cell counts are derived from the data and then the chi-squared statistic is computed as usual. Using the correct degrees of freedom, we can test how much the observed cell counts deviate from the expected cell counts and derive a P-value.
+
+
+### Preparing and submitting your assignment
+
+1. From the "Run" menu, select "Restart R and Run All Chunks".
+2. Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.
+3. Spell check your document by clicking the icon with "ABC" and a check mark.
+4. Hit the "Preview" button one last time to generate the final draft of the `.nb.html` file.
+5. Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
+
+If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
+
+
