@@ -1,5 +1,5 @@
 ---
-title: "20. ANOVA"
+title: "22. ANOVA"
 author: "Put your name here"
 date: "Put the date here"
 output:
@@ -9,97 +9,166 @@ output:
 ---
 
 <!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(49,46,53))`</p>
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(50,46,48))`</p>
 <!-- Please don't mess with the previous few lines! -->
 
-<div class = "summary">
-### Functions introduced in this module:
-`aov`, `TukeyHSD`
-</div>
+
+::: {.summary}
+
+### Functions introduced in this chapter:
+
+No new R functions are introduced here.
+
+:::
 
 
 ## Introduction
 
-ANOVA stands for "Analysis of Variance". In this module, we will study the most basic form of ANOVA, called "one-way ANOVA". We've already considered the one-sample and two-sample t tests for means. ANOVA is what you do when you want to compare means for three or more groups.
+ANOVA stands for "Analysis of Variance". In this chapter, we will study the most basic form of ANOVA, called "one-way ANOVA". We've already considered the one-sample and two-sample t tests for means. ANOVA is what you do when you want to compare means for three or more groups.
+
+### Install new packages
+
+If you are using R and RStudio on your own machine instead of accessing RStudio Workbench through a browser, you'll need to type the following command at the Console:
+
+```
+install.packages("quantreg")
+```
+
+### Download the R notebook file
+
+Check the upper-right corner in RStudio to make sure you're in your `intro_stats` project. Then click on the following link to download this chapter as an R notebook file (`.Rmd`).
+
+<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/22-anova.Rmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/22-anova.Rmd</a>
+
+Once the file is downloaded, move it to your project folder in RStudio and open it there.
+
+### Restart R and run all chunks
+
+In RStudio, select "Restart R and Run All Chunks" from the "Run" menu.
 
 
 ## Load packages
 
-We load the standard `mosaic` package and the `quantreg` package for the `uis` data. The `broom` package gives us tidy output.
+We load the standard `tidyverse`, `janitor`, and `infer` packages. The `quantreg` package contains the `uis` data (which must be explicitly loaded using the `data` command) and the `palmerpenguins` package for the `penguins` data.
 
-```{r, warning = FALSE, message = FALSE}
+```{r}
+library(tidyverse)
+library(janitor)
+library(infer)
 library(quantreg)
 data(uis)
-library(broom)
-library(mosaic)
+library(palmerpenguins)
 ```
 
 
 ## Research question
 
-The `uis` dataset from the `quantreg` package contains data from the UIS Drug Treatment Study. Is a history of IV drug use associated with depression?
+The `uis` data set from the `quantreg` package contains data from the UIS Drug Treatment Study. Is a history of IV drug use associated with depression?
+
+##### Exercise 1
+
+The help file for the `uis` data is particularly uninformative. The source, like so many we see in R packages, is a statistics textbook. If you happen to have access to a copy of the textbook, it's pretty easy to look it up and see what the authors say about it. But it's not likely you have such access.
+
+See if you can find out more about where the data came from. This is tricky and you're going have to dig deep.
+
+Hint #1: Your first hits will be from the University of Illinois-Springfield. That is not the correct source.
+
+Hint #2: You may have more success finding sources that quote from the textbook and mention more detail about the data as it's explained in the textbook. In fact, you might even stumble across actual pages from the textbook with the direct explanation, but that is much harder. **You should not try to find and download PDF files of the book itself. Not only is that illegal, but it might also come along with nasty computer viruses.**
+
+::: {.answer}
+
+Please write up your answer here.
+
+:::
 
 
 ## Data preparation and exploration
 
-Let's look at the UIS data structure:
+Let's look at the UIS data:
 
 ```{r}
-str(uis)
+uis
 ```
 
-To talk about the ANOVA procedure, we'll use the `BECK` and `IV` variables. We need to convert `IV` to a factor variable first (using the help file for guidance). Then we'll put both variables into a new data frame for convenience.
+```{r}
+glimpse(uis)
+```
+
+To talk about the ANOVA procedure, we'll use the `BECK` and `IV` variables. We need to convert `IV` to a factor variable first (using the help file for guidance). We'll add it to a new tibble called `uis2`.
 
 ```{r}
-IV <- factor(uis$IV, levels = c(1, 2, 3),
-             labels = c("Never", "Previous", "Recent"))
-BECK_IV <- data.frame(BECK = uis$BECK, IV)
-BECK_IV
+uis2 <- uis %>%
+  mutate(IV_fct = factor(IV, levels = c(1, 2, 3),
+                         labels = c("Never", "Previous", "Recent")))
+uis2
+```
+
+```{r}
+glimpse(uis2)
 ```
 
 Let's look at the three groups in our data defined by the `IV` variable. These are people who have never used IV drugs, those who have previously used IV drugs, and those who have recently used IV drugs. The following table shows how many people are in each group.
 
 ```{r}
-tally(~ IV, data = BECK_IV)
+tabyl(uis2, IV_fct) %>%
+  adorn_totals()
 ```
 
 We're interested in depression as measured by the Beck Depression Inventory.
 
-##### Exercise 1
+##### Exercise 2
 
-Google the Beck Depression Inventory. Write a short paragraph about it and how it purports to measure depression.
+Search the internet for the Beck Depression Inventory. (This search is much easier than for Exercise 1.) Write a short paragraph about it and how it purports to measure depression.
 
-<div class = "answer">
+::: {.answer}
 
 Please write up your answer here.
 
-</div>
+:::
 
 *****
+
 
 A useful graph is a side-by-side boxplot.
 
 ```{r}
-ggplot(BECK_IV, aes(y = BECK, x = IV)) +
+ggplot(uis2, aes(y = BECK, x = IV_fct)) +
     geom_boxplot()
 ```
 
 This boxplot shows that the distribution of depression scores is similar across the groups. There are some small differences, but it's not clear if these differences are statistically significant.
 
-The mean Beck score is calculated with the `mean` command. If we don't use the tilde, we'll just get one overall mean for the whole sample, often called the "grand mean":
+We can get the overall mean of all Beck scores, sometimes called the "grand mean".
 
 ```{r}
-mean(BECK_IV$BECK)
+uis2 %>%
+  summarize(mean(BECK))
 ```
 
-But if we use the tilde, we can separate this out by `IV` group:
+If we use `group_by`, we can separate this out by `IV` group:
 
 ```{r}
-mean(BECK ~ IV, data = BECK_IV)
+uis2 %>%
+    group_by(IV_fct) %>%
+    summarize(mean(BECK))
 ```
+
+##### Exericse 3
+
+We have to be careful about the term "grand mean". In some contexts, the term "grand mean" refers to the mean of all scores in the response variable (17.36743 above). In other cases, the term refers to the mean of the three group means (the mean of 15.94996, 16.64201, and 18.99363).
+
+First calculate the mean of the three group means above. (You can use R to do this if you want, or you can just use a calculator.) Explain mathematically why the overall mean 17.36743 is not the same as the mean of the three group means. What would have to be true of the sample for the overall mean to agree with the mean of the three group means? (Hint: think about the size of each of the three groups.)
+
+::: {.answer}
+
+Please write up your answer here.
+
+:::
 
 
 ## The F distribution
+
+To keep the exposition simple here, we'll assume that the term "grand mean" refers to the overall mean of the response variable, 17.36743.
 
 When assessing the differences among groups, there are two numbers that are important.
 
@@ -109,9 +178,30 @@ The second number of interest is the "mean square error" (MSE). It is a measure 
 
 All that is somewhat technical and complicated. We'll leave it to the computer. The key insight comes from considering the ratio of $MSG$ and $MSE$. We will call this quantity F:
 
-$$F = \frac{MSG}{MSE}.$$
+$$
+F = \frac{MSG}{MSE}.
+$$
 
 What can be said about this magical F? Under the assumption of the null hypothesis, we expect some variability among the groups, and we expect some variability within each group as well, but these two sources of variability should be about the same. In other words, $MSG$ should be roughly equal to $MSE$. Therefore, F ought to be close to 1.
+
+We can simulate this using the `infer` package. Suppose that there were no difference in the mean BECK scores among the three groups. We can accomplish this by shuffling the IV labels, an idea we've seen several times before in this book. Permuting the IV values breaks any association that might have existed in the original data.
+
+```{r}
+set.seed(420)
+BECK_IV_test_sim <- uis2 %>%
+  specify(response = BECK, explanatory = IV_fct) %>%
+  hypothesize(null = "independence") %>%
+  generate(reps = 1000, type = "permute") %>%
+  calculate(stat = "F")
+BECK_IV_test_sim
+```
+
+```{r}
+BECK_IV_test_sim %>%
+  visualize()
+```
+
+As explained earlier, the F scores are clustered around 1. They can never be smaller than zero. (The bar at zero is centered on zero, but no F score can be less than zero.) There are occasional F scores much larger than 1, but just by chance.
 
 It's not particularly interesting if F is less than one. That just means that the variability between groups is small and the variability of the data within each group is large. That doesn't allow us to conclude that there is a difference among groups. However, if F is really large, that means that there is much more variability between the groups than there is within each group. Therefore, the groups are far apart and there is evidence of a difference among groups.
 
@@ -125,18 +215,50 @@ For example, here is picture of a few different F models.
 # Don't worry about the syntax here.
 # You won't need to know how to do this on your own.
 ggplot(data.frame(x = c(0, 5)), aes(x)) +
-    stat_function(fun = df, args = list(df1 = 1, df2 = 1),
-                  aes(color = "1, 1")) +
-    stat_function(fun = df, args = list(df1 = 5, df2 = 2),
-                  aes(color = "5, 2" )) +
-    stat_function(fun = df, args = list(df1 = 50, df2 = 50),
-                  aes(color = "50, 50")) +
+    stat_function(fun = df, args = list(df1 = 2, df2 = 5),
+                  aes(color = "2, 5")) +
+    stat_function(fun = df, args = list(df1 = 2, df2 = 50),
+                  aes(color = "2, 50" )) +
+    stat_function(fun = df, args = list(df1 = 10, df2 = 50),
+                  aes(color = "10, 50")) +
     scale_color_manual(name = expression(paste(df[G], ", ", df[E])),
-                       values = c("1, 1" = "red",
-                                  "5, 2" = "blue",
-                                  "50, 50" = "green"),
-                       breaks =  c("1, 1", "5, 2", "50, 50"))
+                       values = c("2, 5" = "red",
+                                  "2, 50" = "blue",
+                                  "10, 50" = "green"),
+                       breaks =  c("2, 5", "2, 50", "10, 50"))
 ```
+
+Here is the theoretical F distribution for our data:
+
+```{r}
+BECK_IV_test <- uis2 %>%
+  specify(response = BECK, explanatory = IV_fct) %>%
+  hypothesize(null = "independence") %>%
+  assume(distribution = "F")
+BECK_IV_test
+```
+
+##### Exercise 4
+
+Explain why there are 2 and 572 degrees of freedom. Which one is $df_{G}$ and which one is $df_{E}$?
+
+::: {.answer}
+
+Please write up your answer here.
+
+:::
+
+*****
+
+
+Here are the simulated values again, but with the theoretical F distribution superimposed for comparison.
+
+```{r}
+BECK_IV_test_sim %>%
+  visualize(method = "both")
+```
+
+Other than the very left edge, the theoretical curve is a good fit to the simulated F scores.
 
 
 ## Assumptions
@@ -148,56 +270,66 @@ Let's go through the rubric with commentary.
 
 ## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
+### Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.
 
-[You should type `?uis` at the Console to read the help file. You have already googled the Beck Depression Score.]
+You should have researched this extensively in a previous exercise.
 
 ```{r}
 uis
 ```
 
 ```{r}
-str(uis)
-```
-
-We can also use `favstats` to explore the `BECK` variable grouped by `IV`.
-
-```{r}
-favstats(BECK ~ IV, data = uis)
+glimpse(uis)
 ```
 
 ### Prepare the data for analysis. [Not always necessary.]
 
-We need `IV` to be a factor variable. We put `BECK` and `IV` into a separate data frame.
+We need `IV` to be a factor variable.
 
 ```{r}
 # Although we've already done this above, 
 # we include it here again for completeness.
-IV <- factor(uis$IV, levels = c(1, 2, 3),
-             labels = c("Never", "Previous", "Recent"))
-BECK_IV <- data.frame(BECK = uis$BECK, IV)
-BECK_IV
+uis2 <- uis %>%
+  mutate(IV_fct = factor(IV, levels = c(1, 2, 3),
+                         labels = c("Never", "Previous", "Recent")))
+uis2
+```
+
+```{r}
+glimpse(uis2)
 ```
 
 ### Make tables or plots to explore the data visually.
 
-The following table shows how many people are in each group.
+We should calculate group statistics:
 
 ```{r}
-tally(~ IV, data = BECK_IV)
+tabyl(uis2, IV_fct) %>%
+  adorn_totals()
+```
+
+```{r}
+uis2 %>%
+  summarise(mean(BECK))
+```
+
+```{r}
+uis2 %>%
+  group_by(IV_fct) %>%
+  summarise(mean(BECK))
 ```
 
 Here are two graphs that are appropriate for one categorical and one numerical variable: a side-by-side boxplot and a stacked histogram.
 
 ```{r}
-ggplot(BECK_IV, aes(y = BECK, x = IV)) +
+ggplot(uis2, aes(y = BECK, x = IV_fct)) +
     geom_boxplot()
 ```
 
 ```{r}
-ggplot(BECK_IV, aes(x = BECK)) +
+ggplot(uis2, aes(x = BECK)) +
     geom_histogram(binwidth = 5, boundary = 0) +
-    facet_grid(IV ~ .)
+    facet_grid(IV_fct ~ .)
 ```
 
 Both graphs show that the distribution of depression scores in each group is similar.
@@ -205,26 +337,20 @@ Both graphs show that the distribution of depression scores in each group is sim
 The distributions look reasonably normal, or perhaps a bit right skewed, but we can also check the QQ plots:
 
 ```{r}
-ggplot(BECK_IV, aes(sample = BECK)) +
+ggplot(uis2, aes(sample = BECK)) +
     geom_qq()  +
     geom_qq_line() +
-    facet_grid(IV ~ .)
+    facet_grid(IV_fct ~ .)
 ```
 
-There is one outlier in the "Previous" group, but with sample sizes as large as we have in each group, it's unlikely that this outlier will be influential. So we'll just leave it in the data and not worry about it.
-
-Here are the group means:
-
-```{r}
-mean(BECK ~ IV, data = BECK_IV)
-```
+There is one mild outlier in the "Previous" group, but with sample sizes as large as we have in each group, it's unlikely that this outlier will be influential. So we'll just leave it in the data and not worry about it.
 
 
 ## Hypotheses
 
 ### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
-The sample consists of people who participated in the UIS drug treatment study. Because the UIS studied the effects of residential treatment for drug abuse, the population is, presumably, all drug addicts. (Having said that, the help file is not particularly helpful for figuring out who was in this study.)
+The sample consists of people who participated in the UIS drug treatment study. Because the UIS studied the effects of residential treatment for drug abuse, the population is, presumably, all drug addicts.
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
@@ -249,19 +375,23 @@ We will use an F model with $df_{G} = 2$ and $df_{E} = 572$.
 
 Commentary: Remember that
 
-$$df_{G} = k - 1 = 3 - 1 = 2,$$
+$$
+df_{G} = k - 1 = 3 - 1 = 2,
+$$
 
 ($k$ is the number of groups, in this case, 3), and
 
-$$df_{E} = n - k = 575 - 3 = 572.$$
+$$
+df_{E} = n - k = 575 - 3 = 572.
+$$
 
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 * Random
-    - We have no information about how this sample was collected, so we have to hope it's representative.
+    - We have little information about how this sample was collected, so we have to hope it's representative.
 
 * 10%
-    - `r NROW(uis)` is definitely less than 10% of all drug addicts.
+    - `r NROW(uis2)` is definitely less than 10% of all drug addicts.
 
 * Nearly normal
     - The earlier stacked histograms and QQ plots showed that each group is nearly normal. (There was one outlier in one group, but our sample sizes are quite large.)
@@ -275,84 +405,47 @@ $$df_{E} = n - k = 575 - 3 = 572.$$
 ### Compute the test statistic.
 
 ```{r}
-BECK_test <- aov(BECK ~ IV, data = BECK_IV)
-BECK_test_tidy <- tidy(BECK_test)
-BECK_test_tidy
-```
-
-```{r}
-F1 <- BECK_test_tidy$statistic[1]
-F1
-```
-
-Commentary: ANOVA is run with the `aov` command and the tilde notation. (`BECK ~ IV` means, "Calculate the means of BECK grouped by IV.")
-
-This is the first example we've seen where the tidy output of a hypothesis test has had more than one row. The table of values here is called an ANOVA table. Although it looks foreign, you actually know what almost all of these numbers mean, although by different names.
-
-The first row contains everything related to the groups (as indicated by the `IV` term). The 2 degrees of freedom listed here are what we were calling $df_{G}$. The next number, `sumsq`, or the "sum of squares", is just adding up all the squared differences between the group means and the grand mean, weighted by the size of each group. You can easily see that this sum (1148.039) divided by the degrees of freedom (2) gives you `meansq` (574.01934) which we were calling $MSG$.
-
-The second row says `Residuals`, which is just a technical term for the distances between the data points and their group means. We have seen the number 572 before; this is $df_{E}$. The sum of squares is now measuring the squared distance from each data value to its group mean, the same idea as above but for data points instead of whole groups. Again, check for yourself that `sumsq` (48849.766) divided by the degrees of freedom (572) gives you `meansq` (85.40169), which is just $MSE$.
-
-Moving to the right in the table, what is the `statistic`? This is the value of F. Recall that
-
-$$F = \frac{MSG}{MSE}.$$
-
-Check for yourself: 
-
-```{r}
-574.01934/85.40169
-```
-
-If we need to isolate this number, it no longer works simply to type `BECK_test_tidy$statistic`:
-
-```{r}
-BECK_test_tidy$statistic
-```
-
-There are two entries here because the tidy output has two rows, but there is only one F score. (`NA` is the R code for a missing value.) We can grab the first entry like this:
-
-```{r}
-BECK_test_tidy$statistic[1]
+BECK_IV_F <- uis2 %>% 
+  specify(response = BECK, explanatory = IV_fct) %>%
+  calculate(stat = "F")
+BECK_IV_F
 ```
 
 ### Report the test statistic in context (when possible).
 
-The F score is `r F1`.
+The F score is `r BECK_IV_F %>% pull(1)`.
 
 Commentary: F scores (much like chi-square values earlier in the course) are not particularly interpretable on their own, so there isn't really any context we can provide. It's only required that you report the F score in a full sentence.
 
 ### Plot the null distribution.
 
 ```{r}
-pdist("f", df1 = BECK_test_tidy$df[1], df2 = BECK_test_tidy$df[2],
-      q = BECK_test_tidy$statistic[1],
-      invisible = TRUE)
+BECK_IV_test <- uis2 %>%
+  specify(response = BECK, explanatory = IV_fct) %>%
+  hypothesize(null = "independence") %>%
+  assume(distribution = "F")
+BECK_IV_test
 ```
 
-Commentary: As the F distribution has two parameters corresponding to $df_{G}$ and $df_{E}$, we have to feed both of them into the `pdist` command. The `pdist` uses `df1` to refer to $df_{G}$ and `df2` to refer to $df_{E}$.  As before, the tidy output has two numbers in the $df$ column, so we have to use `[1]` and `[2]` to grab them.
+```{r}
+BECK_IV_test %>%
+  visualize() +
+  shade_p_value(obs_stat = BECK_IV_F, direction = "greater")
+```
 
 ### Calculate the P-value.
 
 ```{r}
-P1 <- BECK_test_tidy$p.value[1]
-P1
+BECK_IV_P <- BECK_IV_test %>%
+  get_p_value(obs_stat = BECK_IV_F, direction = "greater")
+BECK_IV_P
 ```
 
-Commentary: The issue here is the same as in the last step. The P-value is located in the first entry of `BECK_test_tidy$p.value`, so we need to append `[1]` to the variable to grab only the first value listed.
-
-Note that this is, by definition, a one-sided test. Extreme values of F are the ones that are far away from 1, and only those values in the right tail are far from 1.
-
-We obtain the same answer directly from the F distribution using `pdist`.
-
-```{r}
-1 - pdist("f", df1 = BECK_test_tidy$df[1], df2 = BECK_test_tidy$df[2],
-      q = BECK_test_tidy$statistic[1],
-      plot = FALSE)
-```
+Commentary: Note that this is, by definition, a one-sided test. Extreme values of F are the ones that are far away from 1, and only those values in the right tail are far from 1.
 
 ### Interpret the P-value as a probability given the null.
 
-The P-value is `r P1`. If there were no differences in depression scores among the three IV groups, there would be a `r 100 * P1`% chance of seeing data at least as extreme as the data we saw.
+The P-value is `r BECK_IV_P %>% pull(1)`. If there were no differences in depression scores among the three IV groups, there would be a `r 100 * BECK_IV_P %>% pull(1)`% chance of seeing data at least as extreme as the data we saw.
 
 
 ## Conclusion
@@ -365,69 +458,43 @@ We reject the null hypothesis.
 
 There is sufficient evidence that there is a difference in depression levels among those who have no history of IV drug use, those who have some previous IV drug use, and those who have recent IV drug use.
 
+### Express reservations or uncertainty about the generalizability of the conclusion.
+
+Our lack of uncertainty about the sample means we don't know for sure if we can generalize to a larger population of drug users. We hope that the researchers would obtain a representative sample. Also, the study in question is from the 1990s, so we should not suppose that the conclusions are still true today.
+
 ### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
 If we've made a Type I error, that means that there really isn't a difference among the three groups, but our sample is an unusual one that did detect a difference.
 
-*****
-
-##### Exercise 2(a)
+##### Exercise 5(a)
 
 Everything we saw earlier in the exploratory data analysis pointed toward failing to reject the null. All three groups look very similar in all the plots, and the means are not all that far from each other. So why did we get such a tiny P-value and reject the null? In other words, what is it about our data that allows for small effects to be statistically significant?
 
-<div class = "answer">
+::: {.answer}
 
 Please write up your answer here.
 
-</div>
+:::
 
-##### Exercise 2(b)
+##### Exercise 5(b)
 
 If you were a psychologist working with drug addicts, would the statistical conclusion (rejecting the null and concluding that there was a difference among groups) be of clinical importance to you? In other words, if there is a difference, is it of practical significance and not just statistical significance?
 
-<div class = "answer">
+::: {.answer}
 
 Please write up your answer here.
 
-</div>
+:::
 
 *****
 
-There is not really a confidence interval for ANOVA. We are not hypothesizing about the value of any particular parameter, so there's nothing to estimate with a confidence interval. However, there is something of interest to estimate. That leads us to the...
 
-
-## Post hoc analysis
-
-If it has been determined that there is a difference among groups, it's natural to ask which group or groups are most different from the others. For example, we could have ten groups, nine that are identical, and one that is radically different. Rejecting the null means we have evidence of a difference overall, but it doesn't specify where the difference lies. Wouldn't it be nice to know which group or groups were different enough to trigger a statistically significant result?
-
-One easy way to do this is to compute Tukey Honest Significant Differences with the `TukeyHSD` command.^[John Tukey was a famous statistician, not to be confused with John Turkey, the Thanksgiving cousin of David S. Pumpkins.]
-
-The `TukeyHSD` command doesn't like the tidy output; it wants the raw output from the `aov` command, stored in `BECK_test`. So let's give Tukey what he wants. We don't want to make Tukey angry.
-
-```{r}
-TukeyHSD(BECK_test)
-```
-
-This command computes "pairwise differences" which means that it compares every possible pair of groups. For example, the first row indicates that the difference in means between the "Previous" group and the "Never" group is 0.692054. That number is somewhat meaningless by itself, though. Following it is a confidence interval for the "true" difference in means between the "Previous" and "Never" groups. Since this interval contains zero, we don't have any evidence of a difference between "Previous" and "Never". This is also reflected in a large P-value on the right side of the table.
-
-Contrast the first row to the second row of the table, the difference between "Recent" and "Never". Here the difference between the means, 3.043674, is much larger. Furthermore, the confidence interval completely misses zero and the P-value is very small. There is a significant difference between the "Recent" and "Never" groups. (As referenced in an exercise above, though, don't confuse statistical significance for practical significance or clinical significance.)
-
-The last row shows a difference that is also a bit on the larger side, but the interval does contain zero and the P-value is not quite small enough by the traditional $\alpha = 0.05$ standard.
-
-So it seems that it's the "Recent" group that is somewhat different from the other two.
-
-All that's really happening here is that the `TukeyHSD` command is running two-sample t tests between each pair of categories, coming up with both a confidence interval and a P-value.
-
-You may have wondered what `p adj` means. These are "adjusted" P-values. Why do they need to be adjusted? Well, if $\alpha = 0.05$, that means that we have a 5% chance of making a Type I error and saying something is significant even when it's not. This is a 1 in 20 chance. If we then run 20 t tests, chances are that one of them will come back "significant" even though it isn't. That's just how the laws of probability work.
-
-Now, of course, we're not running 20 tests here; we're running three. Nevertheless, every time we run an additional test on the same data, we increase the likelihood of a Type I error. One way to counteract that is to inflate the P-values a little so that only the really, really significant differences get flagged as significant. And even though it doesn't say it, the confidence intervals are widened a bit as well.
-
-I'm sweeping a lot of details under the rug. A more advanced statistics class will deal directly with this issue of "multiple comparisons" and how to adjust for them.
+There is no confidence interval for ANOVA. We are not hypothesizing about the value of any particular parameter, so there's nothing to estimate with a confidence interval. However, there is something of interest to estimate. That leads us to the...
 
 
 ## Your turn
 
-Use the same data. This time determine if depression is associated with heroine/cocaine use during the three months prior to admission. Run ANOVA according to the rubric and then perform a post hoc analysis using Tukey Honest Significant Differences.
+Using the `penguins` data, determine if there is a difference in the average body masses among the three species represented in the data (Adelie, Chinstrap, and Gentoo).
 
 The rubric outline is reproduced below. You may refer to the worked example above and modify it accordingly. Remember to strip out all the commentary. That is just exposition for your benefit in understanding the steps, but is not meant to form part of the formal inference process.
 
@@ -438,171 +505,194 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 
 ##### Exploratory data analysis
 
-###### Use data documentation (help files, code books, Google, etc.), the `str` command, and other summary functions to understand the data.
+###### Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.
 
-<div class = "answer">
+::: {.answer}
+
+Please write up your answer here
 
 ```{r}
-# Add code here to understand the data.
+# Add code here to print the data
 ```
 
-</div>
+```{r}
+# Add code here to glimpse the variables
+```
+
+:::
 
 ###### Prepare the data for analysis. [Not always necessary.]
 
-<div class = "answer">
+::: {.answer}
 
 ```{r}
 # Add code here to prepare the data for analysis.
 ```
 
-</div>
+:::
 
 ###### Make tables or plots to explore the data visually.
 
-<div class = "answer">
+::: {.answer}
 
 ```{r}
 # Add code here to make tables or plots.
 ```
 
-</div>
+:::
 
 
 ##### Hypotheses
 
 ###### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
-<div class = "answer">
+::: {.answer}
 
 Please write up your answer here.
 
-</div>
+:::
 
 ###### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
-<div class = "answer">
+::: {.answer}
 
 $H_{0}:$ Null hypothesis goes here.
 
 $H_{A}:$ Alternative hypothesis goes here.
 
-</div>
+:::
 
 ###### Express the null and alternative hypotheses in symbols (when possible).
 
-<div class = "answer">
+::: {.answer}
 
 $H_{0}: math$
 
 $H_{A}: math$
 
-</div>
+:::
 
 
 ##### Model
 
 ###### Identify the sampling distribution model.
 
-<div class = "answer">
+::: {.answer}
 
 Please write up your answer here.
 
-</div>
+:::
 
 ###### Check the relevant conditions to ensure that model assumptions are met.
 
-<div class = "answer">
+::: {.answer}
 
 Please write up your answer here. (Some conditions may require R code as well.)
 
-</div>
+:::
 
 
 ##### Mechanics
 
 ###### Compute the test statistic.
 
-<div class = "answer">
+::: {.answer}
 
 ```{r}
 # Add code here to compute the test statistic.
 ```
 
-</div>
+:::
 
 ###### Report the test statistic in context (when possible).
 
-<div class = "answer">
+::: {.answer}
 
 Please write up your answer here.
 
-</div>
+:::
 
 ###### Plot the null distribution.
 
-<div class = "answer">
+::: {.answer}
+
+```{r}
+# IF CONDUCTING A SIMULATION...
+set.seed(1)
+# Add code here to simulate the null distribution.
+```
 
 ```{r}
 # Add code here to plot the null distribution.
 ```
 
-</div>
+:::
 
 ###### Calculate the P-value.
 
-<div class = "answer">
+::: {.answer}
 
 ```{r}
 # Add code here to calculate the P-value.
 ```
 
-</div>
+:::
 
 ###### Interpret the P-value as a probability given the null.
 
-<div class = "answer">
+::: {.answer}
 
 Please write up your answer here.
 
-</div>
+:::
 
 
 ##### Conclusion
 
 ###### State the statistical conclusion.
 
-<div class = "answer">
+::: {.answer}
 
 Please write up your answer here.
 
-</div>
+:::
 
 ###### State (but do not overstate) a contextually meaningful conclusion.
 
-<div class = "answer">
+::: {.answer}
 
 Please write up your answer here.
 
-</div>
+:::
+
+###### Express reservations or uncertainty about the generalizability of the conclusion.
+
+::: {.answer}
+
+Please write up your answer here.
+
+:::
 
 ###### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
-<div class = "answer">
+::: {.answer}
 
 Please write up your answer here.
 
-</div>
+:::
 
 
-##### Post hoc analysis
+## Conclusion
 
-<div class = "answer">
+When analyzing a numerical response variable across three or more levels of a categorical predictor variable, ANOVA provides a way of comparing the variability of the response between the groups to the variability within the groups. When there is more variability between the groups than within the groups, this is evidence that the groups are truly different from one another (rather than simply arising from random sampling variability). The result of comparing the two sources of variability gives rise to the F distribution, which can be used to determine when the difference is more than one would expect from chance alone.
 
-```{r}
-# Add code here to compute Tukey Honest Significant Differences
-```
+### Preparing and submitting your assignment
 
-Please write up your answer here.
+1. From the "Run" menu, select "Restart R and Run All Chunks".
+2. Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.
+3. Spell check your document by clicking the icon with "ABC" and a check mark.
+4. Hit the "Preview" button one last time to generate the final draft of the `.nb.html` file.
+5. Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
 
-</div>
+If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
+
