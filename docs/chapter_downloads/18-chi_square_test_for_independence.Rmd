@@ -493,29 +493,36 @@ Please write up your answer here.
 
 Just like with the chi-square test for goodness of fit, rejecting the null hypothesis using the chi-square test for independence informs us that two variables are associated, but it doesn't tell us the useful information about which combinations of variables have higher and lower counts than expected. And just like the chi-square test for goodness of fit, we can examine the *residuals table* to find that information.
 
-**A word of caution**: You should only examine the residuals if your test was statistically significant! The residuals table for tests in which we fail to reject the null hypothesis can be misleading. For the sake of illustration, we'll proceed with examining the residuals here, even though we failed to reject the null hypothesis.
+**A word of caution**: You should only examine the residuals if your test was statistically significant! The residuals table for tests in which we fail to reject the null hypothesis can be misleading. 
 
-We'll return to the example of race and birth weight in the `birthwt` dataset to see how this process works. First we'll build a contingency table, and then we'll use the `chisq.test` command to produce the information we want.
+Because we failed to reject the null hypothesis in the `low_race_test`, it would be unwise for us to examine the residuals table in that test. Instead, we'll use a different example. 
+
+The `diabetes2` dataset in the `openintro` package contains information about an experiment evaluating three treatments for Type 2 diabetes in patients aged 10-17 who were being treated with metformin. The three treatments summarized in the `treatment` variable were: continued treatment with metformin (`met`), treatment with metformin combined with rosiglitazone (`rosi`), or a lifestyle intervention program (`lifestyle`). Each patient had a primary `outcome`, which was either "lacked glycemic control" (`failure`) or did not lack that control (`success`). Here is the summary of the results of the experiment:
 
 ```{r}
-tabyl(birthwt2, low_fct, race_fct) %>%
-  chisq.test() -> low_race_chisq.test
-low_race_chisq.test
+tabyl(diabetes2, treatment, outcome) 
 ```
 
-Notice again that the chi-squared value and p-value obtained this way are the same as the values we obtained through the `infer` tools. **Again, please notice that since the p-value was not significant, it is probably unwise to examine the residuals!**
-
-... But here's how you'd do it if the test was significant:
+For the sake of a streamlined presentation, we'll omit the usual details of condition-checking, hypothesis-writing, etc., and skip right to the conclusion.
 
 ```{r}
-low_race_chisq.test$residuals
+tabyl(diabetes2, treatment, outcome) %>%
+  chisq.test() -> outcome_treatment_chisq.test
+outcome_treatment_chisq.test
+```
+
+Notice that the p-value obtained from the test is below our usual significance level \(\alpha = 0.05\), so it makes sense for us to examine the residuals. 
+
+```{r}
+outcome_treatment_chisq.test$residuals
 ```
 
 Again, these values don't mean much in the real world; our job is to look at the most positive and most negative values.
-- Since the `white` and `yes` cell has the most negative value, the count of babies born with low birth weight to White mothers is the most *below* expected.
-- Since the `black` and `yes` cell has the most positive value, the count of babies born with low birth weight to Black mothers is the most *above* expected.
 
-Notice that none of the values in this particular residuals table is particularly far from zero. This often happens if you (unwisely!) examine a residuals table from a chi-squared test that does not yield a significant result.
+- Since the `rosi` and `failure` cell has the most negative value, the count of people who failed to achieve glycemic control with rosiglitazone is the most *below* expected. (That's a good result!)
+- Since the `rosi` and `success` cell has the most positive value, the count of people who succeeded in achieving glycemic control with rosiglitazone is the most *above* expected. (That's also a good result!)
+
+Overall, we can conclude that the rosiglitazone treatment was quite successful in helping people achieve their glycemic control goals.
 
 ### Your turn
 
