@@ -489,6 +489,50 @@ Please write up your answer here.
 
 :::
 
+## Bonus section: Residuals
+
+Just like with the chi-square test for goodness of fit, rejecting the null hypothesis using the chi-square test for independence informs us that two variables are associated, but it doesn't tell us the useful information about which combinations of variables have higher and lower counts than expected. And just like the chi-square test for goodness of fit, we can examine the *residuals table* to find that information.
+
+**A word of caution**: You should only examine the residuals if your test was statistically significant! The residuals table for tests in which we fail to reject the null hypothesis can be misleading. For the sake of illustration, we'll proceed with examining the residuals here, even though we failed to reject the null hypothesis.
+
+We'll return to the example of race and birth weight in the `birthwt` dataset to see how this process works. First we'll build a contingency table, and then we'll use the `chisq.test` command to produce the information we want.
+
+```{r}
+tabyl(birthwt2, low_fct, race_fct) %>%
+  chisq.test() -> low_race_chisq.test
+low_race_chisq.test
+```
+
+Notice again that the chi-squared value and p-value obtained this way are the same as the values we obtained through the `infer` tools. **Again, please notice that since the p-value was not significant, it is probably unwise to examine the residuals!**
+
+... But here's how you'd do it if the test was significant:
+
+```{r}
+low_race_chisq.test$residuals
+```
+
+Again, these values don't mean much in the real world; our job is to look at the most positive and most negative values.
+- Since the `white` and `yes` cell has the most negative value, the count of babies born with low birth weight to White mothers is the most *below* expected.
+- Since the `black` and `yes` cell has the most positive value, the count of babies born with low birth weight to Black mothers is the most *above* expected.
+
+Notice that none of the values in this particular residuals table is particularly far from zero. This often happens if you (unwisely!) examine a residuals table from a chi-squared test that does not yield a significant result.
+
+### Your turn
+
+Examine the residuals table to determine which marital statuses are most associated with smoking or not smoking.
+
+::: {.answer}
+
+```{r}
+# Add code here to produce the chisq.test result.
+
+# Add code here to examine the residuals table.
+
+```
+
+Please write your answer here.
+
+:::
 
 ## Conclusion
 
