@@ -690,6 +690,58 @@ Please write up your answer here.
 
 :::
 
+## Bonus section: post-hoc analysis
+
+Suppose our ANOVA test leads us to reject the null hypothesis. Then we have statistically significant evidence that there is some difference between the means of the various groups. However, ANOVA doesn't tell us which groups are actually different -- unsatisfying! 
+
+We could consider just doing a bunch of individual t-tests between each pair of groups. However, the problem with this approach is that it greatly increases the chances that we might commit a Type I error. (For an exploration of this problem, please see the following [XKCD comic](https://xkcd.com/882/).)
+
+Fortunately, there is a tool called *post-hoc analysis* that allows us to determine which groups differ from the others in a way that doesn't inflate the Type I error rate.
+
+There are several methods for conducting post-hoc analysis. You may have heard of the *Bonferroni correction*, in which the usual significance level is divided by the number of pairwise comparisons contemplated. Another method, and the one we'll explore here, is called the *Tukey Honestly-Significant-Difference test*. The precise details of this test are a little outside the scope of this course, but here's how it's done in R.
+
+We'll start by using a different function, called `aov`, to conduct the ANOVA test. This function produces a slightly different format of outputs than we're used to, but it produces all the same values as our other tools:
+
+```{r}
+BECK_IV_aov <- aov(BECK ~ IV_fct, uis2)
+summary(BECK_IV_aov)
+```
+
+Notice in particular that the F score and the P-value are the same as we obtained using `infer` tools above.
+
+Now that we have the result of the `aov` command stored in a new variable, we can feed it into the new command `TukeyHSD`:
+
+```{r}
+TukeyHSD(BECK_IV_aov)
+```
+
+Here's how to read these results: Start by looking at the `p adj` column, which tells us adjusted p-values. Look for a p-value that is below the usual significance level \(\alpha = 0.05\). In our example, the second p-value is the only one that is small enough to reach significance.
+
+Once you've located the significant p-values, read the row to determine which comparisons are significant. Here, the second row is the meaningful one: this is the comparison between the "Recent" group and the "Never" group.
+
+The column labeled `diff` reports the difference between the means of the two groups; the order of subtraction is reported in the first column. Here, the difference in Beck depression scores is 3.043674, which is computed by subtracting the mean of the "Never" group from the mean of the "Recent" group.
+
+As usual, we report our results in a contextually-meaningful sentence. Here's our example:
+
+> Tukey's HSD test reports that recent IV drug users have a Beck inventory score that is 3.043674 points higher than those who have never used IV drugs.
+
+### Your turn
+
+Conduct a post-hoc analysis to determine which penguin species is heavier or lighter than the others.
+
+```{r}
+# Add code here to produce the aov model
+
+# Add code here to run Tukey's HSD test on the aov model
+```
+
+Report your results in a contextually-meaningful sentence:
+
+::: {.answer}
+
+Please write your answer here.
+
+:::
 
 ## Conclusion
 

@@ -663,6 +663,50 @@ Please write up your answer here.
 
 :::
 
+## Bonus section: residuals
+
+The chi-square test can tell us if there is some difference from the expected distribution of counts across the categories, but it doesn't tell us which category has a higher or lower count than expected. For that, we'll need to turn to another tool: *residuals*. 
+
+For technical reasons, the `infer` package doesn't provide residuals, so we'll have to turn to slightly different tools. Here's how this works; we'll return to the example of distribution of cars across the different categories of number of cylinders.
+
+The function we'll use is called `chisq.test`. It requires us to give it input in the form of a table of counts, together with the proportions we wish to compare to:
+
+```{r}
+table(mtcars2$cyl_fct) %>%
+  chisq.test(p = c(.38, .38, .24)) -> cyl_chisq.test
+cyl_chisq.test
+```
+
+Notice that the chi-squared value 7.5011 and the p-value 0.0235 are the same as those we calculated using `infer` tools above.
+
+Here's how to obtain the table of residuals:
+
+```{r}
+cyl_chisq.test$residuals
+```
+
+What do these numbers mean in the real world? Not much. (Essentially, they are the values that were squared to become the individual cell contributions to the overall chi-squared score of the table.) 
+
+What we'll do with them is look for the most positive and most negative values. 
+- We see that the 8-cylinder column has the most positive value: this means that the number of 8-cylinder cars in 1974 was substantially *higher* than we expected.
+- We see that the 6-cylinder column has the most negative value: this means that the number of 6-cylinder cars in 1974 was substantially *lower* than we expected.
+
+### Your turn
+
+Determine which of the high school program types is the most substantially overrepresented and the most substantially underrepresented, according to our hypothesized distribution.
+
+::: {.answer}
+
+```{r}
+# Add code here to produce the chisq.test result.
+
+# Add code here to examine the residuals.
+
+```
+
+Please write your answer here.
+
+:::
 
 
 ## Conclusion

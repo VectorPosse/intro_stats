@@ -489,6 +489,57 @@ Please write up your answer here.
 
 :::
 
+## Bonus section: Residuals
+
+Just like with the chi-square test for goodness of fit, rejecting the null hypothesis using the chi-square test for independence informs us that two variables are associated, but it doesn't tell us the useful information about which combinations of variables have higher and lower counts than expected. And just like the chi-square test for goodness of fit, we can examine the *residuals table* to find that information.
+
+**A word of caution**: You should only examine the residuals if your test was statistically significant! The residuals table for tests in which we fail to reject the null hypothesis can be misleading. 
+
+Because we failed to reject the null hypothesis in the `low_race_test`, it would be unwise for us to examine the residuals table in that test. Instead, we'll use a different example. 
+
+The `diabetes2` dataset in the `openintro` package contains information about an experiment evaluating three treatments for Type 2 diabetes in patients aged 10-17 who were being treated with metformin. The three treatments summarized in the `treatment` variable were: continued treatment with metformin (`met`), treatment with metformin combined with rosiglitazone (`rosi`), or a lifestyle intervention program (`lifestyle`). Each patient had a primary `outcome`, which was either "lacked glycemic control" (`failure`) or did not lack that control (`success`). Here is the summary of the results of the experiment:
+
+```{r}
+tabyl(diabetes2, treatment, outcome) 
+```
+
+For the sake of a streamlined presentation, we'll omit the usual details of condition-checking, hypothesis-writing, etc., and skip right to the conclusion.
+
+```{r}
+tabyl(diabetes2, treatment, outcome) %>%
+  chisq.test() -> outcome_treatment_chisq.test
+outcome_treatment_chisq.test
+```
+
+Notice that the p-value obtained from the test is below our usual significance level \(\alpha = 0.05\), so it makes sense for us to examine the residuals. 
+
+```{r}
+outcome_treatment_chisq.test$residuals
+```
+
+Again, these values don't mean much in the real world; our job is to look at the most positive and most negative values.
+
+- Since the `rosi` and `failure` cell has the most negative value, the count of people who failed to achieve glycemic control with rosiglitazone is the most *below* expected. (That's a good result!)
+- Since the `rosi` and `success` cell has the most positive value, the count of people who succeeded in achieving glycemic control with rosiglitazone is the most *above* expected. (That's also a good result!)
+
+Overall, we can conclude that the rosiglitazone treatment was quite successful in helping people achieve their glycemic control goals.
+
+### Your turn
+
+Examine the residuals table to determine which marital statuses are most associated with smoking or not smoking.
+
+::: {.answer}
+
+```{r}
+# Add code here to produce the chisq.test result.
+
+# Add code here to examine the residuals table.
+
+```
+
+Please write your answer here.
+
+:::
 
 ## Conclusion
 
