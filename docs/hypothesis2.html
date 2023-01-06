@@ -125,7 +125,7 @@
 <span class="header-section-number">11.2</span> Load packages<a class="anchor" aria-label="anchor" href="#hypothesis2-load"><i class="fas fa-link"></i></a>
 </h2>
 <p>In additional to <code>tidyverse</code> and <code>janitor</code>, we load the <code>MASS</code> package to access the <code>Melanoma</code> data on patients in Denmark with malignant melanoma, and the <code>infer</code> package for inference tools.</p>
-<div class="sourceCode" id="cb417"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb425"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sfirke/janitor">janitor</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/">MASS</a></span><span class="op">)</span></span></code></pre></div>
@@ -137,7 +137,7 @@
 <pre><code>## The following object is masked from 'package:dplyr':
 ## 
 ##     select</code></pre>
-<div class="sourceCode" id="cb421"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb429"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/infer">infer</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div id="hypothesis2-question" class="section level2" number="11.3">
@@ -167,7 +167,7 @@
 <hr>
 <p>From the exercise above, we can see that it will be very difficult, if not impossible, to discover anything useful about the true provenance of the data (unless you happen to have a copy of that textbook, which in theory provided another more primary source). We will not know, for example, how the data was collected and if the patients consented to having their data shared publicly. The data is suitably anonymized, though, so we don’t have any serious concerns about the privacy of the data. Having said that, if a condition is rare enough, a dedicated research can often “de-anonymize” data by cross-referencing information in the data to other kinds of public records. But melanoma is not particularly rare. At any rate, all we can do is assume that the textbook authors obtained the data from a source that used proper procedures for collecting and handling the data.</p>
 <p>We print the data frame:</p>
-<div class="sourceCode" id="cb422"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb430"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Melanoma</span></span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -175,7 +175,7 @@
   </script>
 </div>
 <p>Use <code>glimpse</code> to examine the structure of the data:</p>
-<div class="sourceCode" id="cb423"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb431"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">Melanoma</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Rows: 205
 ## Columns: 7
@@ -203,7 +203,7 @@
 <hr>
 <p>We can convert a numerical variable a couple of different ways. In Chapter 3, we used the <code>as_factor</code> command. That command works fine, but it doesn’t give you a way to change the levels of the variable. In other words, if we used <code>as_factor</code> here, we would get a factor variable that still contained zeroes and ones.</p>
 <p>Instead, we will use the <code>factor</code> command. It allows us to manually relabel the levels. The <code>levels</code> argument requires a vector (with <code>c</code>) of the current levels, and the <code>labels</code> argument requires a vector listing the new names you want to assign, as follows:</p>
-<div class="sourceCode" id="cb425"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb433"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Melanoma</span> <span class="op">&lt;-</span> <span class="va">Melanoma</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>sex_fct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">sex</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"female"</span>, <span class="st">"male"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">Melanoma</span><span class="op">)</span></span></code></pre></div>
@@ -225,7 +225,7 @@
 <span class="header-section-number">11.4.3</span> Make tables or plots to explore the data visually.<a class="anchor" aria-label="anchor" href="#hypothesis2-ex-plots"><i class="fas fa-link"></i></a>
 </h3>
 <p>We only have one categorical variable, so we only need a frequency table. Since we are concerned with proportions, we’ll also look at a relative frequency table which the <code>tabyl</code> command provides for free.</p>
-<div class="sourceCode" id="cb427"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb435"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/janitor/man/tabyl.html">tabyl</a></span><span class="op">(</span><span class="va">Melanoma</span>, <span class="va">sex_fct</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/janitor/man/adorn_totals.html">adorn_totals</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div data-pagedtable="false">
@@ -311,7 +311,7 @@
 <h3>
 <span class="header-section-number">11.8.1</span> Compute the test statistic.<a class="anchor" aria-label="anchor" href="#hypothesis2-ex-compute-test-stat"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb428"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb436"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">female_prop</span> <span class="op">&lt;-</span> <span class="va">Melanoma</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://infer.tidymodels.org/reference/observe.html">observe</a></span><span class="op">(</span>response <span class="op">=</span> <span class="va">sex_fct</span>, success <span class="op">=</span> <span class="st">"female"</span>,</span>
 <span>            stat <span class="op">=</span> <span class="st">"prop"</span><span class="op">)</span></span>
@@ -335,7 +335,7 @@
 <span class="header-section-number">11.8.3</span> Plot the null distribution.<a class="anchor" aria-label="anchor" href="#hypothesis2-ex-plot-null"><i class="fas fa-link"></i></a>
 </h3>
 <p>Since this is the first step for which we need the simulated values, it will be convenient to run the simulation here. We’ll need to set the seed as well.</p>
-<div class="sourceCode" id="cb429"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb437"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span><span class="va">melanoma_test</span> <span class="op">&lt;-</span> <span class="va">Melanoma</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://infer.tidymodels.org/reference/specify.html">specify</a></span><span class="op">(</span>response <span class="op">=</span> <span class="va">sex_fct</span>, success <span class="op">=</span> <span class="st">"female"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
@@ -351,11 +351,11 @@
 <p>This list of proportions is the sampling distribution. It represents possible sample proportions of females with melanoma <strong>under the assumption that the null is true</strong>. In other words, even if the “true” proportion of female melanoma patients were 0.5, these are all values that can result from random samples.</p>
 <p>In the <code>hypothesize</code> command, we use “point” to tell <code>infer</code> that we want the null to be centered at the point 0.5. In the <code>generate</code> command, we need to specify the <code>type</code> as “draw” instead of “permute”. We are not shuffling any values here; we are “drawing” values from a probability distribution like coin flips. Everything else in the command is pretty self-explanatory.</p>
 <p>The value of our test statistic, <code>female_prop</code>, is 0.6146341. It appears in the right tail:</p>
-<div class="sourceCode" id="cb430"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb438"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">melanoma_test</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://infer.tidymodels.org/reference/visualize.html">visualize</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://infer.tidymodels.org/reference/shade_p_value.html">shade_p_value</a></span><span class="op">(</span>obs_stat <span class="op">=</span> <span class="va">female_prop</span>, direction <span class="op">=</span> <span class="st">"two-sided"</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-299-1.png" width="672"></div>
+<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-307-1.png" width="672"></div>
 <p>Although the line only appears on the right, keep in mind that we are conducting a two-sided test, so we are interested in values more extreme than the red line on the right, but also more extreme than a similarly placed line on the left.</p>
 <div id="exercise-3-6" class="section level5 unnumbered">
 <h5>Exercise 3<a class="anchor" aria-label="anchor" href="#exercise-3-6"><i class="fas fa-link"></i></a>
@@ -370,7 +370,7 @@
 <h3>
 <span class="header-section-number">11.8.4</span> Calculate the P-value.<a class="anchor" aria-label="anchor" href="#hypothesis2-ex-calculate-p"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb431"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb439"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">melanoma_test</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://infer.tidymodels.org/reference/get_p_value.html">get_p_value</a></span><span class="op">(</span>obs_stat <span class="op">=</span> <span class="va">female_prop</span>, direction <span class="op">=</span> <span class="st">"two-sided"</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: Please be cautious in reporting a p-value of 0. This result is an
@@ -442,7 +442,7 @@
 <h6>Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.<a class="anchor" aria-label="anchor" href="#use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-1"><i class="fas fa-link"></i></a>
 </h6>
 <div class="answer">
-<div class="sourceCode" id="cb433"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb441"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to understand the data.</span></span></code></pre></div>
 </div>
 </div>
@@ -450,7 +450,7 @@
 <h6>Prepare the data for analysis. [Not always necessary.]<a class="anchor" aria-label="anchor" href="#prepare-the-data-for-analysis.-not-always-necessary.-1"><i class="fas fa-link"></i></a>
 </h6>
 <div class="answer">
-<div class="sourceCode" id="cb434"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb442"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to prepare the data for analysis.</span></span></code></pre></div>
 </div>
 </div>
@@ -458,7 +458,7 @@
 <h6>Make tables or plots to explore the data visually.<a class="anchor" aria-label="anchor" href="#make-tables-or-plots-to-explore-the-data-visually.-1"><i class="fas fa-link"></i></a>
 </h6>
 <div class="answer">
-<div class="sourceCode" id="cb435"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb443"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to make tables or plots.</span></span></code></pre></div>
 </div>
 </div>
@@ -515,7 +515,7 @@
 <h6>Compute the test statistic.<a class="anchor" aria-label="anchor" href="#compute-the-test-statistic.-1"><i class="fas fa-link"></i></a>
 </h6>
 <div class="answer">
-<div class="sourceCode" id="cb436"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb444"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to compute the test statistic.</span></span></code></pre></div>
 </div>
 </div>
@@ -530,11 +530,11 @@
 <h6>Plot the null distribution.<a class="anchor" aria-label="anchor" href="#plot-the-null-distribution.-1"><i class="fas fa-link"></i></a>
 </h6>
 <div class="answer">
-<div class="sourceCode" id="cb437"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb445"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span><span class="co"># Add code here to simulate the null distribution.</span></span>
 <span><span class="co"># Run 1000 simulations like in the earlier example.</span></span></code></pre></div>
-<div class="sourceCode" id="cb438"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb446"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to plot the null distribution.</span></span></code></pre></div>
 </div>
 </div>
@@ -542,7 +542,7 @@
 <h6>Calculate the P-value.<a class="anchor" aria-label="anchor" href="#calculate-the-p-value.-1"><i class="fas fa-link"></i></a>
 </h6>
 <div class="answer">
-<div class="sourceCode" id="cb439"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb447"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to calculate the P-value.</span></span></code></pre></div>
 </div>
 </div>
@@ -686,7 +686,7 @@
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Introduction to Statistics: an integrated textbook and workbook using R</strong>" was written by Sean Raleigh, Westminster College (Salt Lake City, UT). It was last built on 2022-12-02.</p>
+    <p>"<strong>Introduction to Statistics: an integrated textbook and workbook using R</strong>" was written by Sean Raleigh, Westminster College (Salt Lake City, UT). It was last built on 2023-01-06.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

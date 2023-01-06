@@ -123,7 +123,7 @@
 <span class="header-section-number">17.2</span> Load packages<a class="anchor" aria-label="anchor" href="#load-packages-1"><i class="fas fa-link"></i></a>
 </h2>
 <p>We load the standard <code>tidyverse</code>, <code>janitor</code>, and <code>infer</code> packages and the <code>openintro</code> package for the <code>hsb2</code> data.</p>
-<div class="sourceCode" id="cb600"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb608"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sfirke/janitor">janitor</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/infer">infer</a></span><span class="op">)</span></span>
@@ -136,7 +136,7 @@
 <p>We use a classic data set <code>mtcars</code> from a 1974 Motor Trend magazine to examine the distribution of the number of engine cylinders (with values 4, 6, or 8). We’ll assume that this data set is representative of all cars from 1974.</p>
 <p>In recent years, 4-cylinder vehicles and 6-cylinder vehicles have comprised about 38% of the market each, with nearly all the rest (24%) being 8-cylinder cars. (This ignores a very small number of cars manufactured with 3- or 5-cylinder engines.) Were car engines in 1974 manufactured according to the same distribution?</p>
 <p>Here is the structure of the data:</p>
-<div class="sourceCode" id="cb601"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb609"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Rows: 32
 ## Columns: 11
@@ -152,7 +152,7 @@
 ## $ gear &lt;dbl&gt; 4, 4, 4, 3, 3, 3, 3, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 4, 4, 4, 3, 3,…
 ## $ carb &lt;dbl&gt; 4, 4, 1, 1, 2, 1, 4, 2, 2, 4, 4, 3, 3, 3, 4, 4, 4, 1, 2, 1, 1, 2,…</code></pre>
 <p>Note that the variable of interest <code>cyl</code> is not coded as a factor variable. Let’s convert <code>cyl</code> to a factor variable first and add it to a new data frame called <code>mtcars2</code>. (Since the levels are already called 4, 6, and 8, we do not need to specify <code>levels</code> or <code>labels</code>.) Be sure to remember to use <code>mtcars2</code> from here on out, and not the original <code>mtcars</code>.</p>
-<div class="sourceCode" id="cb603"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb611"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars2</span> <span class="op">&lt;-</span> <span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>cyl_fct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mtcars2</span></span></code></pre></div>
@@ -161,7 +161,7 @@
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["mpg"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["cyl"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["disp"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["hp"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["drat"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["wt"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["qsec"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["vs"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["am"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["gear"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["carb"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["cyl_fct"],"name":[12],"type":["fct"],"align":["left"]}],"data":[{"1":"21.0","2":"6","3":"160.0","4":"110","5":"3.90","6":"2.620","7":"16.46","8":"0","9":"1","10":"4","11":"4","12":"6","_rn_":"Mazda RX4"},{"1":"21.0","2":"6","3":"160.0","4":"110","5":"3.90","6":"2.875","7":"17.02","8":"0","9":"1","10":"4","11":"4","12":"6","_rn_":"Mazda RX4 Wag"},{"1":"22.8","2":"4","3":"108.0","4":"93","5":"3.85","6":"2.320","7":"18.61","8":"1","9":"1","10":"4","11":"1","12":"4","_rn_":"Datsun 710"},{"1":"21.4","2":"6","3":"258.0","4":"110","5":"3.08","6":"3.215","7":"19.44","8":"1","9":"0","10":"3","11":"1","12":"6","_rn_":"Hornet 4 Drive"},{"1":"18.7","2":"8","3":"360.0","4":"175","5":"3.15","6":"3.440","7":"17.02","8":"0","9":"0","10":"3","11":"2","12":"8","_rn_":"Hornet Sportabout"},{"1":"18.1","2":"6","3":"225.0","4":"105","5":"2.76","6":"3.460","7":"20.22","8":"1","9":"0","10":"3","11":"1","12":"6","_rn_":"Valiant"},{"1":"14.3","2":"8","3":"360.0","4":"245","5":"3.21","6":"3.570","7":"15.84","8":"0","9":"0","10":"3","11":"4","12":"8","_rn_":"Duster 360"},{"1":"24.4","2":"4","3":"146.7","4":"62","5":"3.69","6":"3.190","7":"20.00","8":"1","9":"0","10":"4","11":"2","12":"4","_rn_":"Merc 240D"},{"1":"22.8","2":"4","3":"140.8","4":"95","5":"3.92","6":"3.150","7":"22.90","8":"1","9":"0","10":"4","11":"2","12":"4","_rn_":"Merc 230"},{"1":"19.2","2":"6","3":"167.6","4":"123","5":"3.92","6":"3.440","7":"18.30","8":"1","9":"0","10":"4","11":"4","12":"6","_rn_":"Merc 280"},{"1":"17.8","2":"6","3":"167.6","4":"123","5":"3.92","6":"3.440","7":"18.90","8":"1","9":"0","10":"4","11":"4","12":"6","_rn_":"Merc 280C"},{"1":"16.4","2":"8","3":"275.8","4":"180","5":"3.07","6":"4.070","7":"17.40","8":"0","9":"0","10":"3","11":"3","12":"8","_rn_":"Merc 450SE"},{"1":"17.3","2":"8","3":"275.8","4":"180","5":"3.07","6":"3.730","7":"17.60","8":"0","9":"0","10":"3","11":"3","12":"8","_rn_":"Merc 450SL"},{"1":"15.2","2":"8","3":"275.8","4":"180","5":"3.07","6":"3.780","7":"18.00","8":"0","9":"0","10":"3","11":"3","12":"8","_rn_":"Merc 450SLC"},{"1":"10.4","2":"8","3":"472.0","4":"205","5":"2.93","6":"5.250","7":"17.98","8":"0","9":"0","10":"3","11":"4","12":"8","_rn_":"Cadillac Fleetwood"},{"1":"10.4","2":"8","3":"460.0","4":"215","5":"3.00","6":"5.424","7":"17.82","8":"0","9":"0","10":"3","11":"4","12":"8","_rn_":"Lincoln Continental"},{"1":"14.7","2":"8","3":"440.0","4":"230","5":"3.23","6":"5.345","7":"17.42","8":"0","9":"0","10":"3","11":"4","12":"8","_rn_":"Chrysler Imperial"},{"1":"32.4","2":"4","3":"78.7","4":"66","5":"4.08","6":"2.200","7":"19.47","8":"1","9":"1","10":"4","11":"1","12":"4","_rn_":"Fiat 128"},{"1":"30.4","2":"4","3":"75.7","4":"52","5":"4.93","6":"1.615","7":"18.52","8":"1","9":"1","10":"4","11":"2","12":"4","_rn_":"Honda Civic"},{"1":"33.9","2":"4","3":"71.1","4":"65","5":"4.22","6":"1.835","7":"19.90","8":"1","9":"1","10":"4","11":"1","12":"4","_rn_":"Toyota Corolla"},{"1":"21.5","2":"4","3":"120.1","4":"97","5":"3.70","6":"2.465","7":"20.01","8":"1","9":"0","10":"3","11":"1","12":"4","_rn_":"Toyota Corona"},{"1":"15.5","2":"8","3":"318.0","4":"150","5":"2.76","6":"3.520","7":"16.87","8":"0","9":"0","10":"3","11":"2","12":"8","_rn_":"Dodge Challenger"},{"1":"15.2","2":"8","3":"304.0","4":"150","5":"3.15","6":"3.435","7":"17.30","8":"0","9":"0","10":"3","11":"2","12":"8","_rn_":"AMC Javelin"},{"1":"13.3","2":"8","3":"350.0","4":"245","5":"3.73","6":"3.840","7":"15.41","8":"0","9":"0","10":"3","11":"4","12":"8","_rn_":"Camaro Z28"},{"1":"19.2","2":"8","3":"400.0","4":"175","5":"3.08","6":"3.845","7":"17.05","8":"0","9":"0","10":"3","11":"2","12":"8","_rn_":"Pontiac Firebird"},{"1":"27.3","2":"4","3":"79.0","4":"66","5":"4.08","6":"1.935","7":"18.90","8":"1","9":"1","10":"4","11":"1","12":"4","_rn_":"Fiat X1-9"},{"1":"26.0","2":"4","3":"120.3","4":"91","5":"4.43","6":"2.140","7":"16.70","8":"0","9":"1","10":"5","11":"2","12":"4","_rn_":"Porsche 914-2"},{"1":"30.4","2":"4","3":"95.1","4":"113","5":"3.77","6":"1.513","7":"16.90","8":"1","9":"1","10":"5","11":"2","12":"4","_rn_":"Lotus Europa"},{"1":"15.8","2":"8","3":"351.0","4":"264","5":"4.22","6":"3.170","7":"14.50","8":"0","9":"1","10":"5","11":"4","12":"8","_rn_":"Ford Pantera L"},{"1":"19.7","2":"6","3":"145.0","4":"175","5":"3.62","6":"2.770","7":"15.50","8":"0","9":"1","10":"5","11":"6","12":"6","_rn_":"Ferrari Dino"},{"1":"15.0","2":"8","3":"301.0","4":"335","5":"3.54","6":"3.570","7":"14.60","8":"0","9":"1","10":"5","11":"8","12":"8","_rn_":"Maserati Bora"},{"1":"21.4","2":"4","3":"121.0","4":"109","5":"4.11","6":"2.780","7":"18.60","8":"1","9":"1","10":"4","11":"2","12":"4","_rn_":"Volvo 142E"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb604"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb612"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">mtcars2</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Rows: 32
 ## Columns: 12
@@ -184,7 +184,7 @@
 </h2>
 <p>When we have three or more categories in a categorical variable, it is natural to ask how the observed counts in each category compare to the counts that we expect to see under the assumption of some null hypothesis. In other words, we’re assuming that there is some “true” distribution to which we are going to compare our data. Sometimes, this null comes from substantive expert knowledge. (For example, we will be comparing the 1974 distribution to a known distribution from recent years.) Sometimes we’re interested to see if our data deviates from a null distribution that predicts an equal number of observations in each category.</p>
 <p>First of all, what is the actual distribution of cylinders in our data? Here’s a frequency table.</p>
-<div class="sourceCode" id="cb606"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb614"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/janitor/man/tabyl.html">tabyl</a></span><span class="op">(</span><span class="va">mtcars2</span>, <span class="va">cyl_fct</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/janitor/man/adorn_totals.html">adorn_totals</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/janitor/man/adorn_pct_formatting.html">adorn_pct_formatting</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -212,7 +212,7 @@
 \chi^{2} = \frac{(11 - 12.2)^{2}}{12.2} + \frac{(7 - 12.2)^{2}}{12.2} + \frac{(14 - 7.7)^{2}}{7.7} \approx 7.5.
 \]</span></p>
 <p>Or we could just do it in R with the <code>infer</code> package. To do so, we have to state explicitly the proportions that correspond to the null hypothesis. In this case, since the order of entries in the frequency table is 4-cylinder, 6-cylinder, then 8-cylinder, we need to give <code>infer</code> a vector of entries <code>c("4" = 0.38, "6" = 0.38, "8" = 0.24)</code> that represents the 38%, 38%, and 24% expected for 4, 6, and 8 cylinders respectively.</p>
-<div class="sourceCode" id="cb607"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb615"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">obs_chisq</span> <span class="op">&lt;-</span> <span class="va">mtcars2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/specify.html">specify</a></span><span class="op">(</span>response <span class="op">=</span> <span class="va">cyl_fct</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/hypothesize.html">hypothesize</a></span><span class="op">(</span>null <span class="op">=</span> <span class="st">"point"</span>,</span>
@@ -234,42 +234,42 @@
 <p>We know that even if the true distribution were 38%, 38%, 24%, we would not see exactly 12.2, 12.2, 7.7 in a sample of 32 cars. (In fact, the “true” distribution is physically impossible because these are not whole numbers!) So what kinds of numbers could we get?</p>
 <p>Let’s do a quick simulation to find out.</p>
 <p>Under the assumption of the null, there should be a 38%, 38%, and 24% chance of seeing 4, 6, or 8 cylinders, respectively. To get a sense of the extent of sampling variability, we could use the <code>sample</code> command to see what happens in a sample of size 32 taken from a population where the true percentages are 38%, 38%, and 24%.</p>
-<div class="sourceCode" id="cb608"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb616"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">99999</span><span class="op">)</span></span>
 <span><span class="va">sample1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/resample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">32</span>, replace <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>       prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.38</span>, <span class="fl">0.38</span>, <span class="fl">0.24</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">sample1</span></span></code></pre></div>
 <pre><code>##  [1] 6 8 4 8 6 6 8 4 8 6 8 6 6 4 6 8 4 6 6 8 8 6 6 8 4 8 6 4 4 4 6 4</code></pre>
-<div class="sourceCode" id="cb610"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb618"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sample1</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## .
 ##  4  6  8 
 ##  9 13 10</code></pre>
-<div class="sourceCode" id="cb612"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb620"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sample2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/resample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">32</span>, replace <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>       prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.38</span>, <span class="fl">0.38</span>, <span class="fl">0.24</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">sample2</span></span></code></pre></div>
 <pre><code>##  [1] 6 8 8 8 4 4 8 4 8 6 8 4 4 6 6 6 6 4 4 4 6 4 4 4 8 4 4 8 4 4 4 8</code></pre>
-<div class="sourceCode" id="cb614"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb622"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sample2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## .
 ##  4  6  8 
 ## 16  7  9</code></pre>
-<div class="sourceCode" id="cb616"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb624"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sample3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/resample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">32</span>, replace <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>       prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.38</span>, <span class="fl">0.38</span>, <span class="fl">0.24</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">sample3</span></span></code></pre></div>
 <pre><code>##  [1] 8 6 4 6 6 6 6 4 6 6 6 4 6 4 8 8 6 8 8 8 4 6 8 4 8 6 6 6 6 8 4 6</code></pre>
-<div class="sourceCode" id="cb618"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb626"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sample3</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## .
 ##  4  6  8 
 ##  7 16  9</code></pre>
 <p>We can calculate the chi-squared value for each of these samples to get a sense of the possibilities. The <code>chisq.test</code> command from base R is a little unusual because it requires a frequency table (generated from the <code>table</code> command) as input. We will never use the <code>chisq.test</code> command directly because we will always use <code>infer</code> to do this work. But just to see some examples:</p>
-<div class="sourceCode" id="cb620"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb628"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sample1</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/janitor/man/chisq.test.html">chisq.test</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -278,7 +278,7 @@
 ## 
 ## data:  .
 ## X-squared = 0.8125, df = 2, p-value = 0.6661</code></pre>
-<div class="sourceCode" id="cb622"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb630"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sample2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/janitor/man/chisq.test.html">chisq.test</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -287,7 +287,7 @@
 ## 
 ## data:  .
 ## X-squared = 4.1875, df = 2, p-value = 0.1232</code></pre>
-<div class="sourceCode" id="cb624"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb632"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sample3</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/janitor/man/chisq.test.html">chisq.test</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -305,7 +305,7 @@
 </div>
 <hr>
 <p>The <code>infer</code> pipeline below (the <code>generate</code> command specifically) takes the values “4”, “6”, or “8” and grabs them at random according to the probabilities specified until it has 32 values. In other words, it will randomly select “4” about 38% of the time, “6” about 38% of the time, and “8” about 24% of the time, until it gets a list of 32 total cars. Then it will calculate the chi-squared value for that simulated set of 32 cars. But because randomness is involved, the simulated samples are subject to sampling variability and the chi-square values obtained will differ from each other. This is exactly what we did above with the <code>sample</code> command and the <code>chisq</code> command, but the benefit now is that we get 1000 random samples very quickly.</p>
-<div class="sourceCode" id="cb626"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb634"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">99999</span><span class="op">)</span></span>
 <span><span class="va">cyl_test_sim</span> <span class="op">&lt;-</span> <span class="va">mtcars2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/specify.html">specify</a></span><span class="op">(</span>response <span class="op">=</span> <span class="va">cyl_fct</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
@@ -322,18 +322,18 @@
   </script>
 </div>
 <p>The “stat” column above contains 1000 random values of <span class="math inline">\(\chi^{2}\)</span>. Let’s graph these values and include the chi-squared value for our actual data in the same graph.</p>
-<div class="sourceCode" id="cb627"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb635"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cyl_test_sim</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/visualize.html">visualize</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/shade_p_value.html">shade_p_value</a></span><span class="op">(</span><span class="va">obs_chisq</span>, direction <span class="op">=</span> <span class="st">"greater"</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-447-1.png" width="672"></div>
+<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-455-1.png" width="672"></div>
 <p>A few things are apparent:</p>
 <ol style="list-style-type: decimal">
 <li><p>The values are all positive. (The leftmost bar is sitting at 0, but it represents values greater than zero.) This makes sense when you remember that each piece of the <span class="math inline">\(\chi^{2}\)</span> calculation was positive. This is different from our earlier simulations that looked like normal models. (Z scores can be positive or negative, but not <span class="math inline">\(\chi^{2}\)</span>.)</p></li>
 <li><p>This is a severely right-skewed graph. Although most values are near zero, the occasional unusual sample can have a large value of <span class="math inline">\(\chi^{2}\)</span>.</p></li>
 <li><p>You can see that our sample (the red line) is pretty far to the right. It is an unusual value given the assumption of the null hypothesis. In fact, we can count the proportion of sampled values that are to the right of the red line:</p></li>
 </ol>
-<div class="sourceCode" id="cb628"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb636"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cyl_test_sim</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/get_p_value.html">get_p_value</a></span><span class="op">(</span><span class="va">obs_chisq</span>, direction <span class="op">=</span> <span class="st">"greater"</span><span class="op">)</span></span></code></pre></div>
 <div data-pagedtable="false">
@@ -352,7 +352,7 @@
 <p>There is one new idea, though. Although all normal models have the same bell shape, there are many different chi-square models. This is because the number of cells can change the sampling distribution. Our engine cylinder example has three cells (corresponding to the categories “4”, “6”, and “8”). But what if there were 10 categories? The shape of the chi-square model would be different.</p>
 <p>The terminology used by statisticians to distinguish these models is <em>degrees of freedom</em>, abbreviated <span class="math inline">\(df\)</span>. The reason for this name and the mathematics behind it are somewhat technical. Suffice it to say for now that if there are <span class="math inline">\(c\)</span> cells, you use <span class="math inline">\(c - 1\)</span> degrees of freedom. For our car example, there are 3 cylinder categories, so <span class="math inline">\(df = 2\)</span>.</p>
 <p>Look at the graph below that shows the theoretical chi-square models for varying degrees of freedom.</p>
-<div class="sourceCode" id="cb629"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb637"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Don't worry about the syntax here.</span></span>
 <span><span class="co"># You won't need to know how to do this on your own.</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -367,7 +367,7 @@
 <span>                                  <span class="st">"5"</span> <span class="op">=</span> <span class="st">"blue"</span>,</span>
 <span>                                  <span class="st">"10"</span> <span class="op">=</span> <span class="st">"green"</span><span class="op">)</span>,</span>
 <span>                       breaks <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"2"</span>, <span class="st">"5"</span>, <span class="st">"10"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-449-1.png" width="672"></div>
+<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-457-1.png" width="672"></div>
 <p>The red curve (corresponding to <span class="math inline">\(df = 2\)</span>) looks a lot like our simulation above. But as the degrees of freedom increase, the mode shifts further to the right.</p>
 </div>
 <div id="chi-square-goodness-of-fit-test-1" class="section level2" number="17.7">
@@ -377,25 +377,25 @@
 <p>The formal inferential procedure for examining whether data from a categorical variable fits a proposed distribution in the population is called a <em>chi-square goodness-of-fit test</em>.</p>
 <p>We can use the chi-square model as the sampling distribution as long as the sample size is large enough. This is checked by calculating that the expected cell counts (not the observed cell counts!) are at least 5 in each cell.</p>
 <p>The following <code>infer</code> pipeline will run a hypothesis test using the theoretical chi-squared distribution with 2 degrees of freedom.</p>
-<div class="sourceCode" id="cb630"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb638"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cyl_test</span> <span class="op">&lt;-</span> <span class="va">mtcars2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/specify.html">specify</a></span><span class="op">(</span>response <span class="op">=</span> <span class="va">cyl_fct</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/assume.html">assume</a></span><span class="op">(</span>distribution <span class="op">=</span> <span class="st">"chisq"</span><span class="op">)</span></span>
 <span><span class="va">cyl_test</span></span></code></pre></div>
 <pre><code>## A Chi-squared distribution with 2 degrees of freedom.</code></pre>
 <p>Here is the theoretical distribution:</p>
-<div class="sourceCode" id="cb632"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb640"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cyl_test</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/visualize.html">visualize</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-451-1.png" width="672"></div>
+<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-459-1.png" width="672"></div>
 <p>And here it is will our test statistic (the chi-squared value for our observed data) marked:</p>
-<div class="sourceCode" id="cb633"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb641"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cyl_test</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/visualize.html">visualize</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/shade_p_value.html">shade_p_value</a></span><span class="op">(</span><span class="va">obs_chisq</span>, direction <span class="op">=</span> <span class="st">"greater"</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-452-1.png" width="672"></div>
+<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-460-1.png" width="672"></div>
 <p>Finally, here is the P-value associated with the shaded area to the right of the test statistic:</p>
-<div class="sourceCode" id="cb634"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb642"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cyl_test</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/get_p_value.html">get_p_value</a></span><span class="op">(</span><span class="va">obs_chisq</span>, direction <span class="op">=</span> <span class="st">"greater"</span><span class="op">)</span></span></code></pre></div>
 <div data-pagedtable="false">
@@ -415,14 +415,14 @@
 <span class="header-section-number">17.8.1</span> Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.<a class="anchor" aria-label="anchor" href="#use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-5"><i class="fas fa-link"></i></a>
 </h3>
 <p>Type <code><a href="https://rdrr.io/r/datasets/mtcars.html">?mtcars</a></code> at the Console to read the help file. <em>Motor Trend</em> is a reputable publication and, therefore, we do not doubt the accuracy of the data. It’s not clear, however, why these specific 32 cars were chosen and if they reflect a representative sample of cars on the road in 1974.</p>
-<div class="sourceCode" id="cb635"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb643"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span></span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["mpg"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["cyl"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["disp"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["hp"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["drat"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["wt"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["qsec"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["vs"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["am"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["gear"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["carb"],"name":[11],"type":["dbl"],"align":["right"]}],"data":[{"1":"21.0","2":"6","3":"160.0","4":"110","5":"3.90","6":"2.620","7":"16.46","8":"0","9":"1","10":"4","11":"4","_rn_":"Mazda RX4"},{"1":"21.0","2":"6","3":"160.0","4":"110","5":"3.90","6":"2.875","7":"17.02","8":"0","9":"1","10":"4","11":"4","_rn_":"Mazda RX4 Wag"},{"1":"22.8","2":"4","3":"108.0","4":"93","5":"3.85","6":"2.320","7":"18.61","8":"1","9":"1","10":"4","11":"1","_rn_":"Datsun 710"},{"1":"21.4","2":"6","3":"258.0","4":"110","5":"3.08","6":"3.215","7":"19.44","8":"1","9":"0","10":"3","11":"1","_rn_":"Hornet 4 Drive"},{"1":"18.7","2":"8","3":"360.0","4":"175","5":"3.15","6":"3.440","7":"17.02","8":"0","9":"0","10":"3","11":"2","_rn_":"Hornet Sportabout"},{"1":"18.1","2":"6","3":"225.0","4":"105","5":"2.76","6":"3.460","7":"20.22","8":"1","9":"0","10":"3","11":"1","_rn_":"Valiant"},{"1":"14.3","2":"8","3":"360.0","4":"245","5":"3.21","6":"3.570","7":"15.84","8":"0","9":"0","10":"3","11":"4","_rn_":"Duster 360"},{"1":"24.4","2":"4","3":"146.7","4":"62","5":"3.69","6":"3.190","7":"20.00","8":"1","9":"0","10":"4","11":"2","_rn_":"Merc 240D"},{"1":"22.8","2":"4","3":"140.8","4":"95","5":"3.92","6":"3.150","7":"22.90","8":"1","9":"0","10":"4","11":"2","_rn_":"Merc 230"},{"1":"19.2","2":"6","3":"167.6","4":"123","5":"3.92","6":"3.440","7":"18.30","8":"1","9":"0","10":"4","11":"4","_rn_":"Merc 280"},{"1":"17.8","2":"6","3":"167.6","4":"123","5":"3.92","6":"3.440","7":"18.90","8":"1","9":"0","10":"4","11":"4","_rn_":"Merc 280C"},{"1":"16.4","2":"8","3":"275.8","4":"180","5":"3.07","6":"4.070","7":"17.40","8":"0","9":"0","10":"3","11":"3","_rn_":"Merc 450SE"},{"1":"17.3","2":"8","3":"275.8","4":"180","5":"3.07","6":"3.730","7":"17.60","8":"0","9":"0","10":"3","11":"3","_rn_":"Merc 450SL"},{"1":"15.2","2":"8","3":"275.8","4":"180","5":"3.07","6":"3.780","7":"18.00","8":"0","9":"0","10":"3","11":"3","_rn_":"Merc 450SLC"},{"1":"10.4","2":"8","3":"472.0","4":"205","5":"2.93","6":"5.250","7":"17.98","8":"0","9":"0","10":"3","11":"4","_rn_":"Cadillac Fleetwood"},{"1":"10.4","2":"8","3":"460.0","4":"215","5":"3.00","6":"5.424","7":"17.82","8":"0","9":"0","10":"3","11":"4","_rn_":"Lincoln Continental"},{"1":"14.7","2":"8","3":"440.0","4":"230","5":"3.23","6":"5.345","7":"17.42","8":"0","9":"0","10":"3","11":"4","_rn_":"Chrysler Imperial"},{"1":"32.4","2":"4","3":"78.7","4":"66","5":"4.08","6":"2.200","7":"19.47","8":"1","9":"1","10":"4","11":"1","_rn_":"Fiat 128"},{"1":"30.4","2":"4","3":"75.7","4":"52","5":"4.93","6":"1.615","7":"18.52","8":"1","9":"1","10":"4","11":"2","_rn_":"Honda Civic"},{"1":"33.9","2":"4","3":"71.1","4":"65","5":"4.22","6":"1.835","7":"19.90","8":"1","9":"1","10":"4","11":"1","_rn_":"Toyota Corolla"},{"1":"21.5","2":"4","3":"120.1","4":"97","5":"3.70","6":"2.465","7":"20.01","8":"1","9":"0","10":"3","11":"1","_rn_":"Toyota Corona"},{"1":"15.5","2":"8","3":"318.0","4":"150","5":"2.76","6":"3.520","7":"16.87","8":"0","9":"0","10":"3","11":"2","_rn_":"Dodge Challenger"},{"1":"15.2","2":"8","3":"304.0","4":"150","5":"3.15","6":"3.435","7":"17.30","8":"0","9":"0","10":"3","11":"2","_rn_":"AMC Javelin"},{"1":"13.3","2":"8","3":"350.0","4":"245","5":"3.73","6":"3.840","7":"15.41","8":"0","9":"0","10":"3","11":"4","_rn_":"Camaro Z28"},{"1":"19.2","2":"8","3":"400.0","4":"175","5":"3.08","6":"3.845","7":"17.05","8":"0","9":"0","10":"3","11":"2","_rn_":"Pontiac Firebird"},{"1":"27.3","2":"4","3":"79.0","4":"66","5":"4.08","6":"1.935","7":"18.90","8":"1","9":"1","10":"4","11":"1","_rn_":"Fiat X1-9"},{"1":"26.0","2":"4","3":"120.3","4":"91","5":"4.43","6":"2.140","7":"16.70","8":"0","9":"1","10":"5","11":"2","_rn_":"Porsche 914-2"},{"1":"30.4","2":"4","3":"95.1","4":"113","5":"3.77","6":"1.513","7":"16.90","8":"1","9":"1","10":"5","11":"2","_rn_":"Lotus Europa"},{"1":"15.8","2":"8","3":"351.0","4":"264","5":"4.22","6":"3.170","7":"14.50","8":"0","9":"1","10":"5","11":"4","_rn_":"Ford Pantera L"},{"1":"19.7","2":"6","3":"145.0","4":"175","5":"3.62","6":"2.770","7":"15.50","8":"0","9":"1","10":"5","11":"6","_rn_":"Ferrari Dino"},{"1":"15.0","2":"8","3":"301.0","4":"335","5":"3.54","6":"3.570","7":"14.60","8":"0","9":"1","10":"5","11":"8","_rn_":"Maserati Bora"},{"1":"21.4","2":"4","3":"121.0","4":"109","5":"4.11","6":"2.780","7":"18.60","8":"1","9":"1","10":"4","11":"2","_rn_":"Volvo 142E"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb636"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb644"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Rows: 32
 ## Columns: 11
@@ -442,7 +442,7 @@
 <h3>
 <span class="header-section-number">17.8.2</span> Prepare the data for analysis.<a class="anchor" aria-label="anchor" href="#prepare-the-data-for-analysis.-1"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb638"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb646"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Although we've already done this above, </span></span>
 <span><span class="co"># we include it here again for completeness.</span></span>
 <span><span class="va">mtcars2</span> <span class="op">&lt;-</span> <span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
@@ -453,7 +453,7 @@
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["mpg"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["cyl"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["disp"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["hp"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["drat"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["wt"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["qsec"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["vs"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["am"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["gear"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["carb"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["cyl_fct"],"name":[12],"type":["fct"],"align":["left"]}],"data":[{"1":"21.0","2":"6","3":"160.0","4":"110","5":"3.90","6":"2.620","7":"16.46","8":"0","9":"1","10":"4","11":"4","12":"6","_rn_":"Mazda RX4"},{"1":"21.0","2":"6","3":"160.0","4":"110","5":"3.90","6":"2.875","7":"17.02","8":"0","9":"1","10":"4","11":"4","12":"6","_rn_":"Mazda RX4 Wag"},{"1":"22.8","2":"4","3":"108.0","4":"93","5":"3.85","6":"2.320","7":"18.61","8":"1","9":"1","10":"4","11":"1","12":"4","_rn_":"Datsun 710"},{"1":"21.4","2":"6","3":"258.0","4":"110","5":"3.08","6":"3.215","7":"19.44","8":"1","9":"0","10":"3","11":"1","12":"6","_rn_":"Hornet 4 Drive"},{"1":"18.7","2":"8","3":"360.0","4":"175","5":"3.15","6":"3.440","7":"17.02","8":"0","9":"0","10":"3","11":"2","12":"8","_rn_":"Hornet Sportabout"},{"1":"18.1","2":"6","3":"225.0","4":"105","5":"2.76","6":"3.460","7":"20.22","8":"1","9":"0","10":"3","11":"1","12":"6","_rn_":"Valiant"},{"1":"14.3","2":"8","3":"360.0","4":"245","5":"3.21","6":"3.570","7":"15.84","8":"0","9":"0","10":"3","11":"4","12":"8","_rn_":"Duster 360"},{"1":"24.4","2":"4","3":"146.7","4":"62","5":"3.69","6":"3.190","7":"20.00","8":"1","9":"0","10":"4","11":"2","12":"4","_rn_":"Merc 240D"},{"1":"22.8","2":"4","3":"140.8","4":"95","5":"3.92","6":"3.150","7":"22.90","8":"1","9":"0","10":"4","11":"2","12":"4","_rn_":"Merc 230"},{"1":"19.2","2":"6","3":"167.6","4":"123","5":"3.92","6":"3.440","7":"18.30","8":"1","9":"0","10":"4","11":"4","12":"6","_rn_":"Merc 280"},{"1":"17.8","2":"6","3":"167.6","4":"123","5":"3.92","6":"3.440","7":"18.90","8":"1","9":"0","10":"4","11":"4","12":"6","_rn_":"Merc 280C"},{"1":"16.4","2":"8","3":"275.8","4":"180","5":"3.07","6":"4.070","7":"17.40","8":"0","9":"0","10":"3","11":"3","12":"8","_rn_":"Merc 450SE"},{"1":"17.3","2":"8","3":"275.8","4":"180","5":"3.07","6":"3.730","7":"17.60","8":"0","9":"0","10":"3","11":"3","12":"8","_rn_":"Merc 450SL"},{"1":"15.2","2":"8","3":"275.8","4":"180","5":"3.07","6":"3.780","7":"18.00","8":"0","9":"0","10":"3","11":"3","12":"8","_rn_":"Merc 450SLC"},{"1":"10.4","2":"8","3":"472.0","4":"205","5":"2.93","6":"5.250","7":"17.98","8":"0","9":"0","10":"3","11":"4","12":"8","_rn_":"Cadillac Fleetwood"},{"1":"10.4","2":"8","3":"460.0","4":"215","5":"3.00","6":"5.424","7":"17.82","8":"0","9":"0","10":"3","11":"4","12":"8","_rn_":"Lincoln Continental"},{"1":"14.7","2":"8","3":"440.0","4":"230","5":"3.23","6":"5.345","7":"17.42","8":"0","9":"0","10":"3","11":"4","12":"8","_rn_":"Chrysler Imperial"},{"1":"32.4","2":"4","3":"78.7","4":"66","5":"4.08","6":"2.200","7":"19.47","8":"1","9":"1","10":"4","11":"1","12":"4","_rn_":"Fiat 128"},{"1":"30.4","2":"4","3":"75.7","4":"52","5":"4.93","6":"1.615","7":"18.52","8":"1","9":"1","10":"4","11":"2","12":"4","_rn_":"Honda Civic"},{"1":"33.9","2":"4","3":"71.1","4":"65","5":"4.22","6":"1.835","7":"19.90","8":"1","9":"1","10":"4","11":"1","12":"4","_rn_":"Toyota Corolla"},{"1":"21.5","2":"4","3":"120.1","4":"97","5":"3.70","6":"2.465","7":"20.01","8":"1","9":"0","10":"3","11":"1","12":"4","_rn_":"Toyota Corona"},{"1":"15.5","2":"8","3":"318.0","4":"150","5":"2.76","6":"3.520","7":"16.87","8":"0","9":"0","10":"3","11":"2","12":"8","_rn_":"Dodge Challenger"},{"1":"15.2","2":"8","3":"304.0","4":"150","5":"3.15","6":"3.435","7":"17.30","8":"0","9":"0","10":"3","11":"2","12":"8","_rn_":"AMC Javelin"},{"1":"13.3","2":"8","3":"350.0","4":"245","5":"3.73","6":"3.840","7":"15.41","8":"0","9":"0","10":"3","11":"4","12":"8","_rn_":"Camaro Z28"},{"1":"19.2","2":"8","3":"400.0","4":"175","5":"3.08","6":"3.845","7":"17.05","8":"0","9":"0","10":"3","11":"2","12":"8","_rn_":"Pontiac Firebird"},{"1":"27.3","2":"4","3":"79.0","4":"66","5":"4.08","6":"1.935","7":"18.90","8":"1","9":"1","10":"4","11":"1","12":"4","_rn_":"Fiat X1-9"},{"1":"26.0","2":"4","3":"120.3","4":"91","5":"4.43","6":"2.140","7":"16.70","8":"0","9":"1","10":"5","11":"2","12":"4","_rn_":"Porsche 914-2"},{"1":"30.4","2":"4","3":"95.1","4":"113","5":"3.77","6":"1.513","7":"16.90","8":"1","9":"1","10":"5","11":"2","12":"4","_rn_":"Lotus Europa"},{"1":"15.8","2":"8","3":"351.0","4":"264","5":"4.22","6":"3.170","7":"14.50","8":"0","9":"1","10":"5","11":"4","12":"8","_rn_":"Ford Pantera L"},{"1":"19.7","2":"6","3":"145.0","4":"175","5":"3.62","6":"2.770","7":"15.50","8":"0","9":"1","10":"5","11":"6","12":"6","_rn_":"Ferrari Dino"},{"1":"15.0","2":"8","3":"301.0","4":"335","5":"3.54","6":"3.570","7":"14.60","8":"0","9":"1","10":"5","11":"8","12":"8","_rn_":"Maserati Bora"},{"1":"21.4","2":"4","3":"121.0","4":"109","5":"4.11","6":"2.780","7":"18.60","8":"1","9":"1","10":"4","11":"2","12":"4","_rn_":"Volvo 142E"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb639"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb647"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">mtcars2</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Rows: 32
 ## Columns: 12
@@ -474,7 +474,7 @@
 <h3>
 <span class="header-section-number">17.8.3</span> Make tables or plots to explore the data visually.<a class="anchor" aria-label="anchor" href="#make-tables-or-plots-to-explore-the-data-visually.-5"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb641"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb649"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/janitor/man/tabyl.html">tabyl</a></span><span class="op">(</span><span class="va">mtcars2</span>, <span class="va">cyl_fct</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/janitor/man/adorn_totals.html">adorn_totals</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/janitor/man/adorn_pct_formatting.html">adorn_pct_formatting</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -554,7 +554,7 @@
 <h3>
 <span class="header-section-number">17.11.1</span> Compute the test statistic.<a class="anchor" aria-label="anchor" href="#compute-the-test-statistic.-5"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb642"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb650"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">obs_chisq</span> <span class="op">&lt;-</span> <span class="va">mtcars2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/specify.html">specify</a></span><span class="op">(</span>response <span class="op">=</span> <span class="va">cyl_fct</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/hypothesize.html">hypothesize</a></span><span class="op">(</span>null <span class="op">=</span> <span class="st">"point"</span>,</span>
@@ -580,24 +580,24 @@
 <h3>
 <span class="header-section-number">17.11.3</span> Plot the null distribution.<a class="anchor" aria-label="anchor" href="#plot-the-null-distribution.-5"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb643"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb651"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cyl_test</span> <span class="op">&lt;-</span> <span class="va">mtcars2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/specify.html">specify</a></span><span class="op">(</span>response <span class="op">=</span> <span class="va">cyl_fct</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/assume.html">assume</a></span><span class="op">(</span>distribution <span class="op">=</span> <span class="st">"chisq"</span><span class="op">)</span></span>
 <span><span class="va">cyl_test</span></span></code></pre></div>
 <pre><code>## A Chi-squared distribution with 2 degrees of freedom.</code></pre>
-<div class="sourceCode" id="cb645"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb653"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cyl_test</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/visualize.html">visualize</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/shade_p_value.html">shade_p_value</a></span><span class="op">(</span><span class="va">obs_chisq</span>, direction <span class="op">=</span> <span class="st">"greater"</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-461-1.png" width="672"></div>
+<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-469-1.png" width="672"></div>
 <p>Commentary: We will use the theoretical distribution</p>
 </div>
 <div id="calculate-the-p-value.-5" class="section level3" number="17.11.4">
 <h3>
 <span class="header-section-number">17.11.4</span> Calculate the P-value.<a class="anchor" aria-label="anchor" href="#calculate-the-p-value.-5"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb646"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb654"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cyl_test_p</span> <span class="op">&lt;-</span> <span class="va">cyl_test</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/get_p_value.html">get_p_value</a></span><span class="op">(</span><span class="va">obs_chisq</span>, direction <span class="op">=</span> <span class="st">"greater"</span><span class="op">)</span></span>
 <span><span class="va">cyl_test_p</span></span></code></pre></div>
@@ -677,9 +677,9 @@ The P-value is
 </h6>
 <div class="answer">
 <p>Please write up your answer here</p>
-<div class="sourceCode" id="cb647"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb655"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to print the data</span></span></code></pre></div>
-<div class="sourceCode" id="cb648"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb656"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to glimpse the variables</span></span></code></pre></div>
 </div>
 </div>
@@ -687,7 +687,7 @@ The P-value is
 <h6>Prepare the data for analysis. [Not always necessary.]<a class="anchor" aria-label="anchor" href="#prepare-the-data-for-analysis.-not-always-necessary.-4"><i class="fas fa-link"></i></a>
 </h6>
 <div class="answer">
-<div class="sourceCode" id="cb649"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb657"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to prepare the data for analysis.</span></span></code></pre></div>
 </div>
 </div>
@@ -695,7 +695,7 @@ The P-value is
 <h6>Make tables or plots to explore the data visually.<a class="anchor" aria-label="anchor" href="#make-tables-or-plots-to-explore-the-data-visually.-6"><i class="fas fa-link"></i></a>
 </h6>
 <div class="answer">
-<div class="sourceCode" id="cb650"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb658"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to make tables or plots.</span></span></code></pre></div>
 </div>
 </div>
@@ -752,7 +752,7 @@ The P-value is
 <h6>Compute the test statistic.<a class="anchor" aria-label="anchor" href="#compute-the-test-statistic.-6"><i class="fas fa-link"></i></a>
 </h6>
 <div class="answer">
-<div class="sourceCode" id="cb651"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb659"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to compute the test statistic.</span></span></code></pre></div>
 </div>
 </div>
@@ -767,7 +767,7 @@ The P-value is
 <h6>Plot the null distribution.<a class="anchor" aria-label="anchor" href="#plot-the-null-distribution.-6"><i class="fas fa-link"></i></a>
 </h6>
 <div class="answer">
-<div class="sourceCode" id="cb652"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb660"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to plot the null distribution.</span></span></code></pre></div>
 </div>
 </div>
@@ -775,7 +775,7 @@ The P-value is
 <h6>Calculate the P-value.<a class="anchor" aria-label="anchor" href="#calculate-the-p-value.-6"><i class="fas fa-link"></i></a>
 </h6>
 <div class="answer">
-<div class="sourceCode" id="cb653"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb661"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to calculate the P-value.</span></span></code></pre></div>
 </div>
 </div>
@@ -820,14 +820,55 @@ The P-value is
 </div>
 </div>
 </div>
-<div id="conclusion-8" class="section level2" number="17.15">
+<div id="bonus-section-residuals" class="section level2" number="17.15">
 <h2>
-<span class="header-section-number">17.15</span> Conclusion<a class="anchor" aria-label="anchor" href="#conclusion-8"><i class="fas fa-link"></i></a>
+<span class="header-section-number">17.15</span> Bonus section: residuals<a class="anchor" aria-label="anchor" href="#bonus-section-residuals"><i class="fas fa-link"></i></a>
+</h2>
+<p>The chi-square test can tell us if there is some difference from the expected distribution of counts across the categories, but it doesn’t tell us which category has a higher or lower count than expected. For that, we’ll need to turn to another tool: <em>residuals</em>.</p>
+<p>For technical reasons, the <code>infer</code> package doesn’t provide residuals, so we’ll have to turn to slightly different tools. Here’s how this works; we’ll return to the example of distribution of cars across the different categories of number of cylinders.</p>
+<p>The function we’ll use is called <code>chisq.test</code>. It requires us to give it input in the form of a table of counts, together with the proportions we wish to compare to:</p>
+<div class="sourceCode" id="cb662"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">mtcars2</span><span class="op">$</span><span class="va">cyl_fct</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/janitor/man/chisq.test.html">chisq.test</a></span><span class="op">(</span>p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">.38</span>, <span class="fl">.38</span>, <span class="fl">.24</span><span class="op">)</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">cyl_chisq.test</span></span>
+<span><span class="va">cyl_chisq.test</span></span></code></pre></div>
+<pre><code>## 
+##  Chi-squared test for given probabilities
+## 
+## data:  .
+## X-squared = 7.5011, df = 2, p-value = 0.0235</code></pre>
+<p>Notice that the chi-squared value 7.5011 and the p-value 0.0235 are the same as those we calculated using <code>infer</code> tools above.</p>
+<p>Here’s how to obtain the table of residuals:</p>
+<div class="sourceCode" id="cb664"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cyl_chisq.test</span><span class="op">$</span><span class="va">residuals</span></span></code></pre></div>
+<pre><code>## 
+##          4          6          8 
+## -0.3326528 -1.4797315  2.2805336</code></pre>
+<p>What do these numbers mean in the real world? Not much. (Essentially, they are the values that were squared to become the individual cell contributions to the overall chi-squared score of the table.)</p>
+<p>What we’ll do with them is look for the most positive and most negative values.
+- We see that the 8-cylinder column has the most positive value: this means that the number of 8-cylinder cars in 1974 was substantially <em>higher</em> than we expected.
+- We see that the 6-cylinder column has the most negative value: this means that the number of 6-cylinder cars in 1974 was substantially <em>lower</em> than we expected.</p>
+<div id="your-turn-2" class="section level3" number="17.15.1">
+<h3>
+<span class="header-section-number">17.15.1</span> Your turn<a class="anchor" aria-label="anchor" href="#your-turn-2"><i class="fas fa-link"></i></a>
+</h3>
+<p>Determine which of the high school program types is the most substantially overrepresented and the most substantially underrepresented, according to our hypothesized distribution.</p>
+<div class="answer">
+<div class="sourceCode" id="cb666"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Add code here to produce the chisq.test result.</span></span>
+<span></span>
+<span><span class="co"># Add code here to examine the residuals.</span></span></code></pre></div>
+<p>Please write your answer here.</p>
+</div>
+</div>
+</div>
+<div id="conclusion-8" class="section level2" number="17.16">
+<h2>
+<span class="header-section-number">17.16</span> Conclusion<a class="anchor" aria-label="anchor" href="#conclusion-8"><i class="fas fa-link"></i></a>
 </h2>
 <p>When a categorical variable has three or more categories, we can run a chi-square goodness-of-fit test to determine if the distribution of counts across those categories matches some pre-specified null hypothesis. The key new mathematical tool we need is the chi-square distribution, a way of measuring the deviation between observed counts and expected counts according to the null.</p>
-<div id="preparing-and-submitting-your-assignment-1" class="section level3" number="17.15.1">
+<div id="preparing-and-submitting-your-assignment-1" class="section level3" number="17.16.1">
 <h3>
-<span class="header-section-number">17.15.1</span> Preparing and submitting your assignment<a class="anchor" aria-label="anchor" href="#preparing-and-submitting-your-assignment-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">17.16.1</span> Preparing and submitting your assignment<a class="anchor" aria-label="anchor" href="#preparing-and-submitting-your-assignment-1"><i class="fas fa-link"></i></a>
 </h3>
 <ol style="list-style-type: decimal">
 <li>From the “Run” menu, select “Restart R and Run All Chunks”.</li>
@@ -904,7 +945,10 @@ The P-value is
 <li><a class="nav-link" href="#confidence-interval-3"><span class="header-section-number">17.13</span> Confidence interval</a></li>
 <li><a class="nav-link" href="#your-turn-1"><span class="header-section-number">17.14</span> Your turn</a></li>
 <li>
-<a class="nav-link" href="#conclusion-8"><span class="header-section-number">17.15</span> Conclusion</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#preparing-and-submitting-your-assignment-1"><span class="header-section-number">17.15.1</span> Preparing and submitting your assignment</a></li></ul>
+<a class="nav-link" href="#bonus-section-residuals"><span class="header-section-number">17.15</span> Bonus section: residuals</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#your-turn-2"><span class="header-section-number">17.15.1</span> Your turn</a></li></ul>
+</li>
+<li>
+<a class="nav-link" href="#conclusion-8"><span class="header-section-number">17.16</span> Conclusion</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#preparing-and-submitting-your-assignment-1"><span class="header-section-number">17.16.1</span> Preparing and submitting your assignment</a></li></ul>
 </li>
 </ul>
 
@@ -923,7 +967,7 @@ The P-value is
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Introduction to Statistics: an integrated textbook and workbook using R</strong>" was written by Sean Raleigh, Westminster College (Salt Lake City, UT). It was last built on 2022-12-02.</p>
+    <p>"<strong>Introduction to Statistics: an integrated textbook and workbook using R</strong>" was written by Sean Raleigh, Westminster College (Salt Lake City, UT). It was last built on 2023-01-06.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

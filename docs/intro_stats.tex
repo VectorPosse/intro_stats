@@ -125,7 +125,7 @@
 
 \title{Introduction to Statistics: an integrated textbook and workbook using R}
 \author{Sean Raleigh, Westminster College (Salt Lake City, UT)}
-\date{2022-11-30}
+\date{2023-01-06}
 
 \begin{document}
 \maketitle
@@ -2129,6 +2129,216 @@ Use \texttt{ggplot} with \texttt{geom\_col} to create a bar chart for island.
 \end{Highlighting}
 \end{Shaded}
 
+\hypertarget{bonus-section-recovering-raw-data-from-tables}{%
+\section{Bonus section: Recovering raw data from tables}\label{bonus-section-recovering-raw-data-from-tables}}
+
+Sometimes we come across summary data instead of raw data. We've learned how to manually create tibbles with that summary data and use \texttt{geom\_col} instead of \texttt{geom\_bar} to graph it, but sometimes it is also useful to recover what the raw data \emph{would} have been. Fortunately there are R tools to do exactly that.
+
+We'll continue with our example \texttt{penguin\_species\_table}, which we'll reprint here for reference:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{penguin\_species\_table}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 3 x 2
+##   species   count
+##   <chr>     <dbl>
+## 1 Adelie      152
+## 2 Chinstrap    68
+## 3 Gentoo      124
+\end{verbatim}
+
+From this table, we know what the raw data for this variable should look like: there should be 152 rows that say ``Adelie,'' 68 rows that say ``Chinstrap,'' and 124 rows that say ``Gentoo.'' It would be very annoying, though, to make that whole tibble by hand. Fortunately, there are R tools that will create it for us.
+
+The first thing we will need to do is turn our tibble into a tabyl. (I would like to apologize for how ridiculous that sentence sounds.)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{penguin\_species\_tabyl }\OtherTok{\textless{}{-}} \FunctionTok{as\_tabyl}\NormalTok{(penguin\_species\_table)}
+\NormalTok{penguin\_species\_tabyl}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    species count
+##     Adelie   152
+##  Chinstrap    68
+##     Gentoo   124
+\end{verbatim}
+
+The hero of the day is the function \texttt{uncount} from the \texttt{tidyr} package:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{penguin\_species\_raw }\OtherTok{\textless{}{-}}\NormalTok{ penguin\_species\_tabyl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{uncount}\NormalTok{(count)}
+\NormalTok{penguin\_species\_raw}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 344 x 1
+##    species
+##    <chr>  
+##  1 Adelie 
+##  2 Adelie 
+##  3 Adelie 
+##  4 Adelie 
+##  5 Adelie 
+##  6 Adelie 
+##  7 Adelie 
+##  8 Adelie 
+##  9 Adelie 
+## 10 Adelie 
+## # ... with 334 more rows
+\end{verbatim}
+
+Click through the rows of this table and you'll see that it's exactly what we wanted: ``Adelie'' is repeated 152 times, ``Chinstrap'' is repeated 68 times, and ``Gentoo'' is repeated 124 times. Neat!
+
+\hypertarget{recovering-raw-data-from-a-contingency-table}{%
+\subsection{Recovering raw data from a contingency table}\label{recovering-raw-data-from-a-contingency-table}}
+
+This strategy also works, with some modifications, for recovering the raw data presented in a contingency table. Previously, we saw the following contingency table showing the counts of each species broken down by sex:
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule()
+sex & Adelie & Chinstrap & Gentoo \\
+\midrule()
+\endhead
+female & 73 & 34 & 58 \\
+male & 73 & 34 & 61 \\
+\bottomrule()
+\end{longtable}
+
+(Note: I've removed the unruly penguins who did not allow their sex to be determined.)
+
+Again, we can imagine what the raw data would look like: there would be 73 rows where the \texttt{species} variable would say ``Adelie'' and the \texttt{sex} variable would say ``female,'' then 34 rows where the \texttt{species} variable would say ``Chinstrap'' and the \texttt{sex} variable would say ``female,'' and so on.
+
+We can start by building a tibble with this information in the same way we built the tibble of penguin species counts. Note that the species labels now become the column headers.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{penguin\_species\_sex\_table }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+  \AttributeTok{sex =} \FunctionTok{c}\NormalTok{(}\StringTok{"female"}\NormalTok{, }\StringTok{"male"}\NormalTok{),}
+  \AttributeTok{Adelie =} \FunctionTok{c}\NormalTok{(}\DecValTok{73}\NormalTok{, }\DecValTok{73}\NormalTok{),}
+  \AttributeTok{Chinstrap =} \FunctionTok{c}\NormalTok{(}\DecValTok{34}\NormalTok{, }\DecValTok{34}\NormalTok{),}
+  \AttributeTok{Gentoo =} \FunctionTok{c}\NormalTok{(}\DecValTok{58}\NormalTok{, }\DecValTok{61}\NormalTok{)}
+\NormalTok{)}
+\NormalTok{penguin\_species\_sex\_table}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 2 x 4
+##   sex    Adelie Chinstrap Gentoo
+##   <chr>   <dbl>     <dbl>  <dbl>
+## 1 female     73        34     58
+## 2 male       73        34     61
+\end{verbatim}
+
+Once again, we'll want to turn this tibble into a tabyl:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{penguin\_species\_sex\_tabyl }\OtherTok{\textless{}{-}} \FunctionTok{as\_tabyl}\NormalTok{(penguin\_species\_sex\_table)}
+\NormalTok{penguin\_species\_sex\_tabyl}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     sex Adelie Chinstrap Gentoo
+##  female     73        34     58
+##    male     73        34     61
+\end{verbatim}
+
+In order for the \texttt{uncount} function to work correctly, we need to have all the counts in a single column, but since this is a contingency table, our counts are spread out across several columns. To solve this problem, we'll need to ``pivot'' the columns, turning them into rows. The command is called \texttt{pivot\_longer}. (There is also a \texttt{pivot\_wider} command that turns rows into columns, but we won't need that one.)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{penguin\_species\_sex\_tabyl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{pivot\_longer}\NormalTok{(}\AttributeTok{cols =} \FunctionTok{c}\NormalTok{(}\StringTok{"Adelie"}\NormalTok{, }\StringTok{"Chinstrap"}\NormalTok{, }\StringTok{"Gentoo"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 6 x 3
+##   sex    name      value
+##   <chr>  <chr>     <dbl>
+## 1 female Adelie       73
+## 2 female Chinstrap    34
+## 3 female Gentoo       58
+## 4 male   Adelie       73
+## 5 male   Chinstrap    34
+## 6 male   Gentoo       61
+\end{verbatim}
+
+If we want a little more control over the names of the newly created columnds, we can add those as follows:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{penguin\_species\_sex\_tabyl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{pivot\_longer}\NormalTok{(}\AttributeTok{cols =} \FunctionTok{c}\NormalTok{(}\StringTok{"Adelie"}\NormalTok{, }\StringTok{"Chinstrap"}\NormalTok{, }\StringTok{"Gentoo"}\NormalTok{),}
+               \AttributeTok{names\_to =} \StringTok{"species"}\NormalTok{,}
+               \AttributeTok{values\_to =} \StringTok{"count"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 6 x 3
+##   sex    species   count
+##   <chr>  <chr>     <dbl>
+## 1 female Adelie       73
+## 2 female Chinstrap    34
+## 3 female Gentoo       58
+## 4 male   Adelie       73
+## 5 male   Chinstrap    34
+## 6 male   Gentoo       61
+\end{verbatim}
+
+Now our data is in the form that \texttt{uncount} knows how to deal with. And indeed, we can assemble all these steps together into a pipeline. First, we should build the tibble. Then, we should turn the tibble into a tabyl (sorry), then \texttt{pivot} the tabyl, and finally \texttt{uncount} to get back to the raw data. Finally, we should store the result as a new tibble.
+Here are all the steps put together:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{penguin\_species\_sex\_table }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+  \AttributeTok{sex =} \FunctionTok{c}\NormalTok{(}\StringTok{"female"}\NormalTok{, }\StringTok{"male"}\NormalTok{),}
+  \AttributeTok{Adelie =} \FunctionTok{c}\NormalTok{(}\DecValTok{73}\NormalTok{, }\DecValTok{73}\NormalTok{),}
+  \AttributeTok{Chinstrap =} \FunctionTok{c}\NormalTok{(}\DecValTok{34}\NormalTok{, }\DecValTok{34}\NormalTok{),}
+  \AttributeTok{Gentoo =} \FunctionTok{c}\NormalTok{(}\DecValTok{58}\NormalTok{, }\DecValTok{61}\NormalTok{)}
+\NormalTok{) }
+\NormalTok{penguin\_species\_sex\_table }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{as\_tabyl}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{pivot\_longer}\NormalTok{(}\AttributeTok{cols =} \FunctionTok{c}\NormalTok{(}\StringTok{"Adelie"}\NormalTok{, }\StringTok{"Chinstrap"}\NormalTok{, }\StringTok{"Gentoo"}\NormalTok{),}
+               \AttributeTok{names\_to =} \StringTok{"species"}\NormalTok{,}
+               \AttributeTok{values\_to =} \StringTok{"count"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{uncount}\NormalTok{(count) }\OtherTok{{-}\textgreater{}}\NormalTok{ penguin\_species\_sex\_raw}
+
+\NormalTok{penguin\_species\_sex\_raw}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 333 x 2
+##    sex    species
+##    <chr>  <chr>  
+##  1 female Adelie 
+##  2 female Adelie 
+##  3 female Adelie 
+##  4 female Adelie 
+##  5 female Adelie 
+##  6 female Adelie 
+##  7 female Adelie 
+##  8 female Adelie 
+##  9 female Adelie 
+## 10 female Adelie 
+## # ... with 323 more rows
+\end{verbatim}
+
+Indeed, this new tibble looks just like how we wanted it to look.
+
 \hypertarget{categorical-conclusion}{%
 \section{Conclusion}\label{categorical-conclusion}}
 
@@ -2638,7 +2848,7 @@ The single most useful display of a single numerical variable is a histogram. He
 ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-99-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-107-1.pdf}
 
 \hypertarget{numerical-shape}{%
 \subsection{The shape of data}\label{numerical-shape}}
@@ -2715,7 +2925,7 @@ We use \texttt{binwidth} and \texttt{boundary} inside the parentheses of the \te
 ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-100-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-108-1.pdf}
 
 Even with the smoother look, it appears that there are multiple modes, maybe three? Do these correspond to the three species of penguin? Stay tuned.
 
@@ -2736,7 +2946,7 @@ Here is a histogram of the penguin bill lengths (measured in millimeters):
 ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-101-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-109-1.pdf}
 
 Write a short paragraph describing the shape of the distribution of penguin bill lengths, focusing on the three key shape features (modes, symmetry, and outliers).
 
@@ -2815,7 +3025,7 @@ Since we are plotting two variables, we have two aesthetics, one on the y-axis (
 ## Warning: Removed 2 rows containing missing values (geom_point).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-105-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-113-1.pdf}
 
 We are looking for evidence of a relationship between the two variables. This will manifest as a pattern in the data. We are interested in answering the following questions:
 
@@ -2891,7 +3101,7 @@ Here is a scatterplot of
 ## Warning: Removed 2 rows containing missing values (geom_point).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-106-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-114-1.pdf}
 
 Write a short paragraph describing the association of penguin flipper lengths and body mass, focusing on the four key features (linearity, direction, strength, and outliers).
 
@@ -2917,7 +3127,7 @@ Graphically, there are two good options here. The first is a side-by-side boxplo
 ## Warning: Removed 2 rows containing non-finite values (stat_boxplot).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-107-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-115-1.pdf}
 
 Notice the placement of the variables. The y-axis is \texttt{body\_mass\_g}, the numerical variable. The x-axis variable is \texttt{species}; the groups are placed along the x-axis. This is consistent with other graph types that place the response variable on the y-axis and the predictor variable on the x-axis.
 
@@ -2939,7 +3149,7 @@ The other possible graph is a stacked histogram. This uses a feature called ``fa
 ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-108-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-116-1.pdf}
 
 The argument \texttt{species\ \textasciitilde{}\ .} in the \texttt{facet\_grid} function means, ``Put each species on a different row.'' We'll explore this notation a little later.
 
@@ -2957,7 +3167,7 @@ As always, the default bins suck, so let's change them.
 ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-109-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-117-1.pdf}
 
 Consider the following subtle change in notation:
 
@@ -2973,7 +3183,7 @@ Consider the following subtle change in notation:
 ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-110-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-118-1.pdf}
 
 \hypertarget{exercise-9a-1}{%
 \paragraph*{Exercise 9(a)}\label{exercise-9a-1}}
@@ -3008,7 +3218,7 @@ The other thing that kind of sucks is the fact that the y-axis is showing counts
 ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-111-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-119-1.pdf}
 
 Due to some technical issues in \texttt{ggplot2}, these are not strictly proportions. (If you were to add up the heights of all the bars, they would not add up to 100\%.) Nevertheless, the graph is still useful because it does scale the groups to put them on equal footing. In other words, it treats each group as if they all had the same sample size.
 
@@ -3050,7 +3260,7 @@ Let's go back to the first histogram from this chapter.
 ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-114-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-122-1.pdf}
 
 The variable names of this data set are already pretty informative, but we can do a little better with \texttt{labs} (for labels). Observe:
 
@@ -3069,7 +3279,7 @@ The variable names of this data set are already pretty informative, but we can d
 ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-115-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-123-1.pdf}
 
 You can also see that we took the opportunity to mention the units of measurement (grams) for our variable in the x-axis label. This is good practice.
 
@@ -3085,7 +3295,7 @@ A quick note about formatting in R code chunks. Notice that I put different part
 ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-116-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-124-1.pdf}
 
 But it's much harder to read. If you find that your code is ``wrapping'' to the next line, find some spots like commas or plus signs to break the code. Be sure to break the line after the comma or plus sign.
 
@@ -3108,7 +3318,7 @@ Modify the following scatterplot by adding a title and labels for both the y-axi
 ## Warning: Removed 2 rows containing missing values (geom_point).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-117-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-125-1.pdf}
 
 \hypertarget{exercise-12-1}{%
 \paragraph*{Exercise 12}\label{exercise-12-1}}
@@ -3128,7 +3338,7 @@ The previous scatterplot looked a little funny due to some odd groupings that we
 ## Warning: Removed 2 rows containing missing values (geom_point).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-118-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-126-1.pdf}
 
 Please write up your answer here.
 
@@ -5160,7 +5370,7 @@ Recall the \texttt{chredlin} data set from the last chapter investigating the pr
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-177-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-185-1.pdf}
 
 \hypertarget{exercise-1-4}{%
 \paragraph*{Exercise 1}\label{exercise-1-4}}
@@ -5186,7 +5396,7 @@ If certain conditions are met, we can graph a regression line; just add a \textt
 ## `geom_smooth()` using formula 'y ~ x'
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-178-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-186-1.pdf}
 
 The \texttt{method\ =\ lm} argument is telling \texttt{ggplot} to use a ``linear model''. The \texttt{se\ =\ FALSE} argument tells \texttt{ggplot} to draw just the line and nothing else. (What else might it try to draw? You are encouraged to go back to the code above and take out \texttt{se\ =\ FALSE} to see for yourself. However, we are not yet in a position to be able to explain the gray band that appears. We will return to this mystery in a future chapter.)
 
@@ -5546,7 +5756,7 @@ Earlier, we promised to revisit the topic of residuals. Residuals are measured a
 ## `geom_smooth()` using formula 'y ~ x'
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-188-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-196-1.pdf}
 
 The graph above shows the regression line and two of the residuals as red line segments. (There is a residual for all 47 ZIP codes; only two are shown in this graph.) The one on the left corresponds to ZIP code with 35\% racial minority. The regression line predicts that, if the model were true, such a ZIP code would have a value of \texttt{involact} of about 0.6. But the actual data for that ZIP code has an \texttt{involact} value of 1. The residual is the difference, about 0.4. In other words, the true data point is 0.4 units higher than the model prediction. This represents a \emph{positive} residual; the actual data is 0.4 units \emph{above} the line. Data points that lie below the regression line have \emph{negative} residuals.
 
@@ -5648,7 +5858,7 @@ To check for patterns in the residuals, we'll create a \emph{residual plot}. A r
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-190-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-198-1.pdf}
 
 Pay close attention to the \texttt{ggplot} code. Notice that the tibble in the first slot is \emph{not} \texttt{chredlin} as it was before. The residuals we need to plot are not stored in the raw \texttt{chredlin} data. We had to calculate the residuals using the \texttt{augment} command, and those residuals are then stored in a different place that we named \texttt{involact\_race\_aug}. In the latter tibble, the residuals themselves are stored in a variable called \texttt{.resid}. (Don't forget the dot in \texttt{.resid}.)
 
@@ -5682,7 +5892,7 @@ What does a bad residual plot look like? The code below will run an ill-advised 
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-191-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-199-1.pdf}
 
 \hypertarget{exercise-11-3}{%
 \paragraph*{Exercise 11}\label{exercise-11-3}}
@@ -5803,7 +6013,7 @@ One easy thing we can do is incorporate a categorical variable into a graph and 
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-196-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-204-1.pdf}
 
 \hypertarget{exercise-14}{%
 \paragraph*{Exercise 14}\label{exercise-14}}
@@ -5829,7 +6039,7 @@ Does this affect the regression? We haven't checked the conditions carefully for
 ## `geom_smooth()` using formula 'y ~ x'
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-197-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-205-1.pdf}
 
 \hypertarget{exercise-15-1}{%
 \paragraph*{Exercise 15}\label{exercise-15-1}}
@@ -6367,7 +6577,7 @@ Let's look at a histogram of the number of heads we see in the simulated flips. 
 ## Warning: Removed 2 rows containing missing values (geom_bar).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-216-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-224-1.pdf}
 
 Let's do the same thing, but now let's consider the \emph{proportion} of heads.
 
@@ -6383,7 +6593,7 @@ Let's do the same thing, but now let's consider the \emph{proportion} of heads.
 ## Warning: Removed 2 rows containing missing values (geom_bar).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-217-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-225-1.pdf}
 
 \hypertarget{randomization1-bigger}{%
 \section{Bigger and better!}\label{randomization1-bigger}}
@@ -8428,7 +8638,7 @@ This is the same idea as before, but now there are 2000 rows in the data frame i
 ## Warning: Removed 2 rows containing missing values (geom_bar).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-220-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-228-1.pdf}
 
 This is helpful. In contrast with the set of simulations with twenty people, the last histogram gives us something closer to what we expect. The mode is at five heads, and every possible number of heads is represented, with decreasing counts as one moves away from five. With 2000 people flipping coins, all possible outcomes---including rare ones---are better represented.
 
@@ -8446,7 +8656,7 @@ Here is the the same histogram, but this time with the proportion of heads inste
 ## Warning: Removed 2 rows containing missing values (geom_bar).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-221-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-229-1.pdf}
 
 \hypertarget{exercise-3-4}{%
 \paragraph*{Exercise 3}\label{exercise-3-4}}
@@ -10494,7 +10704,7 @@ Now let's increase the number of coin flips each person performs. We'll still us
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-224-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-232-1.pdf}
 
 And now the same histogram, but with proportions:
 
@@ -10505,7 +10715,7 @@ And now the same histogram, but with proportions:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-225-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-233-1.pdf}
 
 \hypertarget{exercise-4-4}{%
 \paragraph*{Exercise 4}\label{exercise-4-4}}
@@ -11261,7 +11471,7 @@ A histogram will show us the range of possible values under the assumption of in
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-254-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-262-1.pdf}
 
 The bins aren't great in the picture above. There is no way currently to set the binwidth or boundary as we've done before, but we can experiment with the total number of bins. 9 seems to be a good number.
 
@@ -11272,7 +11482,7 @@ The bins aren't great in the picture above. There is no way currently to set the
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-255-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-263-1.pdf}
 
 \hypertarget{exercise-6-3}{%
 \paragraph*{Exercise 6}\label{exercise-6-3}}
@@ -11314,7 +11524,7 @@ Now we can graph the observed difference in the data alongside the simulated val
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-257-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-265-1.pdf}
 
 \hypertarget{randomization2-chance}{%
 \section{By chance?}\label{randomization2-chance}}
@@ -12159,7 +12369,7 @@ When you get to the \texttt{visualize} step, leave the number of bins out. (Just
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-279-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-287-1.pdf}
 
 (You'll note that there is light gray shading in \emph{both} tails above. This is because we are conducting a two-sided test, which means that we're interested in values that are more extreme than our observed difference in \emph{both} directions.)
 
@@ -13069,7 +13279,7 @@ The value of our test statistic, \texttt{female\_prop}, is 0.6146341. It appears
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-299-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-307-1.pdf}
 
 Although the line only appears on the right, keep in mind that we are conducting a two-sided test, so we are interested in values more extreme than the red line on the right, but also more extreme than a similarly placed line on the left.
 
@@ -13728,7 +13938,7 @@ Now we visualize like normal:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-321-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-329-1.pdf}
 
 (We can change the number of bins if we want, but this number looks pretty good.)
 
@@ -13764,7 +13974,7 @@ The middle 50\% ranges from 14\% up to 17.5\%. We can also visualize this:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-323-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-331-1.pdf}
 
 In other words, when we go out to gather a sample from our (fake infinite) population of high school seniors, about half of the time, we expect the percentage of private students to be somewhere between 14\% and 17.5\%. The other half of the time, we will sample a value outside that range.
 
@@ -13807,7 +14017,7 @@ The middle 95\% ranges from 11\% up to 21.5\%. We can also visualize this:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-325-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-333-1.pdf}
 
 The interpretation is that when you go collect many samples, the confidence intervals you produce using the bootstrap procedure described above will capture the true population proportion 95\% of the time.
 
@@ -14013,7 +14223,7 @@ Inspect the variables \texttt{prog} and \texttt{prog2} above to make sure that t
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-331-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-339-1.pdf}
 
 \hypertarget{ci-ex-interpret}{%
 \subsection{State (but do not overstate) a contextually meaningful interpretation.}\label{ci-ex-interpret}}
@@ -14168,7 +14378,7 @@ We can do this over and over again through the magic of simulation! Here's what 
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-335-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-343-1.pdf}
 
 Each sample gives us a slightly different estimate, and therefore, a different confidence interval as well.
 
@@ -14300,7 +14510,7 @@ The normal distribution looks like this:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-337-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-345-1.pdf}
 
 The curve pictured above is called the \emph{standard normal distribution}. It has a mean of 0 and a standard deviation of 1. Mathematically, this is written as
 
@@ -14341,7 +14551,7 @@ The graph now looks like this:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-338-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-346-1.pdf}
 
 \hypertarget{normal-predictions}{%
 \section{Predictions using normal models}\label{normal-predictions}}
@@ -14356,7 +14566,7 @@ For example, what percentage of women ages 30--44 in the U.S. and Canada are exp
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-339-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-347-1.pdf}
 
 \begin{verbatim}
 ## [1] 0.873451
@@ -14429,7 +14639,7 @@ What about the pretty picture? Unfortunately, this doesn't work so well:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-342-1.pdf} \includegraphics{intro_stats_files/figure-latex/unnamed-chunk-342-2.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-350-1.pdf} \includegraphics{intro_stats_files/figure-latex/unnamed-chunk-350-2.pdf}
 
 \begin{verbatim}
 ## [1] 0.4859026
@@ -14445,7 +14655,7 @@ Instead, let's observe that the \texttt{pdist} command can include both values (
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-343-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-351-1.pdf}
 
 \begin{verbatim}
 ## [1] 0.3875485 0.8734510
@@ -14545,7 +14755,7 @@ The command we need is \texttt{qdist}. It looks a lot like \texttt{pdist}. Obser
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-349-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-357-1.pdf}
 
 \begin{verbatim}
 ## [1] 104.5571
@@ -14567,7 +14777,7 @@ What if we asked about the highest 10\% of women? All you have to do is remember
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-350-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-358-1.pdf}
 
 \begin{verbatim}
 ## [1] 131.9417
@@ -14585,7 +14795,7 @@ Finally, what if we want the middle 50\%? This is trickier. The middle 50\% lies
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-351-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-359-1.pdf}
 
 \begin{verbatim}
 ## [1] 104.5571 123.4429
@@ -14671,7 +14881,7 @@ What is the z score for an SBP of 132? Look at the graph of the normal model \(N
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-355-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-363-1.pdf}
 
 We can see that 132 lies between 128 and 142, which are 1 and 2 standard deviations above the mean, respectively. The exact z score is
 
@@ -14757,7 +14967,7 @@ Working with z scores also makes it easier to work with normal models. The defau
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-358-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-366-1.pdf}
 
 \begin{verbatim}
 ## [1] 0.1586553
@@ -14797,7 +15007,7 @@ Here is an example. The total snowfall in Grand Rapids, Michigan has been record
 ## Warning: Removed 1 rows containing non-finite values (stat_bin).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-359-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-367-1.pdf}
 
 Here is the QQ plot for the same data. Notice that the aesthetics are a little different; instead of \texttt{x}, we have to use \texttt{sample}.
 
@@ -14817,7 +15027,7 @@ Here is the QQ plot for the same data. Notice that the aesthetics are a little d
 ## Warning: Removed 1 rows containing non-finite values (stat_qq_line).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-360-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-368-1.pdf}
 
 (The warning is because there is one missing value in the data.)
 
@@ -14834,7 +15044,7 @@ Contrast that with skewed data. For example, the \texttt{Alcohol} data set conta
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-361-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-369-1.pdf}
 
 It is also apparent in the QQ plot that the data is not normally distributed.
 
@@ -14846,7 +15056,7 @@ It is also apparent in the QQ plot that the data is not normally distributed.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-362-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-370-1.pdf}
 
 The path of dots is sharply curved, indicating a lack of normality.
 
@@ -16020,7 +16230,7 @@ Instead of focusing on the total number of successes, let's use the proportion o
 ## Warning: Removed 2 rows containing missing values (geom_bar).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-370-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-378-1.pdf}
 
 Because each sample has size 10, the proportion of successes can only be multiples of 0.1. Although the distribution is somewhat normally shaped, it is discrete (no values in between the bars) and there is an appreciable left skew.
 
@@ -16046,7 +16256,7 @@ What happens if we increase the sample size to 20? (The binwidth has to change t
 ## Warning: Removed 2 rows containing missing values (geom_bar).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-372-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-380-1.pdf}
 
 \hypertarget{exercise-1-10}{%
 \paragraph*{Exercise 1}\label{exercise-1-10}}
@@ -16195,7 +16405,7 @@ There is something else going on too. Suppose that \(n = 100\) but \(p = 0.01\).
 ## Warning: Removed 2 rows containing missing values (geom_bar).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-375-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-383-1.pdf}
 
 (Note that the x-axis scale is much smaller than it was before.)
 
@@ -16251,7 +16461,7 @@ Let's simulate:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-377-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-385-1.pdf}
 
 It looks like there are at least a few simulated samples that could come in less than 50\% by chance.
 
@@ -16300,7 +16510,7 @@ Back to our original question. How likely is it that a random survey of 50 voter
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-378-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-386-1.pdf}
 
 \begin{verbatim}
 ## [1] 0.01958508
@@ -16817,7 +17027,7 @@ The z score is -2.5281029. The proportion of survivors is about 2.5 standard err
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-391-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-399-1.pdf}
 
 Commentary: In past chapters, we have used the \texttt{generate} verb to get many repetitions (usually 1000) of some kind of random process to simulate the sampling distribution model. In this chapter, we have used the verb \texttt{assume} instead to assume that the sampling distribution is a normal model. As long as the conditions hold, this is a reasonable assumption. This also means that we don't have to use \texttt{set.seed} as there is no random process to reproduce.
 
@@ -16862,7 +17072,7 @@ Compare the graph above to what we would see if we simulated the sampling distri
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-393-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-401-1.pdf}
 
 This is essentially the same picture, although the model above is centered on the null value 0.5 instead of the z score of 0. This also means that the \texttt{obs\_stat} had to be the sample proportion \texttt{alive\_prop} and not the z score \texttt{alive\_z}.
 
@@ -16998,7 +17208,7 @@ By contrast, a confidence interval is making no assumption about the ``true'' va
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-397-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-405-1.pdf}
 
 Commentary: when we use a theoretical normal distribution, we have to compute the confidence interval a different way.
 
@@ -17921,7 +18131,7 @@ Commentary: Note the phrase ``meaning that males died at a higher rate''. If you
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-418-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-426-1.pdf}
 
 Commentary: Remember that this is a two-sided test.The red line above is the location of the test statistic, but both tails are shaded and count toward the P-value.
 
@@ -18005,7 +18215,7 @@ None of the conditions have changed, so they don't need to be rechecked.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-421-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-429-1.pdf}
 
 \hypertarget{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-2}{%
 \subsection{State (but do not overstate) a contextually meaningful interpretation.}\label{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-2}}
@@ -18721,7 +18931,7 @@ The ``stat'' column above contains 1000 random values of \(\chi^{2}\). Let's gra
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-447-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-455-1.pdf}
 
 A few things are apparent:
 
@@ -18781,7 +18991,7 @@ Look at the graph below that shows the theoretical chi-square models for varying
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-449-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-457-1.pdf}
 
 The red curve (corresponding to \(df = 2\)) looks a lot like our simulation above. But as the degrees of freedom increase, the mode shifts further to the right.
 
@@ -18816,7 +19026,7 @@ Here is the theoretical distribution:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-451-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-459-1.pdf}
 
 And here it is will our test statistic (the chi-squared value for our observed data) marked:
 
@@ -18828,7 +19038,7 @@ And here it is will our test statistic (the chi-squared value for our observed d
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-452-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-460-1.pdf}
 
 Finally, here is the P-value associated with the shaded area to the right of the test statistic:
 
@@ -19139,7 +19349,7 @@ Commentary: The \(\chi^{2}\) test statistic is, of course, the same value we com
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-461-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-469-1.pdf}
 
 Commentary: We will use the theoretical distribution
 
@@ -19362,6 +19572,68 @@ Please write up your answer here.
 \addcontentsline{toc}{subparagraph}{Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.}
 
 Please write up your answer here.
+
+\hypertarget{bonus-section-residuals}{%
+\section{Bonus section: residuals}\label{bonus-section-residuals}}
+
+The chi-square test can tell us if there is some difference from the expected distribution of counts across the categories, but it doesn't tell us which category has a higher or lower count than expected. For that, we'll need to turn to another tool: \emph{residuals}.
+
+For technical reasons, the \texttt{infer} package doesn't provide residuals, so we'll have to turn to slightly different tools. Here's how this works; we'll return to the example of distribution of cars across the different categories of number of cylinders.
+
+The function we'll use is called \texttt{chisq.test}. It requires us to give it input in the form of a table of counts, together with the proportions we wish to compare to:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{table}\NormalTok{(mtcars2}\SpecialCharTok{$}\NormalTok{cyl\_fct) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{chisq.test}\NormalTok{(}\AttributeTok{p =} \FunctionTok{c}\NormalTok{(.}\DecValTok{38}\NormalTok{, .}\DecValTok{38}\NormalTok{, .}\DecValTok{24}\NormalTok{)) }\OtherTok{{-}\textgreater{}}\NormalTok{ cyl\_chisq.test}
+\NormalTok{cyl\_chisq.test}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Chi-squared test for given probabilities
+## 
+## data:  .
+## X-squared = 7.5011, df = 2, p-value = 0.0235
+\end{verbatim}
+
+Notice that the chi-squared value 7.5011 and the p-value 0.0235 are the same as those we calculated using \texttt{infer} tools above.
+
+Here's how to obtain the table of residuals:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cyl\_chisq.test}\SpecialCharTok{$}\NormalTok{residuals}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##          4          6          8 
+## -0.3326528 -1.4797315  2.2805336
+\end{verbatim}
+
+What do these numbers mean in the real world? Not much. (Essentially, they are the values that were squared to become the individual cell contributions to the overall chi-squared score of the table.)
+
+What we'll do with them is look for the most positive and most negative values.
+- We see that the 8-cylinder column has the most positive value: this means that the number of 8-cylinder cars in 1974 was substantially \emph{higher} than we expected.
+- We see that the 6-cylinder column has the most negative value: this means that the number of 6-cylinder cars in 1974 was substantially \emph{lower} than we expected.
+
+\hypertarget{your-turn-2}{%
+\subsection{Your turn}\label{your-turn-2}}
+
+Determine which of the high school program types is the most substantially overrepresented and the most substantially underrepresented, according to our hypothesized distribution.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to produce the chisq.test result.}
+
+\CommentTok{\# Add code here to examine the residuals.}
+\end{Highlighting}
+\end{Shaded}
+
+Please write your answer here.
 
 \hypertarget{conclusion-8}{%
 \section{Conclusion}\label{conclusion-8}}
@@ -20565,7 +20837,7 @@ Commentary: As in the last chapter, there's not much context to report with a va
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-483-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-494-1.pdf}
 
 \hypertarget{calculate-the-p-value.-7}{%
 \subsection{Calculate the P-value.}\label{calculate-the-p-value.-7}}
@@ -20618,8 +20890,8 @@ It's possible that we have made a Type II error. It may be that low birth weight
 
 There are no parameters of interest in a chi-square test, so there is no confidence interval to report.
 
-\hypertarget{your-turn-2}{%
-\section{Your turn}\label{your-turn-2}}
+\hypertarget{your-turn-3}{%
+\section{Your turn}\label{your-turn-3}}
 
 Use the \texttt{smoking} data set from the \texttt{openintro} package. Run a chi-square test for independence to determine if smoking status is associated with marital status.
 
@@ -20786,6 +21058,90 @@ Please write up your answer here.
 \addcontentsline{toc}{subparagraph}{Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.}
 
 Please write up your answer here.
+
+\hypertarget{bonus-section-residuals-1}{%
+\section{Bonus section: Residuals}\label{bonus-section-residuals-1}}
+
+Just like with the chi-square test for goodness of fit, rejecting the null hypothesis using the chi-square test for independence informs us that two variables are associated, but it doesn't tell us the useful information about which combinations of variables have higher and lower counts than expected. And just like the chi-square test for goodness of fit, we can examine the \emph{residuals table} to find that information.
+
+\textbf{A word of caution}: You should only examine the residuals if your test was statistically significant! The residuals table for tests in which we fail to reject the null hypothesis can be misleading.
+
+Because we failed to reject the null hypothesis in the \texttt{low\_race\_test}, it would be unwise for us to examine the residuals table in that test. Instead, we'll use a different example.
+
+The \texttt{diabetes2} dataset in the \texttt{openintro} package contains information about an experiment evaluating three treatments for Type 2 diabetes in patients aged 10-17 who were being treated with metformin. The three treatments summarized in the \texttt{treatment} variable were: continued treatment with metformin (\texttt{met}), treatment with metformin combined with rosiglitazone (\texttt{rosi}), or a lifestyle intervention program (\texttt{lifestyle}). Each patient had a primary \texttt{outcome}, which was either ``lacked glycemic control'' (\texttt{failure}) or did not lack that control (\texttt{success}). Here is the summary of the results of the experiment:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tabyl}\NormalTok{(diabetes2, treatment, outcome) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  treatment failure success
+##  lifestyle     109     125
+##        met     120     112
+##       rosi      90     143
+\end{verbatim}
+
+For the sake of a streamlined presentation, we'll omit the usual details of condition-checking, hypothesis-writing, etc., and skip right to the conclusion.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tabyl}\NormalTok{(diabetes2, treatment, outcome) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{chisq.test}\NormalTok{() }\OtherTok{{-}\textgreater{}}\NormalTok{ outcome\_treatment\_chisq.test}
+\NormalTok{outcome\_treatment\_chisq.test}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Pearson's Chi-squared test
+## 
+## data:  .
+## X-squared = 8.1645, df = 2, p-value = 0.01687
+\end{verbatim}
+
+Notice that the p-value obtained from the test is below our usual significance level \(\alpha = 0.05\), so it makes sense for us to examine the residuals.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{outcome\_treatment\_chisq.test}\SpecialCharTok{$}\NormalTok{residuals}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  treatment    failure    success
+##  lifestyle  0.2138881 -0.1959703
+##        met  1.3725470 -1.2575659
+##       rosi -1.5839451  1.4512548
+\end{verbatim}
+
+Again, these values don't mean much in the real world; our job is to look at the most positive and most negative values.
+
+\begin{itemize}
+\tightlist
+\item
+  Since the \texttt{rosi} and \texttt{failure} cell has the most negative value, the count of people who failed to achieve glycemic control with rosiglitazone is the most \emph{below} expected. (That's a good result!)
+\item
+  Since the \texttt{rosi} and \texttt{success} cell has the most positive value, the count of people who succeeded in achieving glycemic control with rosiglitazone is the most \emph{above} expected. (That's also a good result!)
+\end{itemize}
+
+Overall, we can conclude that the rosiglitazone treatment was quite successful in helping people achieve their glycemic control goals.
+
+\hypertarget{your-turn-4}{%
+\subsection{Your turn}\label{your-turn-4}}
+
+Examine the residuals table to determine which marital statuses are most associated with smoking or not smoking.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to produce the chisq.test result.}
+
+\CommentTok{\# Add code here to examine the residuals table.}
+\end{Highlighting}
+\end{Shaded}
+
+Please write your answer here.
 
 \hypertarget{conclusion-11}{%
 \section{Conclusion}\label{conclusion-11}}
@@ -22933,7 +23289,7 @@ Again, we see that the sample means are close to 114, but there is some variabil
 ## Warning: Removed 2 rows containing missing values (geom_bar).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-497-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-512-1.pdf}
 
 Most sample means are around 114, but there is a good range of possibilities from around 93 to 135. The population standard deviation \(\sigma\) is 14, but the standard deviation in this graph is clearly much smaller than that. (A large majority of the samples are within 14 of the mean!)
 
@@ -22964,7 +23320,7 @@ Let's re-scale the y-axis to use percentages instead of counts. Then we should b
 ## Warning: Removed 2 rows containing missing values (geom_bar).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-498-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-513-1.pdf}
 
 Looks pretty good!
 
@@ -22994,7 +23350,7 @@ The following code will accomplish all of this. (Don't worry about the messy syn
 ## Warning: Removed 2 rows containing missing values (geom_bar).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-499-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-514-1.pdf}
 
 Remember that this is not the standard normal model \(N(0, 1)\). The standard deviation in the graph above is not 1, but 0.5 because that is the standard error when using samples of size 4. (\(1/\sqrt{4} = 0.5\).)
 
@@ -25080,7 +25436,7 @@ Let's plot our simulated t scores alongside a normal distribution.
 ## Warning: Removed 2 rows containing missing values (geom_bar).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-502-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-517-1.pdf}
 
 These t scores are somewhat close to the normal model we had when we knew \(\sigma\), but the fit doesn't look quite right. The peak of the simulated values isn't quite high enough, and the tails seem to spill out over the much thinner tails of the normal model.
 
@@ -25119,7 +25475,7 @@ So is the t model correct for our simulated t scores? Our sample size was 4, so 
 ## Warning: Removed 2 rows containing missing values (geom_bar).
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-503-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-518-1.pdf}
 
 The green curve fits the simulated values much better.
 
@@ -25234,7 +25590,7 @@ Here is a histogram.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-507-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-522-1.pdf}
 
 And here is a QQ plot.
 
@@ -25246,7 +25602,7 @@ And here is a QQ plot.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-508-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-523-1.pdf}
 
 This distribution is quite skewed to the left. Of even more concern is the extreme outlier on the left.
 
@@ -25323,7 +25679,7 @@ Here are the new plots:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-512-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-527-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -25333,7 +25689,7 @@ Here are the new plots:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-513-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-528-1.pdf}
 
 The left skew is still present, but we have removed the outlier.
 
@@ -25473,7 +25829,7 @@ The t score is 5.886253. The mean teacher salary in our sample is almost 6 stand
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-517-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-532-1.pdf}
 
 Commentary: Although we are conducting a two-sided test, the area in the tails is so small that it can't really be seen in the picture above.
 
@@ -25559,7 +25915,7 @@ All the conditions have been checked already.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-520-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-535-1.pdf}
 
 \hypertarget{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-4}{%
 \subsection{State (but do not overstate) a contextually meaningful interpretation.}\label{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-4}}
@@ -25578,8 +25934,8 @@ Since \$63,024 is not contained in the confidence interval, it is not a plausibl
 
 We are not comparing two groups.
 
-\hypertarget{your-turn-3}{%
-\section{Your turn}\label{your-turn-3}}
+\hypertarget{your-turn-5}{%
+\section{Your turn}\label{your-turn-5}}
 
 In the High School and Beyond survey (the \texttt{hsb2} data set from the \texttt{openintro} package), among the many scores that are recorded are standardized math scores. Suppose that these scores are normalized so that a score of 50 represents some kind of international average. (This is not really true. I had to make something up here to give you a baseline number with which to work.) The question is, then, are American students different from this international baseline?
 
@@ -26022,7 +26378,7 @@ Here are summary statistics, a histogram, and a QQ plot for \texttt{d}.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-536-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-551-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -26032,7 +26388,7 @@ Here are summary statistics, a histogram, and a QQ plot for \texttt{d}.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-537-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-552-1.pdf}
 
 The data is somewhat skewed to the right with one observation that might be a bit of an outlier. If the sample size were much smaller, we might be concerned about this point However, it's not much higher than other points in that right tail, and it doesn't appear that its inclusion or exclusion will change the overall conclusion much. If you are concerned that the point might alter the conclusion, run the hypothesis test twice, once with and once without the outlier present to see if the main conclusion changes.
 
@@ -26190,7 +26546,7 @@ The value of t is 7.6487711. The mean difference in textbook prices is more than
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-541-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-556-1.pdf}
 
 \hypertarget{calculate-the-p-value.-11}{%
 \subsection{Calculate the P-value.}\label{calculate-the-p-value.-11}}
@@ -26274,7 +26630,7 @@ All necessary conditions have already been checked.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-544-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-559-1.pdf}
 
 \hypertarget{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-6}{%
 \subsection{State (but do not overstate) a contextually meaningful interpretation.}\label{state-but-do-not-overstate-a-contextually-meaningful-interpretation.-6}}
@@ -26293,8 +26649,8 @@ The confidence interval does not contain zero, which means that zero is not a pl
 
 To think about the practical significance, imagine that you were a student at UCLA and that every textbook you needed was (on average) \$10 to \$15 more expensive in the bookstore than purchasing on Amazon. Multiplied across the number of textbooks you need, that could amount to a significant increase in expenses. In other words, that dollar figure is not likely a trivial amount of money for many students who require multiple textbooks each semester.
 
-\hypertarget{your-turn-4}{%
-\section{Your turn}\label{your-turn-4}}
+\hypertarget{your-turn-6}{%
+\section{Your turn}\label{your-turn-6}}
 
 The \texttt{hsb2} data set contains data from a random sample of 200 high school seniors from the ``High School and Beyond'' survey conducted by the National Center of Education Statistics. It contains, among other things, students' scores on standardized tests in math, reading, writing, science, and social studies. We want to know if students do better on the math test or on the reading test.
 
@@ -27028,7 +27384,7 @@ Here's the visualization:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-563-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-578-1.pdf}
 
 No surprise that this histogram looks nearly normal, centered at zero: the simulation is working under the assumption of the null hypothesis of no difference between the groups.
 
@@ -27042,7 +27398,7 @@ Here is the same plot but including our sample difference:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-564-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-579-1.pdf}
 
 Our observed difference (from the sampled data) is quite far out into the tail of this simulated sampling distribution, so it appears that our actual data would be somewhat unlikely due to pure chance alone if the null hypothesis were true.
 
@@ -27573,7 +27929,7 @@ With a numerical response variable and a categorical predictor variable, there a
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-571-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-586-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -27583,7 +27939,7 @@ With a numerical response variable and a categorical predictor variable, there a
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-572-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-587-1.pdf}
 
 The histograms for both groups look sort of normal, but the nonsmoker group may be a little left skewed and the smoker group may have some low outliers. Here are the QQ plots to give us another way to ascertain normality of the data.
 
@@ -27596,7 +27952,7 @@ The histograms for both groups look sort of normal, but the nonsmoker group may 
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-573-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-588-1.pdf}
 
 There's a little deviation from normality, but nothing too crazy.
 
@@ -27743,7 +28099,7 @@ Commentary: Remember that whenever you are computing the difference between two 
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-577-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-592-1.pdf}
 
 Commentary: We use the name \texttt{bwt\_smoke\_test\_t} (using the assumption of a Student t model) as a new variable name so that it doesn't overwrite the variable \texttt{bwt\_smoke\_test} we performed earlier as a permutation test (the one with the shuffling). This results of using \texttt{bwt\_smoke\_test} versus \texttt{bwt\_smoke\_test\_t} will be very similar.
 
@@ -27842,8 +28198,8 @@ Since zero is not contained in the confidence interval, zero is not a plausible 
 
 In order to know if smoking is a risk factor for low birth weight, we would need to know what a difference of 80 g or 490 grams means for babies. Although most of us presumably don't have any special training in obstetrics, we could do a quick internet search to see that even half a kilogram is not a large amount of weight difference between two babies. Having said that, though, any difference in birth weight that might be attributable to smoking could be a concern to doctors. In any event, our data is observational, so we cannot make causal claims here.
 
-\hypertarget{your-turn-5}{%
-\section{Your turn}\label{your-turn-5}}
+\hypertarget{your-turn-7}{%
+\section{Your turn}\label{your-turn-7}}
 
 Continue to use the \texttt{birthwt} data set. This time, see if a history of hypertension is associated with a difference in the mean birth weight of babies. In the ``Prepare the data for analysis'' section, you will need to create a new tibble---call it \texttt{birthwt3}---in which you convert the \texttt{ht} variable to a factor variable.
 
@@ -30615,7 +30971,7 @@ A useful graph is a side-by-side boxplot.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-596-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-611-1.pdf}
 
 This boxplot shows that the distribution of depression scores is similar across the groups. There are some small differences, but it's not clear if these differences are statistically significant.
 
@@ -30722,7 +31078,7 @@ We can simulate this using the \texttt{infer} package. Suppose that there were n
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-600-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-615-1.pdf}
 
 As explained earlier, the F scores are clustered around 1. They can never be smaller than zero. (The bar at zero is centered on zero, but no F score can be less than zero.) There are occasional F scores much larger than 1, but just by chance.
 
@@ -30753,7 +31109,7 @@ For example, here is picture of a few different F models.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-601-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-616-1.pdf}
 
 Here is the theoretical F distribution for our data:
 
@@ -30795,7 +31151,7 @@ Here are the simulated values again, but with the theoretical F distribution sup
 ## method. {infer} currently does not check these for you.
 \end{verbatim}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-603-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-618-1.pdf}
 
 Other than the very left edge, the theoretical curve is a good fit to the simulated F scores.
 
@@ -33263,7 +33619,7 @@ Here are two graphs that are appropriate for one categorical and one numerical v
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-611-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-626-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -33273,7 +33629,7 @@ Here are two graphs that are appropriate for one categorical and one numerical v
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-612-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-627-1.pdf}
 
 Both graphs show that the distribution of depression scores in each group is similar.
 
@@ -33288,7 +33644,7 @@ The distributions look reasonably normal, or perhaps a bit right skewed, but we 
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-613-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-628-1.pdf}
 
 There is one mild outlier in the ``Previous'' group, but with sample sizes as large as we have in each group, it's unlikely that this outlier will be influential. So we'll just leave it in the data and not worry about it.
 
@@ -33431,7 +33787,7 @@ Commentary: F scores (much like chi-square values earlier in the course) are not
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-616-1.pdf}
+\includegraphics{intro_stats_files/figure-latex/unnamed-chunk-631-1.pdf}
 
 \hypertarget{calculate-the-p-value.-15}{%
 \subsection{Calculate the P-value.}\label{calculate-the-p-value.-15}}
@@ -33501,8 +33857,8 @@ Please write up your answer here.
 
 There is no confidence interval for ANOVA. We are not hypothesizing about the value of any particular parameter, so there's nothing to estimate with a confidence interval.
 
-\hypertarget{your-turn-6}{%
-\section{Your turn}\label{your-turn-6}}
+\hypertarget{your-turn-8}{%
+\section{Your turn}\label{your-turn-8}}
 
 Using the \texttt{penguins} data, determine if there is a difference in the average body masses among the three species represented in the data (Adelie, Chinstrap, and Gentoo).
 
@@ -33688,6 +34044,86 @@ Please write up your answer here.
 \addcontentsline{toc}{subparagraph}{Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.}
 
 Please write up your answer here.
+
+\hypertarget{bonus-section-post-hoc-analysis}{%
+\section{Bonus section: post-hoc analysis}\label{bonus-section-post-hoc-analysis}}
+
+Suppose our ANOVA test leads us to reject the null hypothesis. Then we have statistically significant evidence that there is some difference between the means of the various groups. However, ANOVA doesn't tell us which groups are actually different -- unsatisfying!
+
+We could consider just doing a bunch of individual t-tests between each pair of groups. However, the problem with this approach is that it greatly increases the chances that we might commit a Type I error. (For an exploration of this problem, please see the following \href{https://xkcd.com/882/}{XKCD comic}.)
+
+Fortunately, there is a tool called \emph{post-hoc analysis} that allows us to determine which groups differ from the others in a way that doesn't inflate the Type I error rate.
+
+There are several methods for conducting post-hoc analysis. You may have heard of the \emph{Bonferroni correction}, in which the usual significance level is divided by the number of pairwise comparisons contemplated. Another method, and the one we'll explore here, is called the \emph{Tukey Honestly-Significant-Difference test}. The precise details of this test are a little outside the scope of this course, but here's how it's done in R.
+
+We'll start by using a different function, called \texttt{aov}, to conduct the ANOVA test. This function produces a slightly different format of outputs than we're used to, but it produces all the same values as our other tools:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{BECK\_IV\_aov }\OtherTok{\textless{}{-}} \FunctionTok{aov}\NormalTok{(BECK }\SpecialCharTok{\textasciitilde{}}\NormalTok{ IV\_fct, uis2)}
+\FunctionTok{summary}\NormalTok{(BECK\_IV\_aov)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##              Df Sum Sq Mean Sq F value Pr(>F)   
+## IV_fct        2   1148   574.0   6.721 0.0013 **
+## Residuals   572  48850    85.4                  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+Notice in particular that the F score and the P-value are the same as we obtained using \texttt{infer} tools above.
+
+Now that we have the result of the \texttt{aov} command stored in a new variable, we can feed it into the new command \texttt{TukeyHSD}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{TukeyHSD}\NormalTok{(BECK\_IV\_aov)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = BECK ~ IV_fct, data = uis2)
+## 
+## $IV_fct
+##                     diff        lwr      upr     p adj
+## Previous-Never  0.692054 -1.8458349 3.229943 0.7976511
+## Recent-Never    3.043674  1.0299195 5.057429 0.0012039
+## Recent-Previous 2.351620 -0.1517446 4.854986 0.0707718
+\end{verbatim}
+
+Here's how to read these results: Start by looking at the \texttt{p\ adj} column, which tells us adjusted p-values. Look for a p-value that is below the usual significance level \(\alpha = 0.05\). In our example, the second p-value is the only one that is small enough to reach significance.
+
+Once you've located the significant p-values, read the row to determine which comparisons are significant. Here, the second row is the meaningful one: this is the comparison between the ``Recent'' group and the ``Never'' group.
+
+The column labeled \texttt{diff} reports the difference between the means of the two groups; the order of subtraction is reported in the first column. Here, the difference in Beck depression scores is 3.043674, which is computed by subtracting the mean of the ``Never'' group from the mean of the ``Recent'' group.
+
+As usual, we report our results in a contextually-meaningful sentence. Here's our example:
+
+\begin{quote}
+Tukey's HSD test reports that recent IV drug users have a Beck inventory score that is 3.043674 points higher than those who have never used IV drugs.
+\end{quote}
+
+\hypertarget{your-turn-9}{%
+\subsection{Your turn}\label{your-turn-9}}
+
+Conduct a post-hoc analysis to determine which penguin species is heavier or lighter than the others.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Add code here to produce the aov model}
+
+\CommentTok{\# Add code here to run Tukey\textquotesingle{}s HSD test on the aov model}
+\end{Highlighting}
+\end{Shaded}
+
+Report your results in a contextually-meaningful sentence:
+
+Please write your answer here.
 
 \hypertarget{conclusion-23}{%
 \section{Conclusion}\label{conclusion-23}}
