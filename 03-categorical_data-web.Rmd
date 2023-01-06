@@ -648,6 +648,96 @@ Use `ggplot` with `geom_col` to create a bar chart for island.
 
 :::
 
+## Bonus section: Recovering raw data from tables
+
+Sometimes we come across summary data instead of raw data. We've learned how to manually create tibbles with that summary data and use `geom_col` instead of `geom_bar` to graph it, but sometimes it is also useful to recover what the raw data *would* have been. Fortunately there are R tools to do exactly that.
+
+
+We'll continue with our example `penguin_species_table`, which we'll reprint here for reference:
+
+```{r}
+penguin_species_table
+```
+
+From this table, we know what the raw data for this variable should look like: there should be 152 rows that say "Adelie," 68 rows that say "Chinstrap," and 124 rows that say "Gentoo." It would be very annoying, though, to make that whole dataframe by hand. Fortunately, there are R tools that will create this dataframe for us.
+
+The first thing we will need to do is turn our tibble into a tabyl. (I would like to apologize for how ridiculous that sentence sounds.)
+
+```{r}
+penguin_species_tabyl <- as_tabyl(penguin_species_table)
+penguin_species_tabyl
+```
+
+The hero of the day is the function `uncount` from the `tidyr` package:
+
+```{r}
+penguin_species_raw <- penguin_species_tabyl %>%
+  uncount(count)
+penguin_species_raw
+```
+
+Click through the rows of this table and you'll see that it's exactly what we wanted: "Adelie" is repeated 152 times, "Chinstrap" is repeated 68 times, and "Gentoo" is repeated 124 times. Neat!
+
+### Recovering raw data from a contingency table
+
+This strategy also works, with some modifications, for recovering the raw data presented in a contingency table. Previously, we saw the following contingency table showing the counts of each species broken down by sex:
+
+| sex    | Adelie | Chinstrap | Gentoo |
+|--------|--------|-----------|--------|
+| female | 73     | 34        | 58     |
+| male   | 73     | 34        | 61     |
+
+(Note: I've removed the unruly penguins who did not allow their sex to be determined.)
+
+Again, we can imagine what the raw data would look like: there would be 73 rows where the `species` variable would say "Adelie" and the `sex` variable would say "female," then 34 rows where the `species` variable would say "Chinstrap" and the `sex` variable would say "female," and so on.
+
+We can start by building a tibble with this information in the same way we built the tibble of penguin species counts. Note that the species labels now become the column headers.
+
+```{r}
+penguin_species_sex_table <- tibble(
+  sex = c("female", "male"),
+  Adelie = c(73, 73),
+  Chinstrap = c(34, 34),
+  Gentoo = c(58, 61)
+)
+penguin_species_sex_table
+```
+
+Once again, we'll want to turn this tibble into a tabyl:
+
+```{r}
+penguin_species_sex_tabyl <- as_tabyl(penguin_species_sex_table)
+penguin_species_sex_tabyl
+```
+
+In order for the `uncount` function to work correctly, we need to have all the counts in a single column, but since this is a contingency table, our counts are spread out across several columns. To solve this problem, we'll need one more library that we haven't needed before. The `reshape2` library has lots of tools for reshaping data, including one called `melt` that will do what we need.
+
+```{r}
+library(reshape2)
+melt(penguin_species_sex_tabyl, variable = "species")
+```
+
+(Notice the use of `variable = "species"` to provide the label for the new column, which otherwise didn't appear in our tibble or our tabyl. If we didn't have that line, the new column would be labeled `variable`, which is not very useful.)
+
+Now our data is in the form that `uncount` knows how to deal with. And indeed, we can assemble all these steps together into a pipeline. First, we should build the tibble. Then, we should turn the tibble into a tabyl (sorry), then `melt` the tabyl, and finally `uncount` to get back to the raw data (but notice that the counts are now given in a column called `value`). Finally, we should store the result as a new dataframe. 
+
+Here are all the steps put together:
+
+```{r}
+penguin_species_sex_table <- tibble(
+  sex = c("female", "male"),
+  Adelie = c(73, 73),
+  Chinstrap = c(34, 34),
+  Gentoo = c(58, 61)
+) 
+penguin_species_sex_table %>%
+  as_tabyl() %>%
+  melt(variable = "species") %>%
+  uncount(value) -> penguin_species_sex_raw
+penguin_species_sex_raw
+```
+
+Indeed, this new dataframe looks just like how we wanted it to look.
 
 ## Conclusion {#categorical-conclusion}
 
