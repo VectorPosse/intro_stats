@@ -660,14 +660,13 @@ Use `ggplot` with `geom_col` to create a bar chart for island.
 
 Sometimes we come across summary data instead of raw data. We've learned how to manually create tibbles with that summary data and use `geom_col` instead of `geom_bar` to graph it, but sometimes it is also useful to recover what the raw data *would* have been. Fortunately there are R tools to do exactly that.
 
-
 We'll continue with our example `penguin_species_table`, which we'll reprint here for reference:
 
 ```{r}
 penguin_species_table
 ```
 
-From this table, we know what the raw data for this variable should look like: there should be 152 rows that say "Adelie," 68 rows that say "Chinstrap," and 124 rows that say "Gentoo." It would be very annoying, though, to make that whole dataframe by hand. Fortunately, there are R tools that will create this dataframe for us.
+From this table, we know what the raw data for this variable should look like: there should be 152 rows that say "Adelie," 68 rows that say "Chinstrap," and 124 rows that say "Gentoo." It would be very annoying, though, to make that whole tibble by hand. Fortunately, there are R tools that will create it for us.
 
 The first thing we will need to do is turn our tibble into a tabyl. (I would like to apologize for how ridiculous that sentence sounds.)
 
@@ -718,17 +717,24 @@ penguin_species_sex_tabyl <- as_tabyl(penguin_species_sex_table)
 penguin_species_sex_tabyl
 ```
 
-In order for the `uncount` function to work correctly, we need to have all the counts in a single column, but since this is a contingency table, our counts are spread out across several columns. To solve this problem, we'll need one more library that we haven't needed before. The `reshape2` library has lots of tools for reshaping data, including one called `melt` that will do what we need.
+In order for the `uncount` function to work correctly, we need to have all the counts in a single column, but since this is a contingency table, our counts are spread out across several columns. To solve this problem, we'll need to "pivot" the columns, turning them into rows. The command is called `pivot_longer`. (There is also a `pivot_wider` command that turns rows into columns, but we won't need that one.)
 
 ```{r}
-library(reshape2)
-melt(penguin_species_sex_tabyl, variable = "species")
+penguin_species_sex_tabyl %>%
+  pivot_longer(cols = c("Adelie", "Chinstrap", "Gentoo"))
 ```
 
-(Notice the use of `variable = "species"` to provide the label for the new column, which otherwise didn't appear in our tibble or our tabyl. If we didn't have that line, the new column would be labeled `variable`, which is not very useful.)
+If we want a little more control over the names of the newly created columnds, we can add those as follows:
 
-Now our data is in the form that `uncount` knows how to deal with. And indeed, we can assemble all these steps together into a pipeline. First, we should build the tibble. Then, we should turn the tibble into a tabyl (sorry), then `melt` the tabyl, and finally `uncount` to get back to the raw data (but notice that the counts are now given in a column called `value`). Finally, we should store the result as a new dataframe. 
+```{r}
+penguin_species_sex_tabyl %>%
+  pivot_longer(cols = c("Adelie", "Chinstrap", "Gentoo"),
+               names_to = "species",
+               values_to = "count")
+```
 
+
+Now our data is in the form that `uncount` knows how to deal with. And indeed, we can assemble all these steps together into a pipeline. First, we should build the tibble. Then, we should turn the tibble into a tabyl (sorry), then `pivot` the tabyl, and finally `uncount` to get back to the raw data. Finally, we should store the result as a new tibble. 
 Here are all the steps put together:
 
 ```{r}
@@ -740,12 +746,16 @@ penguin_species_sex_table <- tibble(
 ) 
 penguin_species_sex_table %>%
   as_tabyl() %>%
-  melt(variable = "species") %>%
-  uncount(value) -> penguin_species_sex_raw
+  pivot_longer(cols = c("Adelie", "Chinstrap", "Gentoo"),
+               names_to = "species",
+               values_to = "count") %>%
+  uncount(count) -> penguin_species_sex_raw
+
 penguin_species_sex_raw
 ```
 
-Indeed, this new dataframe looks just like how we wanted it to look.
+Indeed, this new tibble looks just like how we wanted it to look.
+
 
 ## Conclusion
 
