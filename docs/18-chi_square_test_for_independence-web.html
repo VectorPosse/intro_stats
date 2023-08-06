@@ -1,0 +1,2017 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Introduction to Statistics: an integrated textbook and workbook using R - 18&nbsp; Chi-square test for independence</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./19-inference_for_one_mean-web.html" rel="next">
+<link href="./17-chi_square_goodness_of_fit-web.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./18-chi_square_test_for_independence-web.html"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Chi-square test for independence</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to Statistics: an integrated textbook and workbook using R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-intro_to_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-using_r_markdown-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Using R Markdown</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-categorical_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Categorical data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-numerical_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Numerical data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-manipulating_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Manipulating data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-correlation-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Correlation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-regression-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Regression</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-intro_to_randomization_1-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to randomization, Part 1</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-intro_to_randomization_2-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to randomization, Part 2</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-hypothesis_testing_with_randomization_1-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Hypothesis testing with randomization, Part 1</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-hypothesis_testing_with_randomization_2-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Hypothesis testing with randomization, Part 2</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-confidence_intervals-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Confidence intervals</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-normal_models-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Normal models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-sampling_distribution_models-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Sampling distribution models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-inference_for_one_proportion-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Inference for one proportion</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-inference_for_two_proportions-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Inference for two proportions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-chi_square_goodness_of_fit-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Chi-square goodness-of-fit test</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-chi_square_test_for_independence-web.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Chi-square test for independence</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-inference_for_one_mean-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Inference for one mean</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-inference_for_paired_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Inference for paired data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21-inference_for_two_independent_means-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Inference for two independent means</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-anova-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">ANOVA</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rubric.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Rubric for inference</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Concordance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Concordance with <em>Introduction to Modern Statistics</em> (IMS)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#functions-introduced-in-this-chapter" id="toc-functions-introduced-in-this-chapter" class="nav-link active" data-scroll-target="#functions-introduced-in-this-chapter">Functions introduced in this chapter:</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="header-section-number">18.1</span> Introduction</a>
+  <ul class="collapse">
+  <li><a href="#install-new-packages" id="toc-install-new-packages" class="nav-link" data-scroll-target="#install-new-packages"><span class="header-section-number">18.1.1</span> Install new packages</a></li>
+  <li><a href="#download-the-r-notebook-file" id="toc-download-the-r-notebook-file" class="nav-link" data-scroll-target="#download-the-r-notebook-file"><span class="header-section-number">18.1.2</span> Download the R notebook file</a></li>
+  <li><a href="#restart-r-and-run-all-chunks" id="toc-restart-r-and-run-all-chunks" class="nav-link" data-scroll-target="#restart-r-and-run-all-chunks"><span class="header-section-number">18.1.3</span> Restart R and run all chunks</a></li>
+  </ul></li>
+  <li><a href="#load-packages" id="toc-load-packages" class="nav-link" data-scroll-target="#load-packages"><span class="header-section-number">18.2</span> Load packages</a></li>
+  <li><a href="#research-question" id="toc-research-question" class="nav-link" data-scroll-target="#research-question"><span class="header-section-number">18.3</span> Research question</a></li>
+  <li><a href="#chi-square-test-for-independence" id="toc-chi-square-test-for-independence" class="nav-link" data-scroll-target="#chi-square-test-for-independence"><span class="header-section-number">18.4</span> Chi-square test for independence</a></li>
+  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis"><span class="header-section-number">18.5</span> Exploratory data analysis</a>
+  <ul class="collapse">
+  <li><a href="#use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure." id="toc-use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure." class="nav-link" data-scroll-target="#use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure."><span class="header-section-number">18.5.1</span> Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.</a></li>
+  <li><a href="#prepare-the-data-for-analysis." id="toc-prepare-the-data-for-analysis." class="nav-link" data-scroll-target="#prepare-the-data-for-analysis."><span class="header-section-number">18.5.2</span> Prepare the data for analysis.</a></li>
+  <li><a href="#make-tables-or-plots-to-explore-the-data-visually." id="toc-make-tables-or-plots-to-explore-the-data-visually." class="nav-link" data-scroll-target="#make-tables-or-plots-to-explore-the-data-visually."><span class="header-section-number">18.5.3</span> Make tables or plots to explore the data visually.</a></li>
+  </ul></li>
+  <li><a href="#hypotheses" id="toc-hypotheses" class="nav-link" data-scroll-target="#hypotheses"><span class="header-section-number">18.6</span> Hypotheses</a>
+  <ul class="collapse">
+  <li><a href="#identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest." id="toc-identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest." class="nav-link" data-scroll-target="#identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest."><span class="header-section-number">18.6.1</span> Identify the sample (or samples) and a reasonable population (or populations) of interest.</a></li>
+  <li><a href="#express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences." id="toc-express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences." class="nav-link" data-scroll-target="#express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences."><span class="header-section-number">18.6.2</span> Express the null and alternative hypotheses as contextually meaningful full sentences.</a></li>
+  <li><a href="#express-the-null-and-alternative-hypotheses-in-symbols-when-possible." id="toc-express-the-null-and-alternative-hypotheses-in-symbols-when-possible." class="nav-link" data-scroll-target="#express-the-null-and-alternative-hypotheses-in-symbols-when-possible."><span class="header-section-number">18.6.3</span> Express the null and alternative hypotheses in symbols (when possible).</a></li>
+  </ul></li>
+  <li><a href="#model" id="toc-model" class="nav-link" data-scroll-target="#model"><span class="header-section-number">18.7</span> Model</a>
+  <ul class="collapse">
+  <li><a href="#identify-the-sampling-distribution-model." id="toc-identify-the-sampling-distribution-model." class="nav-link" data-scroll-target="#identify-the-sampling-distribution-model."><span class="header-section-number">18.7.1</span> Identify the sampling distribution model.</a></li>
+  <li><a href="#check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met." id="toc-check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met." class="nav-link" data-scroll-target="#check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met."><span class="header-section-number">18.7.2</span> Check the relevant conditions to ensure that model assumptions are met.</a></li>
+  </ul></li>
+  <li><a href="#mechanics" id="toc-mechanics" class="nav-link" data-scroll-target="#mechanics"><span class="header-section-number">18.8</span> Mechanics</a>
+  <ul class="collapse">
+  <li><a href="#compute-the-test-statistic." id="toc-compute-the-test-statistic." class="nav-link" data-scroll-target="#compute-the-test-statistic."><span class="header-section-number">18.8.1</span> Compute the test statistic.</a></li>
+  <li><a href="#report-the-test-statistic-in-context-when-possible." id="toc-report-the-test-statistic-in-context-when-possible." class="nav-link" data-scroll-target="#report-the-test-statistic-in-context-when-possible."><span class="header-section-number">18.8.2</span> Report the test statistic in context (when possible).</a></li>
+  <li><a href="#plot-the-null-distribution." id="toc-plot-the-null-distribution." class="nav-link" data-scroll-target="#plot-the-null-distribution."><span class="header-section-number">18.8.3</span> Plot the null distribution.</a></li>
+  <li><a href="#calculate-the-p-value." id="toc-calculate-the-p-value." class="nav-link" data-scroll-target="#calculate-the-p-value."><span class="header-section-number">18.8.4</span> Calculate the P-value.</a></li>
+  <li><a href="#interpret-the-p-value-as-a-probability-given-the-null." id="toc-interpret-the-p-value-as-a-probability-given-the-null." class="nav-link" data-scroll-target="#interpret-the-p-value-as-a-probability-given-the-null."><span class="header-section-number">18.8.5</span> Interpret the P-value as a probability given the null.</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">18.9</span> Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#state-the-statistical-conclusion." id="toc-state-the-statistical-conclusion." class="nav-link" data-scroll-target="#state-the-statistical-conclusion."><span class="header-section-number">18.9.1</span> State the statistical conclusion.</a></li>
+  <li><a href="#state-but-do-not-overstate-a-contextually-meaningful-conclusion." id="toc-state-but-do-not-overstate-a-contextually-meaningful-conclusion." class="nav-link" data-scroll-target="#state-but-do-not-overstate-a-contextually-meaningful-conclusion."><span class="header-section-number">18.9.2</span> State (but do not overstate) a contextually meaningful conclusion.</a></li>
+  <li><a href="#express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion." id="toc-express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion." class="nav-link" data-scroll-target="#express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion."><span class="header-section-number">18.9.3</span> Express reservations or uncertainty about the generalizability of the conclusion.</a></li>
+  <li><a href="#identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses." id="toc-identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses." class="nav-link" data-scroll-target="#identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses."><span class="header-section-number">18.9.4</span> Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.</a></li>
+  </ul></li>
+  <li><a href="#confidence-interval" id="toc-confidence-interval" class="nav-link" data-scroll-target="#confidence-interval"><span class="header-section-number">18.10</span> Confidence interval</a></li>
+  <li><a href="#your-turn" id="toc-your-turn" class="nav-link" data-scroll-target="#your-turn"><span class="header-section-number">18.11</span> Your turn</a></li>
+  <li><a href="#bonus-section-residuals" id="toc-bonus-section-residuals" class="nav-link" data-scroll-target="#bonus-section-residuals"><span class="header-section-number">18.12</span> Bonus section: Residuals</a>
+  <ul class="collapse">
+  <li><a href="#your-turn-1" id="toc-your-turn-1" class="nav-link" data-scroll-target="#your-turn-1"><span class="header-section-number">18.12.1</span> Your turn</a></li>
+  </ul></li>
+  <li><a href="#conclusion-2" id="toc-conclusion-2" class="nav-link" data-scroll-target="#conclusion-2"><span class="header-section-number">18.13</span> Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#preparing-and-submitting-your-assignment" id="toc-preparing-and-submitting-your-assignment" class="nav-link" data-scroll-target="#preparing-and-submitting-your-assignment"><span class="header-section-number">18.13.1</span> Preparing and submitting your assignment</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Chi-square test for independence</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<!-- Please don't mess with the next few lines! -->
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>
+<p style="color:#ffffff">
+2.0
+</p>
+<!-- Please don't mess with the previous few lines! -->
+<section id="functions-introduced-in-this-chapter" class="level3 unnumbered summary">
+<h3 class="unnumbered anchored" data-anchor-id="functions-introduced-in-this-chapter">Functions introduced in this chapter:</h3>
+<p>No new R functions are introduced here.</p>
+</section>
+<section id="introduction" class="level2" data-number="18.1">
+<h2 data-number="18.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">18.1</span> Introduction</h2>
+<p>In this chapter we will learn how to run the chi-square test for independence.</p>
+<p>A chi-square test for independence tests the relationship between two categorical variables. This is an extension of the test for two proportions, except now applied in situations where either the predictor or response variables (or both) have three or more categories.</p>
+<section id="install-new-packages" class="level3" data-number="18.1.1">
+<h3 data-number="18.1.1" class="anchored" data-anchor-id="install-new-packages"><span class="header-section-number">18.1.1</span> Install new packages</h3>
+<p>There are no new packages used in this chapter.</p>
+</section>
+<section id="download-the-r-notebook-file" class="level3" data-number="18.1.2">
+<h3 data-number="18.1.2" class="anchored" data-anchor-id="download-the-r-notebook-file"><span class="header-section-number">18.1.2</span> Download the R notebook file</h3>
+<p>Check the upper-right corner in RStudio to make sure you’re in your <code>intro_stats</code> project. Then click on the following link to download this chapter as an R notebook file (<code>.Rmd</code>).</p>
+<p><a href="https://vectorposse.github.io/intro_stats/chapter_downloads/18-chi_square_test_for_independence.Rmd" download="">https://vectorposse.github.io/intro_stats/chapter_downloads/18-chi_square_test_for_independence.Rmd</a></p>
+<p>Once the file is downloaded, move it to your project folder in RStudio and open it there.</p>
+</section>
+<section id="restart-r-and-run-all-chunks" class="level3" data-number="18.1.3">
+<h3 data-number="18.1.3" class="anchored" data-anchor-id="restart-r-and-run-all-chunks"><span class="header-section-number">18.1.3</span> Restart R and run all chunks</h3>
+<p>In RStudio, select “Restart R and Run All Chunks” from the “Run” menu.</p>
+</section>
+</section>
+<section id="load-packages" class="level2" data-number="18.2">
+<h2 data-number="18.2" class="anchored" data-anchor-id="load-packages"><span class="header-section-number">18.2</span> Load packages</h2>
+<p>We load the standard <code>tideverse</code>, <code>janitor</code>, and <code>infer</code> packages. We also use the <code>MASS</code> package for the <code>birthwt</code> data, and the <code>openintro</code> package for the <code>smoking</code> data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.2     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'janitor'
+
+The following objects are masked from 'package:stats':
+
+    chisq.test, fisher.test</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(infer)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'MASS'
+
+The following object is masked from 'package:dplyr':
+
+    select</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(openintro)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: airports
+Loading required package: cherryblossom
+Loading required package: usdata
+
+Attaching package: 'openintro'
+
+The following objects are masked from 'package:MASS':
+
+    housing, mammals</code></pre>
+</div>
+</div>
+</section>
+<section id="research-question" class="level2" data-number="18.3">
+<h2 data-number="18.3" class="anchored" data-anchor-id="research-question"><span class="header-section-number">18.3</span> Research question</h2>
+<p>Are mothers from certain racial groups more or less likely to have low birth weight babies? In other words, are low birth weight and race associated?</p>
+<p>Let’s look at the data. The <code>birthwt</code> data was collected at Baystate Medical Center, Springfield, Mass during 1986. In terms of addressing the research question, we are, of course, limited to conclusions about women in that area of the country in the mid-1980s.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>birthwt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    low age lwt race smoke ptl ht ui ftv  bwt
+85    0  19 182    2     0   0  0  1   0 2523
+86    0  33 155    3     0   0  0  0   3 2551
+87    0  20 105    1     1   0  0  0   1 2557
+88    0  21 108    1     1   0  0  1   2 2594
+89    0  18 107    1     1   0  0  1   0 2600
+91    0  21 124    3     0   0  0  0   0 2622
+92    0  22 118    1     0   0  0  0   1 2637
+93    0  17 103    3     0   0  0  0   1 2637
+94    0  29 123    1     1   0  0  0   1 2663
+95    0  26 113    1     1   0  0  0   0 2665
+96    0  19  95    3     0   0  0  0   0 2722
+97    0  19 150    3     0   0  0  0   1 2733
+98    0  22  95    3     0   0  1  0   0 2751
+99    0  30 107    3     0   1  0  1   2 2750
+100   0  18 100    1     1   0  0  0   0 2769
+101   0  18 100    1     1   0  0  0   0 2769
+102   0  15  98    2     0   0  0  0   0 2778
+103   0  25 118    1     1   0  0  0   3 2782
+104   0  20 120    3     0   0  0  1   0 2807
+105   0  28 120    1     1   0  0  0   1 2821
+106   0  32 121    3     0   0  0  0   2 2835
+107   0  31 100    1     0   0  0  1   3 2835
+108   0  36 202    1     0   0  0  0   1 2836
+109   0  28 120    3     0   0  0  0   0 2863
+111   0  25 120    3     0   0  0  1   2 2877
+112   0  28 167    1     0   0  0  0   0 2877
+113   0  17 122    1     1   0  0  0   0 2906
+114   0  29 150    1     0   0  0  0   2 2920
+115   0  26 168    2     1   0  0  0   0 2920
+116   0  17 113    2     0   0  0  0   1 2920
+117   0  17 113    2     0   0  0  0   1 2920
+118   0  24  90    1     1   1  0  0   1 2948
+119   0  35 121    2     1   1  0  0   1 2948
+120   0  25 155    1     0   0  0  0   1 2977
+121   0  25 125    2     0   0  0  0   0 2977
+123   0  29 140    1     1   0  0  0   2 2977
+124   0  19 138    1     1   0  0  0   2 2977
+125   0  27 124    1     1   0  0  0   0 2922
+126   0  31 215    1     1   0  0  0   2 3005
+127   0  33 109    1     1   0  0  0   1 3033
+128   0  21 185    2     1   0  0  0   2 3042
+129   0  19 189    1     0   0  0  0   2 3062
+130   0  23 130    2     0   0  0  0   1 3062
+131   0  21 160    1     0   0  0  0   0 3062
+132   0  18  90    1     1   0  0  1   0 3062
+133   0  18  90    1     1   0  0  1   0 3062
+134   0  32 132    1     0   0  0  0   4 3080
+135   0  19 132    3     0   0  0  0   0 3090
+136   0  24 115    1     0   0  0  0   2 3090
+137   0  22  85    3     1   0  0  0   0 3090
+138   0  22 120    1     0   0  1  0   1 3100
+139   0  23 128    3     0   0  0  0   0 3104
+140   0  22 130    1     1   0  0  0   0 3132
+141   0  30  95    1     1   0  0  0   2 3147
+142   0  19 115    3     0   0  0  0   0 3175
+143   0  16 110    3     0   0  0  0   0 3175
+144   0  21 110    3     1   0  0  1   0 3203
+145   0  30 153    3     0   0  0  0   0 3203
+146   0  20 103    3     0   0  0  0   0 3203
+147   0  17 119    3     0   0  0  0   0 3225
+148   0  17 119    3     0   0  0  0   0 3225
+149   0  23 119    3     0   0  0  0   2 3232
+150   0  24 110    3     0   0  0  0   0 3232
+151   0  28 140    1     0   0  0  0   0 3234
+154   0  26 133    3     1   2  0  0   0 3260
+155   0  20 169    3     0   1  0  1   1 3274
+156   0  24 115    3     0   0  0  0   2 3274
+159   0  28 250    3     1   0  0  0   6 3303
+160   0  20 141    1     0   2  0  1   1 3317
+161   0  22 158    2     0   1  0  0   2 3317
+162   0  22 112    1     1   2  0  0   0 3317
+163   0  31 150    3     1   0  0  0   2 3321
+164   0  23 115    3     1   0  0  0   1 3331
+166   0  16 112    2     0   0  0  0   0 3374
+167   0  16 135    1     1   0  0  0   0 3374
+168   0  18 229    2     0   0  0  0   0 3402
+169   0  25 140    1     0   0  0  0   1 3416
+170   0  32 134    1     1   1  0  0   4 3430
+172   0  20 121    2     1   0  0  0   0 3444
+173   0  23 190    1     0   0  0  0   0 3459
+174   0  22 131    1     0   0  0  0   1 3460
+175   0  32 170    1     0   0  0  0   0 3473
+176   0  30 110    3     0   0  0  0   0 3544
+177   0  20 127    3     0   0  0  0   0 3487
+179   0  23 123    3     0   0  0  0   0 3544
+180   0  17 120    3     1   0  0  0   0 3572
+181   0  19 105    3     0   0  0  0   0 3572
+182   0  23 130    1     0   0  0  0   0 3586
+183   0  36 175    1     0   0  0  0   0 3600
+184   0  22 125    1     0   0  0  0   1 3614
+185   0  24 133    1     0   0  0  0   0 3614
+186   0  21 134    3     0   0  0  0   2 3629
+187   0  19 235    1     1   0  1  0   0 3629
+188   0  25  95    1     1   3  0  1   0 3637
+189   0  16 135    1     1   0  0  0   0 3643
+190   0  29 135    1     0   0  0  0   1 3651
+191   0  29 154    1     0   0  0  0   1 3651
+192   0  19 147    1     1   0  0  0   0 3651
+193   0  19 147    1     1   0  0  0   0 3651
+195   0  30 137    1     0   0  0  0   1 3699
+196   0  24 110    1     0   0  0  0   1 3728
+197   0  19 184    1     1   0  1  0   0 3756
+199   0  24 110    3     0   1  0  0   0 3770
+200   0  23 110    1     0   0  0  0   1 3770
+201   0  20 120    3     0   0  0  0   0 3770
+202   0  25 241    2     0   0  1  0   0 3790
+203   0  30 112    1     0   0  0  0   1 3799
+204   0  22 169    1     0   0  0  0   0 3827
+205   0  18 120    1     1   0  0  0   2 3856
+206   0  16 170    2     0   0  0  0   4 3860
+207   0  32 186    1     0   0  0  0   2 3860
+208   0  18 120    3     0   0  0  0   1 3884
+209   0  29 130    1     1   0  0  0   2 3884
+210   0  33 117    1     0   0  0  1   1 3912
+211   0  20 170    1     1   0  0  0   0 3940
+212   0  28 134    3     0   0  0  0   1 3941
+213   0  14 135    1     0   0  0  0   0 3941
+214   0  28 130    3     0   0  0  0   0 3969
+215   0  25 120    1     0   0  0  0   2 3983
+216   0  16  95    3     0   0  0  0   1 3997
+217   0  20 158    1     0   0  0  0   1 3997
+218   0  26 160    3     0   0  0  0   0 4054
+219   0  21 115    1     0   0  0  0   1 4054
+220   0  22 129    1     0   0  0  0   0 4111
+221   0  25 130    1     0   0  0  0   2 4153
+222   0  31 120    1     0   0  0  0   2 4167
+223   0  35 170    1     0   1  0  0   1 4174
+224   0  19 120    1     1   0  0  0   0 4238
+225   0  24 116    1     0   0  0  0   1 4593
+226   0  45 123    1     0   0  0  0   1 4990
+4     1  28 120    3     1   1  0  1   0  709
+10    1  29 130    1     0   0  0  1   2 1021
+11    1  34 187    2     1   0  1  0   0 1135
+13    1  25 105    3     0   1  1  0   0 1330
+15    1  25  85    3     0   0  0  1   0 1474
+16    1  27 150    3     0   0  0  0   0 1588
+17    1  23  97    3     0   0  0  1   1 1588
+18    1  24 128    2     0   1  0  0   1 1701
+19    1  24 132    3     0   0  1  0   0 1729
+20    1  21 165    1     1   0  1  0   1 1790
+22    1  32 105    1     1   0  0  0   0 1818
+23    1  19  91    1     1   2  0  1   0 1885
+24    1  25 115    3     0   0  0  0   0 1893
+25    1  16 130    3     0   0  0  0   1 1899
+26    1  25  92    1     1   0  0  0   0 1928
+27    1  20 150    1     1   0  0  0   2 1928
+28    1  21 200    2     0   0  0  1   2 1928
+29    1  24 155    1     1   1  0  0   0 1936
+30    1  21 103    3     0   0  0  0   0 1970
+31    1  20 125    3     0   0  0  1   0 2055
+32    1  25  89    3     0   2  0  0   1 2055
+33    1  19 102    1     0   0  0  0   2 2082
+34    1  19 112    1     1   0  0  1   0 2084
+35    1  26 117    1     1   1  0  0   0 2084
+36    1  24 138    1     0   0  0  0   0 2100
+37    1  17 130    3     1   1  0  1   0 2125
+40    1  20 120    2     1   0  0  0   3 2126
+42    1  22 130    1     1   1  0  1   1 2187
+43    1  27 130    2     0   0  0  1   0 2187
+44    1  20  80    3     1   0  0  1   0 2211
+45    1  17 110    1     1   0  0  0   0 2225
+46    1  25 105    3     0   1  0  0   1 2240
+47    1  20 109    3     0   0  0  0   0 2240
+49    1  18 148    3     0   0  0  0   0 2282
+50    1  18 110    2     1   1  0  0   0 2296
+51    1  20 121    1     1   1  0  1   0 2296
+52    1  21 100    3     0   1  0  0   4 2301
+54    1  26  96    3     0   0  0  0   0 2325
+56    1  31 102    1     1   1  0  0   1 2353
+57    1  15 110    1     0   0  0  0   0 2353
+59    1  23 187    2     1   0  0  0   1 2367
+60    1  20 122    2     1   0  0  0   0 2381
+61    1  24 105    2     1   0  0  0   0 2381
+62    1  15 115    3     0   0  0  1   0 2381
+63    1  23 120    3     0   0  0  0   0 2410
+65    1  30 142    1     1   1  0  0   0 2410
+67    1  22 130    1     1   0  0  0   1 2410
+68    1  17 120    1     1   0  0  0   3 2414
+69    1  23 110    1     1   1  0  0   0 2424
+71    1  17 120    2     0   0  0  0   2 2438
+75    1  26 154    3     0   1  1  0   1 2442
+76    1  20 105    3     0   0  0  0   3 2450
+77    1  26 190    1     1   0  0  0   0 2466
+78    1  14 101    3     1   1  0  0   0 2466
+79    1  28  95    1     1   0  0  0   2 2466
+81    1  14 100    3     0   0  0  0   2 2495
+82    1  23  94    3     1   0  0  0   0 2495
+83    1  17 142    2     0   0  1  0   0 2495
+84    1  21 130    1     1   0  1  0   3 2495</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(birthwt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 189
+Columns: 10
+$ low   &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+$ age   &lt;int&gt; 19, 33, 20, 21, 18, 21, 22, 17, 29, 26, 19, 19, 22, 30, 18, 18, …
+$ lwt   &lt;int&gt; 182, 155, 105, 108, 107, 124, 118, 103, 123, 113, 95, 150, 95, 1…
+$ race  &lt;int&gt; 2, 3, 1, 1, 1, 3, 1, 3, 1, 1, 3, 3, 3, 3, 1, 1, 2, 1, 3, 1, 3, 1…
+$ smoke &lt;int&gt; 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0…
+$ ptl   &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0…
+$ ht    &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+$ ui    &lt;int&gt; 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1…
+$ ftv   &lt;int&gt; 0, 3, 1, 2, 0, 0, 1, 1, 1, 0, 0, 1, 0, 2, 0, 0, 0, 3, 0, 1, 2, 3…
+$ bwt   &lt;int&gt; 2523, 2551, 2557, 2594, 2600, 2622, 2637, 2637, 2663, 2665, 2722…</code></pre>
+</div>
+</div>
+<p>The <code>low</code> variable is an indicator of birth weight less than 2.5 kg. So even though birth weight is numerical, we have a convenient categorical variable that serves as a marker of low birth weight, gathering all low birth weight babies into a single group. The <code>race</code> variable is categorical, coded as 1 = white, 2 = black, 3 = other.</p>
+<p>Neither variable appears in the data frame as a factor variable, so we will need to change that. The new tibble will be called <code>birthwt2</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>birthwt2 <span class="ot">&lt;-</span> birthwt <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">low_fct =</span> <span class="fu">factor</span>(low, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"no"</span>, <span class="st">"yes"</span>)),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">race_fct =</span> <span class="fu">factor</span>(race, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"white"</span>, <span class="st">"black"</span>, <span class="st">"other"</span>)))</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>birthwt2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    low age lwt race smoke ptl ht ui ftv  bwt low_fct race_fct
+85    0  19 182    2     0   0  0  1   0 2523      no    black
+86    0  33 155    3     0   0  0  0   3 2551      no    other
+87    0  20 105    1     1   0  0  0   1 2557      no    white
+88    0  21 108    1     1   0  0  1   2 2594      no    white
+89    0  18 107    1     1   0  0  1   0 2600      no    white
+91    0  21 124    3     0   0  0  0   0 2622      no    other
+92    0  22 118    1     0   0  0  0   1 2637      no    white
+93    0  17 103    3     0   0  0  0   1 2637      no    other
+94    0  29 123    1     1   0  0  0   1 2663      no    white
+95    0  26 113    1     1   0  0  0   0 2665      no    white
+96    0  19  95    3     0   0  0  0   0 2722      no    other
+97    0  19 150    3     0   0  0  0   1 2733      no    other
+98    0  22  95    3     0   0  1  0   0 2751      no    other
+99    0  30 107    3     0   1  0  1   2 2750      no    other
+100   0  18 100    1     1   0  0  0   0 2769      no    white
+101   0  18 100    1     1   0  0  0   0 2769      no    white
+102   0  15  98    2     0   0  0  0   0 2778      no    black
+103   0  25 118    1     1   0  0  0   3 2782      no    white
+104   0  20 120    3     0   0  0  1   0 2807      no    other
+105   0  28 120    1     1   0  0  0   1 2821      no    white
+106   0  32 121    3     0   0  0  0   2 2835      no    other
+107   0  31 100    1     0   0  0  1   3 2835      no    white
+108   0  36 202    1     0   0  0  0   1 2836      no    white
+109   0  28 120    3     0   0  0  0   0 2863      no    other
+111   0  25 120    3     0   0  0  1   2 2877      no    other
+112   0  28 167    1     0   0  0  0   0 2877      no    white
+113   0  17 122    1     1   0  0  0   0 2906      no    white
+114   0  29 150    1     0   0  0  0   2 2920      no    white
+115   0  26 168    2     1   0  0  0   0 2920      no    black
+116   0  17 113    2     0   0  0  0   1 2920      no    black
+117   0  17 113    2     0   0  0  0   1 2920      no    black
+118   0  24  90    1     1   1  0  0   1 2948      no    white
+119   0  35 121    2     1   1  0  0   1 2948      no    black
+120   0  25 155    1     0   0  0  0   1 2977      no    white
+121   0  25 125    2     0   0  0  0   0 2977      no    black
+123   0  29 140    1     1   0  0  0   2 2977      no    white
+124   0  19 138    1     1   0  0  0   2 2977      no    white
+125   0  27 124    1     1   0  0  0   0 2922      no    white
+126   0  31 215    1     1   0  0  0   2 3005      no    white
+127   0  33 109    1     1   0  0  0   1 3033      no    white
+128   0  21 185    2     1   0  0  0   2 3042      no    black
+129   0  19 189    1     0   0  0  0   2 3062      no    white
+130   0  23 130    2     0   0  0  0   1 3062      no    black
+131   0  21 160    1     0   0  0  0   0 3062      no    white
+132   0  18  90    1     1   0  0  1   0 3062      no    white
+133   0  18  90    1     1   0  0  1   0 3062      no    white
+134   0  32 132    1     0   0  0  0   4 3080      no    white
+135   0  19 132    3     0   0  0  0   0 3090      no    other
+136   0  24 115    1     0   0  0  0   2 3090      no    white
+137   0  22  85    3     1   0  0  0   0 3090      no    other
+138   0  22 120    1     0   0  1  0   1 3100      no    white
+139   0  23 128    3     0   0  0  0   0 3104      no    other
+140   0  22 130    1     1   0  0  0   0 3132      no    white
+141   0  30  95    1     1   0  0  0   2 3147      no    white
+142   0  19 115    3     0   0  0  0   0 3175      no    other
+143   0  16 110    3     0   0  0  0   0 3175      no    other
+144   0  21 110    3     1   0  0  1   0 3203      no    other
+145   0  30 153    3     0   0  0  0   0 3203      no    other
+146   0  20 103    3     0   0  0  0   0 3203      no    other
+147   0  17 119    3     0   0  0  0   0 3225      no    other
+148   0  17 119    3     0   0  0  0   0 3225      no    other
+149   0  23 119    3     0   0  0  0   2 3232      no    other
+150   0  24 110    3     0   0  0  0   0 3232      no    other
+151   0  28 140    1     0   0  0  0   0 3234      no    white
+154   0  26 133    3     1   2  0  0   0 3260      no    other
+155   0  20 169    3     0   1  0  1   1 3274      no    other
+156   0  24 115    3     0   0  0  0   2 3274      no    other
+159   0  28 250    3     1   0  0  0   6 3303      no    other
+160   0  20 141    1     0   2  0  1   1 3317      no    white
+161   0  22 158    2     0   1  0  0   2 3317      no    black
+162   0  22 112    1     1   2  0  0   0 3317      no    white
+163   0  31 150    3     1   0  0  0   2 3321      no    other
+164   0  23 115    3     1   0  0  0   1 3331      no    other
+166   0  16 112    2     0   0  0  0   0 3374      no    black
+167   0  16 135    1     1   0  0  0   0 3374      no    white
+168   0  18 229    2     0   0  0  0   0 3402      no    black
+169   0  25 140    1     0   0  0  0   1 3416      no    white
+170   0  32 134    1     1   1  0  0   4 3430      no    white
+172   0  20 121    2     1   0  0  0   0 3444      no    black
+173   0  23 190    1     0   0  0  0   0 3459      no    white
+174   0  22 131    1     0   0  0  0   1 3460      no    white
+175   0  32 170    1     0   0  0  0   0 3473      no    white
+176   0  30 110    3     0   0  0  0   0 3544      no    other
+177   0  20 127    3     0   0  0  0   0 3487      no    other
+179   0  23 123    3     0   0  0  0   0 3544      no    other
+180   0  17 120    3     1   0  0  0   0 3572      no    other
+181   0  19 105    3     0   0  0  0   0 3572      no    other
+182   0  23 130    1     0   0  0  0   0 3586      no    white
+183   0  36 175    1     0   0  0  0   0 3600      no    white
+184   0  22 125    1     0   0  0  0   1 3614      no    white
+185   0  24 133    1     0   0  0  0   0 3614      no    white
+186   0  21 134    3     0   0  0  0   2 3629      no    other
+187   0  19 235    1     1   0  1  0   0 3629      no    white
+188   0  25  95    1     1   3  0  1   0 3637      no    white
+189   0  16 135    1     1   0  0  0   0 3643      no    white
+190   0  29 135    1     0   0  0  0   1 3651      no    white
+191   0  29 154    1     0   0  0  0   1 3651      no    white
+192   0  19 147    1     1   0  0  0   0 3651      no    white
+193   0  19 147    1     1   0  0  0   0 3651      no    white
+195   0  30 137    1     0   0  0  0   1 3699      no    white
+196   0  24 110    1     0   0  0  0   1 3728      no    white
+197   0  19 184    1     1   0  1  0   0 3756      no    white
+199   0  24 110    3     0   1  0  0   0 3770      no    other
+200   0  23 110    1     0   0  0  0   1 3770      no    white
+201   0  20 120    3     0   0  0  0   0 3770      no    other
+202   0  25 241    2     0   0  1  0   0 3790      no    black
+203   0  30 112    1     0   0  0  0   1 3799      no    white
+204   0  22 169    1     0   0  0  0   0 3827      no    white
+205   0  18 120    1     1   0  0  0   2 3856      no    white
+206   0  16 170    2     0   0  0  0   4 3860      no    black
+207   0  32 186    1     0   0  0  0   2 3860      no    white
+208   0  18 120    3     0   0  0  0   1 3884      no    other
+209   0  29 130    1     1   0  0  0   2 3884      no    white
+210   0  33 117    1     0   0  0  1   1 3912      no    white
+211   0  20 170    1     1   0  0  0   0 3940      no    white
+212   0  28 134    3     0   0  0  0   1 3941      no    other
+213   0  14 135    1     0   0  0  0   0 3941      no    white
+214   0  28 130    3     0   0  0  0   0 3969      no    other
+215   0  25 120    1     0   0  0  0   2 3983      no    white
+216   0  16  95    3     0   0  0  0   1 3997      no    other
+217   0  20 158    1     0   0  0  0   1 3997      no    white
+218   0  26 160    3     0   0  0  0   0 4054      no    other
+219   0  21 115    1     0   0  0  0   1 4054      no    white
+220   0  22 129    1     0   0  0  0   0 4111      no    white
+221   0  25 130    1     0   0  0  0   2 4153      no    white
+222   0  31 120    1     0   0  0  0   2 4167      no    white
+223   0  35 170    1     0   1  0  0   1 4174      no    white
+224   0  19 120    1     1   0  0  0   0 4238      no    white
+225   0  24 116    1     0   0  0  0   1 4593      no    white
+226   0  45 123    1     0   0  0  0   1 4990      no    white
+4     1  28 120    3     1   1  0  1   0  709     yes    other
+10    1  29 130    1     0   0  0  1   2 1021     yes    white
+11    1  34 187    2     1   0  1  0   0 1135     yes    black
+13    1  25 105    3     0   1  1  0   0 1330     yes    other
+15    1  25  85    3     0   0  0  1   0 1474     yes    other
+16    1  27 150    3     0   0  0  0   0 1588     yes    other
+17    1  23  97    3     0   0  0  1   1 1588     yes    other
+18    1  24 128    2     0   1  0  0   1 1701     yes    black
+19    1  24 132    3     0   0  1  0   0 1729     yes    other
+20    1  21 165    1     1   0  1  0   1 1790     yes    white
+22    1  32 105    1     1   0  0  0   0 1818     yes    white
+23    1  19  91    1     1   2  0  1   0 1885     yes    white
+24    1  25 115    3     0   0  0  0   0 1893     yes    other
+25    1  16 130    3     0   0  0  0   1 1899     yes    other
+26    1  25  92    1     1   0  0  0   0 1928     yes    white
+27    1  20 150    1     1   0  0  0   2 1928     yes    white
+28    1  21 200    2     0   0  0  1   2 1928     yes    black
+29    1  24 155    1     1   1  0  0   0 1936     yes    white
+30    1  21 103    3     0   0  0  0   0 1970     yes    other
+31    1  20 125    3     0   0  0  1   0 2055     yes    other
+32    1  25  89    3     0   2  0  0   1 2055     yes    other
+33    1  19 102    1     0   0  0  0   2 2082     yes    white
+34    1  19 112    1     1   0  0  1   0 2084     yes    white
+35    1  26 117    1     1   1  0  0   0 2084     yes    white
+36    1  24 138    1     0   0  0  0   0 2100     yes    white
+37    1  17 130    3     1   1  0  1   0 2125     yes    other
+40    1  20 120    2     1   0  0  0   3 2126     yes    black
+42    1  22 130    1     1   1  0  1   1 2187     yes    white
+43    1  27 130    2     0   0  0  1   0 2187     yes    black
+44    1  20  80    3     1   0  0  1   0 2211     yes    other
+45    1  17 110    1     1   0  0  0   0 2225     yes    white
+46    1  25 105    3     0   1  0  0   1 2240     yes    other
+47    1  20 109    3     0   0  0  0   0 2240     yes    other
+49    1  18 148    3     0   0  0  0   0 2282     yes    other
+50    1  18 110    2     1   1  0  0   0 2296     yes    black
+51    1  20 121    1     1   1  0  1   0 2296     yes    white
+52    1  21 100    3     0   1  0  0   4 2301     yes    other
+54    1  26  96    3     0   0  0  0   0 2325     yes    other
+56    1  31 102    1     1   1  0  0   1 2353     yes    white
+57    1  15 110    1     0   0  0  0   0 2353     yes    white
+59    1  23 187    2     1   0  0  0   1 2367     yes    black
+60    1  20 122    2     1   0  0  0   0 2381     yes    black
+61    1  24 105    2     1   0  0  0   0 2381     yes    black
+62    1  15 115    3     0   0  0  1   0 2381     yes    other
+63    1  23 120    3     0   0  0  0   0 2410     yes    other
+65    1  30 142    1     1   1  0  0   0 2410     yes    white
+67    1  22 130    1     1   0  0  0   1 2410     yes    white
+68    1  17 120    1     1   0  0  0   3 2414     yes    white
+69    1  23 110    1     1   1  0  0   0 2424     yes    white
+71    1  17 120    2     0   0  0  0   2 2438     yes    black
+75    1  26 154    3     0   1  1  0   1 2442     yes    other
+76    1  20 105    3     0   0  0  0   3 2450     yes    other
+77    1  26 190    1     1   0  0  0   0 2466     yes    white
+78    1  14 101    3     1   1  0  0   0 2466     yes    other
+79    1  28  95    1     1   0  0  0   2 2466     yes    white
+81    1  14 100    3     0   0  0  0   2 2495     yes    other
+82    1  23  94    3     1   0  0  0   0 2495     yes    other
+83    1  17 142    2     0   0  1  0   0 2495     yes    black
+84    1  21 130    1     1   0  1  0   3 2495     yes    white</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(birthwt2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 189
+Columns: 12
+$ low      &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+$ age      &lt;int&gt; 19, 33, 20, 21, 18, 21, 22, 17, 29, 26, 19, 19, 22, 30, 18, 1…
+$ lwt      &lt;int&gt; 182, 155, 105, 108, 107, 124, 118, 103, 123, 113, 95, 150, 95…
+$ race     &lt;int&gt; 2, 3, 1, 1, 1, 3, 1, 3, 1, 1, 3, 3, 3, 3, 1, 1, 2, 1, 3, 1, 3…
+$ smoke    &lt;int&gt; 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0…
+$ ptl      &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0…
+$ ht       &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0…
+$ ui       &lt;int&gt; 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0…
+$ ftv      &lt;int&gt; 0, 3, 1, 2, 0, 0, 1, 1, 1, 0, 0, 1, 0, 2, 0, 0, 0, 3, 0, 1, 2…
+$ bwt      &lt;int&gt; 2523, 2551, 2557, 2594, 2600, 2622, 2637, 2637, 2663, 2665, 2…
+$ low_fct  &lt;fct&gt; no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, n…
+$ race_fct &lt;fct&gt; black, other, white, white, white, other, white, other, white…</code></pre>
+</div>
+</div>
+</section>
+<section id="chi-square-test-for-independence" class="level2" data-number="18.4">
+<h2 data-number="18.4" class="anchored" data-anchor-id="chi-square-test-for-independence"><span class="header-section-number">18.4</span> Chi-square test for independence</h2>
+<p>In a previous chapter, we learned about the chi-square goodness-of-fit test. With a single categorical variable, we summarized data in a frequency table. Each cell of the table had an observed count from the data that we compared to an expected count from the assumption of a null hypothesis. The chi-square statistic measured the discrepancy between observed and expected.</p>
+<p>With two categorical variables, we use a contingency table instead of a frequency table. But the principle of the chi-square statistic is the same: each cell in the contingency table has an observed count and an expected count. This forms the basis of a chi-square test for independence.</p>
+<p>Below is the contingency table for these two variables. Normally, we only care about column totals because we care how the response variable (here, <code>low_fct</code>) is distributed in each group of the predictor variable (i.e., each racial group). But for the calculation of chi-squared, we will need both row and column totals.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(birthwt2, low_fct, race_fct) <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_totals</span>(<span class="at">where =</span> <span class="fu">c</span>(<span class="st">"row"</span>, <span class="st">"col"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> low_fct white black other Total
+      no    73    15    42   130
+     yes    23    11    25    59
+   Total    96    26    67   189</code></pre>
+</div>
+</div>
+<p>A test for independence has a simple null hypothesis: the two variables are independent. This gives us a way to compute expected counts. To see how, look at the sum of all the normal weight babies (<span class="math inline">\(73 + 15 + 42 = 130\)</span>) and all the low birth weight babies (<span class="math inline">\(23 + 11 + 25 = 59\)</span>). In other words, if race is ignored, there were 130 normal weight babies and 59 low birth weight babies out of 189 total babies. 59 of 189 is 0.31217 or 31.217%, and 130 of 189 is 0.68783 or 68.783%.</p>
+<p>Now, if low birth weight and race are truly independent, it shouldn’t matter if the mothers were white, black, or some other race. In other words, of 96 white mothers, we should still expect 68.783% of them to have normal weight babies and 31.217% of them to have low birth weight babies. 68.783% of 96 is 66.032. <strong>This is the expected cell count for normal birth weight babies of white women.</strong> 31.217% of 96 is 29.968. <strong>This is the expected cell count for low birth weight babies of white women.</strong> The same analysis can be done for the next two columns as well.</p>
+<section id="exercise-1" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-1">Exercise 1</h5>
+<p>Complete the list of expected cell counts in the table above. In other words, apply the percentages 68.783% and 31.217% to the totals of the “black” and “other” columns. Put them in the table below:</p>
+<div class="answer">
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th>white</th>
+<th>black</th>
+<th>other</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>no</td>
+<td>66.032</td>
+<td>?</td>
+<td>?</td>
+</tr>
+<tr class="even">
+<td>yes</td>
+<td>29.968</td>
+<td>?</td>
+<td>?</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+<p>Unlike the goodness-of-fit test that requires one to specify expected counts for each cell, the test for independence uses only the data to determine the expected counts. For any given cell, if <span class="math inline">\(R\)</span> is the row total, <span class="math inline">\(C\)</span> is the column total, and <span class="math inline">\(n\)</span> is the grand total (the sample size), the expected count in any cell is simply</p>
+<p><span class="math display">\[
+E = \frac{R C}{n}.
+\]</span></p>
+<p>This is equivalent to the explanation in the previous paragraph. Using low birth weight babies among white mothers as an example, <span class="math inline">\(R/n\)</span> is <span class="math inline">\(59/189\)</span> which is 0.31217. Then we multiply this by the column total <span class="math inline">\(C = 96\)</span> to get</p>
+<p><span class="math display">\[
+\left(\frac{R}{n}\right) C = \frac{R C}{n} = \frac{59 \times 96}{189} =  29.96825.
+\]</span></p>
+<p>Everything else works almost the same as it did for a chi-square goodness-of-fit test. We still compute <span class="math inline">\(\chi^{2}\)</span> by adding up deviations across all cells:</p>
+<p><span class="math display">\[
+\chi^{2} = \sum \frac{(O - E)^{2}}{E}.
+\]</span></p>
+<p>Even under the assumption of the null, there will still be some sampling variability. Like any hypothesis test, our job is to determine whether the deviations we see are possible due to pure chance alone. The random values of <span class="math inline">\(\chi^{2}\)</span> that result from sampling variability will follow a chi-square model. But how many degrees of freedom are there? This is a little different from the goodness-of-fit test. Instead of the number of cells minus one, we use the following formula:</p>
+<p><span class="math display">\[
+df = (\#rows - 1)(\#columns - 1).
+\]</span></p>
+<p>In our example we have 2 rows (“yes”, “no”) and 3 columns (“white”, “black”, “other”); therefore,</p>
+<p><span class="math display">\[
+df = (2 - 1)(3 - 1) = 1 \times 2 = 2
+\]</span></p>
+<p>and we have 2 degrees of freedom (even though there are 6 cells).</p>
+<p>Let’s run through the rubric in its entirety.</p>
+</section>
+</section>
+<section id="exploratory-data-analysis" class="level2" data-number="18.5">
+<h2 data-number="18.5" class="anchored" data-anchor-id="exploratory-data-analysis"><span class="header-section-number">18.5</span> Exploratory data analysis</h2>
+<section id="use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure." class="level3" data-number="18.5.1">
+<h3 data-number="18.5.1" class="anchored" data-anchor-id="use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure."><span class="header-section-number">18.5.1</span> Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.</h3>
+<p>You should type <code>?birthwt</code> at the Console to read the help file. We don’t have any information about how these mothers were selected. The “Source” at the end of the help file is a statistics textbook, so we’d have to track down that book to see where they got the data and if traced back to a primary source.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>birthwt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    low age lwt race smoke ptl ht ui ftv  bwt
+85    0  19 182    2     0   0  0  1   0 2523
+86    0  33 155    3     0   0  0  0   3 2551
+87    0  20 105    1     1   0  0  0   1 2557
+88    0  21 108    1     1   0  0  1   2 2594
+89    0  18 107    1     1   0  0  1   0 2600
+91    0  21 124    3     0   0  0  0   0 2622
+92    0  22 118    1     0   0  0  0   1 2637
+93    0  17 103    3     0   0  0  0   1 2637
+94    0  29 123    1     1   0  0  0   1 2663
+95    0  26 113    1     1   0  0  0   0 2665
+96    0  19  95    3     0   0  0  0   0 2722
+97    0  19 150    3     0   0  0  0   1 2733
+98    0  22  95    3     0   0  1  0   0 2751
+99    0  30 107    3     0   1  0  1   2 2750
+100   0  18 100    1     1   0  0  0   0 2769
+101   0  18 100    1     1   0  0  0   0 2769
+102   0  15  98    2     0   0  0  0   0 2778
+103   0  25 118    1     1   0  0  0   3 2782
+104   0  20 120    3     0   0  0  1   0 2807
+105   0  28 120    1     1   0  0  0   1 2821
+106   0  32 121    3     0   0  0  0   2 2835
+107   0  31 100    1     0   0  0  1   3 2835
+108   0  36 202    1     0   0  0  0   1 2836
+109   0  28 120    3     0   0  0  0   0 2863
+111   0  25 120    3     0   0  0  1   2 2877
+112   0  28 167    1     0   0  0  0   0 2877
+113   0  17 122    1     1   0  0  0   0 2906
+114   0  29 150    1     0   0  0  0   2 2920
+115   0  26 168    2     1   0  0  0   0 2920
+116   0  17 113    2     0   0  0  0   1 2920
+117   0  17 113    2     0   0  0  0   1 2920
+118   0  24  90    1     1   1  0  0   1 2948
+119   0  35 121    2     1   1  0  0   1 2948
+120   0  25 155    1     0   0  0  0   1 2977
+121   0  25 125    2     0   0  0  0   0 2977
+123   0  29 140    1     1   0  0  0   2 2977
+124   0  19 138    1     1   0  0  0   2 2977
+125   0  27 124    1     1   0  0  0   0 2922
+126   0  31 215    1     1   0  0  0   2 3005
+127   0  33 109    1     1   0  0  0   1 3033
+128   0  21 185    2     1   0  0  0   2 3042
+129   0  19 189    1     0   0  0  0   2 3062
+130   0  23 130    2     0   0  0  0   1 3062
+131   0  21 160    1     0   0  0  0   0 3062
+132   0  18  90    1     1   0  0  1   0 3062
+133   0  18  90    1     1   0  0  1   0 3062
+134   0  32 132    1     0   0  0  0   4 3080
+135   0  19 132    3     0   0  0  0   0 3090
+136   0  24 115    1     0   0  0  0   2 3090
+137   0  22  85    3     1   0  0  0   0 3090
+138   0  22 120    1     0   0  1  0   1 3100
+139   0  23 128    3     0   0  0  0   0 3104
+140   0  22 130    1     1   0  0  0   0 3132
+141   0  30  95    1     1   0  0  0   2 3147
+142   0  19 115    3     0   0  0  0   0 3175
+143   0  16 110    3     0   0  0  0   0 3175
+144   0  21 110    3     1   0  0  1   0 3203
+145   0  30 153    3     0   0  0  0   0 3203
+146   0  20 103    3     0   0  0  0   0 3203
+147   0  17 119    3     0   0  0  0   0 3225
+148   0  17 119    3     0   0  0  0   0 3225
+149   0  23 119    3     0   0  0  0   2 3232
+150   0  24 110    3     0   0  0  0   0 3232
+151   0  28 140    1     0   0  0  0   0 3234
+154   0  26 133    3     1   2  0  0   0 3260
+155   0  20 169    3     0   1  0  1   1 3274
+156   0  24 115    3     0   0  0  0   2 3274
+159   0  28 250    3     1   0  0  0   6 3303
+160   0  20 141    1     0   2  0  1   1 3317
+161   0  22 158    2     0   1  0  0   2 3317
+162   0  22 112    1     1   2  0  0   0 3317
+163   0  31 150    3     1   0  0  0   2 3321
+164   0  23 115    3     1   0  0  0   1 3331
+166   0  16 112    2     0   0  0  0   0 3374
+167   0  16 135    1     1   0  0  0   0 3374
+168   0  18 229    2     0   0  0  0   0 3402
+169   0  25 140    1     0   0  0  0   1 3416
+170   0  32 134    1     1   1  0  0   4 3430
+172   0  20 121    2     1   0  0  0   0 3444
+173   0  23 190    1     0   0  0  0   0 3459
+174   0  22 131    1     0   0  0  0   1 3460
+175   0  32 170    1     0   0  0  0   0 3473
+176   0  30 110    3     0   0  0  0   0 3544
+177   0  20 127    3     0   0  0  0   0 3487
+179   0  23 123    3     0   0  0  0   0 3544
+180   0  17 120    3     1   0  0  0   0 3572
+181   0  19 105    3     0   0  0  0   0 3572
+182   0  23 130    1     0   0  0  0   0 3586
+183   0  36 175    1     0   0  0  0   0 3600
+184   0  22 125    1     0   0  0  0   1 3614
+185   0  24 133    1     0   0  0  0   0 3614
+186   0  21 134    3     0   0  0  0   2 3629
+187   0  19 235    1     1   0  1  0   0 3629
+188   0  25  95    1     1   3  0  1   0 3637
+189   0  16 135    1     1   0  0  0   0 3643
+190   0  29 135    1     0   0  0  0   1 3651
+191   0  29 154    1     0   0  0  0   1 3651
+192   0  19 147    1     1   0  0  0   0 3651
+193   0  19 147    1     1   0  0  0   0 3651
+195   0  30 137    1     0   0  0  0   1 3699
+196   0  24 110    1     0   0  0  0   1 3728
+197   0  19 184    1     1   0  1  0   0 3756
+199   0  24 110    3     0   1  0  0   0 3770
+200   0  23 110    1     0   0  0  0   1 3770
+201   0  20 120    3     0   0  0  0   0 3770
+202   0  25 241    2     0   0  1  0   0 3790
+203   0  30 112    1     0   0  0  0   1 3799
+204   0  22 169    1     0   0  0  0   0 3827
+205   0  18 120    1     1   0  0  0   2 3856
+206   0  16 170    2     0   0  0  0   4 3860
+207   0  32 186    1     0   0  0  0   2 3860
+208   0  18 120    3     0   0  0  0   1 3884
+209   0  29 130    1     1   0  0  0   2 3884
+210   0  33 117    1     0   0  0  1   1 3912
+211   0  20 170    1     1   0  0  0   0 3940
+212   0  28 134    3     0   0  0  0   1 3941
+213   0  14 135    1     0   0  0  0   0 3941
+214   0  28 130    3     0   0  0  0   0 3969
+215   0  25 120    1     0   0  0  0   2 3983
+216   0  16  95    3     0   0  0  0   1 3997
+217   0  20 158    1     0   0  0  0   1 3997
+218   0  26 160    3     0   0  0  0   0 4054
+219   0  21 115    1     0   0  0  0   1 4054
+220   0  22 129    1     0   0  0  0   0 4111
+221   0  25 130    1     0   0  0  0   2 4153
+222   0  31 120    1     0   0  0  0   2 4167
+223   0  35 170    1     0   1  0  0   1 4174
+224   0  19 120    1     1   0  0  0   0 4238
+225   0  24 116    1     0   0  0  0   1 4593
+226   0  45 123    1     0   0  0  0   1 4990
+4     1  28 120    3     1   1  0  1   0  709
+10    1  29 130    1     0   0  0  1   2 1021
+11    1  34 187    2     1   0  1  0   0 1135
+13    1  25 105    3     0   1  1  0   0 1330
+15    1  25  85    3     0   0  0  1   0 1474
+16    1  27 150    3     0   0  0  0   0 1588
+17    1  23  97    3     0   0  0  1   1 1588
+18    1  24 128    2     0   1  0  0   1 1701
+19    1  24 132    3     0   0  1  0   0 1729
+20    1  21 165    1     1   0  1  0   1 1790
+22    1  32 105    1     1   0  0  0   0 1818
+23    1  19  91    1     1   2  0  1   0 1885
+24    1  25 115    3     0   0  0  0   0 1893
+25    1  16 130    3     0   0  0  0   1 1899
+26    1  25  92    1     1   0  0  0   0 1928
+27    1  20 150    1     1   0  0  0   2 1928
+28    1  21 200    2     0   0  0  1   2 1928
+29    1  24 155    1     1   1  0  0   0 1936
+30    1  21 103    3     0   0  0  0   0 1970
+31    1  20 125    3     0   0  0  1   0 2055
+32    1  25  89    3     0   2  0  0   1 2055
+33    1  19 102    1     0   0  0  0   2 2082
+34    1  19 112    1     1   0  0  1   0 2084
+35    1  26 117    1     1   1  0  0   0 2084
+36    1  24 138    1     0   0  0  0   0 2100
+37    1  17 130    3     1   1  0  1   0 2125
+40    1  20 120    2     1   0  0  0   3 2126
+42    1  22 130    1     1   1  0  1   1 2187
+43    1  27 130    2     0   0  0  1   0 2187
+44    1  20  80    3     1   0  0  1   0 2211
+45    1  17 110    1     1   0  0  0   0 2225
+46    1  25 105    3     0   1  0  0   1 2240
+47    1  20 109    3     0   0  0  0   0 2240
+49    1  18 148    3     0   0  0  0   0 2282
+50    1  18 110    2     1   1  0  0   0 2296
+51    1  20 121    1     1   1  0  1   0 2296
+52    1  21 100    3     0   1  0  0   4 2301
+54    1  26  96    3     0   0  0  0   0 2325
+56    1  31 102    1     1   1  0  0   1 2353
+57    1  15 110    1     0   0  0  0   0 2353
+59    1  23 187    2     1   0  0  0   1 2367
+60    1  20 122    2     1   0  0  0   0 2381
+61    1  24 105    2     1   0  0  0   0 2381
+62    1  15 115    3     0   0  0  1   0 2381
+63    1  23 120    3     0   0  0  0   0 2410
+65    1  30 142    1     1   1  0  0   0 2410
+67    1  22 130    1     1   0  0  0   1 2410
+68    1  17 120    1     1   0  0  0   3 2414
+69    1  23 110    1     1   1  0  0   0 2424
+71    1  17 120    2     0   0  0  0   2 2438
+75    1  26 154    3     0   1  1  0   1 2442
+76    1  20 105    3     0   0  0  0   3 2450
+77    1  26 190    1     1   0  0  0   0 2466
+78    1  14 101    3     1   1  0  0   0 2466
+79    1  28  95    1     1   0  0  0   2 2466
+81    1  14 100    3     0   0  0  0   2 2495
+82    1  23  94    3     1   0  0  0   0 2495
+83    1  17 142    2     0   0  1  0   0 2495
+84    1  21 130    1     1   0  1  0   3 2495</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(birthwt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 189
+Columns: 10
+$ low   &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+$ age   &lt;int&gt; 19, 33, 20, 21, 18, 21, 22, 17, 29, 26, 19, 19, 22, 30, 18, 18, …
+$ lwt   &lt;int&gt; 182, 155, 105, 108, 107, 124, 118, 103, 123, 113, 95, 150, 95, 1…
+$ race  &lt;int&gt; 2, 3, 1, 1, 1, 3, 1, 3, 1, 1, 3, 3, 3, 3, 1, 1, 2, 1, 3, 1, 3, 1…
+$ smoke &lt;int&gt; 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0…
+$ ptl   &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0…
+$ ht    &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+$ ui    &lt;int&gt; 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1…
+$ ftv   &lt;int&gt; 0, 3, 1, 2, 0, 0, 1, 1, 1, 0, 0, 1, 0, 2, 0, 0, 0, 3, 0, 1, 2, 3…
+$ bwt   &lt;int&gt; 2523, 2551, 2557, 2594, 2600, 2622, 2637, 2637, 2663, 2665, 2722…</code></pre>
+</div>
+</div>
+</section>
+<section id="prepare-the-data-for-analysis." class="level3" data-number="18.5.2">
+<h3 data-number="18.5.2" class="anchored" data-anchor-id="prepare-the-data-for-analysis."><span class="header-section-number">18.5.2</span> Prepare the data for analysis.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Although we've already done this above, </span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># we include it here again for completeness.</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>birthwt2 <span class="ot">&lt;-</span> birthwt <span class="sc">%&gt;%</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">low_fct =</span> <span class="fu">factor</span>(low, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"no"</span>, <span class="st">"yes"</span>)),</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">race_fct =</span> <span class="fu">factor</span>(race, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"white"</span>, <span class="st">"black"</span>, <span class="st">"other"</span>)))</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>birthwt2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    low age lwt race smoke ptl ht ui ftv  bwt low_fct race_fct
+85    0  19 182    2     0   0  0  1   0 2523      no    black
+86    0  33 155    3     0   0  0  0   3 2551      no    other
+87    0  20 105    1     1   0  0  0   1 2557      no    white
+88    0  21 108    1     1   0  0  1   2 2594      no    white
+89    0  18 107    1     1   0  0  1   0 2600      no    white
+91    0  21 124    3     0   0  0  0   0 2622      no    other
+92    0  22 118    1     0   0  0  0   1 2637      no    white
+93    0  17 103    3     0   0  0  0   1 2637      no    other
+94    0  29 123    1     1   0  0  0   1 2663      no    white
+95    0  26 113    1     1   0  0  0   0 2665      no    white
+96    0  19  95    3     0   0  0  0   0 2722      no    other
+97    0  19 150    3     0   0  0  0   1 2733      no    other
+98    0  22  95    3     0   0  1  0   0 2751      no    other
+99    0  30 107    3     0   1  0  1   2 2750      no    other
+100   0  18 100    1     1   0  0  0   0 2769      no    white
+101   0  18 100    1     1   0  0  0   0 2769      no    white
+102   0  15  98    2     0   0  0  0   0 2778      no    black
+103   0  25 118    1     1   0  0  0   3 2782      no    white
+104   0  20 120    3     0   0  0  1   0 2807      no    other
+105   0  28 120    1     1   0  0  0   1 2821      no    white
+106   0  32 121    3     0   0  0  0   2 2835      no    other
+107   0  31 100    1     0   0  0  1   3 2835      no    white
+108   0  36 202    1     0   0  0  0   1 2836      no    white
+109   0  28 120    3     0   0  0  0   0 2863      no    other
+111   0  25 120    3     0   0  0  1   2 2877      no    other
+112   0  28 167    1     0   0  0  0   0 2877      no    white
+113   0  17 122    1     1   0  0  0   0 2906      no    white
+114   0  29 150    1     0   0  0  0   2 2920      no    white
+115   0  26 168    2     1   0  0  0   0 2920      no    black
+116   0  17 113    2     0   0  0  0   1 2920      no    black
+117   0  17 113    2     0   0  0  0   1 2920      no    black
+118   0  24  90    1     1   1  0  0   1 2948      no    white
+119   0  35 121    2     1   1  0  0   1 2948      no    black
+120   0  25 155    1     0   0  0  0   1 2977      no    white
+121   0  25 125    2     0   0  0  0   0 2977      no    black
+123   0  29 140    1     1   0  0  0   2 2977      no    white
+124   0  19 138    1     1   0  0  0   2 2977      no    white
+125   0  27 124    1     1   0  0  0   0 2922      no    white
+126   0  31 215    1     1   0  0  0   2 3005      no    white
+127   0  33 109    1     1   0  0  0   1 3033      no    white
+128   0  21 185    2     1   0  0  0   2 3042      no    black
+129   0  19 189    1     0   0  0  0   2 3062      no    white
+130   0  23 130    2     0   0  0  0   1 3062      no    black
+131   0  21 160    1     0   0  0  0   0 3062      no    white
+132   0  18  90    1     1   0  0  1   0 3062      no    white
+133   0  18  90    1     1   0  0  1   0 3062      no    white
+134   0  32 132    1     0   0  0  0   4 3080      no    white
+135   0  19 132    3     0   0  0  0   0 3090      no    other
+136   0  24 115    1     0   0  0  0   2 3090      no    white
+137   0  22  85    3     1   0  0  0   0 3090      no    other
+138   0  22 120    1     0   0  1  0   1 3100      no    white
+139   0  23 128    3     0   0  0  0   0 3104      no    other
+140   0  22 130    1     1   0  0  0   0 3132      no    white
+141   0  30  95    1     1   0  0  0   2 3147      no    white
+142   0  19 115    3     0   0  0  0   0 3175      no    other
+143   0  16 110    3     0   0  0  0   0 3175      no    other
+144   0  21 110    3     1   0  0  1   0 3203      no    other
+145   0  30 153    3     0   0  0  0   0 3203      no    other
+146   0  20 103    3     0   0  0  0   0 3203      no    other
+147   0  17 119    3     0   0  0  0   0 3225      no    other
+148   0  17 119    3     0   0  0  0   0 3225      no    other
+149   0  23 119    3     0   0  0  0   2 3232      no    other
+150   0  24 110    3     0   0  0  0   0 3232      no    other
+151   0  28 140    1     0   0  0  0   0 3234      no    white
+154   0  26 133    3     1   2  0  0   0 3260      no    other
+155   0  20 169    3     0   1  0  1   1 3274      no    other
+156   0  24 115    3     0   0  0  0   2 3274      no    other
+159   0  28 250    3     1   0  0  0   6 3303      no    other
+160   0  20 141    1     0   2  0  1   1 3317      no    white
+161   0  22 158    2     0   1  0  0   2 3317      no    black
+162   0  22 112    1     1   2  0  0   0 3317      no    white
+163   0  31 150    3     1   0  0  0   2 3321      no    other
+164   0  23 115    3     1   0  0  0   1 3331      no    other
+166   0  16 112    2     0   0  0  0   0 3374      no    black
+167   0  16 135    1     1   0  0  0   0 3374      no    white
+168   0  18 229    2     0   0  0  0   0 3402      no    black
+169   0  25 140    1     0   0  0  0   1 3416      no    white
+170   0  32 134    1     1   1  0  0   4 3430      no    white
+172   0  20 121    2     1   0  0  0   0 3444      no    black
+173   0  23 190    1     0   0  0  0   0 3459      no    white
+174   0  22 131    1     0   0  0  0   1 3460      no    white
+175   0  32 170    1     0   0  0  0   0 3473      no    white
+176   0  30 110    3     0   0  0  0   0 3544      no    other
+177   0  20 127    3     0   0  0  0   0 3487      no    other
+179   0  23 123    3     0   0  0  0   0 3544      no    other
+180   0  17 120    3     1   0  0  0   0 3572      no    other
+181   0  19 105    3     0   0  0  0   0 3572      no    other
+182   0  23 130    1     0   0  0  0   0 3586      no    white
+183   0  36 175    1     0   0  0  0   0 3600      no    white
+184   0  22 125    1     0   0  0  0   1 3614      no    white
+185   0  24 133    1     0   0  0  0   0 3614      no    white
+186   0  21 134    3     0   0  0  0   2 3629      no    other
+187   0  19 235    1     1   0  1  0   0 3629      no    white
+188   0  25  95    1     1   3  0  1   0 3637      no    white
+189   0  16 135    1     1   0  0  0   0 3643      no    white
+190   0  29 135    1     0   0  0  0   1 3651      no    white
+191   0  29 154    1     0   0  0  0   1 3651      no    white
+192   0  19 147    1     1   0  0  0   0 3651      no    white
+193   0  19 147    1     1   0  0  0   0 3651      no    white
+195   0  30 137    1     0   0  0  0   1 3699      no    white
+196   0  24 110    1     0   0  0  0   1 3728      no    white
+197   0  19 184    1     1   0  1  0   0 3756      no    white
+199   0  24 110    3     0   1  0  0   0 3770      no    other
+200   0  23 110    1     0   0  0  0   1 3770      no    white
+201   0  20 120    3     0   0  0  0   0 3770      no    other
+202   0  25 241    2     0   0  1  0   0 3790      no    black
+203   0  30 112    1     0   0  0  0   1 3799      no    white
+204   0  22 169    1     0   0  0  0   0 3827      no    white
+205   0  18 120    1     1   0  0  0   2 3856      no    white
+206   0  16 170    2     0   0  0  0   4 3860      no    black
+207   0  32 186    1     0   0  0  0   2 3860      no    white
+208   0  18 120    3     0   0  0  0   1 3884      no    other
+209   0  29 130    1     1   0  0  0   2 3884      no    white
+210   0  33 117    1     0   0  0  1   1 3912      no    white
+211   0  20 170    1     1   0  0  0   0 3940      no    white
+212   0  28 134    3     0   0  0  0   1 3941      no    other
+213   0  14 135    1     0   0  0  0   0 3941      no    white
+214   0  28 130    3     0   0  0  0   0 3969      no    other
+215   0  25 120    1     0   0  0  0   2 3983      no    white
+216   0  16  95    3     0   0  0  0   1 3997      no    other
+217   0  20 158    1     0   0  0  0   1 3997      no    white
+218   0  26 160    3     0   0  0  0   0 4054      no    other
+219   0  21 115    1     0   0  0  0   1 4054      no    white
+220   0  22 129    1     0   0  0  0   0 4111      no    white
+221   0  25 130    1     0   0  0  0   2 4153      no    white
+222   0  31 120    1     0   0  0  0   2 4167      no    white
+223   0  35 170    1     0   1  0  0   1 4174      no    white
+224   0  19 120    1     1   0  0  0   0 4238      no    white
+225   0  24 116    1     0   0  0  0   1 4593      no    white
+226   0  45 123    1     0   0  0  0   1 4990      no    white
+4     1  28 120    3     1   1  0  1   0  709     yes    other
+10    1  29 130    1     0   0  0  1   2 1021     yes    white
+11    1  34 187    2     1   0  1  0   0 1135     yes    black
+13    1  25 105    3     0   1  1  0   0 1330     yes    other
+15    1  25  85    3     0   0  0  1   0 1474     yes    other
+16    1  27 150    3     0   0  0  0   0 1588     yes    other
+17    1  23  97    3     0   0  0  1   1 1588     yes    other
+18    1  24 128    2     0   1  0  0   1 1701     yes    black
+19    1  24 132    3     0   0  1  0   0 1729     yes    other
+20    1  21 165    1     1   0  1  0   1 1790     yes    white
+22    1  32 105    1     1   0  0  0   0 1818     yes    white
+23    1  19  91    1     1   2  0  1   0 1885     yes    white
+24    1  25 115    3     0   0  0  0   0 1893     yes    other
+25    1  16 130    3     0   0  0  0   1 1899     yes    other
+26    1  25  92    1     1   0  0  0   0 1928     yes    white
+27    1  20 150    1     1   0  0  0   2 1928     yes    white
+28    1  21 200    2     0   0  0  1   2 1928     yes    black
+29    1  24 155    1     1   1  0  0   0 1936     yes    white
+30    1  21 103    3     0   0  0  0   0 1970     yes    other
+31    1  20 125    3     0   0  0  1   0 2055     yes    other
+32    1  25  89    3     0   2  0  0   1 2055     yes    other
+33    1  19 102    1     0   0  0  0   2 2082     yes    white
+34    1  19 112    1     1   0  0  1   0 2084     yes    white
+35    1  26 117    1     1   1  0  0   0 2084     yes    white
+36    1  24 138    1     0   0  0  0   0 2100     yes    white
+37    1  17 130    3     1   1  0  1   0 2125     yes    other
+40    1  20 120    2     1   0  0  0   3 2126     yes    black
+42    1  22 130    1     1   1  0  1   1 2187     yes    white
+43    1  27 130    2     0   0  0  1   0 2187     yes    black
+44    1  20  80    3     1   0  0  1   0 2211     yes    other
+45    1  17 110    1     1   0  0  0   0 2225     yes    white
+46    1  25 105    3     0   1  0  0   1 2240     yes    other
+47    1  20 109    3     0   0  0  0   0 2240     yes    other
+49    1  18 148    3     0   0  0  0   0 2282     yes    other
+50    1  18 110    2     1   1  0  0   0 2296     yes    black
+51    1  20 121    1     1   1  0  1   0 2296     yes    white
+52    1  21 100    3     0   1  0  0   4 2301     yes    other
+54    1  26  96    3     0   0  0  0   0 2325     yes    other
+56    1  31 102    1     1   1  0  0   1 2353     yes    white
+57    1  15 110    1     0   0  0  0   0 2353     yes    white
+59    1  23 187    2     1   0  0  0   1 2367     yes    black
+60    1  20 122    2     1   0  0  0   0 2381     yes    black
+61    1  24 105    2     1   0  0  0   0 2381     yes    black
+62    1  15 115    3     0   0  0  1   0 2381     yes    other
+63    1  23 120    3     0   0  0  0   0 2410     yes    other
+65    1  30 142    1     1   1  0  0   0 2410     yes    white
+67    1  22 130    1     1   0  0  0   1 2410     yes    white
+68    1  17 120    1     1   0  0  0   3 2414     yes    white
+69    1  23 110    1     1   1  0  0   0 2424     yes    white
+71    1  17 120    2     0   0  0  0   2 2438     yes    black
+75    1  26 154    3     0   1  1  0   1 2442     yes    other
+76    1  20 105    3     0   0  0  0   3 2450     yes    other
+77    1  26 190    1     1   0  0  0   0 2466     yes    white
+78    1  14 101    3     1   1  0  0   0 2466     yes    other
+79    1  28  95    1     1   0  0  0   2 2466     yes    white
+81    1  14 100    3     0   0  0  0   2 2495     yes    other
+82    1  23  94    3     1   0  0  0   0 2495     yes    other
+83    1  17 142    2     0   0  1  0   0 2495     yes    black
+84    1  21 130    1     1   0  1  0   3 2495     yes    white</code></pre>
+</div>
+</div>
+</section>
+<section id="make-tables-or-plots-to-explore-the-data-visually." class="level3" data-number="18.5.3">
+<h3 data-number="18.5.3" class="anchored" data-anchor-id="make-tables-or-plots-to-explore-the-data-visually."><span class="header-section-number">18.5.3</span> Make tables or plots to explore the data visually.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(birthwt2, low_fct, race_fct) <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_totals</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> low_fct white black other
+      no    73    15    42
+     yes    23    11    25
+   Total    96    26    67</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(birthwt2, low_fct, race_fct) <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_totals</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_percentages</span>(<span class="st">"col"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_pct_formatting</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> low_fct  white  black  other
+      no  76.0%  57.7%  62.7%
+     yes  24.0%  42.3%  37.3%
+   Total 100.0% 100.0% 100.0%</code></pre>
+</div>
+</div>
+<p>Commentary: Earlier we used row and column total to explain how expected cell counts arise. Here, however, we will revert back to our previous standard practice of generating one contingency table with counts and another with column percentages.</p>
+</section>
+</section>
+<section id="hypotheses" class="level2" data-number="18.6">
+<h2 data-number="18.6" class="anchored" data-anchor-id="hypotheses"><span class="header-section-number">18.6</span> Hypotheses</h2>
+<section id="identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest." class="level3" data-number="18.6.1">
+<h3 data-number="18.6.1" class="anchored" data-anchor-id="identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest."><span class="header-section-number">18.6.1</span> Identify the sample (or samples) and a reasonable population (or populations) of interest.</h3>
+<p>The sample consists of 189 mothers who gave birth at the Baystate Medical Center in Springfield, Massachusetts in 1986. The population is presumably all mothers, although it’s safest to conclude only about mothers who gave birth at this hospital.</p>
+</section>
+<section id="express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences." class="level3" data-number="18.6.2">
+<h3 data-number="18.6.2" class="anchored" data-anchor-id="express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences."><span class="header-section-number">18.6.2</span> Express the null and alternative hypotheses as contextually meaningful full sentences.</h3>
+<p><span class="math inline">\(H_{0}:\)</span> Low birth weight and race are independent.</p>
+<p><span class="math inline">\(H_{A}:\)</span> Low birth weight and race are associated.</p>
+</section>
+<section id="express-the-null-and-alternative-hypotheses-in-symbols-when-possible." class="level3" data-number="18.6.3">
+<h3 data-number="18.6.3" class="anchored" data-anchor-id="express-the-null-and-alternative-hypotheses-in-symbols-when-possible."><span class="header-section-number">18.6.3</span> Express the null and alternative hypotheses in symbols (when possible).</h3>
+<p>For a chi-square test for independence, this section is not applicable. With multiple categories in the response and predictor variables, there are no specific parameters of interest to express symbolically.</p>
+</section>
+</section>
+<section id="model" class="level2" data-number="18.7">
+<h2 data-number="18.7" class="anchored" data-anchor-id="model"><span class="header-section-number">18.7</span> Model</h2>
+<section id="identify-the-sampling-distribution-model." class="level3" data-number="18.7.1">
+<h3 data-number="18.7.1" class="anchored" data-anchor-id="identify-the-sampling-distribution-model."><span class="header-section-number">18.7.1</span> Identify the sampling distribution model.</h3>
+<p>We will use a chi-square model with 2 degrees of freedom.</p>
+</section>
+<section id="check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met." class="level3" data-number="18.7.2">
+<h3 data-number="18.7.2" class="anchored" data-anchor-id="check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met."><span class="header-section-number">18.7.2</span> Check the relevant conditions to ensure that model assumptions are met.</h3>
+<ul>
+<li>Random
+<ul>
+<li>We hope that these 189 women are representative of all women who gave birth in this hospital (or, at best, in that region) around that time.</li>
+</ul></li>
+<li>10%
+<ul>
+<li>We don’t know how many women gave birth at this hospital, but perhaps over many years we might have more than 1890 women.</li>
+</ul></li>
+<li>Expected cell counts
+<ul>
+<li>You checked the cell counts as a part of Exercise 1. Note that all expected cell counts are larger than 5, so the condition is met.</li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="mechanics" class="level2" data-number="18.8">
+<h2 data-number="18.8" class="anchored" data-anchor-id="mechanics"><span class="header-section-number">18.8</span> Mechanics</h2>
+<section id="compute-the-test-statistic." class="level3" data-number="18.8.1">
+<h3 data-number="18.8.1" class="anchored" data-anchor-id="compute-the-test-statistic."><span class="header-section-number">18.8.1</span> Compute the test statistic.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>obs_chisq <span class="ot">&lt;-</span> birthwt2 <span class="sc">%&gt;%</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">specify</span>(<span class="at">response =</span> low_fct, <span class="at">explanatory =</span> race_fct) <span class="sc">%&gt;%</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hypothesize</span>(<span class="at">null =</span> <span class="st">"independence"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"chisq"</span>)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>obs_chisq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Response: low_fct (factor)
+Explanatory: race_fct (factor)
+Null Hypothesis: independence
+# A tibble: 1 × 1
+   stat
+  &lt;dbl&gt;
+1  5.00</code></pre>
+</div>
+</div>
+</section>
+<section id="report-the-test-statistic-in-context-when-possible." class="level3" data-number="18.8.2">
+<h3 data-number="18.8.2" class="anchored" data-anchor-id="report-the-test-statistic-in-context-when-possible."><span class="header-section-number">18.8.2</span> Report the test statistic in context (when possible).</h3>
+<p>The value of <span class="math inline">\(\chi^{2}\)</span> is 5.004813.</p>
+<p>Commentary: As in the last chapter, there’s not much context to report with a value of <span class="math inline">\(\chi^{2}\)</span>, so the most we can do here is just report it in a full sentence.</p>
+</section>
+<section id="plot-the-null-distribution." class="level3" data-number="18.8.3">
+<h3 data-number="18.8.3" class="anchored" data-anchor-id="plot-the-null-distribution."><span class="header-section-number">18.8.3</span> Plot the null distribution.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>low_race_test <span class="ot">&lt;-</span> birthwt2 <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">specify</span>(<span class="at">response =</span> low_fct, <span class="at">explanatory =</span> race_fct) <span class="sc">%&gt;%</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assume</span>(<span class="at">distribution =</span> <span class="st">"chisq"</span>)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>low_race_test</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A Chi-squared distribution with 2 degrees of freedom.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>low_race_test <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visualize</span>() <span class="sc">+</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shade_p_value</span>(obs_chisq, <span class="at">direction =</span> <span class="st">"greater"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="18-chi_square_test_for_independence-web_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="calculate-the-p-value." class="level3" data-number="18.8.4">
+<h3 data-number="18.8.4" class="anchored" data-anchor-id="calculate-the-p-value."><span class="header-section-number">18.8.4</span> Calculate the P-value.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>low_race_test_p <span class="ot">&lt;-</span> low_race_test <span class="sc">%&gt;%</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_p_value</span>(obs_chisq, <span class="at">direction =</span> <span class="st">"greater"</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>low_race_test_p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  p_value
+    &lt;dbl&gt;
+1  0.0819</code></pre>
+</div>
+</div>
+</section>
+<section id="interpret-the-p-value-as-a-probability-given-the-null." class="level3" data-number="18.8.5">
+<h3 data-number="18.8.5" class="anchored" data-anchor-id="interpret-the-p-value-as-a-probability-given-the-null."><span class="header-section-number">18.8.5</span> Interpret the P-value as a probability given the null.</h3>
+<p>The P-value is 0.0818877. If low birth weight and race were independent, there would be a 8.1887698% chance of seeing results at least as extreme as we saw in the data.</p>
+</section>
+</section>
+<section id="conclusion" class="level2" data-number="18.9">
+<h2 data-number="18.9" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">18.9</span> Conclusion</h2>
+<section id="state-the-statistical-conclusion." class="level3" data-number="18.9.1">
+<h3 data-number="18.9.1" class="anchored" data-anchor-id="state-the-statistical-conclusion."><span class="header-section-number">18.9.1</span> State the statistical conclusion.</h3>
+<p>We fail to reject the null hypothesis.</p>
+</section>
+<section id="state-but-do-not-overstate-a-contextually-meaningful-conclusion." class="level3" data-number="18.9.2">
+<h3 data-number="18.9.2" class="anchored" data-anchor-id="state-but-do-not-overstate-a-contextually-meaningful-conclusion."><span class="header-section-number">18.9.2</span> State (but do not overstate) a contextually meaningful conclusion.</h3>
+<p>There is insufficient evidence that low birth weight and race are associated.</p>
+</section>
+<section id="express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion." class="level3" data-number="18.9.3">
+<h3 data-number="18.9.3" class="anchored" data-anchor-id="express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion."><span class="header-section-number">18.9.3</span> Express reservations or uncertainty about the generalizability of the conclusion.</h3>
+<p>Given our uncertainly about how the data was collected, it’s not clear what our conclusion means. Also, failing to reject the null is really a “non-conclusion” in that it leaves us basically knowing nothing. We don’t have evidence of such an association (and there are good reasons to believe there may not be one), but failing to reject the null does not prove anything.</p>
+</section>
+<section id="identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses." class="level3" data-number="18.9.4">
+<h3 data-number="18.9.4" class="anchored" data-anchor-id="identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses."><span class="header-section-number">18.9.4</span> Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.</h3>
+<p>It’s possible that we have made a Type II error. It may be that low birth weight and race are associated, but our sample has not given enough evidence of such an association.</p>
+</section>
+</section>
+<section id="confidence-interval" class="level2" data-number="18.10">
+<h2 data-number="18.10" class="anchored" data-anchor-id="confidence-interval"><span class="header-section-number">18.10</span> Confidence interval</h2>
+<p>There are no parameters of interest in a chi-square test, so there is no confidence interval to report.</p>
+</section>
+<section id="your-turn" class="level2" data-number="18.11">
+<h2 data-number="18.11" class="anchored" data-anchor-id="your-turn"><span class="header-section-number">18.11</span> Your turn</h2>
+<p>Use the <code>smoking</code> data set from the <code>openintro</code> package. Run a chi-square test for independence to determine if smoking status is associated with marital status.</p>
+<p>The rubric outline is reproduced below. You may refer to the worked example above and modify it accordingly. Remember to strip out all the commentary. That is just exposition for your benefit in understanding the steps, but is not meant to form part of the formal inference process.</p>
+<p>Another word of warning: the copy/paste process is not a substitute for your brain. You will often need to modify more than just the names of the data frames and variables to adapt the worked examples to your own work. Do not blindly copy and paste code without understanding what it does. And you should <strong>never</strong> copy and paste text. All the sentences and paragraphs you write are expressions of your own analysis. They must reflect your own understanding of the inferential process.</p>
+<p><strong>Also, so that your answers here don’t mess up the code chunks above, use new variable names everywhere.</strong></p>
+<section id="exploratory-data-analysis-1" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exploratory-data-analysis-1">Exploratory data analysis</h5>
+<section id="use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-1">Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.</h6>
+<div class="answer">
+<p>Please write up your answer here</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to print the data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to glimpse the variables</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="prepare-the-data-for-analysis.-not-always-necessary." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="prepare-the-data-for-analysis.-not-always-necessary.">Prepare the data for analysis. [Not always necessary.]</h6>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to prepare the data for analysis.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="make-tables-or-plots-to-explore-the-data-visually.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="make-tables-or-plots-to-explore-the-data-visually.-1">Make tables or plots to explore the data visually.</h6>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to make tables or plots.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="hypotheses-1" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="hypotheses-1">Hypotheses</h5>
+<section id="identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-1">Identify the sample (or samples) and a reasonable population (or populations) of interest.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-1">Express the null and alternative hypotheses as contextually meaningful full sentences.</h6>
+<div class="answer">
+<p><span class="math inline">\(H_{0}:\)</span> Null hypothesis goes here.</p>
+<p><span class="math inline">\(H_{A}:\)</span> Alternative hypothesis goes here.</p>
+</div>
+</section>
+<section id="express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-1">Express the null and alternative hypotheses in symbols (when possible).</h6>
+<div class="answer">
+<p><span class="math inline">\(H_{0}: math\)</span></p>
+<p><span class="math inline">\(H_{A}: math\)</span></p>
+</div>
+</section>
+</section>
+<section id="model-1" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="model-1">Model</h5>
+<section id="identify-the-sampling-distribution-model.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="identify-the-sampling-distribution-model.-1">Identify the sampling distribution model.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-1">Check the relevant conditions to ensure that model assumptions are met.</h6>
+<div class="answer">
+<p>Please write up your answer here. (Some conditions may require R code as well.)</p>
+</div>
+</section>
+</section>
+<section id="mechanics-1" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="mechanics-1">Mechanics</h5>
+<section id="compute-the-test-statistic.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="compute-the-test-statistic.-1">Compute the test statistic.</h6>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to compute the test statistic.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="report-the-test-statistic-in-context-when-possible.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="report-the-test-statistic-in-context-when-possible.-1">Report the test statistic in context (when possible).</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="plot-the-null-distribution.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="plot-the-null-distribution.-1">Plot the null distribution.</h6>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to plot the null distribution.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="calculate-the-p-value.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="calculate-the-p-value.-1">Calculate the P-value.</h6>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to calculate the P-value.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="interpret-the-p-value-as-a-probability-given-the-null.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="interpret-the-p-value-as-a-probability-given-the-null.-1">Interpret the P-value as a probability given the null.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+</section>
+<section id="conclusion-1" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="conclusion-1">Conclusion</h5>
+<section id="state-the-statistical-conclusion.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="state-the-statistical-conclusion.-1">State the statistical conclusion.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="state-but-do-not-overstate-a-contextually-meaningful-conclusion.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="state-but-do-not-overstate-a-contextually-meaningful-conclusion.-1">State (but do not overstate) a contextually meaningful conclusion.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-1">Express reservations or uncertainty about the generalizability of the conclusion.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-1">Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+</section>
+</section>
+<section id="bonus-section-residuals" class="level2" data-number="18.12">
+<h2 data-number="18.12" class="anchored" data-anchor-id="bonus-section-residuals"><span class="header-section-number">18.12</span> Bonus section: Residuals</h2>
+<p>Just like with the chi-square test for goodness of fit, rejecting the null hypothesis using the chi-square test for independence informs us that two variables are associated, but it doesn’t tell us the useful information about which combinations of variables have higher and lower counts than expected. And just like the chi-square test for goodness of fit, we can examine the <em>residuals table</em> to find that information.</p>
+<p><strong>A word of caution</strong>: You should only examine the residuals if your test was statistically significant! The residuals table for tests in which we fail to reject the null hypothesis can be misleading.</p>
+<p>Because we failed to reject the null hypothesis in the <code>low_race_test</code>, it would be unwise for us to examine the residuals table in that test. Instead, we’ll use a different example.</p>
+<p>The <code>diabetes2</code> dataset in the <code>openintro</code> package contains information about an experiment evaluating three treatments for Type 2 diabetes in patients aged 10-17 who were being treated with metformin. The three treatments summarized in the <code>treatment</code> variable were: continued treatment with metformin (<code>met</code>), treatment with metformin combined with rosiglitazone (<code>rosi</code>), or a lifestyle intervention program (<code>lifestyle</code>). Each patient had a primary <code>outcome</code>, which was either “lacked glycemic control” (<code>failure</code>) or did not lack that control (<code>success</code>). Here is the summary of the results of the experiment:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(diabetes2, treatment, outcome) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> treatment failure success
+ lifestyle     109     125
+       met     120     112
+      rosi      90     143</code></pre>
+</div>
+</div>
+<p>For the sake of a streamlined presentation, we’ll omit the usual details of condition-checking, hypothesis-writing, etc., and skip right to the conclusion.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(diabetes2, treatment, outcome) <span class="sc">%&gt;%</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">chisq.test</span>() <span class="ot">-&gt;</span> outcome_treatment_chisq.test</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>outcome_treatment_chisq.test</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's Chi-squared test
+
+data:  .
+X-squared = 8.1645, df = 2, p-value = 0.01687</code></pre>
+</div>
+</div>
+<p>Notice that the p-value obtained from the test is below our usual significance level (= 0.05), so it makes sense for us to examine the residuals.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>outcome_treatment_chisq.test<span class="sc">$</span>residuals</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> treatment    failure    success
+ lifestyle  0.2138881 -0.1959703
+       met  1.3725470 -1.2575659
+      rosi -1.5839451  1.4512548</code></pre>
+</div>
+</div>
+<p>Again, these values don’t mean much in the real world; our job is to look at the most positive and most negative values.</p>
+<ul>
+<li>Since the <code>rosi</code> and <code>failure</code> cell has the most negative value, the count of people who failed to achieve glycemic control with rosiglitazone is the most <em>below</em> expected. (That’s a good result!)</li>
+<li>Since the <code>rosi</code> and <code>success</code> cell has the most positive value, the count of people who succeeded in achieving glycemic control with rosiglitazone is the most <em>above</em> expected. (That’s also a good result!)</li>
+</ul>
+<p>Overall, we can conclude that the rosiglitazone treatment was quite successful in helping people achieve their glycemic control goals.</p>
+<section id="your-turn-1" class="level3" data-number="18.12.1">
+<h3 data-number="18.12.1" class="anchored" data-anchor-id="your-turn-1"><span class="header-section-number">18.12.1</span> Your turn</h3>
+<p>Examine the residuals table to determine which marital statuses are most associated with smoking or not smoking.</p>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to produce the chisq.test result.</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to examine the residuals table.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Please write your answer here.</p>
+</div>
+</section>
+</section>
+<section id="conclusion-2" class="level2" data-number="18.13">
+<h2 data-number="18.13" class="anchored" data-anchor-id="conclusion-2"><span class="header-section-number">18.13</span> Conclusion</h2>
+<p>With two categorical variables, we can run a chi-square test for independence to test the null hypothesis that the two variables are independent. While technically we can run this test for any two categorical variables, if both variables have only two levels, we would usually choose to run a test for two proportions. The chi-square test for independence is useful when one or both of the response and predictor variables have three or more levels. The expected cell counts are derived from the data and then the chi-squared statistic is computed as usual. Using the correct degrees of freedom, we can test how much the observed cell counts deviate from the expected cell counts and derive a P-value.</p>
+<section id="preparing-and-submitting-your-assignment" class="level3" data-number="18.13.1">
+<h3 data-number="18.13.1" class="anchored" data-anchor-id="preparing-and-submitting-your-assignment"><span class="header-section-number">18.13.1</span> Preparing and submitting your assignment</h3>
+<ol type="1">
+<li>From the “Run” menu, select “Restart R and Run All Chunks”.</li>
+<li>Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.</li>
+<li>Spell check your document by clicking the icon with “ABC” and a check mark.</li>
+<li>Hit the “Preview” button one last time to generate the final draft of the <code>.nb.html</code> file.</li>
+<li>Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1–5 again.</li>
+</ol>
+<p>If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./17-chi_square_goodness_of_fit-web.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Chi-square goodness-of-fit test</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./19-inference_for_one_mean-web.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Inference for one mean</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

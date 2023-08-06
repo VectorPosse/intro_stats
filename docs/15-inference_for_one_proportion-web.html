@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Introduction to Statistics: an integrated textbook and workbook using R - 15&nbsp; Inference for one proportion</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./16-inference_for_two_proportions-web.html" rel="next">
+<link href="./14-sampling_distribution_models-web.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./15-inference_for_one_proportion-web.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Inference for one proportion</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to Statistics: an integrated textbook and workbook using R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-intro_to_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-using_r_markdown-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Using R Markdown</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-categorical_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Categorical data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-numerical_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Numerical data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-manipulating_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Manipulating data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-correlation-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Correlation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-regression-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Regression</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-intro_to_randomization_1-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to randomization, Part 1</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-intro_to_randomization_2-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to randomization, Part 2</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-hypothesis_testing_with_randomization_1-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Hypothesis testing with randomization, Part 1</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-hypothesis_testing_with_randomization_2-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Hypothesis testing with randomization, Part 2</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-confidence_intervals-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Confidence intervals</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-normal_models-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Normal models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-sampling_distribution_models-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Sampling distribution models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-inference_for_one_proportion-web.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Inference for one proportion</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-inference_for_two_proportions-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Inference for two proportions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-chi_square_goodness_of_fit-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Chi-square goodness-of-fit test</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-chi_square_test_for_independence-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Chi-square test for independence</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-inference_for_one_mean-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Inference for one mean</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-inference_for_paired_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Inference for paired data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21-inference_for_two_independent_means-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Inference for two independent means</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-anova-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">ANOVA</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rubric.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Rubric for inference</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Concordance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Concordance with <em>Introduction to Modern Statistics</em> (IMS)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#functions-introduced-in-this-chapter" id="toc-functions-introduced-in-this-chapter" class="nav-link active" data-scroll-target="#functions-introduced-in-this-chapter">Functions introduced in this chapter</a></li>
+  <li><a href="#one-prop-intro" id="toc-one-prop-intro" class="nav-link" data-scroll-target="#one-prop-intro"><span class="header-section-number">15.1</span> Introduction</a>
+  <ul class="collapse">
+  <li><a href="#one-prop-install" id="toc-one-prop-install" class="nav-link" data-scroll-target="#one-prop-install"><span class="header-section-number">15.1.1</span> Install new packages</a></li>
+  <li><a href="#one-prop-download" id="toc-one-prop-download" class="nav-link" data-scroll-target="#one-prop-download"><span class="header-section-number">15.1.2</span> Download the R notebook file</a></li>
+  <li><a href="#one-prop-restart" id="toc-one-prop-restart" class="nav-link" data-scroll-target="#one-prop-restart"><span class="header-section-number">15.1.3</span> Restart R and run all chunks</a></li>
+  </ul></li>
+  <li><a href="#one-prop-load" id="toc-one-prop-load" class="nav-link" data-scroll-target="#one-prop-load"><span class="header-section-number">15.2</span> Load packages</a></li>
+  <li><a href="#one-prop-rubric" id="toc-one-prop-rubric" class="nav-link" data-scroll-target="#one-prop-rubric"><span class="header-section-number">15.3</span> Revisiting the rubric for inference</a></li>
+  <li><a href="#one-prop-question" id="toc-one-prop-question" class="nav-link" data-scroll-target="#one-prop-question"><span class="header-section-number">15.4</span> Research question</a></li>
+  <li><a href="#one-prop-ex-eda" id="toc-one-prop-ex-eda" class="nav-link" data-scroll-target="#one-prop-ex-eda"><span class="header-section-number">15.5</span> Exploratory data analysis</a>
+  <ul class="collapse">
+  <li><a href="#one-prop-ex-documentation" id="toc-one-prop-ex-documentation" class="nav-link" data-scroll-target="#one-prop-ex-documentation"><span class="header-section-number">15.5.1</span> Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.</a></li>
+  <li><a href="#one-prop-ex-prepare" id="toc-one-prop-ex-prepare" class="nav-link" data-scroll-target="#one-prop-ex-prepare"><span class="header-section-number">15.5.2</span> Prepare the data for analysis.</a></li>
+  <li><a href="#one-prop-ex-plots" id="toc-one-prop-ex-plots" class="nav-link" data-scroll-target="#one-prop-ex-plots"><span class="header-section-number">15.5.3</span> Make tables or plots to explore the data visually.</a></li>
+  </ul></li>
+  <li><a href="#one-prop-ex-hypotheses" id="toc-one-prop-ex-hypotheses" class="nav-link" data-scroll-target="#one-prop-ex-hypotheses"><span class="header-section-number">15.6</span> Hypotheses</a>
+  <ul class="collapse">
+  <li><a href="#one-prop-ex-sample-pop" id="toc-one-prop-ex-sample-pop" class="nav-link" data-scroll-target="#one-prop-ex-sample-pop"><span class="header-section-number">15.6.1</span> Identify the sample (or samples) and a reasonable population (or populations) of interest.</a></li>
+  <li><a href="#one-prop-ex-express-words" id="toc-one-prop-ex-express-words" class="nav-link" data-scroll-target="#one-prop-ex-express-words"><span class="header-section-number">15.6.2</span> Express the null and alternative hypotheses as contextually meaningful full sentences.</a></li>
+  <li><a href="#one-prop-ex-express-math" id="toc-one-prop-ex-express-math" class="nav-link" data-scroll-target="#one-prop-ex-express-math"><span class="header-section-number">15.6.3</span> Express the null and alternative hypotheses in symbols (when possible).</a></li>
+  </ul></li>
+  <li><a href="#one-prop-ex-model" id="toc-one-prop-ex-model" class="nav-link" data-scroll-target="#one-prop-ex-model"><span class="header-section-number">15.7</span> Model</a>
+  <ul class="collapse">
+  <li><a href="#one-prop-ex-sampling-dist-model" id="toc-one-prop-ex-sampling-dist-model" class="nav-link" data-scroll-target="#one-prop-ex-sampling-dist-model"><span class="header-section-number">15.7.1</span> Identify the sampling distribution model.</a></li>
+  <li><a href="#one-prop-ex-ht-conditions" id="toc-one-prop-ex-ht-conditions" class="nav-link" data-scroll-target="#one-prop-ex-ht-conditions"><span class="header-section-number">15.7.2</span> Check the relevant conditions to ensure that model assumptions are met.</a></li>
+  </ul></li>
+  <li><a href="#one-prop-ex-mechanics" id="toc-one-prop-ex-mechanics" class="nav-link" data-scroll-target="#one-prop-ex-mechanics"><span class="header-section-number">15.8</span> Mechanics</a>
+  <ul class="collapse">
+  <li><a href="#one-prop-ex-compute-test-stat" id="toc-one-prop-ex-compute-test-stat" class="nav-link" data-scroll-target="#one-prop-ex-compute-test-stat"><span class="header-section-number">15.8.1</span> Compute the test statistic.</a></li>
+  <li><a href="#one-prop-ex-report-test-stat" id="toc-one-prop-ex-report-test-stat" class="nav-link" data-scroll-target="#one-prop-ex-report-test-stat"><span class="header-section-number">15.8.2</span> Report the test statistic in context (when possible).</a></li>
+  <li><a href="#one-prop-ex-plot_null" id="toc-one-prop-ex-plot_null" class="nav-link" data-scroll-target="#one-prop-ex-plot_null"><span class="header-section-number">15.8.3</span> Plot the null distribution.</a></li>
+  <li><a href="#one-prop-ex-calculate-p" id="toc-one-prop-ex-calculate-p" class="nav-link" data-scroll-target="#one-prop-ex-calculate-p"><span class="header-section-number">15.8.4</span> Calculate the P-value.</a></li>
+  <li><a href="#one-prop-ex-interpret-p" id="toc-one-prop-ex-interpret-p" class="nav-link" data-scroll-target="#one-prop-ex-interpret-p"><span class="header-section-number">15.8.5</span> Interpret the P-value as a probability given the null.</a></li>
+  </ul></li>
+  <li><a href="#one-prop-ex-ht-conclusion" id="toc-one-prop-ex-ht-conclusion" class="nav-link" data-scroll-target="#one-prop-ex-ht-conclusion"><span class="header-section-number">15.9</span> Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#one-prop-ex-stat-conclusion" id="toc-one-prop-ex-stat-conclusion" class="nav-link" data-scroll-target="#one-prop-ex-stat-conclusion"><span class="header-section-number">15.9.1</span> State the statistical conclusion.</a></li>
+  <li><a href="#one-prop-ex-context-conclusion" id="toc-one-prop-ex-context-conclusion" class="nav-link" data-scroll-target="#one-prop-ex-context-conclusion"><span class="header-section-number">15.9.2</span> State (but do not overstate) a contextually meaningful conclusion.</a></li>
+  <li><a href="#one-prop-ex-reservations" id="toc-one-prop-ex-reservations" class="nav-link" data-scroll-target="#one-prop-ex-reservations"><span class="header-section-number">15.9.3</span> Express reservations or uncertainty about the generalizability of the conclusion.</a></li>
+  <li><a href="#one-prop-ex-errors" id="toc-one-prop-ex-errors" class="nav-link" data-scroll-target="#one-prop-ex-errors"><span class="header-section-number">15.9.4</span> Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.</a></li>
+  </ul></li>
+  <li><a href="#one-prop-ex-ci" id="toc-one-prop-ex-ci" class="nav-link" data-scroll-target="#one-prop-ex-ci"><span class="header-section-number">15.10</span> Confidence interval</a>
+  <ul class="collapse">
+  <li><a href="#one-prop-ex-ci-conditions" id="toc-one-prop-ex-ci-conditions" class="nav-link" data-scroll-target="#one-prop-ex-ci-conditions"><span class="header-section-number">15.10.1</span> Check the relevant conditions to ensure that model assumptions are met.</a></li>
+  <li><a href="#one-prop-ex-ci-calculate" id="toc-one-prop-ex-ci-calculate" class="nav-link" data-scroll-target="#one-prop-ex-ci-calculate"><span class="header-section-number">15.10.2</span> Calculate and graph the confidence interval.</a></li>
+  <li><a href="#one-prop-ex-ci-interpret" id="toc-one-prop-ex-ci-interpret" class="nav-link" data-scroll-target="#one-prop-ex-ci-interpret"><span class="header-section-number">15.10.3</span> State (but do not overstate) a contextually meaningful interpretation.</a></li>
+  <li><a href="#one-prop-ex-two-sided" id="toc-one-prop-ex-two-sided" class="nav-link" data-scroll-target="#one-prop-ex-two-sided"><span class="header-section-number">15.10.4</span> If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.</a></li>
+  <li><a href="#one-prop-ex-effect" id="toc-one-prop-ex-effect" class="nav-link" data-scroll-target="#one-prop-ex-effect"><span class="header-section-number">15.10.5</span> When comparing two groups, comment on the effect size and the practical significance of the result.</a></li>
+  </ul></li>
+  <li><a href="#one-prop-your-turn" id="toc-one-prop-your-turn" class="nav-link" data-scroll-target="#one-prop-your-turn"><span class="header-section-number">15.11</span> Your turn</a></li>
+  <li><a href="#one-prop-conclusion" id="toc-one-prop-conclusion" class="nav-link" data-scroll-target="#one-prop-conclusion"><span class="header-section-number">15.12</span> Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#one-prop-prep" id="toc-one-prop-prep" class="nav-link" data-scroll-target="#one-prop-prep"><span class="header-section-number">15.12.1</span> Preparing and submitting your assignment</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="one-prop" class="quarto-section-identifier"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Inference for one proportion</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<!-- Please don't mess with the next few lines! -->
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>
+<p style="color:#ffffff">
+2.0
+</p>
+<!-- Please don't mess with the previous few lines! -->
+<section id="functions-introduced-in-this-chapter" class="level3 unnumbered summary">
+<h3 class="unnumbered anchored" data-anchor-id="functions-introduced-in-this-chapter">Functions introduced in this chapter</h3>
+<p>No new R functions are introduced here.</p>
+</section>
+<section id="one-prop-intro" class="level2" data-number="15.1">
+<h2 data-number="15.1" class="anchored" data-anchor-id="one-prop-intro"><span class="header-section-number">15.1</span> Introduction</h2>
+<p>Our earlier work with simulations showed us that when the number of successes and failures is large enough, we can use a normal model as our sampling distribution model.</p>
+<p>We revisit hypothesis tests for a single proportion, but now, instead of running a simulation to compute the P-value, we take the shortcut of computing the P-value directly from a normal model.</p>
+<p>There are no new concepts here. All we are doing is revisiting the rubric for inference and making the necessary changes.</p>
+<section id="one-prop-install" class="level3" data-number="15.1.1">
+<h3 data-number="15.1.1" class="anchored" data-anchor-id="one-prop-install"><span class="header-section-number">15.1.1</span> Install new packages</h3>
+<p>There are no new packages used in this chapter.</p>
+</section>
+<section id="one-prop-download" class="level3" data-number="15.1.2">
+<h3 data-number="15.1.2" class="anchored" data-anchor-id="one-prop-download"><span class="header-section-number">15.1.2</span> Download the R notebook file</h3>
+<p>Check the upper-right corner in RStudio to make sure you’re in your <code>intro_stats</code> project. Then click on the following link to download this chapter as an R notebook file (<code>.Rmd</code>).</p>
+<p><a href="https://vectorposse.github.io/intro_stats/chapter_downloads/15-inference_for_one_proportion.Rmd" download="">https://vectorposse.github.io/intro_stats/chapter_downloads/15-inference_for_one_proportion.Rmd</a></p>
+<p>Once the file is downloaded, move it to your project folder in RStudio and open it there.</p>
+</section>
+<section id="one-prop-restart" class="level3" data-number="15.1.3">
+<h3 data-number="15.1.3" class="anchored" data-anchor-id="one-prop-restart"><span class="header-section-number">15.1.3</span> Restart R and run all chunks</h3>
+<p>In RStudio, select “Restart R and Run All Chunks” from the “Run” menu.</p>
+</section>
+</section>
+<section id="one-prop-load" class="level2" data-number="15.2">
+<h2 data-number="15.2" class="anchored" data-anchor-id="one-prop-load"><span class="header-section-number">15.2</span> Load packages</h2>
+<p>We load the standard <code>tidyverse</code>, <code>janitor</code> and <code>infer</code> packages as well as the <code>openintro</code> package to access data on heart transplant candidates. We’ll include <code>mosaic</code> for one spot below when we compare the results of <code>infer</code> to the results of graphing a normal distribution using <code>qdist</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.2     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'janitor'
+
+The following objects are masked from 'package:stats':
+
+    chisq.test, fisher.test</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(infer)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(openintro)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: airports
+Loading required package: cherryblossom
+Loading required package: usdata</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mosaic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'mosaic' was built under R version 4.3.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered S3 method overwritten by 'mosaic':
+  method                           from   
+  fortify.SpatialPolygonsDataFrame ggplot2
+
+The 'mosaic' package masks several functions from core packages in order to add 
+additional features.  The original behavior of these functions should not be affected by this.
+
+Attaching package: 'mosaic'
+
+The following object is masked from 'package:Matrix':
+
+    mean
+
+The following object is masked from 'package:openintro':
+
+    dotPlot
+
+The following objects are masked from 'package:infer':
+
+    prop_test, t_test
+
+The following objects are masked from 'package:dplyr':
+
+    count, do, tally
+
+The following object is masked from 'package:purrr':
+
+    cross
+
+The following object is masked from 'package:ggplot2':
+
+    stat
+
+The following objects are masked from 'package:stats':
+
+    binom.test, cor, cor.test, cov, fivenum, IQR, median, prop.test,
+    quantile, sd, t.test, var
+
+The following objects are masked from 'package:base':
+
+    max, mean, min, prod, range, sample, sum</code></pre>
+</div>
+</div>
+</section>
+<section id="one-prop-rubric" class="level2" data-number="15.3">
+<h2 data-number="15.3" class="anchored" data-anchor-id="one-prop-rubric"><span class="header-section-number">15.3</span> Revisiting the rubric for inference</h2>
+<p>Instead of running a simulation, we are going to assume that the sampling distribution can be modeled with a normal model as long as the conditions for using a normal model are met.</p>
+<p>Although the rubric has not changed, the use of a normal model changes quite a bit about the way we go through the other steps. For example, we won’t have simulated values to give us a histogram of the null model. Instead, we’ll go straight to graphing a normal model. We won’t compute the percent of our simulated samples that are at least as extreme as our test statistic to get the P-value. The P-value from a normal model is found directly from shading the model.</p>
+<p>What follows is a fully-worked example of inference for one proportion. After the hypothesis test (sometimes called a one-proportion z-test for reasons that will become clear), we also follow up by computing a confidence interval. <strong>From now on, we will consider inference to consist of a hypothesis test and a confidence interval.</strong> Whenever you’re asked a question that requires statistical inference, you should follow both the rubric steps for a hypothesis test and for a confidence interval.</p>
+<p>The example below will pause frequently for commentary on the steps, especially where their execution will be different from what you’ve seen before when you used simulation. When it’s your turn to work through another example on your own, you should follow the outline of the rubric, but you should <strong>not</strong> copy and paste the commentary that accompanies it.</p>
+</section>
+<section id="one-prop-question" class="level2" data-number="15.4">
+<h2 data-number="15.4" class="anchored" data-anchor-id="one-prop-question"><span class="header-section-number">15.4</span> Research question</h2>
+<p>Data from the Stanford University Heart Transplant Study is located in the <code>openintro</code> package in a data frame called <code>heart_transplant</code>. From the help file we learn, “Each patient entering the program was designated officially a heart transplant candidate, meaning that he was gravely ill and would most likely benefit from a new heart.” Survival rates are not good for this population, although they are better for those who receive a heart transplant. Do heart transplant recipients still have less than a 50% chance of survival?</p>
+</section>
+<section id="one-prop-ex-eda" class="level2" data-number="15.5">
+<h2 data-number="15.5" class="anchored" data-anchor-id="one-prop-ex-eda"><span class="header-section-number">15.5</span> Exploratory data analysis</h2>
+<section id="one-prop-ex-documentation" class="level3" data-number="15.5.1">
+<h3 data-number="15.5.1" class="anchored" data-anchor-id="one-prop-ex-documentation"><span class="header-section-number">15.5.1</span> Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.</h3>
+<p>Start by typing <code>?heart_transplant</code> at the Console or searching for <code>heart_translplant</code> in the Help tab to read the help file.</p>
+<section id="exercise-1" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-1">Exercise 1</h5>
+<p>Click on the link under “Source” in the help file. Why is this not helpful for determining the provenance of the data?</p>
+<p>Now try to do an internet search to find the original research article from 1974. Why is this search process also not likely to help you determine the provenance of the data?</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+<hr>
+<p>Now that we have learned everything we can reasonably learn about the data, we print it out and look at the variables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>heart_transplant</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 103 × 8
+      id acceptyear   age survived survtime prior transplant  wait
+   &lt;int&gt;      &lt;int&gt; &lt;int&gt; &lt;fct&gt;       &lt;int&gt; &lt;fct&gt; &lt;fct&gt;      &lt;int&gt;
+ 1    15         68    53 dead            1 no    control       NA
+ 2    43         70    43 dead            2 no    control       NA
+ 3    61         71    52 dead            2 no    control       NA
+ 4    75         72    52 dead            2 no    control       NA
+ 5     6         68    54 dead            3 no    control       NA
+ 6    42         70    36 dead            3 no    control       NA
+ 7    54         71    47 dead            3 no    control       NA
+ 8    38         70    41 dead            5 no    treatment      5
+ 9    85         73    47 dead            5 no    control       NA
+10     2         68    51 dead            6 no    control       NA
+# ℹ 93 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(heart_transplant)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 103
+Columns: 8
+$ id         &lt;int&gt; 15, 43, 61, 75, 6, 42, 54, 38, 85, 2, 103, 12, 48, 102, 35,…
+$ acceptyear &lt;int&gt; 68, 70, 71, 72, 68, 70, 71, 70, 73, 68, 67, 68, 71, 74, 70,…
+$ age        &lt;int&gt; 53, 43, 52, 52, 54, 36, 47, 41, 47, 51, 39, 53, 56, 40, 43,…
+$ survived   &lt;fct&gt; dead, dead, dead, dead, dead, dead, dead, dead, dead, dead,…
+$ survtime   &lt;int&gt; 1, 2, 2, 2, 3, 3, 3, 5, 5, 6, 6, 8, 9, 11, 12, 16, 16, 16, …
+$ prior      &lt;fct&gt; no, no, no, no, no, no, no, no, no, no, no, no, no, no, no,…
+$ transplant &lt;fct&gt; control, control, control, control, control, control, contr…
+$ wait       &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, 5, NA, NA, NA, NA, NA, NA, NA, …</code></pre>
+</div>
+</div>
+<p>Commentary: The variable of interest is <code>survived</code>, which is coded as a factor variable with two categories, “alive” and “dead”. Keep in mind that because we are interested in survival rates, the “alive” condition will be considered the “success” condition.</p>
+<p>There are 103 patients, but we are not considering all these patients. Our sample should consist of only those patients who actually received the transplant. The following table shows that only 69 patients were in the “treatment” group (meaning that they received a heart transplant).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(heart_transplant, transplant) <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_totals</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> transplant   n   percent
+    control  34 0.3300971
+  treatment  69 0.6699029
+      Total 103 1.0000000</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="one-prop-ex-prepare" class="level3" data-number="15.5.2">
+<h3 data-number="15.5.2" class="anchored" data-anchor-id="one-prop-ex-prepare"><span class="header-section-number">15.5.2</span> Prepare the data for analysis.</h3>
+<p><strong>CAUTION: If you are copying and pasting from this example to use for another research question, the following code chunk is specific to this research question and not applicable in other contexts.</strong></p>
+<p>We need to use <code>filter</code> so we get only the patients who actually received the heart transplant.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Do not copy and paste this code for future work</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>heart_transplant2 <span class="ot">&lt;-</span> heart_transplant <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(transplant <span class="sc">==</span> <span class="st">"treatment"</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>heart_transplant2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 69 × 8
+      id acceptyear   age survived survtime prior transplant  wait
+   &lt;int&gt;      &lt;int&gt; &lt;int&gt; &lt;fct&gt;       &lt;int&gt; &lt;fct&gt; &lt;fct&gt;      &lt;int&gt;
+ 1    38         70    41 dead            5 no    treatment      5
+ 2    95         73    40 dead           16 no    treatment      2
+ 3     3         68    54 dead           16 no    treatment      1
+ 4    74         72    29 dead           17 no    treatment      5
+ 5    20         69    55 dead           28 no    treatment      1
+ 6    70         72    52 dead           30 no    treatment      5
+ 7     4         68    40 dead           39 no    treatment     36
+ 8   100         74    35 alive          39 yes   treatment     38
+ 9    16         68    56 dead           43 no    treatment     20
+10    45         71    36 dead           45 no    treatment      1
+# ℹ 59 more rows</code></pre>
+</div>
+</div>
+<p>Commentary: don’t forget the double equal sign (<code>==</code>) that checks whether the <code>treatment</code> variable is equal to the value “treatment”. (See the Chapter 5 if you’ve forgotten how to use <code>filter</code>.)</p>
+<p>Again, this step isn’t something you need to do for other research questions. This question is peculiar because it asks only about patients who received a heart transplant, and that only involves a subset of the data we have in the <code>heart_transplant</code> data frame.</p>
+</section>
+<section id="one-prop-ex-plots" class="level3" data-number="15.5.3">
+<h3 data-number="15.5.3" class="anchored" data-anchor-id="one-prop-ex-plots"><span class="header-section-number">15.5.3</span> Make tables or plots to explore the data visually.</h3>
+<p>Making sure that we refer from now on to the <code>heart_transplant2</code> data frame and not the original <code>heart_transplant</code> data frame:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(heart_transplant2, survived) <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_totals</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> survived  n   percent
+    alive 24 0.3478261
+     dead 45 0.6521739
+    Total 69 1.0000000</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="one-prop-ex-hypotheses" class="level2" data-number="15.6">
+<h2 data-number="15.6" class="anchored" data-anchor-id="one-prop-ex-hypotheses"><span class="header-section-number">15.6</span> Hypotheses</h2>
+<section id="one-prop-ex-sample-pop" class="level3" data-number="15.6.1">
+<h3 data-number="15.6.1" class="anchored" data-anchor-id="one-prop-ex-sample-pop"><span class="header-section-number">15.6.1</span> Identify the sample (or samples) and a reasonable population (or populations) of interest.</h3>
+<p>The sample consists of 69 heart transplant recipients in a study at Stanford University. The population of interest is presumably all heart transplants recipients.</p>
+</section>
+<section id="one-prop-ex-express-words" class="level3" data-number="15.6.2">
+<h3 data-number="15.6.2" class="anchored" data-anchor-id="one-prop-ex-express-words"><span class="header-section-number">15.6.2</span> Express the null and alternative hypotheses as contextually meaningful full sentences.</h3>
+<p><span class="math inline">\(H_{0}:\)</span> Heart transplant recipients have a 50% chance of survival.</p>
+<p><span class="math inline">\(H_{A}:\)</span> Heart transplant recipients have less than a 50% chance of survival.</p>
+<p>Commentary: It is slightly unusual that we are conducting a one-sided test. The standard default is typically a two-sided test. However, it is not for us to choose: the proposed research question is unequivocal in hypothesizing “less than 50%” survival.</p>
+</section>
+<section id="one-prop-ex-express-math" class="level3" data-number="15.6.3">
+<h3 data-number="15.6.3" class="anchored" data-anchor-id="one-prop-ex-express-math"><span class="header-section-number">15.6.3</span> Express the null and alternative hypotheses in symbols (when possible).</h3>
+<p><span class="math inline">\(H_{0}: p_{alive} = 0.5\)</span></p>
+<p><span class="math inline">\(H_{A}: p_{alive} &lt; 0.5\)</span></p>
+</section>
+</section>
+<section id="one-prop-ex-model" class="level2" data-number="15.7">
+<h2 data-number="15.7" class="anchored" data-anchor-id="one-prop-ex-model"><span class="header-section-number">15.7</span> Model</h2>
+<section id="one-prop-ex-sampling-dist-model" class="level3" data-number="15.7.1">
+<h3 data-number="15.7.1" class="anchored" data-anchor-id="one-prop-ex-sampling-dist-model"><span class="header-section-number">15.7.1</span> Identify the sampling distribution model.</h3>
+<p>We will use a normal model.</p>
+<p>Commentary: In past chapters, we have simulated the sampling distribution or applied some kind of randomization to simulate the effect of the null hypothesis. The point of this chapter is that we can—when the conditions are met—substitute a normal model to replace the unimodal and symmetric histogram that resulted from randomization and simulation.</p>
+</section>
+<section id="one-prop-ex-ht-conditions" class="level3" data-number="15.7.2">
+<h3 data-number="15.7.2" class="anchored" data-anchor-id="one-prop-ex-ht-conditions"><span class="header-section-number">15.7.2</span> Check the relevant conditions to ensure that model assumptions are met.</h3>
+<ul>
+<li>Random
+<ul>
+<li>Since the 69 patients are from a study at Stanford, we do not have a random sample of all heart transplant recipients. We hope that the patients recruited to this study were physiologically similar to other heart patients so that they are a representative sample. Without more information, we have no real way of knowing.</li>
+</ul></li>
+<li>10%
+<ul>
+<li>69 patients are definitely less than 10% of all heart transplant recipients.</li>
+</ul></li>
+<li>Success/failure</li>
+</ul>
+<p><span class="math display">\[
+np_{alive} = 69(0.5) = 34.5 \geq 10
+\]</span></p>
+<p><span class="math display">\[
+n(1 - p_{alive}) = 69(0.5) = 34.5 \geq 10
+\]</span></p>
+<p>Commentary: Notice something interesting here. Why did we not use the 24 patients who survived and the 45 who died as the successes and failures? In other words, why did we use <span class="math inline">\(np_{alive}\)</span> and <span class="math inline">\(n(1 - p_{alive})\)</span> instead of <span class="math inline">\(n \hat{p}_{alive}\)</span> and <span class="math inline">\(n(1 - \hat{p}_{alive})\)</span>?</p>
+<p>Remember the logic of inference and the philosophy of the null hypothesis. To convince the skeptics, we must assume the null hypothesis throughout the process. It’s only after we present sufficient evidence that can we reject the null and fall back on the alternative hypothesis that encapsulates our research question.</p>
+<p>Therefore, under the assumption of the null, the sampling distribution is the <em>null distribution</em>, meaning that it’s centered at 0.5. All work we do with the normal model, including checking conditions, must use the null model with <span class="math inline">\(p_{alive}= 0.5\)</span>.</p>
+<p>That’s also why the numbers don’t have to be whole numbers. If the null states that of the 69 patients, 50% are expected to survive, then we expect 50% of 69, or 34.5, to survive. Of course, you can’t have half of a survivor. But these are not <em>actual</em> survivors. Rather, they are the expected number of survivors in a group of 69 patients <em>on average</em> under the assumption of the null.</p>
+</section>
+</section>
+<section id="one-prop-ex-mechanics" class="level2" data-number="15.8">
+<h2 data-number="15.8" class="anchored" data-anchor-id="one-prop-ex-mechanics"><span class="header-section-number">15.8</span> Mechanics</h2>
+<section id="one-prop-ex-compute-test-stat" class="level3" data-number="15.8.1">
+<h3 data-number="15.8.1" class="anchored" data-anchor-id="one-prop-ex-compute-test-stat"><span class="header-section-number">15.8.1</span> Compute the test statistic.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>alive_prop <span class="ot">&lt;-</span> heart_transplant2 <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">specify</span>(<span class="at">response =</span> survived, <span class="at">succes =</span> <span class="st">"alive"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"prop"</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>alive_prop</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Response: survived (factor)
+# A tibble: 1 × 1
+   stat
+  &lt;dbl&gt;
+1 0.348</code></pre>
+</div>
+</div>
+<p>We’ll also compute the corresponding z score.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>alive_z <span class="ot">&lt;-</span> heart_transplant2 <span class="sc">%&gt;%</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">specify</span>(<span class="at">response =</span> survived, <span class="at">success =</span> <span class="st">"alive"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hypothesize</span>(<span class="at">null =</span> <span class="st">"point"</span>, <span class="at">p =</span> <span class="fl">0.5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"z"</span>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>alive_z</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Response: survived (factor)
+Null Hypothesis: point
+# A tibble: 1 × 1
+   stat
+  &lt;dbl&gt;
+1 -2.53</code></pre>
+</div>
+</div>
+<p>Commentary: The sample proportion code is straightforward and we’ve seen it before. To get the z score, we also have to tell <code>infer</code> what the null hypothesis is so that it knows where the center of our normal distribution will be. In the <code>hypothesize</code> function, we tell <code>infer</code> to use a “point” null hypothesis with <code>p = 0.5</code>. All this means is that the null is a specific point: 0.5. (Contrast this to hypothesis tests with two variables when we had <code>null = "independence"</code>.)</p>
+<p>We can confirm the calculation of the z score manually. It’s easiest to compute the standard error first. Recall that the standard error is</p>
+<p><span class="math display">\[
+SE = \sqrt{\frac{p_{alive}(1 - p_{alive})}{n}} = \sqrt{\frac{0.5(1 - 0.5)}{69}}
+\]</span></p>
+<p><strong>Remember that are working under the assumption of the null hypothesis.</strong> This means that we use <span class="math inline">\(p_{alive} = 0.5\)</span> everywhere in the formula for the standard error.</p>
+<p>We can do the math in R and store our result as <code>SE</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>SE <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fl">0.5</span><span class="sc">*</span>(<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.5</span>)<span class="sc">/</span><span class="dv">69</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>SE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.06019293</code></pre>
+</div>
+</div>
+<p>Then our z score is</p>
+<p><span class="math display">\[
+z = \frac{(\hat{p}_{alive} - p_{alive})}{SE} =  \frac{(\hat{p}_{alive} - p_{alive})}{\sqrt{\frac{p_{alive} (1 - p_{alive})}{n}}} = \frac{(0.348 - 0.5)}{\sqrt{\frac{0.5 (1 - 0.5)}{69}}} =  -2.53.
+\]</span></p>
+<p>Using the values of <code>alive_prop</code> and <code>SE</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> (alive_prop <span class="sc">-</span> <span class="fl">0.5</span>)<span class="sc">/</span>SE</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>z</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       stat
+1 -2.528103</code></pre>
+</div>
+</div>
+<p>Both the sample proportion <span class="math inline">\(\hat{p}_{alive}\)</span> (stored above as <code>alive_prop</code>) and the corresponding z-score can be considered the “test statistic”. If we use <span class="math inline">\(\hat{p}_{alive}\)</span> as the test statistic, then we’re considering the null model to be</p>
+<p><span class="math display">\[
+N\left(0.5, \sqrt{\frac{0.5 (1 - 0.5)}{69}}\right).
+\]</span></p>
+<p>If we use z as the test statistic, then we’re considering the null model to be the <em>standard normal model</em>:</p>
+<p><span class="math display">\[
+N(0, 1).
+\]</span></p>
+<p>The standard normal model is more intuitive and easier to work with, both conceptually and in R. Generally, then, we will consider z as the test statistic so that we can consider our null model to be the standard normal model. For example, knowing that our test statistic is two and a half standard deviations to the left of the null value already tells us a lot. We can anticipate a small P-value leading to rejection of the null. Nevertheless, for this type of hypothesis test, we’ll compute both in this section of the rubric.</p>
+</section>
+<section id="one-prop-ex-report-test-stat" class="level3" data-number="15.8.2">
+<h3 data-number="15.8.2" class="anchored" data-anchor-id="one-prop-ex-report-test-stat"><span class="header-section-number">15.8.2</span> Report the test statistic in context (when possible).</h3>
+<p>The test statistic is 0.3478261. In other words, 34.7826087% of heart transplant recipients were alive at the end of the study.</p>
+<p>The z score is -2.5281029. The proportion of survivors is about 2.5 standard errors below the null value.</p>
+</section>
+<section id="one-prop-ex-plot_null" class="level3" data-number="15.8.3">
+<h3 data-number="15.8.3" class="anchored" data-anchor-id="one-prop-ex-plot_null"><span class="header-section-number">15.8.3</span> Plot the null distribution.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>alive_test <span class="ot">&lt;-</span> heart_transplant2 <span class="sc">%&gt;%</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">specify</span>(<span class="at">response =</span> survived, <span class="at">success =</span> <span class="st">"alive"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hypothesize</span>(<span class="at">null =</span> <span class="st">"point"</span>, <span class="at">p =</span> <span class="fl">0.5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">assume</span>(<span class="at">distribution =</span> <span class="st">"z"</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>alive_test</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A Z distribution.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>alive_test <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visualize</span>() <span class="sc">+</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">shade_p_value</span>(<span class="at">obs_stat =</span> alive_z, <span class="at">direction =</span> <span class="st">"less"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="15-inference_for_one_proportion-web_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Commentary: In past chapters, we have used the <code>generate</code> verb to get many repetitions (usually 1000) of some kind of random process to simulate the sampling distribution model. In this chapter, we have used the verb <code>assume</code> instead to assume that the sampling distribution is a normal model. As long as the conditions hold, this is a reasonable assumption. This also means that we don’t have to use <code>set.seed</code> as there is no random process to reproduce.</p>
+<p>Compare the graph above to what we would see if we simulated the sampling distribution. (Now we do need <code>set.seed</code>!)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">6789</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>alive_test_draw <span class="ot">&lt;-</span> heart_transplant2 <span class="sc">%&gt;%</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">specify</span>(<span class="at">response =</span> survived, <span class="at">success =</span> <span class="st">"alive"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hypothesize</span>(<span class="at">null =</span> <span class="st">"point"</span>, <span class="at">p =</span> <span class="fl">0.5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">generate</span>(<span class="at">reps =</span> <span class="dv">1000</span>, <span class="at">type =</span> <span class="st">"draw"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"prop"</span>)</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>alive_test_draw</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Response: survived (factor)
+Null Hypothesis: point
+# A tibble: 1,000 × 2
+   replicate  stat
+   &lt;fct&gt;     &lt;dbl&gt;
+ 1 1         0.493
+ 2 2         0.406
+ 3 3         0.435
+ 4 4         0.580
+ 5 5         0.522
+ 6 6         0.507
+ 7 7         0.580
+ 8 8         0.435
+ 9 9         0.551
+10 10        0.435
+# ℹ 990 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>alive_test_draw <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visualize</span>() <span class="sc">+</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">shade_p_value</span>(<span class="at">obs_stat =</span> alive_prop, <span class="at">direction =</span> <span class="st">"less"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="15-inference_for_one_proportion-web_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>This is essentially the same picture, although the model above is centered on the null value 0.5 instead of the z score of 0. This also means that the <code>obs_stat</code> had to be the sample proportion <code>alive_prop</code> and not the z score <code>alive_z</code>.</p>
+</section>
+<section id="one-prop-ex-calculate-p" class="level3" data-number="15.8.4">
+<h3 data-number="15.8.4" class="anchored" data-anchor-id="one-prop-ex-calculate-p"><span class="header-section-number">15.8.4</span> Calculate the P-value.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>alive_test_p <span class="ot">&lt;-</span> alive_test <span class="sc">%&gt;%</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_p_value</span>(<span class="at">obs_stat =</span> alive_z, <span class="at">direction =</span> <span class="st">"less"</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>alive_test_p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  p_value
+    &lt;dbl&gt;
+1 0.00573</code></pre>
+</div>
+</div>
+<p>Commentary: compare this to the P-value we get from simulating random draws:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>alive_test_draw <span class="sc">%&gt;%</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_p_value</span>(<span class="at">obs_stat =</span> alive_prop, <span class="at">direction =</span> <span class="st">"less"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  p_value
+    &lt;dbl&gt;
+1   0.007</code></pre>
+</div>
+</div>
+<p>The values are not exactly the same. And a new simulation with a different seed would likely give another slightly different P-value. The takeaway here is that the P-value itself has some uncertainty, so you should never take the value too seriously.</p>
+</section>
+<section id="one-prop-ex-interpret-p" class="level3" data-number="15.8.5">
+<h3 data-number="15.8.5" class="anchored" data-anchor-id="one-prop-ex-interpret-p"><span class="header-section-number">15.8.5</span> Interpret the P-value as a probability given the null.</h3>
+<p>The P-value is 0.005734. If there were truly a 50% chance of survival among heart transplant patients, there would only be a 0.5734037% chance of seeing data at least as extreme as we saw.</p>
+</section>
+</section>
+<section id="one-prop-ex-ht-conclusion" class="level2" data-number="15.9">
+<h2 data-number="15.9" class="anchored" data-anchor-id="one-prop-ex-ht-conclusion"><span class="header-section-number">15.9</span> Conclusion</h2>
+<section id="one-prop-ex-stat-conclusion" class="level3" data-number="15.9.1">
+<h3 data-number="15.9.1" class="anchored" data-anchor-id="one-prop-ex-stat-conclusion"><span class="header-section-number">15.9.1</span> State the statistical conclusion.</h3>
+<p>We reject the null hypothesis.</p>
+</section>
+<section id="one-prop-ex-context-conclusion" class="level3" data-number="15.9.2">
+<h3 data-number="15.9.2" class="anchored" data-anchor-id="one-prop-ex-context-conclusion"><span class="header-section-number">15.9.2</span> State (but do not overstate) a contextually meaningful conclusion.</h3>
+<p>We have sufficient evidence that heart transplant recipients have less than a 50% chance of survival.</p>
+</section>
+<section id="one-prop-ex-reservations" class="level3" data-number="15.9.3">
+<h3 data-number="15.9.3" class="anchored" data-anchor-id="one-prop-ex-reservations"><span class="header-section-number">15.9.3</span> Express reservations or uncertainty about the generalizability of the conclusion.</h3>
+<p>Because we know nearly nothing about the provenance of the data, it’s hard to generalize the conclusion. We know the data is from 1974, so it’s also very likely that survival rates for heart transplant patients then are not the same as they are today. The most we could hope for is that the Stanford data was representative for heart transplant patients in 1974. Our sample size (69) is also quite small.</p>
+</section>
+<section id="one-prop-ex-errors" class="level3" data-number="15.9.4">
+<h3 data-number="15.9.4" class="anchored" data-anchor-id="one-prop-ex-errors"><span class="header-section-number">15.9.4</span> Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.</h3>
+<p>As we rejected the null, we run the risk of making a Type I error. It is possible that the null is true and that there is a 50% chance of survival for these patients, but we got an unusual sample that appears to have a much smaller chance of survival.</p>
+</section>
+</section>
+<section id="one-prop-ex-ci" class="level2" data-number="15.10">
+<h2 data-number="15.10" class="anchored" data-anchor-id="one-prop-ex-ci"><span class="header-section-number">15.10</span> Confidence interval</h2>
+<section id="one-prop-ex-ci-conditions" class="level3" data-number="15.10.1">
+<h3 data-number="15.10.1" class="anchored" data-anchor-id="one-prop-ex-ci-conditions"><span class="header-section-number">15.10.1</span> Check the relevant conditions to ensure that model assumptions are met.</h3>
+<ul>
+<li>Random
+<ul>
+<li>Same as above.</li>
+</ul></li>
+<li>10%
+<ul>
+<li>Same as above.</li>
+</ul></li>
+<li>Success/failure
+<ul>
+<li>There were 24 patients who survived and 45 who died in our sample. Both are larger than 10.</li>
+</ul></li>
+</ul>
+<p>Commentary: In the “Confidence interval” section of the rubric, there is no need to recheck conditions that have already been checked. The sample has not changed; if it met the “Random” and “10%” conditions before, it will meet them now.</p>
+<p>So why recheck the success/failure condition?</p>
+<p>Keep in mind that in a hypothesis test, we temporarily assume the null is true. The null states that <span class="math inline">\(p = 0.5\)</span> and the resulting null distribution is, therefore, centered at <span class="math inline">\(p = 0.5\)</span>. The success/failure condition is a condition that applies to the normal model we’re using, and for a hypothesis test, that’s the null model.</p>
+<p>By contrast, a confidence interval is making no assumption about the “true” value of <span class="math inline">\(p\)</span>. The inferential goal of a confidence interval is to try to capture the true value of <span class="math inline">\(p\)</span>, so we certainly cannot make any assumptions about it. Therefore, we go back to the original way we learned about the success/failure condition. That is, we check the actual number of successes and failures.</p>
+</section>
+<section id="one-prop-ex-ci-calculate" class="level3" data-number="15.10.2">
+<h3 data-number="15.10.2" class="anchored" data-anchor-id="one-prop-ex-ci-calculate"><span class="header-section-number">15.10.2</span> Calculate and graph the confidence interval.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>alive_ci <span class="ot">&lt;-</span> alive_test <span class="sc">%&gt;%</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_confidence_interval</span>(<span class="at">point_estimate =</span> alive_prop, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>alive_ci</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+  lower_ci upper_ci
+     &lt;dbl&gt;    &lt;dbl&gt;
+1    0.235    0.460</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>alive_test <span class="sc">%&gt;%</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visualize</span>() <span class="sc">+</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">shade_confidence_interval</span>(<span class="at">endpoints =</span> alive_ci)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="15-inference_for_one_proportion-web_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Commentary: when we use a theoretical normal distribution, we have to compute the confidence interval a different way.</p>
+<p>When we bootstrapped, we had many repetitions of a process that resulted in a sampling distribution. From all those, we could find the 2.5th percentile and the 97.5th percentile. Although we let the computer do it for us, the process is straightforward enough that we could do it by hand if we needed to. Just put all 1000 bootstrapped values in order, then go to the 25th and 975th position in the list.</p>
+<p>We don’t have a list of 1000 values when we use an abstract curve to represent our sampling distribution. Nevertheless, we can find the 2.5th percentile and the 97.5th percentile using the area under the normal curve as we saw in the last two chapters. We can do this “manually” with the <code>qdist</code> command, but we need the standard error first.</p>
+<p>Didn’t we calculate this earlier?</p>
+<p><span class="math display">\[
+SE = \sqrt{\frac{p_{alive}(1 - p_{alive})}{n}} = \sqrt{\frac{0.5(1 - 0.5)}{69}}
+\]</span></p>
+<p>Well…sort of. The value of <span class="math inline">\(p_{alive}\)</span> here is the value of the null hypothesis from the hypothesis test above. <em>However</em>, the hypothesis test is done. For a confidence interval, we have no information about any “null” value. There is no null anymore. It’s irrelevant.</p>
+<p>So what is the standard error for a confidence interval? Since we don’t have <span class="math inline">\(p_{alive}\)</span>, the best we can do is replace it with <span class="math inline">\(\hat{p}_{alive}\)</span>:</p>
+<p><span class="math display">\[
+SE = \sqrt{\frac{\hat{p}_{alive} (1 - \hat{p}_{alive})}{n}} = \sqrt{\frac{0.3478261 (1 - 0.3478261 )}{69}}.
+\]</span></p>
+<p>We can let R do the heavy lifting here:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>SE2 <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(alive_prop <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> alive_prop) <span class="sc">/</span> <span class="dv">69</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>SE2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        stat
+1 0.05733743</code></pre>
+</div>
+</div>
+<p>And now this number can go into <code>qdist</code> as our standard deviation:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qdist</span>(<span class="st">"norm"</span>, <span class="at">p =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>), <span class="at">mean =</span> <span class="fl">0.3478261</span>, <span class="at">sd =</span> <span class="fl">0.05733743</span>, <span class="at">plot =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2354468 0.4602054</code></pre>
+</div>
+</div>
+<p>The numbers above are identical to the ones computed by the <code>infer</code> commands.</p>
+</section>
+<section id="one-prop-ex-ci-interpret" class="level3" data-number="15.10.3">
+<h3 data-number="15.10.3" class="anchored" data-anchor-id="one-prop-ex-ci-interpret"><span class="header-section-number">15.10.3</span> State (but do not overstate) a contextually meaningful interpretation.</h3>
+<p>We are 95% confident that the true percentage of heart transplant recipients who survive is captured in the interval (23.5446784%, 46.020539%).</p>
+<p>Commentary: Note that when we state our contextually meaningful conclusion, we also convert the decimal proportions to percentages. Humans like percentages a lot better.</p>
+</section>
+<section id="one-prop-ex-two-sided" class="level3" data-number="15.10.4">
+<h3 data-number="15.10.4" class="anchored" data-anchor-id="one-prop-ex-two-sided"><span class="header-section-number">15.10.4</span> If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.</h3>
+<p>We are not running a two-sided test, so this step is not applicable.</p>
+</section>
+<section id="one-prop-ex-effect" class="level3" data-number="15.10.5">
+<h3 data-number="15.10.5" class="anchored" data-anchor-id="one-prop-ex-effect"><span class="header-section-number">15.10.5</span> When comparing two groups, comment on the effect size and the practical significance of the result.</h3>
+<p>This is not applicable here because we are not comparing two groups. We are looking at the survival percentage in only one group of patients, those who had a heart transplant.</p>
+</section>
+</section>
+<section id="one-prop-your-turn" class="level2" data-number="15.11">
+<h2 data-number="15.11" class="anchored" data-anchor-id="one-prop-your-turn"><span class="header-section-number">15.11</span> Your turn</h2>
+<p>Follow the rubric to answer the following research question:</p>
+<p>Some heart transplant candidates have already had a prior surgery. Use the variable <code>prior</code> in the <code>heart_transplant</code> data set to determine if fewer than 50% of patients have had a prior surgery. (To be clear, you are being asked to perform a one-sided test again.) <strong>Be sure to use the full <code>heart_transplant</code> data, not the modified <code>heart_transplant2</code> from the previous example.</strong></p>
+<p>The rubric outline is reproduced below. You may refer to the worked example above and modify it accordingly. Remember to strip out all the commentary. That is just exposition for your benefit in understanding the steps, but is not meant to form part of the formal inference process.</p>
+<p>Another word of warning: the copy/paste process is not a substitute for your brain. You will often need to modify more than just the names of the tibbles and variables to adapt the worked examples to your own work. For example, if you run a two-sided test instead of a one-sided test, there are a few places that have to be adjusted accordingly. Understanding the sampling distribution model and the computation of the P-value goes a long way toward understanding the changes that must be made. Do not blindly copy and paste code without understanding what it does. And you should <strong>never</strong> copy and paste text. All the sentences and paragraphs you write are expressions of your own analysis. They must reflect your own understanding of the inferential process.</p>
+<p><strong>Also, so that your answers here don’t mess up the code chunks above, use new variable names everywhere. In particular, you should use <code>prior_test</code>(instead of <code>alive_test</code>) to store the results of your hypothesis test. Make other corresponding changes as necessary, like <code>prior_test_p</code> instead of <code>alive_test_p</code>, for example.</strong></p>
+<section id="exploratory-data-analysis" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exploratory-data-analysis">Exploratory data analysis</h5>
+<section id="use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.">Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to print the data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to glimpse the variables</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="prepare-the-data-for-analysis.-not-always-necessary." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="prepare-the-data-for-analysis.-not-always-necessary.">Prepare the data for analysis. [Not always necessary.]</h6>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to prepare the data for analysis.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="make-tables-or-plots-to-explore-the-data-visually." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="make-tables-or-plots-to-explore-the-data-visually.">Make tables or plots to explore the data visually.</h6>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to make tables or plots.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="hypotheses" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="hypotheses">Hypotheses</h5>
+<section id="identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.">Identify the sample (or samples) and a reasonable population (or populations) of interest.</h6>
+<p>[Remember that you are using the full <code>heart_transplant</code> data, so your sample size should be larger here than in the example above.]</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.">Express the null and alternative hypotheses as contextually meaningful full sentences.</h6>
+<div class="answer">
+<p><span class="math inline">\(H_{0}:\)</span> Null hypothesis goes here.</p>
+<p><span class="math inline">\(H_{A}:\)</span> Alternative hypothesis goes here.</p>
+</div>
+</section>
+<section id="express-the-null-and-alternative-hypotheses-in-symbols-when-possible." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="express-the-null-and-alternative-hypotheses-in-symbols-when-possible.">Express the null and alternative hypotheses in symbols (when possible).</h6>
+<div class="answer">
+<p><span class="math inline">\(H_{0}: math\)</span></p>
+<p><span class="math inline">\(H_{A}: math\)</span></p>
+</div>
+</section>
+</section>
+<section id="model" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="model">Model</h5>
+<section id="identify-the-sampling-distribution-model." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="identify-the-sampling-distribution-model.">Identify the sampling distribution model.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.">Check the relevant conditions to ensure that model assumptions are met.</h6>
+<p>[Remember that you are using the full <code>heart_transplant</code> data, so the number of successes and failures will be different here than in the example above.]</p>
+<div class="answer">
+<p>Please write up your answer here. (Some conditions may require R code as well.)</p>
+</div>
+</section>
+</section>
+<section id="mechanics" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="mechanics">Mechanics</h5>
+<p>[Be sure to use <code>heart_transplant</code> everywhere and not <code>heart_transplant2</code>!]</p>
+<section id="compute-the-test-statistic." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="compute-the-test-statistic.">Compute the test statistic.</h6>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to compute the test statistic.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="report-the-test-statistic-in-context-when-possible." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="report-the-test-statistic-in-context-when-possible.">Report the test statistic in context (when possible).</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="plot-the-null-distribution." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="plot-the-null-distribution.">Plot the null distribution.</h6>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to plot the null distribution.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="calculate-the-p-value." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="calculate-the-p-value.">Calculate the P-value.</h6>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to calculate the P-value.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="interpret-the-p-value-as-a-probability-given-the-null." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="interpret-the-p-value-as-a-probability-given-the-null.">Interpret the P-value as a probability given the null.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+</section>
+<section id="conclusion" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="conclusion">Conclusion</h5>
+<section id="state-the-statistical-conclusion." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="state-the-statistical-conclusion.">State the statistical conclusion.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="state-but-do-not-overstate-a-contextually-meaningful-conclusion." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="state-but-do-not-overstate-a-contextually-meaningful-conclusion.">State (but do not overstate) a contextually meaningful conclusion.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.">Express reservations or uncertainty about the generalizability of the conclusion.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.">Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+</section>
+<section id="confidence-interval" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="confidence-interval">Confidence interval</h5>
+<section id="check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-1">Check the relevant conditions to ensure that model assumptions are met.</h6>
+<div class="answer">
+<p>Please write up your answer here. (Some conditions may require R code as well.)</p>
+</div>
+</section>
+<section id="calculate-the-confidence-interval." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="calculate-the-confidence-interval.">Calculate the confidence interval.</h6>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to calculate the confidence interval.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="state-but-do-not-overstate-a-contextually-meaningful-interpretation." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="state-but-do-not-overstate-a-contextually-meaningful-interpretation.">State (but do not overstate) a contextually meaningful interpretation.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.-not-always-applicable." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.-not-always-applicable.">If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test. [Not always applicable.]</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-not-always-applicable." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-not-always-applicable.">When comparing two groups, comment on the effect size and the practical significance of the result. [Not always applicable.]</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+</section>
+</section>
+<section id="one-prop-conclusion" class="level2" data-number="15.12">
+<h2 data-number="15.12" class="anchored" data-anchor-id="one-prop-conclusion"><span class="header-section-number">15.12</span> Conclusion</h2>
+<p>When certain conditions are met, we can use a theoretical normal model—a perfectly symmetric bell curve—as a sampling distribution model in hypothesis testing. Because this does not require drawing many samples, it is faster and cleaner than simulation. Of course, on modern computing devices, drawing even thousands of simulated samples is not very time consuming, and the code we write doesn’t really change much. Given the additional success/failure condition that has to met, it’s worth considering the pros and cons of using a normal model instead of simulating the sampling distribution. Similarly, confidence intervals can be obtained directly from the percentiles of the normal model without the need to obtain bootstrapped samples.</p>
+<section id="one-prop-prep" class="level3" data-number="15.12.1">
+<h3 data-number="15.12.1" class="anchored" data-anchor-id="one-prop-prep"><span class="header-section-number">15.12.1</span> Preparing and submitting your assignment</h3>
+<ol type="1">
+<li>From the “Run” menu, select “Restart R and Run All Chunks”.</li>
+<li>Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.</li>
+<li>Spell check your document by clicking the icon with “ABC” and a check mark.</li>
+<li>Hit the “Preview” button one last time to generate the final draft of the <code>.nb.html</code> file.</li>
+<li>Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1–5 again.</li>
+</ol>
+<p>If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./14-sampling_distribution_models-web.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Sampling distribution models</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./16-inference_for_two_proportions-web.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Inference for two proportions</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

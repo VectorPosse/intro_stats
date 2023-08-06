@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Introduction to Statistics: an integrated textbook and workbook using R - 6&nbsp; Correlation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./07-regression-web.html" rel="next">
+<link href="./05-manipulating_data-web.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-correlation-web.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Correlation</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to Statistics: an integrated textbook and workbook using R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-intro_to_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-using_r_markdown-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Using R Markdown</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-categorical_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Categorical data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-numerical_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Numerical data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-manipulating_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Manipulating data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-correlation-web.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Correlation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-regression-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Regression</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-intro_to_randomization_1-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to randomization, Part 1</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-intro_to_randomization_2-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to randomization, Part 2</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-hypothesis_testing_with_randomization_1-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Hypothesis testing with randomization, Part 1</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-hypothesis_testing_with_randomization_2-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Hypothesis testing with randomization, Part 2</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-confidence_intervals-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Confidence intervals</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-normal_models-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Normal models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-sampling_distribution_models-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Sampling distribution models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-inference_for_one_proportion-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Inference for one proportion</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-inference_for_two_proportions-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Inference for two proportions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-chi_square_goodness_of_fit-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Chi-square goodness-of-fit test</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-chi_square_test_for_independence-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Chi-square test for independence</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-inference_for_one_mean-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Inference for one mean</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-inference_for_paired_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Inference for paired data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21-inference_for_two_independent_means-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Inference for two independent means</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-anova-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">ANOVA</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rubric.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Rubric for inference</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Concordance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Concordance with <em>Introduction to Modern Statistics</em> (IMS)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#functions-introduced-in-this-chapter" id="toc-functions-introduced-in-this-chapter" class="nav-link active" data-scroll-target="#functions-introduced-in-this-chapter">Functions introduced in this chapter</a></li>
+  <li><a href="#correlation-intro" id="toc-correlation-intro" class="nav-link" data-scroll-target="#correlation-intro"><span class="header-section-number">6.1</span> Introduction</a>
+  <ul class="collapse">
+  <li><a href="#correlation-install" id="toc-correlation-install" class="nav-link" data-scroll-target="#correlation-install"><span class="header-section-number">6.1.1</span> Install new packages</a></li>
+  <li><a href="#correlation-download" id="toc-correlation-download" class="nav-link" data-scroll-target="#correlation-download"><span class="header-section-number">6.1.2</span> Download the R notebook file</a></li>
+  <li><a href="#correlation-restart" id="toc-correlation-restart" class="nav-link" data-scroll-target="#correlation-restart"><span class="header-section-number">6.1.3</span> Restart R and run all chunks</a></li>
+  <li><a href="#correlation-load" id="toc-correlation-load" class="nav-link" data-scroll-target="#correlation-load"><span class="header-section-number">6.1.4</span> Load packages</a></li>
+  </ul></li>
+  <li><a href="#correlation-redlining" id="toc-correlation-redlining" class="nav-link" data-scroll-target="#correlation-redlining"><span class="header-section-number">6.2</span> Redlining in Chicago</a>
+  <ul class="collapse">
+  <li><a href="#correlation-eda" id="toc-correlation-eda" class="nav-link" data-scroll-target="#correlation-eda"><span class="header-section-number">6.2.1</span> Exploratory data analysis</a></li>
+  </ul></li>
+  <li><a href="#correlation-correlation" id="toc-correlation-correlation" class="nav-link" data-scroll-target="#correlation-correlation"><span class="header-section-number">6.3</span> Correlation</a></li>
+  <li><a href="#correlation-conditions" id="toc-correlation-conditions" class="nav-link" data-scroll-target="#correlation-conditions"><span class="header-section-number">6.4</span> Conditions for correlation</a></li>
+  <li><a href="#correlation-calculating" id="toc-correlation-calculating" class="nav-link" data-scroll-target="#correlation-calculating"><span class="header-section-number">6.5</span> Calculating correlation</a></li>
+  <li><a href="#correlation-causation" id="toc-correlation-causation" class="nav-link" data-scroll-target="#correlation-causation"><span class="header-section-number">6.6</span> Correlation is not causation</a></li>
+  <li><a href="#correlation-obs-exp" id="toc-correlation-obs-exp" class="nav-link" data-scroll-target="#correlation-obs-exp"><span class="header-section-number">6.7</span> Observational studies versus experiments</a></li>
+  <li><a href="#correlation-pred-exp" id="toc-correlation-pred-exp" class="nav-link" data-scroll-target="#correlation-pred-exp"><span class="header-section-number">6.8</span> Prediction versus explanation</a></li>
+  <li><a href="#correlation-conclusion" id="toc-correlation-conclusion" class="nav-link" data-scroll-target="#correlation-conclusion"><span class="header-section-number">6.9</span> Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#correlation-prep" id="toc-correlation-prep" class="nav-link" data-scroll-target="#correlation-prep"><span class="header-section-number">6.9.1</span> Preparing and submitting your assignment</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="correlation" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Correlation</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<!-- Please don't mess with the next few lines! -->
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>
+<p style="color:#ffffff">
+2.0
+</p>
+<!-- Please don't mess with the previous few lines! -->
+<section id="functions-introduced-in-this-chapter" class="level3 unnumbered summary">
+<h3 class="unnumbered anchored" data-anchor-id="functions-introduced-in-this-chapter">Functions introduced in this chapter</h3>
+<p><code>cor</code></p>
+</section>
+<section id="correlation-intro" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="correlation-intro"><span class="header-section-number">6.1</span> Introduction</h2>
+<p>In this chapter, we will learn about the concept of correlation, which is a way of measuring a linear relationship between two numerical variables.</p>
+<section id="correlation-install" class="level3" data-number="6.1.1">
+<h3 data-number="6.1.1" class="anchored" data-anchor-id="correlation-install"><span class="header-section-number">6.1.1</span> Install new packages</h3>
+<p>If you are using RStudio Workbench, you do not need to install any packages. (Any packages you need should already be installed by the server administrators.)</p>
+<p>If you are using R and RStudio on your own machine instead of accessing RStudio Workbench through a browser, you’ll need to type the following command at the Console:</p>
+<pre><code>install.packages("faraway")</code></pre>
+</section>
+<section id="correlation-download" class="level3" data-number="6.1.2">
+<h3 data-number="6.1.2" class="anchored" data-anchor-id="correlation-download"><span class="header-section-number">6.1.2</span> Download the R notebook file</h3>
+<p>Check the upper-right corner in RStudio to make sure you’re in your <code>intro_stats</code> project. Then click on the following link to download this chapter as an R notebook file (<code>.Rmd</code>).</p>
+<p><a href="https://vectorposse.github.io/intro_stats/chapter_downloads/06-correlation.Rmd" download="">https://vectorposse.github.io/intro_stats/chapter_downloads/06-correlation.Rmd</a></p>
+<p>Once the file is downloaded, move it to your project folder in RStudio and open it there.</p>
+</section>
+<section id="correlation-restart" class="level3" data-number="6.1.3">
+<h3 data-number="6.1.3" class="anchored" data-anchor-id="correlation-restart"><span class="header-section-number">6.1.3</span> Restart R and run all chunks</h3>
+<p>In RStudio, select “Restart R and Run All Chunks” from the “Run” menu.</p>
+</section>
+<section id="correlation-load" class="level3" data-number="6.1.4">
+<h3 data-number="6.1.4" class="anchored" data-anchor-id="correlation-load"><span class="header-section-number">6.1.4</span> Load packages</h3>
+<p>We load the now-standard <code>tidyverse</code> package. We also include the <code>faraway</code> package to access data about Chicago in the 1970s.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.2     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(faraway)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'faraway' was built under R version 4.3.1</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="correlation-redlining" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="correlation-redlining"><span class="header-section-number">6.2</span> Redlining in Chicago</h2>
+<p>The data set we will use throughout this chapter is from Chicago in the 1970s studying the practice of “redlining”.</p>
+<section id="exercise-1" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-1">Exercise 1</h5>
+<p>Do an internet search for “redlining”.</p>
+<p>Consult at least two or three sources. Then, in your own words (not copied and pasted from any of the websites you consulted), explain what “redlining” means.</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+<hr>
+<p>The <code>chredlin</code> data set appears in the <code>faraway</code> package accompanying a book by Julian Faraway (<em>Practical Regression and Anova using R</em>, 2002.) Faraway explains:</p>
+<blockquote class="blockquote">
+<p>“In a study of insurance availability in Chicago, the U.S. Commission on Civil Rights attempted to examine charges by several community organizations that insurance companies were redlining their neighborhoods, i.e.&nbsp;canceling policies or refusing to insure or renew. First the Illinois Department of Insurance provided the number of cancellations, non-renewals, new policies, and renewals of homeowners and residential fire insurance policies by ZIP code for the months of December 1977 through February 1978. The companies that provided this information account for more than 70% of the homeowners insurance policies written in the City of Chicago. The department also supplied the number of FAIR plan policies written an renewed in Chicago by zip code for the months of December 1977 through May 1978. Since most FAIR plan policyholders secure such coverage only after they have been rejected by the voluntary market, rather than as a result of a preference for that type of insurance, the distribution of FAIR plan policies is another measure of insurance availability in the voluntary market.”</p>
+</blockquote>
+<p>In other words, the degree to which residents obtained FAIR policies can be seen as an indirect measure of redlining. This participation in an “involuntary” market is thought to be largely driven by rejection of coverage under more traditional insurance plans.</p>
+</section>
+<section id="correlation-eda" class="level3" data-number="6.2.1">
+<h3 data-number="6.2.1" class="anchored" data-anchor-id="correlation-eda"><span class="header-section-number">6.2.1</span> Exploratory data analysis</h3>
+<p>Before we learn about correlation, let’s get to know our data a little better.</p>
+<p>Type <code>?chredlin</code> at the Console to read the help file. While it’s not very informative about how the data was collected, it does have crucial information about the way the data is structured.</p>
+<p>Here is the data set:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>chredlin</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      race fire theft  age involact income side
+60626 10.0  6.2    29 60.4      0.0 11.744    n
+60640 22.2  9.5    44 76.5      0.1  9.323    n
+60613 19.6 10.5    36 73.5      1.2  9.948    n
+60657 17.3  7.7    37 66.9      0.5 10.656    n
+60614 24.5  8.6    53 81.4      0.7  9.730    n
+60610 54.0 34.1    68 52.6      0.3  8.231    n
+60611  4.9 11.0    75 42.6      0.0 21.480    n
+60625  7.1  6.9    18 78.5      0.0 11.104    n
+60618  5.3  7.3    31 90.1      0.4 10.694    n
+60647 21.5 15.1    25 89.8      1.1  9.631    n
+60622 43.1 29.1    34 82.7      1.9  7.995    n
+60631  1.1  2.2    14 40.2      0.0 13.722    n
+60646  1.0  5.7    11 27.9      0.0 16.250    n
+60656  1.7  2.0    11  7.7      0.0 13.686    n
+60630  1.6  2.5    22 63.8      0.0 12.405    n
+60634  1.5  3.0    17 51.2      0.0 12.198    n
+60641  1.8  5.4    27 85.1      0.0 11.600    n
+60635  1.0  2.2     9 44.4      0.0 12.765    n
+60639  2.5  7.2    29 84.2      0.2 11.084    n
+60651 13.4 15.1    30 89.8      0.8 10.510    n
+60644 59.8 16.5    40 72.7      0.8  9.784    n
+60624 94.4 18.4    32 72.9      1.8  7.342    n
+60612 86.2 36.2    41 63.1      1.8  6.565    n
+60607 50.2 39.7   147 83.0      0.9  7.459    n
+60623 74.2 18.5    22 78.3      1.9  8.014    s
+60608 55.5 23.3    29 79.0      1.5  8.177    s
+60616 62.3 12.2    46 48.0      0.6  8.212    s
+60632  4.4  5.6    23 71.5      0.3 11.230    s
+60609 46.2 21.8     4 73.1      1.3  8.330    s
+60653 99.7 21.6    31 65.0      0.9  5.583    s
+60615 73.5  9.0    39 75.4      0.4  8.564    s
+60638 10.7  3.6    15 20.8      0.0 12.102    s
+60629  1.5  5.0    32 61.8      0.0 11.876    s
+60636 48.8 28.6    27 78.1      1.4  9.742    s
+60621 98.9 17.4    32 68.6      2.2  7.520    s
+60637 90.6 11.3    34 73.4      0.8  7.388    s
+60652  1.4  3.4    17  2.0      0.0 13.842    s
+60620 71.2 11.9    46 57.0      0.9 11.040    s
+60619 94.1 10.5    42 55.9      0.9 10.332    s
+60649 66.1 10.7    43 67.5      0.4 10.908    s
+60617 36.4 10.8    34 58.0      0.9 11.156    s
+60655  1.0  4.8    19 15.2      0.0 13.323    s
+60643 42.5 10.4    25 40.8      0.5 12.960    s
+60628 35.1 15.6    28 57.8      1.0 11.260    s
+60627 47.4  7.0     3 11.4      0.2 10.080    s
+60633 34.0  7.1    23 49.2      0.3 11.428    s
+60645  3.1  4.9    27 46.6      0.0 13.731    n</code></pre>
+</div>
+</div>
+<section id="exercise-2" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-2">Exercise 2</h5>
+<p>What do each of the rows of this data set represent? You’ll need to refer to the help file. (They are <em>not</em> individual people.)</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="exercise-3" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-3">Exercise 3</h5>
+<p>The <code>race</code> variable is numeric. Why? What do these numbers represent? (Again, refer to the help file.)</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+<hr>
+<p>The <code>glimpse</code> command gives a concise overview of all the variables present.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(chredlin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 47
+Columns: 7
+$ race     &lt;dbl&gt; 10.0, 22.2, 19.6, 17.3, 24.5, 54.0, 4.9, 7.1, 5.3, 21.5, 43.1…
+$ fire     &lt;dbl&gt; 6.2, 9.5, 10.5, 7.7, 8.6, 34.1, 11.0, 6.9, 7.3, 15.1, 29.1, 2…
+$ theft    &lt;dbl&gt; 29, 44, 36, 37, 53, 68, 75, 18, 31, 25, 34, 14, 11, 11, 22, 1…
+$ age      &lt;dbl&gt; 60.4, 76.5, 73.5, 66.9, 81.4, 52.6, 42.6, 78.5, 90.1, 89.8, 8…
+$ involact &lt;dbl&gt; 0.0, 0.1, 1.2, 0.5, 0.7, 0.3, 0.0, 0.0, 0.4, 1.1, 1.9, 0.0, 0…
+$ income   &lt;dbl&gt; 11.744, 9.323, 9.948, 10.656, 9.730, 8.231, 21.480, 11.104, 1…
+$ side     &lt;fct&gt; n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n…</code></pre>
+</div>
+</div>
+</section>
+<section id="exercise-4a" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-4a">Exercise 4(a)</h5>
+<p>Which variable listed above represents participation in the FAIR plan? How is it measured? (Again, refer to the help file.)</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="exercise-4b" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-4b">Exercise 4(b)</h5>
+<p>Why is it important to analyze the number of plans <em>per 100 housing units</em> as opposed to the total number of plans across each ZIP code? (Hint: what happens if some ZIP codes are larger than others?)</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+<hr>
+<p>We are interested in the association between <code>race</code> and <code>involact</code>. If redlining plays a role in driving people toward FAIR plan policies, we would expect there to be a relationship between the racial composition of a ZIP code and the number of FAIR plan policies obtained in that ZIP code.</p>
+</section>
+<section id="exercise-5a" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-5a">Exercise 5(a)</h5>
+<p>Since <code>race</code> is a numerical variable, what type of graph or chart is appropriate for visualizing it? (You may need to refer back to the “Numerical data” chapter.)</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="exercise-5b" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-5b">Exercise 5(b)</h5>
+<p>Using <code>ggplot</code> code, create the type of graph you identified above. (Again, refer back to the “Numerical data” chapter for sample code if you’ve forgotten.) After creating the initial plot, be sure to go back and set the <code>binwidth</code> and <code>boundary</code> to sensible values.</p>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a plot of race</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="exercise-5c" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-5c">Exercise 5(c)</h5>
+<p>Describe the shape of the <code>race</code> variable using the three key shape descriptors (modes, symmetry, and outliers).</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="exercise-5d" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-5d">Exercise 5(d)</h5>
+<p>Create the same kind of graph as above, but for <code>involact</code>. (Again, go back and set the <code>binwidth</code> and <code>boundary</code> to sensible values.)</p>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a plot of race</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="exercise-5e" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-5e">Exercise 5(e)</h5>
+<p>Describe the shape of the <code>involact</code> variable using the three key shape descriptors (modes, symmetry, and outliers).</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="exercise-5f" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-5f">Exercise 5(f)</h5>
+<p>Since both <code>race</code> and <code>involact</code> are numerical variables, what type of graph or chart is appropriate for visualizing the relationship between them?</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="exercise-5g" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-5g">Exercise 5(g)</h5>
+<p>For our research question, is <code>race</code> functioning as a predictor variable or as the response variable? What about <code>involact</code>? Why? Explain why it makes more sense to think of one of them as the predictor and the other as the response.</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="exercise-5h" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-5h">Exercise 5(h)</h5>
+<p>Using <code>ggplot</code> code, create the type of graph you identified above. Be sure to put <code>involact</code> on the y-axis and race` on the x-axis.</p>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a plot of involact against race</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+</section>
+<section id="correlation-correlation" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="correlation-correlation"><span class="header-section-number">6.3</span> Correlation</h2>
+<p>The word <em>correlation</em> describes a linear relationship between two numerical variables. As long as certain conditions are met, we can calculate a statistic called the <em>correlation coefficient</em>, often denoted with a lowercase r.</p>
+<p>There are several different ways to compute a statistic that measures correlation. The most common way, and the way we will learn in this chapter, is often attributed to an English mathematician named Karl Pearson. According to his <a href="https://en.wikipedia.org/wiki/Karl_Pearson">Wikipedia page</a>,</p>
+<blockquote class="blockquote">
+<p>“Pearson was also a proponent of social Darwinism, eugenics and scientific racism.”</p>
+</blockquote>
+<section id="exercise-6" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-6">Exercise 6</h5>
+<p>Do an internet search for each of the following terms:</p>
+<ul>
+<li>Social Darwinism</li>
+<li>Eugenics</li>
+<li>Scientific racism</li>
+</ul>
+<p>Consult at least two or three sources for each term. Then, in your own words (not copied and pasted from any of the websites you consulted), explain what these terms mean.</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+<hr>
+<p>While Pearson is often credited with its discovery, the so-called “Pearson correlation coefficient” was first developed by a French scientist, Auguste Bravais. Due to the misattribution of discovery, along with the desire to disassociate the useful tool of correlation from its problematic applications to racism and eugenics, we will just refer to it as the <em>correlation coefficient</em> (without a name attached).</p>
+<p>The correlation coefficient, r, has some important properties.</p>
+<ul>
+<li>The correlation coefficient is a number between -1 and 1.</li>
+<li>A value close to 0 indicates little or no correlation.</li>
+<li>A value close to 1 indicates strong positive correlation.</li>
+<li>A value close to -1 indicates strong negative correlation.</li>
+</ul>
+<p>In between 0 and 1 (or -1), we often use words like weak, moderately weak, moderate, and moderately strong. There are no exact cutoffs for when such words apply. You must learn from experience how to judge scatterplots and r values to make such determinations.</p>
+<p>A correlation is positive when low values of one variable are associated with low values of the other value. Similarly, high values of one variable are associated with high values of the other. For example, exercise is positively correlated with burning calories. Low exercise levels will burn a few calories; high exercise levels burn more calories, on average.</p>
+<p>A correlation is negative when low values of one variable are associated with high values of the other value, and vice versa. For example, tooth brushing is negatively correlated with cavities. Less tooth brushing may result in more cavities; more tooth brushing is associated with fewer calories, on average.</p>
+</section>
+</section>
+<section id="correlation-conditions" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="correlation-conditions"><span class="header-section-number">6.4</span> Conditions for correlation</h2>
+<p>Two variables are considered “associated” any time there is any type of relationship between them (i.e., they are not independent). However, in statistics, we reserve the word “correlation” for situations meeting more stringent conditions:</p>
+<ol type="1">
+<li>The two variables must be numerical.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
+<li>There is a somewhat linear relationship between the variables, as shown in a scatterplot.</li>
+<li>There are no serious outliers.</li>
+</ol>
+<p>For condition (2) above, keep in mind that real data in scatterplots very rarely lines up in a perfect straight line. Instead, you will see a “cloud” of dots. All we want to know is whether that cloud of dots mostly moves from one corner of the scatterplot to the other. Violations of this condition will usually be for one of two reasons:</p>
+<ul>
+<li>The dots are scattered completely randomly with no discernible pattern.</li>
+<li>The dots have a pattern or shape to them, but that shape is curved and not linear.</li>
+</ul>
+<section id="exercise-7" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-7">Exercise 7</h5>
+<p>Check the three conditions for the relationship between <code>involact</code> and <code>race</code>. For conditions (2) and (3), you’ll need to check the scatterplot you created above. (You did create a scatterplot for one of the exercises above, right?)</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+<ol type="1">
+<li></li>
+<li></li>
+<li></li>
+</ol>
+</div>
+</section>
+</section>
+<section id="correlation-calculating" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="correlation-calculating"><span class="header-section-number">6.5</span> Calculating correlation</h2>
+<p>Since the conditions are met, We calculate the correlation coefficient using the <code>cor</code> command.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(chredlin<span class="sc">$</span>race, chredlin<span class="sc">$</span>involact)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.713754</code></pre>
+</div>
+</div>
+<p>The order of the variables doesn’t matter; correlation is symmetric, so the r value is the same independent of the choice of response and predictor variables.</p>
+<p>Since the correlation between <code>involact</code> and <code>race</code> is a positive number and slightly closer to 1 than 0, we might call this a “moderate” positive correlation. You can tell from the scatterplot above that the relationship is not a strong relationship. The words you choose should match the graphs you create and the statistics you calculate.</p>
+<section id="exercise-8a" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-8a">Exercise 8(a)</h5>
+<p>Create a scatterplot of <code>income</code> against <code>race</code>. (Put <code>income</code> on the y-axis and <code>race</code> on the x-axis.)</p>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a scatterplot of income against race</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="exercise-8b" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-8b">Exercise 8(b)</h5>
+<p>Check the three conditions for the relationship between <code>income</code> and <code>race</code>. Which condition is pretty seriously violated here?</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+<ol type="1">
+<li></li>
+<li></li>
+<li></li>
+</ol>
+</div>
+</section>
+<section id="exercise-9a" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-9a">Exercise 9(a)</h5>
+<p>Create a scatterplot of <code>theft</code> against <code>fire</code>. (Put <code>theft</code> on the y-axis and <code>fire</code> on the x-axis.)</p>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a scatterplot of theft against fire</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="exercise-9b" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-9b">Exercise 9(b)</h5>
+<p>Check the three conditions for the relationship between <code>theft</code> and <code>fire</code>. Which condition is pretty seriously violated here?</p>
+<div class="answer">
+<ol type="1">
+<li></li>
+<li></li>
+<li></li>
+</ol>
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="exercise-9c" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-9c">Exercise 9(c)</h5>
+<p>Even though the conditions are not met, what if you calculated the correlation coefficient anyway? Try it.</p>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to calculate the correlation coefficient between theft and fire</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="exercise-9d" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-9d">Exercise 9(d)</h5>
+<p>Suppose you hadn’t looked at the scatterplot and you only saw the correlation coefficient you calculated in the previous part. What would your conclusion be about the relationship between <code>theft</code> and <code>fire</code>. Why would that conclusion be misleading?</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+<p>The lesson learned here is that you should never try to interpret a correlation coefficient without looking at a plot of the data to assure that the conditions are met and that the result is a sensible thing to interpret.</p>
+</section>
+</section>
+<section id="correlation-causation" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="correlation-causation"><span class="header-section-number">6.6</span> Correlation is not causation</h2>
+<p>When two variables are correlated—indeed, associated in any way, not just in a linear relationship—that means that there is a relationship between them. However, that does not mean that one variable <em>causes</em> the other variable.</p>
+<p>For example, we discovered above that there was a moderate correlation between the racial composition of a ZIP code and the new FAIR policies created in those ZIP codes. However, being part of a racial minority does not cause someone to seek out alternative forms of insurance, at least not directly. In this case, the racial composition of certain neighborhoods, though racist policies, affected the availability of certain forms of insurance for residents in those neighborhoods. And that, in turn, caused residents to seek other forms of insurance.</p>
+<p>In the Chicago example, there is still likely a causal connection between one variable (<code>race</code>) and the other (<code>involact</code>), but it was indirect. In other cases, there is no causal connection at all. Here are a few of my favorite examples.</p>
+<section id="exercise-10" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-10">Exercise 10</h5>
+<p>Ice cream sales are positively correlated with drowning deaths. Does eating ice cream cause you to drown? (Perhaps the myth about swimming within one hour of eating is really true!) Does drowning deaths cause ice cream sales to rise? (Perhaps people are so sad about all the drownings that they have to go out for ice cream to cheer themselves up?)</p>
+<p>See if you can figure out the real reason why ice cream sales are positively correlated with drowning deaths.</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+<hr>
+<p>In the Chicago example, the causal effect was indirect. In the example from the exercise above, there is no causation whatsoever between the two variables. Instead, the causal effect was generated by a third factor that caused both ice cream sales to go up, and also happened to cause drowning deaths to go up. (Or, equivalently stated, it caused ice cream sales to be low during certain times of the year and also caused the drowning deaths to be low as well.) Such a factor is called a <em>lurking variable</em>. When a correlation between two variables exists due solely to the intervention of a lurking variable, that correlation is called a <em>spurious correlation</em>. The correlation is real; a scatterplot of ice cream sales and drowning deaths would show a positive relationship. But the reasons for that correlation to exist have nothing to do with any kind of direct causal link between the two.</p>
+<p>Here’s another one:</p>
+</section>
+<section id="exercise-11" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-11">Exercise 11</h5>
+<p>Most studies involving children create a number of weird correlations. For example, the height of children is very strongly correlated to pretty much everything you can measure about scholastic aptitude. For example, vocabulary count (the number of words children can use fluently in a sentence) is strongly correlated to height. Are tall people just smarter than short people?</p>
+<p>The answer is, of course, no. The correlation is spurious. So what’s the lurking variable?</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+</section>
+<section id="correlation-obs-exp" class="level2" data-number="6.7">
+<h2 data-number="6.7" class="anchored" data-anchor-id="correlation-obs-exp"><span class="header-section-number">6.7</span> Observational studies versus experiments</h2>
+<p>So when is a statistical finding (like correlation, for example) evidence of a causal relationship? Before we can answer that question, we need a few more definitions.</p>
+<p>A lot of data comes from “observational studies” where we simply observe or measure things as they are “in the wild,” so to speak. We don’t interfere in any way. We just write down what we see. Polls are usually observational in that we ask people questions and record their responses. We do not try to manipulate their responses in any way. We just ask the questions and observe the answers. Field studies are often observational. We go out in nature and write stuff down as we observe it.</p>
+<p>Another way to gather data is an <em>experiment</em>. In an experiment, we introduce a manipulation or treatment to try to ascertain its effect. For example. if we’re testing a new drug, we will likely give the drug to one group of patients and a <em>placebo</em> to the other.</p>
+<section id="exercise-12" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-12">Exercise 12</h5>
+<p>Here’s another internet rabbit hole for you. First, look up the definition of placebo. You do not need to write up your own version of that definition here; just familiarize yourself with the term if you’re not already familiar with it. Next, find some websites about the <em>placebo effect</em> and read those.</p>
+<p>Given what you have learned about the placebo effect, why is it important to have a placebo group in a drug trial? Why not just give one set of patients the drug and compare them to another group that takes no pill at all?</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+<hr>
+<p>The goal of the experiment is to learn whether the <em>treatment</em> (in this example, the drug) is effective when compared to the <em>control</em> (in this example, the placebo).</p>
+<p>Note that the word “effective” implies a causal claim. We want to know if the drug <em>causes</em> patients to get better.</p>
+<p>Unlike an observational study, in which the relationship between variables can be caused by a lurking variable, in an experiment, we purposefully manipulate one of the variables and try to control all others. For example, we manipulate the drug variable (we purposefully give some people the drug and others the placebo). But we control the amount of the drug given and the schedule on which patients are required to take the pills.</p>
+<p>There are lots of things we cannot control. For example, it would be very difficult to control the diet of every person in the experiment. Could diet play a role in whether a patient gets better? Sure, so how do we know diet is not a lurking variable? In the context of an experiment, lurking variables are often called “confounders” or “confounding variables”. (The two terms are basically synonymous.)</p>
+<p>One way to mitigate the effect of confounders that we cannot directly control is to <em>randomize</em> the patients into the treatment and control groups. With random selection, there will likely be people who have relatively healthy diets in both the control and treatment groups. If the drugs work, in theory they should still work better for the treatment group than for those taking the placebo. And likewise, patients with less healthy diets will generally be mixed up in both groups, and the drug should also work better for them.</p>
+<p>The mantra of experimental design is, “Control as much as you can. Randomize to take care of the rest.”</p>
+<p>There are lots of aspects of experimental design that we will not go into here (for example, blinding and blocking). But we will continue to mention the differences between observational studies and experiments in future chapters as we exercise caution in making causal claims.</p>
+</section>
+</section>
+<section id="correlation-pred-exp" class="level2" data-number="6.8">
+<h2 data-number="6.8" class="anchored" data-anchor-id="correlation-pred-exp"><span class="header-section-number">6.8</span> Prediction versus explanation</h2>
+<p>Even when claims are not causal, we can use associations (and correlations more specifically) for purposes of <em>prediction</em>.</p>
+<section id="exercise-13" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-13">Exercise 13</h5>
+<p>If I tell you that ice cream sales are high right now, can you make a reasonable prediction about the relative number of drowning deaths this month (high or low)? Why or why not?</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+<hr>
+<p>So even when there is no direct causal link between two variables, if they are positively correlated, then large values of one variable are associated with large values of the other variable. So if I tell you one value is large, it is reasonable to predict that the other value will be large as well.</p>
+<p>We use the language “predictor” variable and “response” variable to reinforce this idea.</p>
+<p>In a properly designed and controlled experiment, we can use different language. In this case, we can <em>explain</em> the outcome using the treatment variable. If we’ve controlled for everything else, the only possible explanation for a difference between the treatment and control groups must be the treatment variable. If the patients get better on the drug (more so than those on the placebo) and we’ve controlled for every other possible confounding variable, the only possible explanation is that the drug works. The drug “explains” the difference in the response variable.</p>
+<p>Be careful, as sometimes statisticians use the term “explanatory variable” to mean any kind of variable that predicts or explains. In this course, we will try to use the term “predictor variable” exclusively.</p>
+</section>
+</section>
+<section id="correlation-conclusion" class="level2" data-number="6.9">
+<h2 data-number="6.9" class="anchored" data-anchor-id="correlation-conclusion"><span class="header-section-number">6.9</span> Conclusion</h2>
+<p>If we have two numerical variables that have a linear association between them (also assuming there are no serious outliers), we can compute the correlation coefficient that measures the strength and direction of that linear association.</p>
+<p>Keep in mind that in an observational study, this correlation is a measure of association, but it does not signify that one variable causes the other. It’s possible that one variable causes the other, but it’s also possible that a third “lurking” variable is responsible for the association. Either way, the fact that a relationship exists means it is possible to use values of one variable to make reasonable predictions about the values of the other variable.</p>
+<p>In a properly designed experiment, the manipulation of one variable while controlling for others (and randomizing to take care of other confounders) ensures that there is a causal link between the treatment variable and the response of interest. In this case, the treatment can “explain” the response, not just predict it.</p>
+<section id="correlation-prep" class="level3" data-number="6.9.1">
+<h3 data-number="6.9.1" class="anchored" data-anchor-id="correlation-prep"><span class="header-section-number">6.9.1</span> Preparing and submitting your assignment</h3>
+<ol type="1">
+<li>From the “Run” menu, select “Restart R and Run All Chunks”.</li>
+<li>Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.</li>
+<li>Spell check your document by clicking the icon with “ABC” and a check mark.</li>
+<li>Hit the “Preview” button one last time to generate the final draft of the <code>.nb.html</code> file.</li>
+<li>Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1–5 again.</li>
+</ol>
+<p>If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.</p>
+
+
+</section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>There are other ways of measuring association for variables that are not numerical, but these aren’t covered in this course.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./05-manipulating_data-web.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Manipulating data</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./07-regression-web.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Regression</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

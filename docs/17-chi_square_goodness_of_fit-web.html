@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Introduction to Statistics: an integrated textbook and workbook using R - 17&nbsp; Chi-square goodness-of-fit test</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./18-chi_square_test_for_independence-web.html" rel="next">
+<link href="./16-inference_for_two_proportions-web.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./17-chi_square_goodness_of_fit-web.html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Chi-square goodness-of-fit test</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to Statistics: an integrated textbook and workbook using R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-intro_to_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-using_r_markdown-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Using R Markdown</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-categorical_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Categorical data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-numerical_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Numerical data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-manipulating_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Manipulating data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-correlation-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Correlation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-regression-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Regression</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-intro_to_randomization_1-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to randomization, Part 1</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-intro_to_randomization_2-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to randomization, Part 2</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-hypothesis_testing_with_randomization_1-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Hypothesis testing with randomization, Part 1</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-hypothesis_testing_with_randomization_2-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Hypothesis testing with randomization, Part 2</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-confidence_intervals-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Confidence intervals</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-normal_models-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Normal models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-sampling_distribution_models-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Sampling distribution models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-inference_for_one_proportion-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Inference for one proportion</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-inference_for_two_proportions-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Inference for two proportions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-chi_square_goodness_of_fit-web.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Chi-square goodness-of-fit test</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-chi_square_test_for_independence-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Chi-square test for independence</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-inference_for_one_mean-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Inference for one mean</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-inference_for_paired_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Inference for paired data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21-inference_for_two_independent_means-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Inference for two independent means</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-anova-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">ANOVA</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rubric.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Rubric for inference</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Concordance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Concordance with <em>Introduction to Modern Statistics</em> (IMS)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#functions-introduced-in-this-chapter" id="toc-functions-introduced-in-this-chapter" class="nav-link active" data-scroll-target="#functions-introduced-in-this-chapter">Functions introduced in this chapter:</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="header-section-number">17.1</span> Introduction</a>
+  <ul class="collapse">
+  <li><a href="#install-new-packages" id="toc-install-new-packages" class="nav-link" data-scroll-target="#install-new-packages"><span class="header-section-number">17.1.1</span> Install new packages</a></li>
+  <li><a href="#download-the-r-notebook-file" id="toc-download-the-r-notebook-file" class="nav-link" data-scroll-target="#download-the-r-notebook-file"><span class="header-section-number">17.1.2</span> Download the R notebook file</a></li>
+  <li><a href="#restart-r-and-run-all-chunks" id="toc-restart-r-and-run-all-chunks" class="nav-link" data-scroll-target="#restart-r-and-run-all-chunks"><span class="header-section-number">17.1.3</span> Restart R and run all chunks</a></li>
+  </ul></li>
+  <li><a href="#load-packages" id="toc-load-packages" class="nav-link" data-scroll-target="#load-packages"><span class="header-section-number">17.2</span> Load packages</a></li>
+  <li><a href="#research-question" id="toc-research-question" class="nav-link" data-scroll-target="#research-question"><span class="header-section-number">17.3</span> Research question</a></li>
+  <li><a href="#chi-squared" id="toc-chi-squared" class="nav-link" data-scroll-target="#chi-squared"><span class="header-section-number">17.4</span> Chi-squared</a></li>
+  <li><a href="#the-chi-square-distribution" id="toc-the-chi-square-distribution" class="nav-link" data-scroll-target="#the-chi-square-distribution"><span class="header-section-number">17.5</span> The chi-square distribution</a></li>
+  <li><a href="#chi-square-as-a-sampling-distribution-model" id="toc-chi-square-as-a-sampling-distribution-model" class="nav-link" data-scroll-target="#chi-square-as-a-sampling-distribution-model"><span class="header-section-number">17.6</span> Chi-square as a sampling distribution model</a></li>
+  <li><a href="#chi-square-goodness-of-fit-test" id="toc-chi-square-goodness-of-fit-test" class="nav-link" data-scroll-target="#chi-square-goodness-of-fit-test"><span class="header-section-number">17.7</span> Chi-square goodness-of-fit test</a></li>
+  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis"><span class="header-section-number">17.8</span> Exploratory data analysis</a>
+  <ul class="collapse">
+  <li><a href="#use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure." id="toc-use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure." class="nav-link" data-scroll-target="#use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure."><span class="header-section-number">17.8.1</span> Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.</a></li>
+  <li><a href="#prepare-the-data-for-analysis." id="toc-prepare-the-data-for-analysis." class="nav-link" data-scroll-target="#prepare-the-data-for-analysis."><span class="header-section-number">17.8.2</span> Prepare the data for analysis.</a></li>
+  <li><a href="#make-tables-or-plots-to-explore-the-data-visually." id="toc-make-tables-or-plots-to-explore-the-data-visually." class="nav-link" data-scroll-target="#make-tables-or-plots-to-explore-the-data-visually."><span class="header-section-number">17.8.3</span> Make tables or plots to explore the data visually.</a></li>
+  </ul></li>
+  <li><a href="#hypotheses" id="toc-hypotheses" class="nav-link" data-scroll-target="#hypotheses"><span class="header-section-number">17.9</span> Hypotheses</a>
+  <ul class="collapse">
+  <li><a href="#identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest." id="toc-identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest." class="nav-link" data-scroll-target="#identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest."><span class="header-section-number">17.9.1</span> Identify the sample (or samples) and a reasonable population (or populations) of interest.</a></li>
+  <li><a href="#express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences." id="toc-express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences." class="nav-link" data-scroll-target="#express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences."><span class="header-section-number">17.9.2</span> Express the null and alternative hypotheses as contextually meaningful full sentences.</a></li>
+  <li><a href="#express-the-null-and-alternative-hypotheses-in-symbols-when-possible." id="toc-express-the-null-and-alternative-hypotheses-in-symbols-when-possible." class="nav-link" data-scroll-target="#express-the-null-and-alternative-hypotheses-in-symbols-when-possible."><span class="header-section-number">17.9.3</span> Express the null and alternative hypotheses in symbols (when possible).</a></li>
+  </ul></li>
+  <li><a href="#model" id="toc-model" class="nav-link" data-scroll-target="#model"><span class="header-section-number">17.10</span> Model</a>
+  <ul class="collapse">
+  <li><a href="#identify-the-sampling-distribution-model." id="toc-identify-the-sampling-distribution-model." class="nav-link" data-scroll-target="#identify-the-sampling-distribution-model."><span class="header-section-number">17.10.1</span> Identify the sampling distribution model.</a></li>
+  <li><a href="#check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met." id="toc-check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met." class="nav-link" data-scroll-target="#check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met."><span class="header-section-number">17.10.2</span> Check the relevant conditions to ensure that model assumptions are met.</a></li>
+  </ul></li>
+  <li><a href="#mechanics" id="toc-mechanics" class="nav-link" data-scroll-target="#mechanics"><span class="header-section-number">17.11</span> Mechanics</a>
+  <ul class="collapse">
+  <li><a href="#compute-the-test-statistic." id="toc-compute-the-test-statistic." class="nav-link" data-scroll-target="#compute-the-test-statistic."><span class="header-section-number">17.11.1</span> Compute the test statistic.</a></li>
+  <li><a href="#report-the-test-statistic-in-context-when-possible." id="toc-report-the-test-statistic-in-context-when-possible." class="nav-link" data-scroll-target="#report-the-test-statistic-in-context-when-possible."><span class="header-section-number">17.11.2</span> Report the test statistic in context (when possible).</a></li>
+  <li><a href="#plot-the-null-distribution." id="toc-plot-the-null-distribution." class="nav-link" data-scroll-target="#plot-the-null-distribution."><span class="header-section-number">17.11.3</span> Plot the null distribution.</a></li>
+  <li><a href="#calculate-the-p-value." id="toc-calculate-the-p-value." class="nav-link" data-scroll-target="#calculate-the-p-value."><span class="header-section-number">17.11.4</span> Calculate the P-value.</a></li>
+  <li><a href="#interpret-the-p-value-as-a-probability-given-the-null." id="toc-interpret-the-p-value-as-a-probability-given-the-null." class="nav-link" data-scroll-target="#interpret-the-p-value-as-a-probability-given-the-null."><span class="header-section-number">17.11.5</span> Interpret the P-value as a probability given the null.</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">17.12</span> Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#state-the-statistical-conclusion." id="toc-state-the-statistical-conclusion." class="nav-link" data-scroll-target="#state-the-statistical-conclusion."><span class="header-section-number">17.12.1</span> State the statistical conclusion.</a></li>
+  <li><a href="#state-but-do-not-overstate-a-contextually-meaningful-conclusion." id="toc-state-but-do-not-overstate-a-contextually-meaningful-conclusion." class="nav-link" data-scroll-target="#state-but-do-not-overstate-a-contextually-meaningful-conclusion."><span class="header-section-number">17.12.2</span> State (but do not overstate) a contextually meaningful conclusion.</a></li>
+  <li><a href="#express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion." id="toc-express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion." class="nav-link" data-scroll-target="#express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion."><span class="header-section-number">17.12.3</span> Express reservations or uncertainty about the generalizability of the conclusion.</a></li>
+  <li><a href="#identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses." id="toc-identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses." class="nav-link" data-scroll-target="#identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses."><span class="header-section-number">17.12.4</span> Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.</a></li>
+  </ul></li>
+  <li><a href="#confidence-interval" id="toc-confidence-interval" class="nav-link" data-scroll-target="#confidence-interval"><span class="header-section-number">17.13</span> Confidence interval</a></li>
+  <li><a href="#your-turn" id="toc-your-turn" class="nav-link" data-scroll-target="#your-turn"><span class="header-section-number">17.14</span> Your turn</a></li>
+  <li><a href="#bonus-section-residuals" id="toc-bonus-section-residuals" class="nav-link" data-scroll-target="#bonus-section-residuals"><span class="header-section-number">17.15</span> Bonus section: residuals</a>
+  <ul class="collapse">
+  <li><a href="#your-turn-1" id="toc-your-turn-1" class="nav-link" data-scroll-target="#your-turn-1"><span class="header-section-number">17.15.1</span> Your turn</a></li>
+  </ul></li>
+  <li><a href="#conclusion-2" id="toc-conclusion-2" class="nav-link" data-scroll-target="#conclusion-2"><span class="header-section-number">17.16</span> Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#preparing-and-submitting-your-assignment" id="toc-preparing-and-submitting-your-assignment" class="nav-link" data-scroll-target="#preparing-and-submitting-your-assignment"><span class="header-section-number">17.16.1</span> Preparing and submitting your assignment</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Chi-square goodness-of-fit test</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<!-- Please don't mess with the next few lines! -->
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>
+<p style="color:#ffffff">
+2.0
+</p>
+<!-- Please don't mess with the previous few lines! -->
+<section id="functions-introduced-in-this-chapter" class="level3 unnumbered summary">
+<h3 class="unnumbered anchored" data-anchor-id="functions-introduced-in-this-chapter">Functions introduced in this chapter:</h3>
+<p><code>chisq.test</code></p>
+</section>
+<section id="introduction" class="level2" data-number="17.1">
+<h2 data-number="17.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">17.1</span> Introduction</h2>
+<p>In this assignment we will learn how to run the chi-square goodness-of-fit test. A chi-square goodness-of-fit test is similar to a test for a single proportion except, instead of two categories (success/failure), we now try to understand the distribution among three or more categories.</p>
+<section id="install-new-packages" class="level3" data-number="17.1.1">
+<h3 data-number="17.1.1" class="anchored" data-anchor-id="install-new-packages"><span class="header-section-number">17.1.1</span> Install new packages</h3>
+<p>There are no new packages used in this chapter.</p>
+</section>
+<section id="download-the-r-notebook-file" class="level3" data-number="17.1.2">
+<h3 data-number="17.1.2" class="anchored" data-anchor-id="download-the-r-notebook-file"><span class="header-section-number">17.1.2</span> Download the R notebook file</h3>
+<p>Check the upper-right corner in RStudio to make sure you’re in your <code>intro_stats</code> project. Then click on the following link to download this chapter as an R notebook file (<code>.Rmd</code>).</p>
+<p><a href="https://vectorposse.github.io/intro_stats/chapter_downloads/17-chi_square_goodness_of_fit.Rmd" download="">https://vectorposse.github.io/intro_stats/chapter_downloads/17-chi_square_goodness_of_fit.Rmd</a></p>
+<p>Once the file is downloaded, move it to your project folder in RStudio and open it there.</p>
+</section>
+<section id="restart-r-and-run-all-chunks" class="level3" data-number="17.1.3">
+<h3 data-number="17.1.3" class="anchored" data-anchor-id="restart-r-and-run-all-chunks"><span class="header-section-number">17.1.3</span> Restart R and run all chunks</h3>
+<p>In RStudio, select “Restart R and Run All Chunks” from the “Run” menu.</p>
+</section>
+</section>
+<section id="load-packages" class="level2" data-number="17.2">
+<h2 data-number="17.2" class="anchored" data-anchor-id="load-packages"><span class="header-section-number">17.2</span> Load packages</h2>
+<p>We load the standard <code>tidyverse</code>, <code>janitor</code>, and <code>infer</code> packages and the <code>openintro</code> package for the <code>hsb2</code> data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.2     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'janitor'
+
+The following objects are masked from 'package:stats':
+
+    chisq.test, fisher.test</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(infer)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(openintro)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: airports
+Loading required package: cherryblossom
+Loading required package: usdata</code></pre>
+</div>
+</div>
+</section>
+<section id="research-question" class="level2" data-number="17.3">
+<h2 data-number="17.3" class="anchored" data-anchor-id="research-question"><span class="header-section-number">17.3</span> Research question</h2>
+<p>We use a classic data set <code>mtcars</code> from a 1974 Motor Trend magazine to examine the distribution of the number of engine cylinders (with values 4, 6, or 8). We’ll assume that this data set is representative of all cars from 1974.</p>
+<p>In recent years, 4-cylinder vehicles and 6-cylinder vehicles have comprised about 38% of the market each, with nearly all the rest (24%) being 8-cylinder cars. (This ignores a very small number of cars manufactured with 3- or 5-cylinder engines.) Were car engines in 1974 manufactured according to the same distribution?</p>
+<p>Here is the structure of the data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(mtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 32
+Columns: 11
+$ mpg  &lt;dbl&gt; 21.0, 21.0, 22.8, 21.4, 18.7, 18.1, 14.3, 24.4, 22.8, 19.2, 17.8,…
+$ cyl  &lt;dbl&gt; 6, 6, 4, 6, 8, 6, 8, 4, 4, 6, 6, 8, 8, 8, 8, 8, 8, 4, 4, 4, 4, 8,…
+$ disp &lt;dbl&gt; 160.0, 160.0, 108.0, 258.0, 360.0, 225.0, 360.0, 146.7, 140.8, 16…
+$ hp   &lt;dbl&gt; 110, 110, 93, 110, 175, 105, 245, 62, 95, 123, 123, 180, 180, 180…
+$ drat &lt;dbl&gt; 3.90, 3.90, 3.85, 3.08, 3.15, 2.76, 3.21, 3.69, 3.92, 3.92, 3.92,…
+$ wt   &lt;dbl&gt; 2.620, 2.875, 2.320, 3.215, 3.440, 3.460, 3.570, 3.190, 3.150, 3.…
+$ qsec &lt;dbl&gt; 16.46, 17.02, 18.61, 19.44, 17.02, 20.22, 15.84, 20.00, 22.90, 18…
+$ vs   &lt;dbl&gt; 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0,…
+$ am   &lt;dbl&gt; 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0,…
+$ gear &lt;dbl&gt; 4, 4, 4, 3, 3, 3, 3, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 4, 4, 4, 3, 3,…
+$ carb &lt;dbl&gt; 4, 4, 1, 1, 2, 1, 4, 2, 2, 4, 4, 3, 3, 3, 4, 4, 4, 1, 2, 1, 1, 2,…</code></pre>
+</div>
+</div>
+<p>Note that the variable of interest <code>cyl</code> is not coded as a factor variable. Let’s convert <code>cyl</code> to a factor variable first and add it to a new data frame called <code>mtcars2</code>. (Since the levels are already called 4, 6, and 8, we do not need to specify <code>levels</code> or <code>labels</code>.) Be sure to remember to use <code>mtcars2</code> from here on out, and not the original <code>mtcars</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mtcars2 <span class="ot">&lt;-</span> mtcars <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cyl_fct =</span> <span class="fu">factor</span>(cyl))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>mtcars2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                     mpg cyl  disp  hp drat    wt  qsec vs am gear carb cyl_fct
+Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4       6
+Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4       6
+Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1       4
+Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1       6
+Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2       8
+Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1       6
+Duster 360          14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4       8
+Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2       4
+Merc 230            22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2       4
+Merc 280            19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4       6
+Merc 280C           17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4       6
+Merc 450SE          16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3       8
+Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3       8
+Merc 450SLC         15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3       8
+Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4       8
+Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4       8
+Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4       8
+Fiat 128            32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1       4
+Honda Civic         30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2       4
+Toyota Corolla      33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1       4
+Toyota Corona       21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1       4
+Dodge Challenger    15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2       8
+AMC Javelin         15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2       8
+Camaro Z28          13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4       8
+Pontiac Firebird    19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2       8
+Fiat X1-9           27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1       4
+Porsche 914-2       26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2       4
+Lotus Europa        30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2       4
+Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4       8
+Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6       6
+Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8       8
+Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2       4</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(mtcars2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 32
+Columns: 12
+$ mpg     &lt;dbl&gt; 21.0, 21.0, 22.8, 21.4, 18.7, 18.1, 14.3, 24.4, 22.8, 19.2, 17…
+$ cyl     &lt;dbl&gt; 6, 6, 4, 6, 8, 6, 8, 4, 4, 6, 6, 8, 8, 8, 8, 8, 8, 4, 4, 4, 4,…
+$ disp    &lt;dbl&gt; 160.0, 160.0, 108.0, 258.0, 360.0, 225.0, 360.0, 146.7, 140.8,…
+$ hp      &lt;dbl&gt; 110, 110, 93, 110, 175, 105, 245, 62, 95, 123, 123, 180, 180, …
+$ drat    &lt;dbl&gt; 3.90, 3.90, 3.85, 3.08, 3.15, 2.76, 3.21, 3.69, 3.92, 3.92, 3.…
+$ wt      &lt;dbl&gt; 2.620, 2.875, 2.320, 3.215, 3.440, 3.460, 3.570, 3.190, 3.150,…
+$ qsec    &lt;dbl&gt; 16.46, 17.02, 18.61, 19.44, 17.02, 20.22, 15.84, 20.00, 22.90,…
+$ vs      &lt;dbl&gt; 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1,…
+$ am      &lt;dbl&gt; 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0,…
+$ gear    &lt;dbl&gt; 4, 4, 4, 3, 3, 3, 3, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 4, 4, 4, 3,…
+$ carb    &lt;dbl&gt; 4, 4, 1, 1, 2, 1, 4, 2, 2, 4, 4, 3, 3, 3, 4, 4, 4, 1, 2, 1, 1,…
+$ cyl_fct &lt;fct&gt; 6, 6, 4, 6, 8, 6, 8, 4, 4, 6, 6, 8, 8, 8, 8, 8, 8, 4, 4, 4, 4,…</code></pre>
+</div>
+</div>
+</section>
+<section id="chi-squared" class="level2" data-number="17.4">
+<h2 data-number="17.4" class="anchored" data-anchor-id="chi-squared"><span class="header-section-number">17.4</span> Chi-squared</h2>
+<p>When we have three or more categories in a categorical variable, it is natural to ask how the observed counts in each category compare to the counts that we expect to see under the assumption of some null hypothesis. In other words, we’re assuming that there is some “true” distribution to which we are going to compare our data. Sometimes, this null comes from substantive expert knowledge. (For example, we will be comparing the 1974 distribution to a known distribution from recent years.) Sometimes we’re interested to see if our data deviates from a null distribution that predicts an equal number of observations in each category.</p>
+<p>First of all, what is the actual distribution of cylinders in our data? Here’s a frequency table.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(mtcars2, cyl_fct) <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_totals</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_pct_formatting</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> cyl_fct  n percent
+       4 11   34.4%
+       6  7   21.9%
+       8 14   43.8%
+   Total 32  100.0%</code></pre>
+</div>
+</div>
+<p>The counts of our frequency table are the “observed” values, usually denoted by the letter <span class="math inline">\(O\)</span> (uppercase “O”, which is a little unfortunate, because it also looks like a zero).</p>
+<p>What are the expected counts? Well, since there are 32 cars, we need to multiply 32 by the percentages listed in the research question. For 4-cylinder and 6-cylinder cars, if the distribution of engines in 1974 were the same as today, there would be <span class="math inline">\(32 * 0.38\)</span> or about 12.2 cars we would expect to see in our sample that have 4-cylinder engines, and the same for 6-cylinder cars. For 8-cylinder cars, we expect <span class="math inline">\(32 * 0.24\)</span> or about 7.7 cars in our sample to have 8-cylinder engines. These “expected” counts are usually denoted by the letter <span class="math inline">\(E\)</span>.</p>
+<p>Why aren’t the expected counts whole numbers? In any given data set, of course, we will see a whole number of cars with 4, 6, or 8 cylinders. However, since we’re looking only at expected counts, they are the average over lots of possible sets of 32 cars under the assumption of the null. We don’t need for these averages to be whole numbers.</p>
+<p>How should the deviation between the data and the null distribution be measured? We could simply look at the difference between the observed counts and the expected counts <span class="math inline">\(O - E\)</span>. However, there will be some positive values (cells where we have more than the expected number of cars) and some negative values (cells where we have fewer than the expected number of cars). These will all cancel out.</p>
+<p>If this sounds vaguely familiar, it is because we encountered the same problem with the formula for the standard deviation. The differences <span class="math inline">\(y - \bar{y}\)</span> had the same issue. Do you recall the solution in that case? It was to square these values, making them all positive.</p>
+<p>So instead of <span class="math inline">\(O - E\)</span>, we will consider <span class="math inline">\((O - E)^{2}\)</span>. Finally, to make sure that cells with large expected values don’t dominate, we divide by <span class="math inline">\(E\)</span>:</p>
+<p><span class="math display">\[
+\frac{(O - E)^{2}}{E}.
+\]</span></p>
+<p>This puts each cell on equal footing. Now that we have a reasonable measure of the deviation between observed and expected counts for each cell, we define <span class="math inline">\(\chi^{2}\)</span> (“chi-squared”, pronounced “kye-squared”—rhymes with “die-scared”, or if that’s too dark, how about “pie-shared”<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>) as the sum of all these fractions, one for each cell:</p>
+<p><span class="math display">\[
+\chi^{2} = \sum \frac{(O - E)^{2}}{E}.
+\]</span></p>
+<p>A <span class="math inline">\(\chi^{2}\)</span> value of zero would indicate perfect agreement between observed and expected values. As the <span class="math inline">\(\chi^{2}\)</span> value gets larger and larger, this indicates more and more deviation between observed and expected values.</p>
+<p>As an example, for our data, we calculate chi-squared as follows:</p>
+<p><span class="math display">\[
+\chi^{2} = \frac{(11 - 12.2)^{2}}{12.2} + \frac{(7 - 12.2)^{2}}{12.2} + \frac{(14 - 7.7)^{2}}{7.7} \approx 7.5.
+\]</span></p>
+<p>Or we could just do it in R with the <code>infer</code> package. To do so, we have to state explicitly the proportions that correspond to the null hypothesis. In this case, since the order of entries in the frequency table is 4-cylinder, 6-cylinder, then 8-cylinder, we need to give <code>infer</code> a vector of entries <code>c("4" = 0.38, "6" = 0.38, "8" = 0.24)</code> that represents the 38%, 38%, and 24% expected for 4, 6, and 8 cylinders respectively.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>obs_chisq <span class="ot">&lt;-</span> mtcars2 <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">specify</span>(<span class="at">response =</span> cyl_fct) <span class="sc">%&gt;%</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hypothesize</span>(<span class="at">null =</span> <span class="st">"point"</span>,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">p =</span> <span class="fu">c</span>(<span class="st">"4"</span> <span class="ot">=</span> <span class="fl">0.38</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"6"</span> <span class="ot">=</span> <span class="fl">0.38</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"8"</span> <span class="ot">=</span> <span class="fl">0.24</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"chisq"</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>obs_chisq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Response: cyl_fct (factor)
+Null Hypothesis: point
+# A tibble: 1 × 1
+   stat
+  &lt;dbl&gt;
+1  7.50</code></pre>
+</div>
+</div>
+</section>
+<section id="the-chi-square-distribution" class="level2" data-number="17.5">
+<h2 data-number="17.5" class="anchored" data-anchor-id="the-chi-square-distribution"><span class="header-section-number">17.5</span> The chi-square distribution</h2>
+<p>We know that even if the true distribution were 38%, 38%, 24%, we would not see exactly 12.2, 12.2, 7.7 in a sample of 32 cars. (In fact, the “true” distribution is physically impossible because these are not whole numbers!) So what kinds of numbers could we get?</p>
+<p>Let’s do a quick simulation to find out.</p>
+<p>Under the assumption of the null, there should be a 38%, 38%, and 24% chance of seeing 4, 6, or 8 cylinders, respectively. To get a sense of the extent of sampling variability, we could use the <code>sample</code> command to see what happens in a sample of size 32 taken from a population where the true percentages are 38%, 38%, and 24%.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">99999</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>sample1 <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>), <span class="at">size =</span> <span class="dv">32</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.38</span>, <span class="fl">0.38</span>, <span class="fl">0.24</span>))</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>sample1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 6 8 4 8 6 6 8 4 8 6 8 6 6 4 6 8 4 6 6 8 8 6 6 8 4 8 6 4 4 4 6 4</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>sample1 <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">table</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>.
+ 4  6  8 
+ 9 13 10 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>sample2 <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>), <span class="at">size =</span> <span class="dv">32</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.38</span>, <span class="fl">0.38</span>, <span class="fl">0.24</span>))</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>sample2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 6 8 8 8 4 4 8 4 8 6 8 4 4 6 6 6 6 4 4 4 6 4 4 4 8 4 4 8 4 4 4 8</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>sample2 <span class="sc">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">table</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>.
+ 4  6  8 
+16  7  9 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>sample3 <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>), <span class="at">size =</span> <span class="dv">32</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.38</span>, <span class="fl">0.38</span>, <span class="fl">0.24</span>))</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>sample3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 8 6 4 6 6 6 6 4 6 6 6 4 6 4 8 8 6 8 8 8 4 6 8 4 8 6 6 6 6 8 4 6</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>sample3 <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">table</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>.
+ 4  6  8 
+ 7 16  9 </code></pre>
+</div>
+</div>
+<p>We can calculate the chi-squared value for each of these samples to get a sense of the possibilities. The <code>chisq.test</code> command from base R is a little unusual because it requires a frequency table (generated from the <code>table</code> command) as input. We will never use the <code>chisq.test</code> command directly because we will always use <code>infer</code> to do this work. But just to see some examples:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>sample1 <span class="sc">%&gt;%</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">chisq.test</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Chi-squared test for given probabilities
+
+data:  .
+X-squared = 0.8125, df = 2, p-value = 0.6661</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>sample2 <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">chisq.test</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Chi-squared test for given probabilities
+
+data:  .
+X-squared = 4.1875, df = 2, p-value = 0.1232</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>sample3 <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">table</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">chisq.test</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Chi-squared test for given probabilities
+
+data:  .
+X-squared = 4.1875, df = 2, p-value = 0.1232</code></pre>
+</div>
+</div>
+<section id="exercise-1" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-1">Exercise 1</h5>
+<p>Look more carefully at the three random samples above. Why does sample 1 have a chi-squared closer to 0 while samples 2 and 3 have a chi-squared values that are a little larger? (Hint: look at the counts of 4s, 6s, and 8s in those samples. How do those counts compare to the expected number of 4s, 6s, and 8s?)</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+<hr>
+<p>The <code>infer</code> pipeline below (the <code>generate</code> command specifically) takes the values “4”, “6”, or “8” and grabs them at random according to the probabilities specified until it has 32 values. In other words, it will randomly select “4” about 38% of the time, “6” about 38% of the time, and “8” about 24% of the time, until it gets a list of 32 total cars. Then it will calculate the chi-squared value for that simulated set of 32 cars. But because randomness is involved, the simulated samples are subject to sampling variability and the chi-square values obtained will differ from each other. This is exactly what we did above with the <code>sample</code> command and the <code>chisq</code> command, but the benefit now is that we get 1000 random samples very quickly.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">99999</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>cyl_test_sim <span class="ot">&lt;-</span> mtcars2 <span class="sc">%&gt;%</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">specify</span>(<span class="at">response =</span> cyl_fct) <span class="sc">%&gt;%</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hypothesize</span>(<span class="at">null =</span> <span class="st">"point"</span>,</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">p =</span> <span class="fu">c</span>(<span class="st">"4"</span> <span class="ot">=</span> <span class="fl">0.38</span>,</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"6"</span> <span class="ot">=</span> <span class="fl">0.38</span>,</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"8"</span> <span class="ot">=</span> <span class="fl">0.24</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">generate</span>(<span class="at">reps =</span> <span class="dv">1000</span>, <span class="at">type =</span> <span class="st">"draw"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"chisq"</span>)</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>cyl_test_sim</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Response: cyl_fct (factor)
+Null Hypothesis: point
+# A tibble: 1,000 × 2
+   replicate  stat
+   &lt;fct&gt;     &lt;dbl&gt;
+ 1 1         1.58 
+ 2 2         3.63 
+ 3 3         3.63 
+ 4 4         0.669
+ 5 5         2.31 
+ 6 6         0.648
+ 7 7         4.13 
+ 8 8         7.08 
+ 9 9         0.648
+10 10        0.669
+# ℹ 990 more rows</code></pre>
+</div>
+</div>
+<p>The “stat” column above contains 1000 random values of <span class="math inline">\(\chi^{2}\)</span>. Let’s graph these values and include the chi-squared value for our actual data in the same graph.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>cyl_test_sim <span class="sc">%&gt;%</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visualize</span>() <span class="sc">+</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shade_p_value</span>(obs_chisq, <span class="at">direction =</span> <span class="st">"greater"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="17-chi_square_goodness_of_fit-web_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>A few things are apparent:</p>
+<ol type="1">
+<li><p>The values are all positive. (The leftmost bar is sitting at 0, but it represents values greater than zero.) This makes sense when you remember that each piece of the <span class="math inline">\(\chi^{2}\)</span> calculation was positive. This is different from our earlier simulations that looked like normal models. (Z scores can be positive or negative, but not <span class="math inline">\(\chi^{2}\)</span>.)</p></li>
+<li><p>This is a severely right-skewed graph. Although most values are near zero, the occasional unusual sample can have a large value of <span class="math inline">\(\chi^{2}\)</span>.</p></li>
+<li><p>You can see that our sample (the red line) is pretty far to the right. It is an unusual value given the assumption of the null hypothesis. In fact, we can count the proportion of sampled values that are to the right of the red line:</p></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>cyl_test_sim <span class="sc">%&gt;%</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_p_value</span>(obs_chisq, <span class="at">direction =</span> <span class="st">"greater"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  p_value
+    &lt;dbl&gt;
+1   0.021</code></pre>
+</div>
+</div>
+<p>This is the simulated P-value. Keep this number in mind when we calculate the P-value using a sampling distribution model below.</p>
+</section>
+</section>
+<section id="chi-square-as-a-sampling-distribution-model" class="level2" data-number="17.6">
+<h2 data-number="17.6" class="anchored" data-anchor-id="chi-square-as-a-sampling-distribution-model"><span class="header-section-number">17.6</span> Chi-square as a sampling distribution model</h2>
+<p>Just like there was a mathematical model for our simulated data before (the normal model back then), there is also a mathematical model for this type of simulated data. It’s called (not surprisingly) the <em>chi-square distribution</em>.</p>
+<p>There is one new idea, though. Although all normal models have the same bell shape, there are many different chi-square models. This is because the number of cells can change the sampling distribution. Our engine cylinder example has three cells (corresponding to the categories “4”, “6”, and “8”). But what if there were 10 categories? The shape of the chi-square model would be different.</p>
+<p>The terminology used by statisticians to distinguish these models is <em>degrees of freedom</em>, abbreviated <span class="math inline">\(df\)</span>. The reason for this name and the mathematics behind it are somewhat technical. Suffice it to say for now that if there are <span class="math inline">\(c\)</span> cells, you use <span class="math inline">\(c - 1\)</span> degrees of freedom. For our car example, there are 3 cylinder categories, so <span class="math inline">\(df = 2\)</span>.</p>
+<p>Look at the graph below that shows the theoretical chi-square models for varying degrees of freedom.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Don't worry about the syntax here.</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co"># You won't need to know how to do this on your own.</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">20</span>)), <span class="fu">aes</span>(x)) <span class="sc">+</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_function</span>(<span class="at">fun =</span> dchisq, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">df =</span> <span class="dv">2</span>),</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">aes</span>(<span class="at">color =</span> <span class="st">"2"</span>)) <span class="sc">+</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_function</span>(<span class="at">fun =</span> dchisq, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">df =</span> <span class="dv">5</span>),</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">aes</span>(<span class="at">color =</span> <span class="st">"5"</span> )) <span class="sc">+</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_function</span>(<span class="at">fun =</span> dchisq, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">df =</span> <span class="dv">10</span>),</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">aes</span>(<span class="at">color =</span> <span class="st">"10"</span>)) <span class="sc">+</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">name =</span> <span class="st">"df"</span>,</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>                       <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"2"</span> <span class="ot">=</span> <span class="st">"red"</span>,</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">"5"</span> <span class="ot">=</span> <span class="st">"blue"</span>,</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">"10"</span> <span class="ot">=</span> <span class="st">"green"</span>),</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>                       <span class="at">breaks =</span>  <span class="fu">c</span>(<span class="st">"2"</span>, <span class="st">"5"</span>, <span class="st">"10"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="17-chi_square_goodness_of_fit-web_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The red curve (corresponding to <span class="math inline">\(df = 2\)</span>) looks a lot like our simulation above. But as the degrees of freedom increase, the mode shifts further to the right.</p>
+</section>
+<section id="chi-square-goodness-of-fit-test" class="level2" data-number="17.7">
+<h2 data-number="17.7" class="anchored" data-anchor-id="chi-square-goodness-of-fit-test"><span class="header-section-number">17.7</span> Chi-square goodness-of-fit test</h2>
+<p>The formal inferential procedure for examining whether data from a categorical variable fits a proposed distribution in the population is called a <em>chi-square goodness-of-fit test</em>.</p>
+<p>We can use the chi-square model as the sampling distribution as long as the sample size is large enough. This is checked by calculating that the expected cell counts (not the observed cell counts!) are at least 5 in each cell.</p>
+<p>The following <code>infer</code> pipeline will run a hypothesis test using the theoretical chi-squared distribution with 2 degrees of freedom.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>cyl_test <span class="ot">&lt;-</span> mtcars2 <span class="sc">%&gt;%</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">specify</span>(<span class="at">response =</span> cyl_fct) <span class="sc">%&gt;%</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assume</span>(<span class="at">distribution =</span> <span class="st">"chisq"</span>)</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>cyl_test</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A Chi-squared distribution with 2 degrees of freedom.</code></pre>
+</div>
+</div>
+<p>Here is the theoretical distribution:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>cyl_test <span class="sc">%&gt;%</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visualize</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="17-chi_square_goodness_of_fit-web_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>And here it is will our test statistic (the chi-squared value for our observed data) marked:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>cyl_test <span class="sc">%&gt;%</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visualize</span>() <span class="sc">+</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shade_p_value</span>(obs_chisq, <span class="at">direction =</span> <span class="st">"greater"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="17-chi_square_goodness_of_fit-web_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Finally, here is the P-value associated with the shaded area to the right of the test statistic:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>cyl_test <span class="sc">%&gt;%</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_p_value</span>(obs_chisq, <span class="at">direction =</span> <span class="st">"greater"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  p_value
+    &lt;dbl&gt;
+1  0.0235</code></pre>
+</div>
+</div>
+<p>Note that this P-value is quite similar to the P-value derived from the simulation earlier.</p>
+<p>We’ll walk through the engine cylinder example from top to bottom using the rubric. Most of this is just repeating work we’ve already done, but showing this work in the context of the rubric will help you as you take over in the “Your Turn” section later.</p>
+</section>
+<section id="exploratory-data-analysis" class="level2" data-number="17.8">
+<h2 data-number="17.8" class="anchored" data-anchor-id="exploratory-data-analysis"><span class="header-section-number">17.8</span> Exploratory data analysis</h2>
+<section id="use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure." class="level3" data-number="17.8.1">
+<h3 data-number="17.8.1" class="anchored" data-anchor-id="use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure."><span class="header-section-number">17.8.1</span> Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.</h3>
+<p>Type <code>?mtcars</code> at the Console to read the help file. <em>Motor Trend</em> is a reputable publication and, therefore, we do not doubt the accuracy of the data. It’s not clear, however, why these specific 32 cars were chosen and if they reflect a representative sample of cars on the road in 1974.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>mtcars</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                     mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
+Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
+Duster 360          14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
+Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+Merc 230            22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
+Merc 280            19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
+Merc 280C           17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
+Merc 450SE          16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
+Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
+Merc 450SLC         15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
+Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4
+Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
+Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4
+Fiat 128            32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+Honda Civic         30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+Toyota Corolla      33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
+Toyota Corona       21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1
+Dodge Challenger    15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2
+AMC Javelin         15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2
+Camaro Z28          13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4
+Pontiac Firebird    19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2
+Fiat X1-9           27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+Porsche 914-2       26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+Lotus Europa        30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
+Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
+Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
+Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
+Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(mtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 32
+Columns: 11
+$ mpg  &lt;dbl&gt; 21.0, 21.0, 22.8, 21.4, 18.7, 18.1, 14.3, 24.4, 22.8, 19.2, 17.8,…
+$ cyl  &lt;dbl&gt; 6, 6, 4, 6, 8, 6, 8, 4, 4, 6, 6, 8, 8, 8, 8, 8, 8, 4, 4, 4, 4, 8,…
+$ disp &lt;dbl&gt; 160.0, 160.0, 108.0, 258.0, 360.0, 225.0, 360.0, 146.7, 140.8, 16…
+$ hp   &lt;dbl&gt; 110, 110, 93, 110, 175, 105, 245, 62, 95, 123, 123, 180, 180, 180…
+$ drat &lt;dbl&gt; 3.90, 3.90, 3.85, 3.08, 3.15, 2.76, 3.21, 3.69, 3.92, 3.92, 3.92,…
+$ wt   &lt;dbl&gt; 2.620, 2.875, 2.320, 3.215, 3.440, 3.460, 3.570, 3.190, 3.150, 3.…
+$ qsec &lt;dbl&gt; 16.46, 17.02, 18.61, 19.44, 17.02, 20.22, 15.84, 20.00, 22.90, 18…
+$ vs   &lt;dbl&gt; 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0,…
+$ am   &lt;dbl&gt; 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0,…
+$ gear &lt;dbl&gt; 4, 4, 4, 3, 3, 3, 3, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 4, 4, 4, 3, 3,…
+$ carb &lt;dbl&gt; 4, 4, 1, 1, 2, 1, 4, 2, 2, 4, 4, 3, 3, 3, 4, 4, 4, 1, 2, 1, 1, 2,…</code></pre>
+</div>
+</div>
+</section>
+<section id="prepare-the-data-for-analysis." class="level3" data-number="17.8.2">
+<h3 data-number="17.8.2" class="anchored" data-anchor-id="prepare-the-data-for-analysis."><span class="header-section-number">17.8.2</span> Prepare the data for analysis.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Although we've already done this above, </span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="co"># we include it here again for completeness.</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>mtcars2 <span class="ot">&lt;-</span> mtcars <span class="sc">%&gt;%</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cyl_fct =</span> <span class="fu">factor</span>(cyl))</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>mtcars2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                     mpg cyl  disp  hp drat    wt  qsec vs am gear carb cyl_fct
+Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4       6
+Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4       6
+Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1       4
+Hornet 4 Drive      21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1       6
+Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2       8
+Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1       6
+Duster 360          14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4       8
+Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2       4
+Merc 230            22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2       4
+Merc 280            19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4       6
+Merc 280C           17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4       6
+Merc 450SE          16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3       8
+Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3       8
+Merc 450SLC         15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3       8
+Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4       8
+Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4       8
+Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4       8
+Fiat 128            32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1       4
+Honda Civic         30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2       4
+Toyota Corolla      33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1       4
+Toyota Corona       21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1       4
+Dodge Challenger    15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2       8
+AMC Javelin         15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2       8
+Camaro Z28          13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4       8
+Pontiac Firebird    19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2       8
+Fiat X1-9           27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1       4
+Porsche 914-2       26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2       4
+Lotus Europa        30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2       4
+Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4       8
+Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6       6
+Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8       8
+Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2       4</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(mtcars2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 32
+Columns: 12
+$ mpg     &lt;dbl&gt; 21.0, 21.0, 22.8, 21.4, 18.7, 18.1, 14.3, 24.4, 22.8, 19.2, 17…
+$ cyl     &lt;dbl&gt; 6, 6, 4, 6, 8, 6, 8, 4, 4, 6, 6, 8, 8, 8, 8, 8, 8, 4, 4, 4, 4,…
+$ disp    &lt;dbl&gt; 160.0, 160.0, 108.0, 258.0, 360.0, 225.0, 360.0, 146.7, 140.8,…
+$ hp      &lt;dbl&gt; 110, 110, 93, 110, 175, 105, 245, 62, 95, 123, 123, 180, 180, …
+$ drat    &lt;dbl&gt; 3.90, 3.90, 3.85, 3.08, 3.15, 2.76, 3.21, 3.69, 3.92, 3.92, 3.…
+$ wt      &lt;dbl&gt; 2.620, 2.875, 2.320, 3.215, 3.440, 3.460, 3.570, 3.190, 3.150,…
+$ qsec    &lt;dbl&gt; 16.46, 17.02, 18.61, 19.44, 17.02, 20.22, 15.84, 20.00, 22.90,…
+$ vs      &lt;dbl&gt; 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1,…
+$ am      &lt;dbl&gt; 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0,…
+$ gear    &lt;dbl&gt; 4, 4, 4, 3, 3, 3, 3, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 4, 4, 4, 3,…
+$ carb    &lt;dbl&gt; 4, 4, 1, 1, 2, 1, 4, 2, 2, 4, 4, 3, 3, 3, 4, 4, 4, 1, 2, 1, 1,…
+$ cyl_fct &lt;fct&gt; 6, 6, 4, 6, 8, 6, 8, 4, 4, 6, 6, 8, 8, 8, 8, 8, 8, 4, 4, 4, 4,…</code></pre>
+</div>
+</div>
+</section>
+<section id="make-tables-or-plots-to-explore-the-data-visually." class="level3" data-number="17.8.3">
+<h3 data-number="17.8.3" class="anchored" data-anchor-id="make-tables-or-plots-to-explore-the-data-visually."><span class="header-section-number">17.8.3</span> Make tables or plots to explore the data visually.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(mtcars2, cyl_fct) <span class="sc">%&gt;%</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_totals</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_pct_formatting</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> cyl_fct  n percent
+       4 11   34.4%
+       6  7   21.9%
+       8 14   43.8%
+   Total 32  100.0%</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="hypotheses" class="level2" data-number="17.9">
+<h2 data-number="17.9" class="anchored" data-anchor-id="hypotheses"><span class="header-section-number">17.9</span> Hypotheses</h2>
+<section id="identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest." class="level3" data-number="17.9.1">
+<h3 data-number="17.9.1" class="anchored" data-anchor-id="identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest."><span class="header-section-number">17.9.1</span> Identify the sample (or samples) and a reasonable population (or populations) of interest.</h3>
+<p>The sample is a set of 32 cars from a 1974 Motor Trends magazine. The population is all cars from 1974.</p>
+</section>
+<section id="express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences." class="level3" data-number="17.9.2">
+<h3 data-number="17.9.2" class="anchored" data-anchor-id="express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences."><span class="header-section-number">17.9.2</span> Express the null and alternative hypotheses as contextually meaningful full sentences.</h3>
+<p><span class="math inline">\(H_{0}:\)</span> In 1974, the proportion of cars with 4, 6, and 8 cylinders was 38%, 38%, and 24%, respectively.</p>
+<p><span class="math inline">\(H_{A}:\)</span> In 1974, the proportion of cars with 4, 6, and 8 cylinders was not 38%, 38%, and 24%.</p>
+</section>
+<section id="express-the-null-and-alternative-hypotheses-in-symbols-when-possible." class="level3" data-number="17.9.3">
+<h3 data-number="17.9.3" class="anchored" data-anchor-id="express-the-null-and-alternative-hypotheses-in-symbols-when-possible."><span class="header-section-number">17.9.3</span> Express the null and alternative hypotheses in symbols (when possible).</h3>
+<p><span class="math inline">\(H_{0}: p_{4} = 0.38, p_{6} = 0.38, p_{8} = 0.24\)</span></p>
+<p>There is no easy way to express the alternate hypothesis in symbols because any deviation in any of the categories can lead to rejection of the null. You can’t just say <span class="math inline">\(p_{4} \neq 0.38, p_{6} \neq 0.38, p_{8} \neq 0.24\)</span> because one of these categories might have the correct proportion with the other two different and that would still be consistent with the alternative hypothesis.</p>
+<p>So the only requirement here is to express the null in symbols.</p>
+</section>
+</section>
+<section id="model" class="level2" data-number="17.10">
+<h2 data-number="17.10" class="anchored" data-anchor-id="model"><span class="header-section-number">17.10</span> Model</h2>
+<section id="identify-the-sampling-distribution-model." class="level3" data-number="17.10.1">
+<h3 data-number="17.10.1" class="anchored" data-anchor-id="identify-the-sampling-distribution-model."><span class="header-section-number">17.10.1</span> Identify the sampling distribution model.</h3>
+<p>We use a <span class="math inline">\(\chi^{2}\)</span> model with 2 degrees of freedom.</p>
+<p>Commentary: Unlike the normal model, there are infinitely many different <span class="math inline">\(\chi^{2}\)</span> models, so you have to specify the degrees of freedom when you identify it as the sampling distribution model.</p>
+</section>
+<section id="check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met." class="level3" data-number="17.10.2">
+<h3 data-number="17.10.2" class="anchored" data-anchor-id="check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met."><span class="header-section-number">17.10.2</span> Check the relevant conditions to ensure that model assumptions are met.</h3>
+<ul>
+<li>Random
+<ul>
+<li>We do not know how Motor Trends magazine sampled these 32 cars, so we’re not sure if this list is random or representative of all cars from 1974. We should be cautious in our conclusions.</li>
+</ul></li>
+<li>10%
+<ul>
+<li>As long as there are at least 320 different car models, we are okay. This sounds like a lot, so this condition might not quite be met. Again, we need to be careful. (Also note that the population is not all automobiles manufactured in 1974. It is all <em>types</em> of automobile manufactured in 1974. There’s a big difference.)</li>
+</ul></li>
+<li>Expected cell counts
+<ul>
+<li>This condition says that under the null, we should see at least 5 cars in each category. The expected counts are <span class="math inline">\(32(0.38) = 12.2\)</span>, <span class="math inline">\(32(0.38) = 12.2\)</span>, and <span class="math inline">\(32(0.24) = 7.7\)</span>. So this condition is met.</li>
+</ul></li>
+</ul>
+<p>Commentary: The expected counts condition is necessary for using the theoretical chi-squared distribution. If we were using simulation instead, we would not need this condition.</p>
+</section>
+</section>
+<section id="mechanics" class="level2" data-number="17.11">
+<h2 data-number="17.11" class="anchored" data-anchor-id="mechanics"><span class="header-section-number">17.11</span> Mechanics</h2>
+<section id="compute-the-test-statistic." class="level3" data-number="17.11.1">
+<h3 data-number="17.11.1" class="anchored" data-anchor-id="compute-the-test-statistic."><span class="header-section-number">17.11.1</span> Compute the test statistic.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>obs_chisq <span class="ot">&lt;-</span> mtcars2 <span class="sc">%&gt;%</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">specify</span>(<span class="at">response =</span> cyl_fct) <span class="sc">%&gt;%</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hypothesize</span>(<span class="at">null =</span> <span class="st">"point"</span>,</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">p =</span> <span class="fu">c</span>(<span class="st">"4"</span> <span class="ot">=</span> <span class="fl">0.38</span>,</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"6"</span> <span class="ot">=</span> <span class="fl">0.38</span>,</span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"8"</span> <span class="ot">=</span> <span class="fl">0.24</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"chisq"</span>)</span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>obs_chisq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Response: cyl_fct (factor)
+Null Hypothesis: point
+# A tibble: 1 × 1
+   stat
+  &lt;dbl&gt;
+1  7.50</code></pre>
+</div>
+</div>
+</section>
+<section id="report-the-test-statistic-in-context-when-possible." class="level3" data-number="17.11.2">
+<h3 data-number="17.11.2" class="anchored" data-anchor-id="report-the-test-statistic-in-context-when-possible."><span class="header-section-number">17.11.2</span> Report the test statistic in context (when possible).</h3>
+<p>The value of <span class="math inline">\(\chi^{2}\)</span> is 7.5010965.</p>
+<p>Commentary: The <span class="math inline">\(\chi^{2}\)</span> test statistic is, of course, the same value we computed manually by hand earlier. Also, the formula for <span class="math inline">\(\chi^{2}\)</span> is a complicated function of observed and expected values, making it difficult to say anything about this number in the context of cars and engine cylinders. So even though the requirement is to “report the test statistic in context,” there’s not much one can say here other than just to report the test statistic.</p>
+</section>
+<section id="plot-the-null-distribution." class="level3" data-number="17.11.3">
+<h3 data-number="17.11.3" class="anchored" data-anchor-id="plot-the-null-distribution."><span class="header-section-number">17.11.3</span> Plot the null distribution.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>cyl_test <span class="ot">&lt;-</span> mtcars2 <span class="sc">%&gt;%</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">specify</span>(<span class="at">response =</span> cyl_fct) <span class="sc">%&gt;%</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assume</span>(<span class="at">distribution =</span> <span class="st">"chisq"</span>)</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>cyl_test</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A Chi-squared distribution with 2 degrees of freedom.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>cyl_test <span class="sc">%&gt;%</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visualize</span>() <span class="sc">+</span></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shade_p_value</span>(obs_chisq, <span class="at">direction =</span> <span class="st">"greater"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="17-chi_square_goodness_of_fit-web_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Commentary: We will use the theoretical distribution</p>
+</section>
+<section id="calculate-the-p-value." class="level3" data-number="17.11.4">
+<h3 data-number="17.11.4" class="anchored" data-anchor-id="calculate-the-p-value."><span class="header-section-number">17.11.4</span> Calculate the P-value.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>cyl_test_p <span class="ot">&lt;-</span> cyl_test <span class="sc">%&gt;%</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_p_value</span>(obs_chisq, <span class="at">direction =</span> <span class="st">"greater"</span>)</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>cyl_test_p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  p_value
+    &lt;dbl&gt;
+1  0.0235</code></pre>
+</div>
+</div>
+</section>
+<section id="interpret-the-p-value-as-a-probability-given-the-null." class="level3" data-number="17.11.5">
+<h3 data-number="17.11.5" class="anchored" data-anchor-id="interpret-the-p-value-as-a-probability-given-the-null."><span class="header-section-number">17.11.5</span> Interpret the P-value as a probability given the null.</h3>
+<p>The P-value is 0.0235049. If the true distribution of cars in 1974 were 38% 4-cylinder, 38% 6-cylinder, and 24% 8-cylinder, there would be a 2.3504856% chance of seeing data at least as extreme as what we saw.</p>
+</section>
+</section>
+<section id="conclusion" class="level2" data-number="17.12">
+<h2 data-number="17.12" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">17.12</span> Conclusion</h2>
+<section id="state-the-statistical-conclusion." class="level3" data-number="17.12.1">
+<h3 data-number="17.12.1" class="anchored" data-anchor-id="state-the-statistical-conclusion."><span class="header-section-number">17.12.1</span> State the statistical conclusion.</h3>
+<p>We reject the null.</p>
+</section>
+<section id="state-but-do-not-overstate-a-contextually-meaningful-conclusion." class="level3" data-number="17.12.2">
+<h3 data-number="17.12.2" class="anchored" data-anchor-id="state-but-do-not-overstate-a-contextually-meaningful-conclusion."><span class="header-section-number">17.12.2</span> State (but do not overstate) a contextually meaningful conclusion.</h3>
+<p>There is sufficient evidence that in 1974, the distribution of cars was not 38% 4-cylinder, 38% 6-cylinder, and 24% 8-cylinder.</p>
+</section>
+<section id="express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion." class="level3" data-number="17.12.3">
+<h3 data-number="17.12.3" class="anchored" data-anchor-id="express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion."><span class="header-section-number">17.12.3</span> Express reservations or uncertainty about the generalizability of the conclusion.</h3>
+<p>As long as we restrict our attention to cars in 1974, we are pretty safe, although we are still uncertain if the sample we had was representative of all cars in 1974.</p>
+</section>
+<section id="identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses." class="level3" data-number="17.12.4">
+<h3 data-number="17.12.4" class="anchored" data-anchor-id="identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses."><span class="header-section-number">17.12.4</span> Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.</h3>
+<p>If we made a Type I error, that would mean the true distribution of cars in 1974 was 38% 4-cylinder, 38% 6-cylinder, and 24% 8-cylinder, but our sample showed otherwise.</p>
+</section>
+</section>
+<section id="confidence-interval" class="level2" data-number="17.13">
+<h2 data-number="17.13" class="anchored" data-anchor-id="confidence-interval"><span class="header-section-number">17.13</span> Confidence interval</h2>
+<p>There is no confidence interval for a chi-square test. Since our test is not about measuring some parameter of interest (like <span class="math inline">\(p\)</span> or <span class="math inline">\(p_{1} - p_{2}\)</span>), there is no interval to produce.</p>
+</section>
+<section id="your-turn" class="level2" data-number="17.14">
+<h2 data-number="17.14" class="anchored" data-anchor-id="your-turn"><span class="header-section-number">17.14</span> Your turn</h2>
+<p>Use the <code>hsb2</code> data and determine if the proportion of high school students who attend general programs, academic programs, and vocational programs is 15%, 60%, and 25% respectively.</p>
+<p>The rubric outline is reproduced below. You may refer to the worked example above and modify it accordingly. Remember to strip out all the commentary. That is just exposition for your benefit in understanding the steps, but is not meant to form part of the formal inference process.</p>
+<p>Another word of warning: the copy/paste process is not a substitute for your brain. You will often need to modify more than just the names of the data frames and variables to adapt the worked examples to your own work. Do not blindly copy and paste code without understanding what it does. And you should <strong>never</strong> copy and paste text. All the sentences and paragraphs you write are expressions of your own analysis. They must reflect your own understanding of the inferential process.</p>
+<p><strong>Also, so that your answers here don’t mess up the code chunks above, use new variable names everywhere.</strong></p>
+<section id="exploratory-data-analysis-1" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exploratory-data-analysis-1">Exploratory data analysis</h5>
+<section id="use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-1">Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.</h6>
+<div class="answer">
+<p>Please write up your answer here</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to print the data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to glimpse the variables</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="prepare-the-data-for-analysis.-not-always-necessary." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="prepare-the-data-for-analysis.-not-always-necessary.">Prepare the data for analysis. [Not always necessary.]</h6>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to prepare the data for analysis.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="make-tables-or-plots-to-explore-the-data-visually.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="make-tables-or-plots-to-explore-the-data-visually.-1">Make tables or plots to explore the data visually.</h6>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to make tables or plots.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="hypotheses-1" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="hypotheses-1">Hypotheses</h5>
+<section id="identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-1">Identify the sample (or samples) and a reasonable population (or populations) of interest.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.-1">Express the null and alternative hypotheses as contextually meaningful full sentences.</h6>
+<div class="answer">
+<p><span class="math inline">\(H_{0}:\)</span> Null hypothesis goes here.</p>
+<p><span class="math inline">\(H_{A}:\)</span> Alternative hypothesis goes here.</p>
+</div>
+</section>
+<section id="express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="express-the-null-and-alternative-hypotheses-in-symbols-when-possible.-1">Express the null and alternative hypotheses in symbols (when possible).</h6>
+<div class="answer">
+<p><span class="math inline">\(H_{0}: math\)</span></p>
+<p><span class="math inline">\(H_{A}: math\)</span></p>
+</div>
+</section>
+</section>
+<section id="model-1" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="model-1">Model</h5>
+<section id="identify-the-sampling-distribution-model.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="identify-the-sampling-distribution-model.-1">Identify the sampling distribution model.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-1">Check the relevant conditions to ensure that model assumptions are met.</h6>
+<div class="answer">
+<p>Please write up your answer here. (Some conditions may require R code as well.)</p>
+</div>
+</section>
+</section>
+<section id="mechanics-1" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="mechanics-1">Mechanics</h5>
+<section id="compute-the-test-statistic.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="compute-the-test-statistic.-1">Compute the test statistic.</h6>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to compute the test statistic.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="report-the-test-statistic-in-context-when-possible.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="report-the-test-statistic-in-context-when-possible.-1">Report the test statistic in context (when possible).</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="plot-the-null-distribution.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="plot-the-null-distribution.-1">Plot the null distribution.</h6>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to plot the null distribution.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="calculate-the-p-value.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="calculate-the-p-value.-1">Calculate the P-value.</h6>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to calculate the P-value.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="interpret-the-p-value-as-a-probability-given-the-null.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="interpret-the-p-value-as-a-probability-given-the-null.-1">Interpret the P-value as a probability given the null.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+</section>
+<section id="conclusion-1" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="conclusion-1">Conclusion</h5>
+<section id="state-the-statistical-conclusion.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="state-the-statistical-conclusion.-1">State the statistical conclusion.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="state-but-do-not-overstate-a-contextually-meaningful-conclusion.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="state-but-do-not-overstate-a-contextually-meaningful-conclusion.-1">State (but do not overstate) a contextually meaningful conclusion.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.-1">Express reservations or uncertainty about the generalizability of the conclusion.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.-1">Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+</section>
+</section>
+<section id="bonus-section-residuals" class="level2" data-number="17.15">
+<h2 data-number="17.15" class="anchored" data-anchor-id="bonus-section-residuals"><span class="header-section-number">17.15</span> Bonus section: residuals</h2>
+<p>The chi-square test can tell us if there is some difference from the expected distribution of counts across the categories, but it doesn’t tell us which category has a higher or lower count than expected. For that, we’ll need to turn to another tool: <em>residuals</em>.</p>
+<p>For technical reasons, the <code>infer</code> package doesn’t provide residuals, so we’ll have to turn to slightly different tools. Here’s how this works; we’ll return to the example of distribution of cars across the different categories of number of cylinders.</p>
+<p>The function we’ll use is called <code>chisq.test</code>. It requires us to give it input in the form of a table of counts, together with the proportions we wish to compare to:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(mtcars2<span class="sc">$</span>cyl_fct) <span class="sc">%&gt;%</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">chisq.test</span>(<span class="at">p =</span> <span class="fu">c</span>(.<span class="dv">38</span>, .<span class="dv">38</span>, .<span class="dv">24</span>)) <span class="ot">-&gt;</span> cyl_chisq.test</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>cyl_chisq.test</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Chi-squared test for given probabilities
+
+data:  .
+X-squared = 7.5011, df = 2, p-value = 0.0235</code></pre>
+</div>
+</div>
+<p>Notice that the chi-squared value 7.5011 and the p-value 0.0235 are the same as those we calculated using <code>infer</code> tools above.</p>
+<p>Here’s how to obtain the table of residuals:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>cyl_chisq.test<span class="sc">$</span>residuals</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+         4          6          8 
+-0.3326528 -1.4797315  2.2805336 </code></pre>
+</div>
+</div>
+<p>What do these numbers mean in the real world? Not much. (Essentially, they are the values that were squared to become the individual cell contributions to the overall chi-squared score of the table.)</p>
+<p>What we’ll do with them is look for the most positive and most negative values. - We see that the 8-cylinder column has the most positive value: this means that the number of 8-cylinder cars in 1974 was substantially <em>higher</em> than we expected. - We see that the 6-cylinder column has the most negative value: this means that the number of 6-cylinder cars in 1974 was substantially <em>lower</em> than we expected.</p>
+<section id="your-turn-1" class="level3" data-number="17.15.1">
+<h3 data-number="17.15.1" class="anchored" data-anchor-id="your-turn-1"><span class="header-section-number">17.15.1</span> Your turn</h3>
+<p>Determine which of the high school program types is the most substantially overrepresented and the most substantially underrepresented, according to our hypothesized distribution.</p>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to produce the chisq.test result.</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to examine the residuals.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Please write your answer here.</p>
+</div>
+</section>
+</section>
+<section id="conclusion-2" class="level2" data-number="17.16">
+<h2 data-number="17.16" class="anchored" data-anchor-id="conclusion-2"><span class="header-section-number">17.16</span> Conclusion</h2>
+<p>When a categorical variable has three or more categories, we can run a chi-square goodness-of-fit test to determine if the distribution of counts across those categories matches some pre-specified null hypothesis. The key new mathematical tool we need is the chi-square distribution, a way of measuring the deviation between observed counts and expected counts according to the null.</p>
+<section id="preparing-and-submitting-your-assignment" class="level3" data-number="17.16.1">
+<h3 data-number="17.16.1" class="anchored" data-anchor-id="preparing-and-submitting-your-assignment"><span class="header-section-number">17.16.1</span> Preparing and submitting your assignment</h3>
+<ol type="1">
+<li>From the “Run” menu, select “Restart R and Run All Chunks”.</li>
+<li>Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.</li>
+<li>Spell check your document by clicking the icon with “ABC” and a check mark.</li>
+<li>Hit the “Preview” button one last time to generate the final draft of the <code>.nb.html</code> file.</li>
+<li>Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1–5 again.</li>
+</ol>
+<p>If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.</p>
+
+
+</section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Rhyming is fun!<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./16-inference_for_two_proportions-web.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Inference for two proportions</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./18-chi_square_test_for_independence-web.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Chi-square test for independence</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

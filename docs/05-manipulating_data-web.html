@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Introduction to Statistics: an integrated textbook and workbook using R - 5&nbsp; Manipulating data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./06-correlation-web.html" rel="next">
+<link href="./04-numerical_data-web.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-manipulating_data-web.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Manipulating data</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to Statistics: an integrated textbook and workbook using R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-intro_to_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-using_r_markdown-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Using R Markdown</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-categorical_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Categorical data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-numerical_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Numerical data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-manipulating_data-web.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Manipulating data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-correlation-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Correlation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-regression-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Regression</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-intro_to_randomization_1-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to randomization, Part 1</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-intro_to_randomization_2-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to randomization, Part 2</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-hypothesis_testing_with_randomization_1-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Hypothesis testing with randomization, Part 1</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-hypothesis_testing_with_randomization_2-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Hypothesis testing with randomization, Part 2</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-confidence_intervals-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Confidence intervals</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-normal_models-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Normal models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-sampling_distribution_models-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Sampling distribution models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-inference_for_one_proportion-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Inference for one proportion</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-inference_for_two_proportions-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Inference for two proportions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-chi_square_goodness_of_fit-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Chi-square goodness-of-fit test</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-chi_square_test_for_independence-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Chi-square test for independence</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-inference_for_one_mean-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Inference for one mean</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-inference_for_paired_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Inference for paired data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21-inference_for_two_independent_means-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Inference for two independent means</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-anova-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">ANOVA</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rubric.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Rubric for inference</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Concordance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Concordance with <em>Introduction to Modern Statistics</em> (IMS)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#functions-introduced-in-this-chapter" id="toc-functions-introduced-in-this-chapter" class="nav-link active" data-scroll-target="#functions-introduced-in-this-chapter">Functions introduced in this chapter</a></li>
+  <li><a href="#manipulating-intro" id="toc-manipulating-intro" class="nav-link" data-scroll-target="#manipulating-intro"><span class="header-section-number">5.1</span> Introduction</a>
+  <ul class="collapse">
+  <li><a href="#manipulating-install" id="toc-manipulating-install" class="nav-link" data-scroll-target="#manipulating-install"><span class="header-section-number">5.1.1</span> Install new packages</a></li>
+  <li><a href="#manipulating-download" id="toc-manipulating-download" class="nav-link" data-scroll-target="#manipulating-download"><span class="header-section-number">5.1.2</span> Download the R notebook file</a></li>
+  <li><a href="#manipulating-restart" id="toc-manipulating-restart" class="nav-link" data-scroll-target="#manipulating-restart"><span class="header-section-number">5.1.3</span> Restart R and run all chunks</a></li>
+  <li><a href="#manipulating-load" id="toc-manipulating-load" class="nav-link" data-scroll-target="#manipulating-load"><span class="header-section-number">5.1.4</span> Load packages</a></li>
+  </ul></li>
+  <li><a href="#manipulating-csv" id="toc-manipulating-csv" class="nav-link" data-scroll-target="#manipulating-csv"><span class="header-section-number">5.2</span> Importing CSV data</a></li>
+  <li><a href="#manipulating-dplyr" id="toc-manipulating-dplyr" class="nav-link" data-scroll-target="#manipulating-dplyr"><span class="header-section-number">5.3</span> Introduction to <code>dplyr</code></a></li>
+  <li><a href="#manipulating-select" id="toc-manipulating-select" class="nav-link" data-scroll-target="#manipulating-select"><span class="header-section-number">5.4</span> <code>select</code></a></li>
+  <li><a href="#manipulating-rm" id="toc-manipulating-rm" class="nav-link" data-scroll-target="#manipulating-rm"><span class="header-section-number">5.5</span> The <code>rm</code> command</a></li>
+  <li><a href="#manipulating-filter" id="toc-manipulating-filter" class="nav-link" data-scroll-target="#manipulating-filter"><span class="header-section-number">5.6</span> <code>filter</code></a></li>
+  <li><a href="#manipulating-arrange" id="toc-manipulating-arrange" class="nav-link" data-scroll-target="#manipulating-arrange"><span class="header-section-number">5.7</span> <code>arrange</code></a></li>
+  <li><a href="#manipulating-mutate" id="toc-manipulating-mutate" class="nav-link" data-scroll-target="#manipulating-mutate"><span class="header-section-number">5.8</span> <code>mutate</code></a></li>
+  <li><a href="#manipulating-summ-group" id="toc-manipulating-summ-group" class="nav-link" data-scroll-target="#manipulating-summ-group"><span class="header-section-number">5.9</span> <code>summarise</code> (with <code>group_by</code>)</a>
+  <ul class="collapse">
+  <li><a href="#manipulating-piping" id="toc-manipulating-piping" class="nav-link" data-scroll-target="#manipulating-piping"><span class="header-section-number">5.9.1</span> Piping</a></li>
+  </ul></li>
+  <li><a href="#manipulating-all-together" id="toc-manipulating-all-together" class="nav-link" data-scroll-target="#manipulating-all-together"><span class="header-section-number">5.10</span> Putting it all together</a></li>
+  <li><a href="#manipulating-conclusion" id="toc-manipulating-conclusion" class="nav-link" data-scroll-target="#manipulating-conclusion"><span class="header-section-number">5.11</span> Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#manipulating-prep" id="toc-manipulating-prep" class="nav-link" data-scroll-target="#manipulating-prep"><span class="header-section-number">5.11.1</span> Preparing and submitting your assignment</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="manipulating" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Manipulating data</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<!-- Please don't mess with the next few lines! -->
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>
+<p style="color:#ffffff">
+2.0
+</p>
+<!-- Please don't mess with the previous few lines! -->
+<section id="functions-introduced-in-this-chapter" class="level3 unnumbered summary">
+<h3 class="unnumbered anchored" data-anchor-id="functions-introduced-in-this-chapter">Functions introduced in this chapter</h3>
+<p><code>read_csv</code>, <code>select</code>, <code>rename</code>, <code>rm</code>, <code>filter</code>, <code>slice</code>, <code>arrange</code>, <code>mutate</code>, <code>all.equal</code>, <code>ifelse</code>, <code>transmute</code>, <code>summarise</code>, <code>group_by</code>, <code>%&gt;%</code>, <code>count</code></p>
+</section>
+<section id="manipulating-intro" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="manipulating-intro"><span class="header-section-number">5.1</span> Introduction</h2>
+<p>This tutorial will import some data from the web and then explore it using the amazing <code>dplyr</code> package, a package which is quickly becoming the <em>de facto</em> standard among R users for manipulating data. It’s part of the <code>tidyverse</code> that we’ve already used in several chapters.</p>
+<section id="manipulating-install" class="level3" data-number="5.1.1">
+<h3 data-number="5.1.1" class="anchored" data-anchor-id="manipulating-install"><span class="header-section-number">5.1.1</span> Install new packages</h3>
+<p>There are no new packages used in this chapter.</p>
+</section>
+<section id="manipulating-download" class="level3" data-number="5.1.2">
+<h3 data-number="5.1.2" class="anchored" data-anchor-id="manipulating-download"><span class="header-section-number">5.1.2</span> Download the R notebook file</h3>
+<p>Check the upper-right corner in RStudio to make sure you’re in your <code>intro_stats</code> project. Then click on the following link to download this chapter as an R notebook file (<code>.Rmd</code>).</p>
+<p><a href="https://vectorposse.github.io/intro_stats/chapter_downloads/05-manipulating_data.Rmd" download="">https://vectorposse.github.io/intro_stats/chapter_downloads/05-manipulating_data.Rmd</a></p>
+<p>Once the file is downloaded, move it to your project folder in RStudio and open it there.</p>
+</section>
+<section id="manipulating-restart" class="level3" data-number="5.1.3">
+<h3 data-number="5.1.3" class="anchored" data-anchor-id="manipulating-restart"><span class="header-section-number">5.1.3</span> Restart R and run all chunks</h3>
+<p>In RStudio, select “Restart R and Run All Chunks” from the “Run” menu.</p>
+</section>
+<section id="manipulating-load" class="level3" data-number="5.1.4">
+<h3 data-number="5.1.4" class="anchored" data-anchor-id="manipulating-load"><span class="header-section-number">5.1.4</span> Load packages</h3>
+<p>We load the <code>tidyverse</code> package as usual, but this time it is to give us access to the <code>dplyr</code> package, which is loaded alongside our other <code>tidyverse</code> packages like <code>ggplot2</code>. The <code>tidyverse</code> also has a package called <code>readr</code> that will allow us to import data from an external source (in this case, a web site).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.2     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="manipulating-csv" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="manipulating-csv"><span class="header-section-number">5.2</span> Importing CSV data</h2>
+<p>For most of the chapters, we use data sets that are either included in base R or included in a package that can be loaded into R. But it is useful to see how to get a data set from outside the R ecosystem. This depends a lot on the format of the data file, but a common format is a “comma-separated values” file, or CSV file. If you have a data set that is not formatted as a CSV file, it is usually pretty easy to open it in something like Google Spreadsheets or Microsoft Excel and then re-save it as a CSV file.</p>
+<p>The file we’ll import is a random sample from all the commercial domestic flights that departed from Houston, Texas, in 2011.</p>
+<p>We use the <code>read_csv</code> command to import a CSV file. In this case, we’re grabbing the file from a web page where the file is hosted. If you have a file on your computer, you can also put the file into your project directory and import it from there. Put the URL (for a web page) or the filename (for a file in your project directory) in quotes inside the <code>read_csv</code>command. We also need to assign the output to a tibble, so we’ve called it <code>hf</code> for “Houston flights”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>hf <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://vectorposse.github.io/intro_stats/data/hf.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 22758 Columns: 21
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (5): UniqueCarrier, TailNum, Origin, Dest, CancellationCode
+dbl (16): Year, Month, DayofMonth, DayOfWeek, DepTime, ArrTime, FlightNum, A...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>hf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 22,758 × 21
+    Year Month DayofMonth DayOfWeek DepTime ArrTime UniqueCarrier FlightNum
+   &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt;
+ 1  2011     1         12         3    1419    1515 AA                  428
+ 2  2011     1         17         1    1530    1634 AA                  428
+ 3  2011     1         24         1    1356    1513 AA                  428
+ 4  2011     1          9         7     714     829 AA                  460
+ 5  2011     1         18         2     721     827 AA                  460
+ 6  2011     1         22         6     717     829 AA                  460
+ 7  2011     1         11         2    1953    2051 AA                  533
+ 8  2011     1         14         5    2119    2229 AA                  533
+ 9  2011     1         26         3    2009    2103 AA                  533
+10  2011     1         14         5    1629    1734 AA                 1121
+# ℹ 22,748 more rows
+# ℹ 13 more variables: TailNum &lt;chr&gt;, ActualElapsedTime &lt;dbl&gt;, AirTime &lt;dbl&gt;,
+#   ArrDelay &lt;dbl&gt;, DepDelay &lt;dbl&gt;, Origin &lt;chr&gt;, Dest &lt;chr&gt;, Distance &lt;dbl&gt;,
+#   TaxiIn &lt;dbl&gt;, TaxiOut &lt;dbl&gt;, Cancelled &lt;dbl&gt;, CancellationCode &lt;chr&gt;,
+#   Diverted &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(hf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 22,758
+Columns: 21
+$ Year              &lt;dbl&gt; 2011, 2011, 2011, 2011, 2011, 2011, 2011, 2011, 2011…
+$ Month             &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…
+$ DayofMonth        &lt;dbl&gt; 12, 17, 24, 9, 18, 22, 11, 14, 26, 14, 18, 20, 3, 12…
+$ DayOfWeek         &lt;dbl&gt; 3, 1, 1, 7, 2, 6, 2, 5, 3, 5, 2, 4, 1, 3, 6, 4, 1, 3…
+$ DepTime           &lt;dbl&gt; 1419, 1530, 1356, 714, 721, 717, 1953, 2119, 2009, 1…
+$ ArrTime           &lt;dbl&gt; 1515, 1634, 1513, 829, 827, 829, 2051, 2229, 2103, 1…
+$ UniqueCarrier     &lt;chr&gt; "AA", "AA", "AA", "AA", "AA", "AA", "AA", "AA", "AA"…
+$ FlightNum         &lt;dbl&gt; 428, 428, 428, 460, 460, 460, 533, 533, 533, 1121, 1…
+$ TailNum           &lt;chr&gt; "N577AA", "N518AA", "N531AA", "N586AA", "N558AA", "N…
+$ ActualElapsedTime &lt;dbl&gt; 56, 64, 77, 75, 66, 72, 58, 70, 54, 65, 135, 144, 64…
+$ AirTime           &lt;dbl&gt; 41, 48, 43, 51, 46, 47, 44, 45, 39, 47, 114, 111, 46…
+$ ArrDelay          &lt;dbl&gt; 5, 84, 3, -6, -8, -6, -29, 69, -17, -11, 39, -1, -2,…
+$ DepDelay          &lt;dbl&gt; 19, 90, -4, -6, 1, -3, -12, 74, 4, -1, 44, -5, -1, 1…
+$ Origin            &lt;chr&gt; "IAH", "IAH", "IAH", "IAH", "IAH", "IAH", "IAH", "IA…
+$ Dest              &lt;chr&gt; "DFW", "DFW", "DFW", "DFW", "DFW", "DFW", "DFW", "DF…
+$ Distance          &lt;dbl&gt; 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 96…
+$ TaxiIn            &lt;dbl&gt; 4, 8, 6, 11, 7, 18, 3, 5, 9, 8, 7, 20, 5, 8, 8, 7, 4…
+$ TaxiOut           &lt;dbl&gt; 11, 8, 28, 13, 13, 7, 11, 20, 6, 10, 14, 13, 13, 10,…
+$ Cancelled         &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+$ CancellationCode  &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+$ Diverted          &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</code></pre>
+</div>
+</div>
+<p>The one disadvantage of a file imported from the internet or your computer is that it does not come with a help file. (Only packages in R have help files.) Hopefully you have access to some kind of information about the data you’re importing. In this case, we get lucky because the full Houston flights data set happens to be available in a package called <code>hflights</code>.</p>
+<section id="exercise-1" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-1">Exercise 1</h5>
+<p>Go to the help tab in RStudio and search for <code>hflights</code>. Of the several options that appear, click the one from the <code>hflights</code> package (listed as <code>hflights::hflights</code>). Review the help file so you know what all the variables mean. Report below how many cases are in the original <code>hflights</code> data. What fraction of the original data has been sampled in the CSV file we imported above?</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+</section>
+<section id="manipulating-dplyr" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="manipulating-dplyr"><span class="header-section-number">5.3</span> Introduction to <code>dplyr</code></h2>
+<p>The <code>dplyr</code> package (pronounced “dee-ply-er”) contains tools for manipulating the rows and columns of tibbles. The key to using <code>dplyr</code> is to familiarize yourself with the “key verbs”:</p>
+<ul>
+<li><code>select</code> (and <code>rename</code>)</li>
+<li><code>filter</code> (and <code>slice</code>)</li>
+<li><code>arrange</code></li>
+<li><code>mutate</code> (and <code>transmute</code>)</li>
+<li><code>summarise</code> (with <code>group_by</code>)</li>
+</ul>
+<p>We’ll consider these one by one. We won’t have time to cover every aspect of these functions. More information appears in the help files, as well as this very helpful “cheat sheet”: <a href="https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-transformation.pdf">https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-transformation.pdf</a></p>
+</section>
+<section id="manipulating-select" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="manipulating-select"><span class="header-section-number">5.4</span> <code>select</code></h2>
+<p>The <code>select</code> verb is very easy. It just selects some subset of variables (the columns of your data set).</p>
+<p>The <code>select</code> command from the <code>dplyr</code> package illustrates one of the common issues R users face. Because the word “select” is pretty common, and selecting things is a common task, there are multiple packages that have a function called <code>select</code>. Depending on the order in which packages were loaded, R might get confused as to which version of <code>select</code> you want and try to apply the wrong one. One way to get the correct version is to specify the package in the syntax. Instead of typing <code>select</code>, we can type <code>dplyr::select</code> to ensure we get the version from the <code>dplyr</code> package. We’ll do this in all future uses of the <code>select</code> function. (The other functions in this chapter don’t cause us trouble because we don’t use any other packages whose functions conflict like this.)</p>
+<p>Suppose all we wanted to see was the carrier, origin, and destination. We would type</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>hf_select <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">select</span>(hf, UniqueCarrier, Origin, Dest)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>hf_select</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 22,758 × 3
+   UniqueCarrier Origin Dest 
+   &lt;chr&gt;         &lt;chr&gt;  &lt;chr&gt;
+ 1 AA            IAH    DFW  
+ 2 AA            IAH    DFW  
+ 3 AA            IAH    DFW  
+ 4 AA            IAH    DFW  
+ 5 AA            IAH    DFW  
+ 6 AA            IAH    DFW  
+ 7 AA            IAH    DFW  
+ 8 AA            IAH    DFW  
+ 9 AA            IAH    DFW  
+10 AA            IAH    DFW  
+# ℹ 22,748 more rows</code></pre>
+</div>
+</div>
+<p>A brief but important aside here: there is nothing special about the variable name <code>hf_select</code>. I could have typed</p>
+<p><code>beef_gravy &lt;- dplyr::select(hf, UniqueCarrier, Origin, Dest)</code></p>
+<p>and it would work just as well. Generally speaking, though, you want to give variables a name that reflects the intent of your analysis.</p>
+<p>Also, <strong>it is important to assign the result to a new variable</strong>. If I had typed</p>
+<p><code>hf &lt;- dplyr::select(hf, UniqueCarrier, Origin, Dest)</code></p>
+<p>this would have overwritten the original tibble <code>hf</code> with this new version with only three variables. I want to preserve <code>hf</code> because I want to do other things with the entire data set later. The take-home message here is this: <strong>Major modifications to your data should generally be given a new variable name.</strong> There are caveats here, though. Every time you create a new variable, you also fill up more memory with your creation. If you check your Global Environment, you’ll see that both <code>hf</code> and <code>hf_select</code> are sitting in there. We’ll have more to say about this in a moment.</p>
+<p>Okay, back to the <code>select</code> function. The first argument of <code>select</code> is the tibble. After that, just list all the names of the variables you want to select.</p>
+<p>If you don’t like the names of the variables, you can change them as part of the select process.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>hf_select <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">select</span>(hf,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">carrier =</span> UniqueCarrier,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">origin =</span> Origin,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">dest =</span> Dest)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>hf_select</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 22,758 × 3
+   carrier origin dest 
+   &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;
+ 1 AA      IAH    DFW  
+ 2 AA      IAH    DFW  
+ 3 AA      IAH    DFW  
+ 4 AA      IAH    DFW  
+ 5 AA      IAH    DFW  
+ 6 AA      IAH    DFW  
+ 7 AA      IAH    DFW  
+ 8 AA      IAH    DFW  
+ 9 AA      IAH    DFW  
+10 AA      IAH    DFW  
+# ℹ 22,748 more rows</code></pre>
+</div>
+</div>
+<p>(Note here that I am overwriting <code>hf_select</code> which had been defined slightly differently before. However, these two versions of <code>hf_select</code> are basically the same object, so no need to keep two copies here.)</p>
+<p>There are a few notational shortcuts. For example, see what the following do.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>hf_select2 <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">select</span>(hf, DayOfWeek<span class="sc">:</span>UniqueCarrier)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>hf_select2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 22,758 × 4
+   DayOfWeek DepTime ArrTime UniqueCarrier
+       &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;        
+ 1         3    1419    1515 AA           
+ 2         1    1530    1634 AA           
+ 3         1    1356    1513 AA           
+ 4         7     714     829 AA           
+ 5         2     721     827 AA           
+ 6         6     717     829 AA           
+ 7         2    1953    2051 AA           
+ 8         5    2119    2229 AA           
+ 9         3    2009    2103 AA           
+10         5    1629    1734 AA           
+# ℹ 22,748 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>hf_select3 <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">select</span>(hf, <span class="fu">starts_with</span>(<span class="st">"Taxi"</span>))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>hf_select3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 22,758 × 2
+   TaxiIn TaxiOut
+    &lt;dbl&gt;   &lt;dbl&gt;
+ 1      4      11
+ 2      8       8
+ 3      6      28
+ 4     11      13
+ 5      7      13
+ 6     18       7
+ 7      3      11
+ 8      5      20
+ 9      9       6
+10      8      10
+# ℹ 22,748 more rows</code></pre>
+</div>
+</div>
+<section id="exercise-2" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-2">Exercise 2</h5>
+<p>What is contained in the new tibbles <code>hf_select2</code> and <code>hf_select3</code>? In other words, what does the colon (:) appear to do and what does <code>starts_with</code> appear to do in the <code>select</code> function?</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+<hr>
+<p>The cheat sheet shows a lot more of these “helper functions” if you’re interested.</p>
+<p>The other command that’s related to <code>select</code> is <code>rename</code>. The only difference is that <code>select</code> will throw away any columns you don’t select (which is what you want and expect, typically), whereas <code>rename</code> will keep all the columns, but rename those you designate.</p>
+</section>
+<section id="exercise-3" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-3">Exercise 3</h5>
+<p>Putting a minus sign in front of a variable name in the <code>select</code> command will remove the variable. Create a tibble called <code>hf_select4</code> that removes <code>Year</code>, <code>DayofMonth</code>, <code>DayOfWeek</code>, <code>FlightNum</code>, and <code>Diverted</code>. (Be careful with the unusual—and inconsistent!—capitalization in those variable names.) In the second part of the code chunk below, type <code>hf_select4</code> so that the tibble prints to the screen (just like in all the above examples).</p>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to define hf_select4.</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to print hf_select4.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="manipulating-rm" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="manipulating-rm"><span class="header-section-number">5.5</span> The <code>rm</code> command</h2>
+<p>Recall that earlier we mentioned the pros and cons of creating a new tibble every time we make a change. On one hand, making a new tibble instead of overwriting the original one will keep the original one available so that we can run different commands on it. On the other hand, making a new tibble does eat up a lot of memory.</p>
+<p>One way to get rid of an object once we are done with it is the <code>rm</code> command, where <code>rm</code> is short for “remove”. When you run the code chunk below, you’ll see that all the tibbles we created with <code>select</code> will disappear from your Global Environment.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(hf_select, hf_select2, hf_select3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If you need one these tibbles back later, you can always go back and re-run the code chunk that defined it.</p>
+<p>We’ll use <code>rm</code> at the end of some of the following sections so that we don’t use up too much memory.</p>
+<section id="exercise-4" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-4">Exercise 4</h5>
+<p>Remove <code>hf_select4</code> (that you created in Exercise 3) from the Global Environment.</p>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to remove hf_select4.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="manipulating-filter" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="manipulating-filter"><span class="header-section-number">5.6</span> <code>filter</code></h2>
+<p>The <code>filter</code> verb works a lot like <code>select</code>, but for rows instead of columns.</p>
+<p>For example, let’s say we only want to see Delta flights. We use <code>filter</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>hf_filter <span class="ot">&lt;-</span> <span class="fu">filter</span>(hf, UniqueCarrier <span class="sc">==</span> <span class="st">"DL"</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>hf_filter</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 265 × 21
+    Year Month DayofMonth DayOfWeek DepTime ArrTime UniqueCarrier FlightNum
+   &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt;
+ 1  2011     1          4         2    1834    2134 DL                   54
+ 2  2011     1          5         3    1606    1903 DL                    8
+ 3  2011     1          5         3     543     834 DL                 1248
+ 4  2011     1          7         5    1603    1902 DL                    8
+ 5  2011     1          7         5    1245    1539 DL                 1204
+ 6  2011     1          7         5     933    1225 DL                 1590
+ 7  2011     1          8         6     921    1210 DL                 1590
+ 8  2011     1         12         3      NA      NA DL                 1590
+ 9  2011     1         13         4     928    1224 DL                 1590
+10  2011     1         13         4     656     947 DL                 1900
+# ℹ 255 more rows
+# ℹ 13 more variables: TailNum &lt;chr&gt;, ActualElapsedTime &lt;dbl&gt;, AirTime &lt;dbl&gt;,
+#   ArrDelay &lt;dbl&gt;, DepDelay &lt;dbl&gt;, Origin &lt;chr&gt;, Dest &lt;chr&gt;, Distance &lt;dbl&gt;,
+#   TaxiIn &lt;dbl&gt;, TaxiOut &lt;dbl&gt;, Cancelled &lt;dbl&gt;, CancellationCode &lt;chr&gt;,
+#   Diverted &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>In the printout of the tibble above, if you can’t see the <code>UniqueCarrier</code> column, click the black arrow on the right to scroll through the columns until you can see it. You can click “Next” at the bottom to scroll through the rows.</p>
+<section id="exercise-5" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-5">Exercise 5</h5>
+<p>How many rows did we get in the <code>hf_filter</code> tibble? What do you notice about the <code>UniqueCarrier</code> of all those rows?</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+<hr>
+<p>Just like <code>select</code>, the first argument of <code>filter</code> is the name of the tibble. Following that, you must specify some condition. Only rows meeting that condition will be included in the output.</p>
+<p>One thing that is unusual here is the double equal sign (<code>UniqueCarrier == "DL"</code>). This won’t be a mystery to people with programming experience, but it tends to be a sticking point for the rest of us. A single equals sign represents assignment. If I type <code>x = 3</code>, what I mean is, “Take the letter x and assign it the value 3.” In R, we would also write <code>x &lt;- 3</code> to mean the same thing. The first line of the code chunk below assigns <code>x</code> to be 3. Therefore, the following line that just says <code>x</code> creates the output “3”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="dv">3</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+</div>
+<p>On the other hand, <code>x == 3</code> means something completely different. This is a logical statement that is either true or false. Either <code>x</code> is 3, in which case we get <code>TRUE</code> or <code>x</code> is not 3, and we get <code>FALSE</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>x <span class="sc">==</span> <span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>(It’s true because we just assigned <code>x</code> to be 3 in the previous code chunk!)</p>
+<p>In the above <code>filter</code> command, we are saying, “Give me the rows where the value of <code>UniqueCarrier</code> is <code>"DL"</code>, or, in other words, where the statement <code>UniqueCarrier == "DL"</code> is true.</p>
+<p>As another example, suppose we wanted to find out all flights that leave before 6:00 a.m.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>hf_filter2 <span class="ot">&lt;-</span> <span class="fu">filter</span>(hf, DepTime <span class="sc">&lt;</span> <span class="dv">600</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>hf_filter2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 230 × 21
+    Year Month DayofMonth DayOfWeek DepTime ArrTime UniqueCarrier FlightNum
+   &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt;
+ 1  2011     1         20         4     556     912 AA                 1994
+ 2  2011     1         21         5     555     822 CO                  446
+ 3  2011     1         18         2     555     831 CO                  446
+ 4  2011     1         16         7     556     722 CO                  199
+ 5  2011     1          5         3     558    1009 CO                   89
+ 6  2011     1          1         6     558    1006 CO                   89
+ 7  2011     1          5         3     543     834 DL                 1248
+ 8  2011     1          3         1     555     749 US                  270
+ 9  2011     1          6         4     556     801 US                  270
+10  2011     1         13         4     552     713 US                  270
+# ℹ 220 more rows
+# ℹ 13 more variables: TailNum &lt;chr&gt;, ActualElapsedTime &lt;dbl&gt;, AirTime &lt;dbl&gt;,
+#   ArrDelay &lt;dbl&gt;, DepDelay &lt;dbl&gt;, Origin &lt;chr&gt;, Dest &lt;chr&gt;, Distance &lt;dbl&gt;,
+#   TaxiIn &lt;dbl&gt;, TaxiOut &lt;dbl&gt;, Cancelled &lt;dbl&gt;, CancellationCode &lt;chr&gt;,
+#   Diverted &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="exercise-6" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-6">Exercise 6</h5>
+<p>Look at the help file for <code>hflights</code> again. Why do we have to use the number 600 in the command above? (Read the description of the <code>DepTime</code> variable.)</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+<hr>
+<p>If we need two or more conditions, we use <code>&amp;</code> for “and” and <code>|</code> for “or”. The following will give us only the Delta flights that departed before 6:00 a.m.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>hf_filter3 <span class="ot">&lt;-</span> <span class="fu">filter</span>(hf, UniqueCarrier <span class="sc">==</span> <span class="st">"DL"</span> <span class="sc">&amp;</span> DepTime <span class="sc">&lt;</span> <span class="dv">600</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>hf_filter3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 30 × 21
+    Year Month DayofMonth DayOfWeek DepTime ArrTime UniqueCarrier FlightNum
+   &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt;
+ 1  2011     1          5         3     543     834 DL                 1248
+ 2  2011     1         16         7     542     834 DL                 1248
+ 3  2011     1         19         3     538     844 DL                 1248
+ 4  2011     1         22         6     540     850 DL                 1248
+ 5  2011     1         26         3     540     851 DL                 1248
+ 6  2011     2         12         6     538     823 DL                 1248
+ 7  2011     2         15         2     539     840 DL                 1248
+ 8  2011     2         16         3     540     829 DL                 1248
+ 9  2011     2         21         1     552     856 DL                 1248
+10  2011     3          2         3     557     902 DL                 2375
+# ℹ 20 more rows
+# ℹ 13 more variables: TailNum &lt;chr&gt;, ActualElapsedTime &lt;dbl&gt;, AirTime &lt;dbl&gt;,
+#   ArrDelay &lt;dbl&gt;, DepDelay &lt;dbl&gt;, Origin &lt;chr&gt;, Dest &lt;chr&gt;, Distance &lt;dbl&gt;,
+#   TaxiIn &lt;dbl&gt;, TaxiOut &lt;dbl&gt;, Cancelled &lt;dbl&gt;, CancellationCode &lt;chr&gt;,
+#   Diverted &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>Again, check the cheat sheet for more complicated condition-checking if needed.</p>
+</section>
+<section id="exercise-7a" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-7a">Exercise 7(a)</h5>
+<p>The symbol <code>!=</code> means “not equal to” in R. Use the <code>filter</code> command to create a tibble called <code>hf_filter4</code> that finds all flights <em>except</em> those flying into Salt Lake City (“SLC”). As before, print the output to the screen.</p>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to define hf_filter4.</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to print hf_filter4.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="exercise-7b" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-7b">Exercise 7(b)</h5>
+<p>Based on the output of the previous part, how many flights were there flying into SLC? (In other words, how many rows were removed from the original <code>hf</code> tibble to produce <code>hf_filter4</code>?)</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="exercise-8" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-8">Exercise 8</h5>
+<p>Use the <code>rm</code> command to remove all the extra tibbles you created in this section with <code>filter</code>.</p>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to remove all filtered tibbles.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<hr>
+<p>The <code>slice</code> command is related, but fairly useless in practice. It will allow you to extract rows by position. So <code>slice(hf, 1:10)</code> will give you the first 10 rows. As a general rule, the information available in a tibble should never depend on the order in which the rows appear. Therefore, no function you run should make any assumptions about the ordering of your data. The only reason one might want to think about the order of data is for convenience in presenting that data visually for someone to inspect. And that brings us to…</p>
+</section>
+</section>
+<section id="manipulating-arrange" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="manipulating-arrange"><span class="header-section-number">5.7</span> <code>arrange</code></h2>
+<p>This just re-orders the rows, sorting on the values of one or more specified columns. As I mentioned before, in most data analyses you work with summaries of the data that do not depend on the order of the rows, so this is not quite as interesting as some of the other verbs. In fact, since the re-ordering is usually for the visual benefit of the reader, there is often no need to store the output in a new variable. We’ll just print the output to the screen.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">arrange</span>(hf, ActualElapsedTime)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 22,758 × 21
+    Year Month DayofMonth DayOfWeek DepTime ArrTime UniqueCarrier FlightNum
+   &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt;
+ 1  2011    10          5         3    1656    1731 WN                 2493
+ 2  2011     4         13         3    1207    1243 WN                 2025
+ 3  2011     7         19         2    1043    1119 CO                 1583
+ 4  2011     2         22         2    1426    1503 WN                 1773
+ 5  2011     3         19         6    1629    1706 WN                 3805
+ 6  2011     5         31         2    1937    2014 WN                  819
+ 7  2011     7         16         6    1632    1709 WN                  912
+ 8  2011     8         22         1    1708    1745 WN                 1754
+ 9  2011     9         30         5    1955    2032 WN                 1959
+10  2011     9          1         4    1735    1812 WN                 1754
+# ℹ 22,748 more rows
+# ℹ 13 more variables: TailNum &lt;chr&gt;, ActualElapsedTime &lt;dbl&gt;, AirTime &lt;dbl&gt;,
+#   ArrDelay &lt;dbl&gt;, DepDelay &lt;dbl&gt;, Origin &lt;chr&gt;, Dest &lt;chr&gt;, Distance &lt;dbl&gt;,
+#   TaxiIn &lt;dbl&gt;, TaxiOut &lt;dbl&gt;, Cancelled &lt;dbl&gt;, CancellationCode &lt;chr&gt;,
+#   Diverted &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>Scroll over to the <code>ActualElapsedTime</code> variable in the output above (using the black right arrow) to see that these are now sorted in ascending order.</p>
+<section id="exercise-9" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-9">Exercise 9</h5>
+<p>How long is the shortest actual elapsed time? Why is this flight so short? (Hint: look at the destination.) Which airline flies that route? You may have to use your best friend Google to look up airport and airline codes.</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+<hr>
+<p>If you want descending order, do this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">arrange</span>(hf, <span class="fu">desc</span>(ActualElapsedTime))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 22,758 × 21
+    Year Month DayofMonth DayOfWeek DepTime ArrTime UniqueCarrier FlightNum
+   &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt;
+ 1  2011     2          4         5     941    1428 CO                    1
+ 2  2011    11          8         2     937    1417 CO                    1
+ 3  2011    11         11         5     930    1408 CO                    1
+ 4  2011    12         30         5     936    1413 CO                    1
+ 5  2011    12          8         4     935    1410 CO                    1
+ 6  2011    10         17         1     938    1311 CO                    1
+ 7  2011     6         27         1     936    1308 CO                    1
+ 8  2011     3         24         4     926    1256 CO                    1
+ 9  2011    12         27         2     935    1405 CO                    1
+10  2011     3          9         3     933    1402 CO                    1
+# ℹ 22,748 more rows
+# ℹ 13 more variables: TailNum &lt;chr&gt;, ActualElapsedTime &lt;dbl&gt;, AirTime &lt;dbl&gt;,
+#   ArrDelay &lt;dbl&gt;, DepDelay &lt;dbl&gt;, Origin &lt;chr&gt;, Dest &lt;chr&gt;, Distance &lt;dbl&gt;,
+#   TaxiIn &lt;dbl&gt;, TaxiOut &lt;dbl&gt;, Cancelled &lt;dbl&gt;, CancellationCode &lt;chr&gt;,
+#   Diverted &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="exercise-10" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-10">Exercise 10</h5>
+<p>How long is the longest actual elapsed time? Why is this flight so long? Which airline flies that route? Again, you may have to use your best friend Google to look up airport and airline codes.</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="exercise-11a" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-11a">Exercise 11(a)</h5>
+<p>You can sort by multiple columns. The first column listed will be the first in the sort order, and then within each level of that first variable, the next column will be sorted, etc. Print a tibble that sorts first by destination (<code>Dest</code>) and then by arrival time (<code>ArrTime</code>), both in the default ascending order.</p>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to sort hf first by Dest and then by ArrTime.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="exercise-11b" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-11b">Exercise 11(b)</h5>
+<p>Based on the output of the previous part, what is the first airport code alphabetically and to what city does it correspond? (Use Google if you need to link the airport code to a city name.) At what time did the earliest flight to that city arrive?</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+</section>
+<section id="manipulating-mutate" class="level2" data-number="5.8">
+<h2 data-number="5.8" class="anchored" data-anchor-id="manipulating-mutate"><span class="header-section-number">5.8</span> <code>mutate</code></h2>
+<p>Frequently, we want to create new variables that combine information from one or more existing variables. We use <code>mutate</code> for this. For example, suppose we wanted to find the total time of the flight. We might do this by adding up the minutes from several variables: <code>TaxiOut</code>, <code>AirTime</code>, and <code>TaxiIn</code>, and assigning that sum to a new variable called <code>total</code>. Scroll all the way to the right in the output below (using the black right arrow) to see the new <code>total</code> variable.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>hf_mutate <span class="ot">&lt;-</span> <span class="fu">mutate</span>(hf, <span class="at">total =</span> TaxiOut <span class="sc">+</span> AirTime <span class="sc">+</span> TaxiIn)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>hf_mutate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 22,758 × 22
+    Year Month DayofMonth DayOfWeek DepTime ArrTime UniqueCarrier FlightNum
+   &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt;
+ 1  2011     1         12         3    1419    1515 AA                  428
+ 2  2011     1         17         1    1530    1634 AA                  428
+ 3  2011     1         24         1    1356    1513 AA                  428
+ 4  2011     1          9         7     714     829 AA                  460
+ 5  2011     1         18         2     721     827 AA                  460
+ 6  2011     1         22         6     717     829 AA                  460
+ 7  2011     1         11         2    1953    2051 AA                  533
+ 8  2011     1         14         5    2119    2229 AA                  533
+ 9  2011     1         26         3    2009    2103 AA                  533
+10  2011     1         14         5    1629    1734 AA                 1121
+# ℹ 22,748 more rows
+# ℹ 14 more variables: TailNum &lt;chr&gt;, ActualElapsedTime &lt;dbl&gt;, AirTime &lt;dbl&gt;,
+#   ArrDelay &lt;dbl&gt;, DepDelay &lt;dbl&gt;, Origin &lt;chr&gt;, Dest &lt;chr&gt;, Distance &lt;dbl&gt;,
+#   TaxiIn &lt;dbl&gt;, TaxiOut &lt;dbl&gt;, Cancelled &lt;dbl&gt;, CancellationCode &lt;chr&gt;,
+#   Diverted &lt;dbl&gt;, total &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>As it turns out, that was wasted effort because that variable already exists in <code>ActualElapsedTime</code>. The <code>all.equal</code> command below checks that both specified columns contain the exact same values.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(hf_mutate<span class="sc">$</span>total, hf<span class="sc">$</span>ActualElapsedTime)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>Perhaps we want a variable that just classifies a flight as arriving late or not. Scroll all the way to the right in the output below to see the new <code>late</code> variable.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>hf_mutate2 <span class="ot">&lt;-</span> <span class="fu">mutate</span>(hf, <span class="at">late =</span> (ArrDelay <span class="sc">&gt;</span> <span class="dv">0</span>))</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>hf_mutate2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 22,758 × 22
+    Year Month DayofMonth DayOfWeek DepTime ArrTime UniqueCarrier FlightNum
+   &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt;
+ 1  2011     1         12         3    1419    1515 AA                  428
+ 2  2011     1         17         1    1530    1634 AA                  428
+ 3  2011     1         24         1    1356    1513 AA                  428
+ 4  2011     1          9         7     714     829 AA                  460
+ 5  2011     1         18         2     721     827 AA                  460
+ 6  2011     1         22         6     717     829 AA                  460
+ 7  2011     1         11         2    1953    2051 AA                  533
+ 8  2011     1         14         5    2119    2229 AA                  533
+ 9  2011     1         26         3    2009    2103 AA                  533
+10  2011     1         14         5    1629    1734 AA                 1121
+# ℹ 22,748 more rows
+# ℹ 14 more variables: TailNum &lt;chr&gt;, ActualElapsedTime &lt;dbl&gt;, AirTime &lt;dbl&gt;,
+#   ArrDelay &lt;dbl&gt;, DepDelay &lt;dbl&gt;, Origin &lt;chr&gt;, Dest &lt;chr&gt;, Distance &lt;dbl&gt;,
+#   TaxiIn &lt;dbl&gt;, TaxiOut &lt;dbl&gt;, Cancelled &lt;dbl&gt;, CancellationCode &lt;chr&gt;,
+#   Diverted &lt;dbl&gt;, late &lt;lgl&gt;</code></pre>
+</div>
+</div>
+<p>This one is a little tricky. Keep in mind that <code>ArrDelay &gt; 0</code> is a logical condition that is either true or false, so that truth value is what is recorded in the <code>late</code> variable. If the arrival delay is a positive number of minutes, the flight is considered “late”, and if the arrival delay is zero or negative, it’s not late.</p>
+<p>If we would rather see more descriptive words than <code>TRUE</code> or <code>FALSE</code>, we have to do something even more tricky. Look at the <code>late</code> variable in the output below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>hf_mutate3 <span class="ot">&lt;-</span> <span class="fu">mutate</span>(hf,</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">late =</span> <span class="fu">as_factor</span>(<span class="fu">ifelse</span>(ArrDelay <span class="sc">&gt;</span> <span class="dv">0</span>, </span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"Late"</span>, <span class="st">"On time"</span>)))</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>hf_mutate3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 22,758 × 22
+    Year Month DayofMonth DayOfWeek DepTime ArrTime UniqueCarrier FlightNum
+   &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt;
+ 1  2011     1         12         3    1419    1515 AA                  428
+ 2  2011     1         17         1    1530    1634 AA                  428
+ 3  2011     1         24         1    1356    1513 AA                  428
+ 4  2011     1          9         7     714     829 AA                  460
+ 5  2011     1         18         2     721     827 AA                  460
+ 6  2011     1         22         6     717     829 AA                  460
+ 7  2011     1         11         2    1953    2051 AA                  533
+ 8  2011     1         14         5    2119    2229 AA                  533
+ 9  2011     1         26         3    2009    2103 AA                  533
+10  2011     1         14         5    1629    1734 AA                 1121
+# ℹ 22,748 more rows
+# ℹ 14 more variables: TailNum &lt;chr&gt;, ActualElapsedTime &lt;dbl&gt;, AirTime &lt;dbl&gt;,
+#   ArrDelay &lt;dbl&gt;, DepDelay &lt;dbl&gt;, Origin &lt;chr&gt;, Dest &lt;chr&gt;, Distance &lt;dbl&gt;,
+#   TaxiIn &lt;dbl&gt;, TaxiOut &lt;dbl&gt;, Cancelled &lt;dbl&gt;, CancellationCode &lt;chr&gt;,
+#   Diverted &lt;dbl&gt;, late &lt;fct&gt;</code></pre>
+</div>
+</div>
+<p>The <code>as_factor</code> command tells R that <code>late</code> should be a categorical variable. Without it, the variable would be a “character” variable, meaning a list of character strings. It won’t matter for us here, but in any future analysis, you want categorical data to be treated as such by R.</p>
+<p>The main focus here is on the <code>ifelse</code> construction. The <code>ifelse</code> function takes a condition as its first argument. If the condition is true, it returns the value in the second slot, and if it’s false (the “else” part of if/else), it returns the value in the third slot. In other words, if <code>ArrDelay &gt; 0</code>, this means the flight is late, so the new <code>late</code> variable should say “Late”; whereas, if <code>ArrDelay</code> is not greater than zero (so either zero or possibly negative if the flight arrived early), then the new variable should say “On Time”.</p>
+<p>Having said that, I would generally recommend that you leave these kinds of variables as logical types. It’s much easier to summarize such variables in R, namely because R treats <code>TRUE</code> as 1 and <code>FALSE</code> as 0, allowing us to do things like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(hf_mutate2<span class="sc">$</span>late, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4761522</code></pre>
+</div>
+</div>
+<p>This gives us the proportion of late flights.</p>
+<p>Note that we needed <code>na.rm</code> as you’ve seen in previous chapter. For example, look at the 93rd row of the tibble:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slice</span>(hf_mutate2, <span class="dv">93</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 22
+   Year Month DayofMonth DayOfWeek DepTime ArrTime UniqueCarrier FlightNum
+  &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt;
+1  2011     1         27         4      NA      NA CO                  258
+# ℹ 14 more variables: TailNum &lt;chr&gt;, ActualElapsedTime &lt;dbl&gt;, AirTime &lt;dbl&gt;,
+#   ArrDelay &lt;dbl&gt;, DepDelay &lt;dbl&gt;, Origin &lt;chr&gt;, Dest &lt;chr&gt;, Distance &lt;dbl&gt;,
+#   TaxiIn &lt;dbl&gt;, TaxiOut &lt;dbl&gt;, Cancelled &lt;dbl&gt;, CancellationCode &lt;chr&gt;,
+#   Diverted &lt;dbl&gt;, late &lt;lgl&gt;</code></pre>
+</div>
+</div>
+<p>Notice that all the times are missing. There are a bunch of rows like this. Since there is not always an arrival delay listed, the <code>ArrDelay</code> variable doesn’t always have a value, and if <code>ArrDelay</code> is <code>NA</code>, the <code>late</code> variable will be too. So if we try to calculate the mean with just the <code>mean</code> command, this happens:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(hf_mutate2<span class="sc">$</span>late)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA</code></pre>
+</div>
+</div>
+<section id="exercise-12" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-12">Exercise 12</h5>
+<p>Why does taking the mean of a bunch of zeros and ones give us the proportion of ones? (Think about the formula for the mean. What happens when we take the sum of all the zeros and ones, and what happens when we divide by the total?)</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="exercise-13" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-13">Exercise 13</h5>
+<p>Create a new tibble called <code>hf_mutate4</code> that uses the <code>mutate</code> command to create a new variable called <code>dist_k</code> which measures the flight distance in kilometers instead of miles. (Hint: to get from miles to kilometers, multiply the distance by 1.60934.) Print the output to the screen.</p>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to define hf_mutate4.</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to print hf_mutate4.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<hr>
+<p>A related verb is <code>transmute</code>. The only difference between <code>mutate</code> and <code>transmute</code> is that <code>mutate</code> creates the new column(s) and keeps all the old ones too, whereas <code>transmute</code> will throw away all the columns except the newly created ones. This is not something that you generally want to do, but there are exceptions. For example, if I was preparing a report and I needed only to talk about flights being late or not, it would do no harm (and would save some memory) to throw away everything except the <code>late</code> variable.</p>
+<p>Before moving on to the next section, we’ll clean up the extra tibbles lying around. You’ll need to manually click the run button in the next code chunk since you have defined <code>hf_mutate4</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(hf_mutate, hf_mutate2, hf_mutate3, hf_mutate4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in rm(hf_mutate, hf_mutate2, hf_mutate3, hf_mutate4): object
+'hf_mutate4' not found</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="manipulating-summ-group" class="level2" data-number="5.9">
+<h2 data-number="5.9" class="anchored" data-anchor-id="manipulating-summ-group"><span class="header-section-number">5.9</span> <code>summarise</code> (with <code>group_by</code>)</h2>
+<p>First, before you mention that <code>summarise</code> is spelled wrong…well, the author of the <code>dplyr</code> package is named Hadley Wickham (same author as the <code>ggplot2</code> package) and he is from New Zealand. So that’s the way he spells it. He was nice enough to include the <code>summarize</code> function as an alias if you need to use it ’cause this is ’Murica!</p>
+<p>The <code>summarise</code> function, by itself, is kind of boring, and doesn’t do anything that couldn’t be done more easily with base R functions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(hf, <span class="fu">mean</span>(Distance))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  `mean(Distance)`
+             &lt;dbl&gt;
+1             791.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(hf<span class="sc">$</span>Distance)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 790.5861</code></pre>
+</div>
+</div>
+<p>Where <code>summarise</code> shines is in combination with <code>group_by</code>. For example, let’s suppose that we want to see average flight distances, but broken down by airline. We can do the following:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>hf_summ_grouped <span class="ot">&lt;-</span> <span class="fu">group_by</span>(hf, UniqueCarrier)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>hf_summ <span class="ot">&lt;-</span> <span class="fu">summarise</span>(hf_summ_grouped, <span class="fu">mean</span>(Distance))</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>hf_summ</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 15 × 2
+   UniqueCarrier `mean(Distance)`
+   &lt;chr&gt;                    &lt;dbl&gt;
+ 1 AA                        470.
+ 2 AS                       1874 
+ 3 B6                       1428 
+ 4 CO                       1097.
+ 5 DL                        723.
+ 6 EV                        788.
+ 7 F9                        883 
+ 8 FL                        686.
+ 9 MQ                        701.
+10 OO                        823.
+11 UA                       1204.
+12 US                        982.
+13 WN                        613.
+14 XE                        590.
+15 YV                        982.</code></pre>
+</div>
+</div>
+<section id="manipulating-piping" class="level3" data-number="5.9.1">
+<h3 data-number="5.9.1" class="anchored" data-anchor-id="manipulating-piping"><span class="header-section-number">5.9.1</span> Piping</h3>
+<p>This is a good spot to introduce a time-saving and helpful device called “piping”, denoted by the symbol <code>%&gt;%</code>. We’ve seen this weird combination of symbols in past chapters, but we haven’t really explained what they do.</p>
+<p>Piping always looks more complicated than it really is. The technical definition is that</p>
+<p><code>x %&gt;% f(y)</code></p>
+<p>is equivalent to</p>
+<p><code>f(x, y)</code>.</p>
+<p>As a simple example, we could add two numbers like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="dv">2</span>, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5</code></pre>
+</div>
+</div>
+<p>Or using the pipe, we could do it like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">%&gt;%</span> <span class="fu">sum</span>(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5</code></pre>
+</div>
+</div>
+<p>All this is really saying is that the pipe takes the thing on its left, and plugs it into the first slot of the function on its right. So why do we care?</p>
+<p>Let’s revisit the combination <code>group_by</code>/<code>summarise</code> example above. There are two ways to do this without pipes, and both are a little ugly. One way is above, where you have to keep reassigning the output to new variables (in the case above, to <code>hf_summ_grouped</code> and then <code>hf_summ</code>). The other way is to nest the functions:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(<span class="fu">group_by</span>(hf, UniqueCarrier), <span class="fu">mean</span>(Distance))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 15 × 2
+   UniqueCarrier `mean(Distance)`
+   &lt;chr&gt;                    &lt;dbl&gt;
+ 1 AA                        470.
+ 2 AS                       1874 
+ 3 B6                       1428 
+ 4 CO                       1097.
+ 5 DL                        723.
+ 6 EV                        788.
+ 7 F9                        883 
+ 8 FL                        686.
+ 9 MQ                        701.
+10 OO                        823.
+11 UA                       1204.
+12 US                        982.
+13 WN                        613.
+14 XE                        590.
+15 YV                        982.</code></pre>
+</div>
+</div>
+<p>This requires a lot of brain power to parse. In part, this is because the function is inside-out: first you group <code>hf</code> by <code>UniqueCarrier</code>, and then the result of that is summarized. Here’s how the pipe fixes it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>hf <span class="sc">%&gt;%</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(UniqueCarrier) <span class="sc">%&gt;%</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="fu">mean</span>(Distance))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 15 × 2
+   UniqueCarrier `mean(Distance)`
+   &lt;chr&gt;                    &lt;dbl&gt;
+ 1 AA                        470.
+ 2 AS                       1874 
+ 3 B6                       1428 
+ 4 CO                       1097.
+ 5 DL                        723.
+ 6 EV                        788.
+ 7 F9                        883 
+ 8 FL                        686.
+ 9 MQ                        701.
+10 OO                        823.
+11 UA                       1204.
+12 US                        982.
+13 WN                        613.
+14 XE                        590.
+15 YV                        982.</code></pre>
+</div>
+</div>
+<p>Look at the <code>group_by</code> line. The <code>group_by</code> function should take two arguments, the tibble, and then the grouping variable. It appears to have only one argument. But look at the previous line. The pipe says to insert whatever is on its left (<code>hf</code>) into the first slot of the function on its right (<code>group_by</code>). So the net effect is still to evaluate the function <code>group_by(hf, UniqueCarrier)</code>.</p>
+<p>Now look at the <code>summarise</code> line. Again, <code>summarise</code> is a function of two inputs, but all we see is the part that finds the mean. The pipe at the end of the previous line tells the <code>summarise</code> function to insert the stuff already computed (the grouped tibble returned by <code>group_by(hf, UniqueCarrier)</code>) into the first slot of the <code>summarise</code> function.</p>
+<p>Piping takes a little getting used to, but once you’re good at it, you’ll never go back. It’s just makes more sense semantically. When I read the above set of commands, I see a set of instructions in chronological order:</p>
+<ul>
+<li>Start with the tibble <code>hf</code>.</li>
+<li>Next, group by the carrier.</li>
+<li>Next, summarize each group using the mean distance.</li>
+</ul>
+<p>Now we can assign the result of all that to the new variable <code>hf_summ</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>hf_summ <span class="ot">&lt;-</span> hf <span class="sc">%&gt;%</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(UniqueCarrier) <span class="sc">%&gt;%</span></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="fu">mean</span>(Distance))</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>hf_summ</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 15 × 2
+   UniqueCarrier `mean(Distance)`
+   &lt;chr&gt;                    &lt;dbl&gt;
+ 1 AA                        470.
+ 2 AS                       1874 
+ 3 B6                       1428 
+ 4 CO                       1097.
+ 5 DL                        723.
+ 6 EV                        788.
+ 7 F9                        883 
+ 8 FL                        686.
+ 9 MQ                        701.
+10 OO                        823.
+11 UA                       1204.
+12 US                        982.
+13 WN                        613.
+14 XE                        590.
+15 YV                        982.</code></pre>
+</div>
+</div>
+<p>Some people even take this one step further. The result of all the above is assigned to a new variable <code>hf_summ</code> that currently appears as the first command (<code>hf_summ &lt;- ...</code>) But you could write this as</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>hf <span class="sc">%&gt;%</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(UniqueCarrier) <span class="sc">%&gt;%</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="fu">mean</span>(Distance)) <span class="ot">-&gt;</span> hf_summ</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now it says the following:</p>
+<ul>
+<li>Start with the tibble <code>hf</code>.</li>
+<li>Next, group by the carrier.</li>
+<li>Next, summarize each group using the mean distance.</li>
+<li><em>Finally</em>, assign the result to a new variable called <code>hf_summ</code>.</li>
+</ul>
+<p>In other words, the arrow operator for assignment works both directions!</p>
+<p>Let’s try some counting. This one is common enough that <code>dplyr</code> doesn’t even make us use <code>group_by</code> and <code>summarise</code>. We can just use the command <code>count</code>. What if we wanted to know how many flights correspond to each carrier?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>hf_summ2 <span class="ot">&lt;-</span> hf <span class="sc">%&gt;%</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(UniqueCarrier)</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>hf_summ2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 15 × 2
+   UniqueCarrier     n
+   &lt;chr&gt;         &lt;int&gt;
+ 1 AA              325
+ 2 AS               37
+ 3 B6               70
+ 4 CO             7004
+ 5 DL              265
+ 6 EV              221
+ 7 F9               84
+ 8 FL              214
+ 9 MQ              465
+10 OO             1607
+11 UA              208
+12 US              409
+13 WN             4535
+14 XE             7306
+15 YV                8</code></pre>
+</div>
+</div>
+<p>Also note that we can give summary columns a new name if we wish. In <code>hf_summ</code>, we didn’t give the new column an explicit name, so it showed up in our tibble as a column called <code>mean(Distance)</code>. If we want to change it, we can do this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>hf_summ <span class="ot">&lt;-</span> hf <span class="sc">%&gt;%</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(UniqueCarrier) <span class="sc">%&gt;%</span></span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">mean_dist =</span> <span class="fu">mean</span>(Distance))</span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>hf_summ</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 15 × 2
+   UniqueCarrier mean_dist
+   &lt;chr&gt;             &lt;dbl&gt;
+ 1 AA                 470.
+ 2 AS                1874 
+ 3 B6                1428 
+ 4 CO                1097.
+ 5 DL                 723.
+ 6 EV                 788.
+ 7 F9                 883 
+ 8 FL                 686.
+ 9 MQ                 701.
+10 OO                 823.
+11 UA                1204.
+12 US                 982.
+13 WN                 613.
+14 XE                 590.
+15 YV                 982.</code></pre>
+</div>
+</div>
+<p>Look at the earlier version of <code>hf_summ</code> and compare it to the one above. Make sure you see that the name of the second column changed.</p>
+<p>The new count column of <code>hf_summ2</code> is just called <code>n</code>. That’s okay, but if we insist on giving it a more user-friendly name, we can do so as follows:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>hf_summ2 <span class="ot">&lt;-</span> hf <span class="sc">%&gt;%</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(UniqueCarrier, <span class="at">name =</span> <span class="st">"total_count"</span>)</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>hf_summ2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 15 × 2
+   UniqueCarrier total_count
+   &lt;chr&gt;               &lt;int&gt;
+ 1 AA                    325
+ 2 AS                     37
+ 3 B6                     70
+ 4 CO                   7004
+ 5 DL                    265
+ 6 EV                    221
+ 7 F9                     84
+ 8 FL                    214
+ 9 MQ                    465
+10 OO                   1607
+11 UA                    208
+12 US                    409
+13 WN                   4535
+14 XE                   7306
+15 YV                      8</code></pre>
+</div>
+</div>
+<p>This is a little different because it requires us to use a <code>name</code> argument and put the new name in quotes.</p>
+<section id="exercise-14a" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-14a">Exercise 14(a)</h5>
+<p>Create a tibble called <code>hf_summ3</code> that lists the total count of flights for each day of the week. Be sure to use the pipe as above. Print the output to the screen. (You don’t need to give the count column a new name.)</p>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to define hf_summ3.</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to print hf_summ3.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="exercise-14b" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-14b">Exercise 14(b)</h5>
+<p>According to the output in the previous part, what day of the week had the fewest flights? (Assume 1 = Monday.)</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+<hr>
+<p>The tibbles created in this section are all just a few rows each. They don’t take up much memory, so we don’t really need to remove them. You can if you want, but it’s not necessary.</p>
+</section>
+</section>
+</section>
+<section id="manipulating-all-together" class="level2" data-number="5.10">
+<h2 data-number="5.10" class="anchored" data-anchor-id="manipulating-all-together"><span class="header-section-number">5.10</span> Putting it all together</h2>
+<p>Often we need more than one of these verbs. In many data analyses, we need to do a sequence of operations to get at the answer we seek. This is most easily accomplished using a more complicated sequence of pipes.</p>
+<p>Here’s a example of multi-step piping. Let’s say that we only care about Delta flights, and even then, we only want to know about the month of the flight and the departure delay. From there, we wish to group by month so we can find the maximum departure delay by month. Here is a solution, piping hot and ready to go. [groan]</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>hf_grand_finale <span class="ot">&lt;-</span> hf <span class="sc">%&gt;%</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(UniqueCarrier <span class="sc">==</span> <span class="st">"DL"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(Month, DepDelay) <span class="sc">%&gt;%</span></span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(Month) <span class="sc">%&gt;%</span></span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">max_delay =</span> <span class="fu">max</span>(DepDelay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a>hf_grand_finale</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 2
+   Month max_delay
+   &lt;dbl&gt;     &lt;dbl&gt;
+ 1     1        26
+ 2     2       460
+ 3     3       202
+ 4     4        23
+ 5     5       127
+ 6     6       184
+ 7     7       360
+ 8     8        48
+ 9     9       292
+10    10        90
+11    11        10
+12    12        14</code></pre>
+</div>
+</div>
+<p>Go through each line of code carefully and translate it into English:</p>
+<ul>
+<li>We define a variable called <code>hf_grand_finale</code> that starts with the original <code>hf</code> data.</li>
+<li>We <code>filter</code> this data so that only Delta flights will be analyzed.</li>
+<li>We <code>select</code> the variables <code>Month</code> and <code>DepDelay</code>, throwing away all other variables that are not of interest to us. (Don’t forget to use the <code>dplyr::select</code> syntax to make sure we get the right function!)</li>
+<li>We <code>group_by</code> month so that the results will be displayed by month.</li>
+<li>We <code>summarise</code> each month by listing the maximum value of <code>DepDelay</code> that appears within each month.</li>
+<li>We print the result to the screen.</li>
+</ul>
+<p>Notice in the <code>summarise</code> line, we again took advantage of <code>dplyr</code>’s ability to rename any variable along the way, assigning our computation to the new variable <code>max_delay</code>. Also note the need for <code>na.rm = TRUE</code> so that the <code>max</code> command ignores any missing values.</p>
+<p>A minor simplification results from the realization that <code>summarise</code> must throw away any variables it doesn’t need. (Think about why for a second: what would <code>summarise</code> do with, say, <code>ArrTime</code> if we’ve only asked it to calculate the maximum value of <code>DepDelay</code> for each month?) So you could write this instead, removing the <code>select</code> clause:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>hf_grand_finale <span class="ot">&lt;-</span> hf <span class="sc">%&gt;%</span></span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(UniqueCarrier <span class="sc">==</span> <span class="st">"DL"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(Month) <span class="sc">%&gt;%</span></span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">max_delay =</span> <span class="fu">max</span>(DepDelay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>hf_grand_finale</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 2
+   Month max_delay
+   &lt;dbl&gt;     &lt;dbl&gt;
+ 1     1        26
+ 2     2       460
+ 3     3       202
+ 4     4        23
+ 5     5       127
+ 6     6       184
+ 7     7       360
+ 8     8        48
+ 9     9       292
+10    10        90
+11    11        10
+12    12        14</code></pre>
+</div>
+</div>
+<p>Check that you get the same result. With <em>massive</em> data sets, it’s possible that the selection and sequence of these verbs matter, but you don’t see an appreciable difference here, even with 22758 rows. (There are ways of benchmarking performance in R, but that is a more advanced topic.)</p>
+<section id="exercise-15" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-15">Exercise 15</h5>
+<p>Summarize in your own words what information is contained in the <code>hf_grand_finale</code> tibble. In other words, what are the numbers in the <code>max_delay</code> column telling us? Be specific!</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+<p>The remaining exercises are probably the most challenging you’ve seen so far in the course. Take each slowly. Read the instructions carefully. Go back through the chapter and identify which “verb” needs to be used for each part of the task. Examine the sample code in those sections carefully to make sure you get the syntax right. Create a sequence of “pipes” to do each task, one-by-one. Copy and paste pieces of code from earlier and make minor changes to adapt the code to the given task.</p>
+</section>
+<section id="exercise-16" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-16">Exercise 16</h5>
+<p>Create a tibble that counts the flights to LAX grouped by day of the week. (Hint: you need to <code>filter</code> to get flights to LAX. Then you’ll need to <code>count</code> using <code>DayOfWeek</code> as a grouping variable. Because you’re using <code>count</code>, you don’t need <code>group_by</code> or <code>summarise</code>.) Print the output to the screen.</p>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to count the flights to LAX</span></span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a><span class="co"># grouped by day of the week.</span></span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the output to the screen.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="exercise-17" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-17">Exercise 17</h5>
+<p>Create a tibble that finds the median distance flight for each airline. Sort the resulting tibble from highest distance to lowest. (Hint: You’ll need to <code>group_by</code> carrier and <code>summarise</code> using the <code>median</code> function. Finally, you’ll need to <code>arrange</code> the result according to the median distance variable that you just created.) Print the output to the screen.</p>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to find the median distance by airline.</span></span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the output to the screen.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="manipulating-conclusion" class="level2" data-number="5.11">
+<h2 data-number="5.11" class="anchored" data-anchor-id="manipulating-conclusion"><span class="header-section-number">5.11</span> Conclusion</h2>
+<p>Raw data often doesn’t come in the right form for us to run our analyses. The <code>dplyr</code> verbs are powerful tools for manipulating tibbles until they are in the right form.</p>
+<section id="manipulating-prep" class="level3" data-number="5.11.1">
+<h3 data-number="5.11.1" class="anchored" data-anchor-id="manipulating-prep"><span class="header-section-number">5.11.1</span> Preparing and submitting your assignment</h3>
+<ol type="1">
+<li>From the “Run” menu, select “Restart R and Run All Chunks”.</li>
+<li>Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.</li>
+<li>Spell check your document by clicking the icon with “ABC” and a check mark.</li>
+<li>Hit the “Preview” button one last time to generate the final draft of the <code>.nb.html</code> file.</li>
+<li>Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1–5 again.</li>
+</ol>
+<p>If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./04-numerical_data-web.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Numerical data</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./06-correlation-web.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Correlation</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
