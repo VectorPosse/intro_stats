@@ -96,9 +96,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
+<link rel="stylesheet" href="custom.css">
 </head>
 
 <body class="nav-sidebar floating">
@@ -542,25 +546,17 @@ Loading required package: usdata</code></pre>
 <p>In this section, we’ll also print the data set and use <code>glimpse</code> to summarize the variables.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>sex_discrimination</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 48 × 2
-   sex   decision
-   &lt;fct&gt; &lt;fct&gt;   
- 1 male  promoted
- 2 male  promoted
- 3 male  promoted
- 4 male  promoted
- 5 male  promoted
- 6 male  promoted
- 7 male  promoted
- 8 male  promoted
- 9 male  promoted
-10 male  promoted
-# ℹ 38 more rows</code></pre>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["sex"],"name":[1],"type":["fct"],"align":["left"]},{"label":["decision"],"name":[2],"type":["fct"],"align":["left"]}],"data":[{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"not promoted"},{"1":"male","2":"not promoted"},{"1":"male","2":"not promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"not promoted"},{"1":"female","2":"not promoted"},{"1":"female","2":"not promoted"},{"1":"female","2":"not promoted"},{"1":"female","2":"not promoted"},{"1":"female","2":"not promoted"},{"1":"female","2":"not promoted"},{"1":"female","2":"not promoted"},{"1":"female","2":"not promoted"},{"1":"female","2":"not promoted"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(sex_discrimination)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(sex_discrimination)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 48
 Columns: 2
@@ -575,23 +571,15 @@ $ decision &lt;fct&gt; promoted, promoted, promoted, promoted, promoted, promote
 <p>If there is missing data, this is the place to identify it and decide if you need to address it before starting your analysis. It’s always important to check for missing data. It’s not always necessary to address it now as many of the R functions we use will ignore rows with missing data.</p>
 <p>The easiest way to detect missing data is to try deleting rows that are missing some data with <code>drop_na</code> and see if the number of rows changes:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>sex_discrimination <span class="sc">%&gt;%</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 48 × 2
-   sex   decision
-   &lt;fct&gt; &lt;fct&gt;   
- 1 male  promoted
- 2 male  promoted
- 3 male  promoted
- 4 male  promoted
- 5 male  promoted
- 6 male  promoted
- 7 male  promoted
- 8 male  promoted
- 9 male  promoted
-10 male  promoted
-# ℹ 38 more rows</code></pre>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>sex_discrimination <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["sex"],"name":[1],"type":["fct"],"align":["left"]},{"label":["decision"],"name":[2],"type":["fct"],"align":["left"]}],"data":[{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"promoted"},{"1":"male","2":"not promoted"},{"1":"male","2":"not promoted"},{"1":"male","2":"not promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"promoted"},{"1":"female","2":"not promoted"},{"1":"female","2":"not promoted"},{"1":"female","2":"not promoted"},{"1":"female","2":"not promoted"},{"1":"female","2":"not promoted"},{"1":"female","2":"not promoted"},{"1":"female","2":"not promoted"},{"1":"female","2":"not promoted"},{"1":"female","2":"not promoted"},{"1":"female","2":"not promoted"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>Since the result still has 48 rows, there are no missing values.</p>
@@ -601,25 +589,29 @@ $ decision &lt;fct&gt; promoted, promoted, promoted, promoted, promoted, promote
 <h3 data-number="10.6.3" class="anchored" data-anchor-id="hypothesis1-ex-plots"><span class="header-section-number">10.6.3</span> Make tables or plots to explore the data visually.</h3>
 <p>As we have two categorical variables, a contingency table is a good way of visualizing the distribution of both variables together. (Don’t forget to include the marginal distribution and create two tables: one with counts and one with percentages!)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(sex_discrimination, decision, sex) <span class="sc">%&gt;%</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     decision male female
-     promoted   21     14
- not promoted    3     10
-        Total   24     24</code></pre>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(sex_discrimination, decision, sex) <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["decision"],"name":[1],"type":["fct"],"align":["left"]},{"label":["male"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["female"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"promoted","2":"21","3":"14","_rn_":"1"},{"1":"not promoted","2":"3","3":"10","_rn_":"2"},{"1":"Total","2":"24","3":"24","_rn_":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(sex_discrimination, decision, sex) <span class="sc">%&gt;%</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_percentages</span>(<span class="st">"col"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_pct_formatting</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     decision   male female
-     promoted  87.5%  58.3%
- not promoted  12.5%  41.7%
-        Total 100.0% 100.0%</code></pre>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(sex_discrimination, decision, sex) <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_percentages</span>(<span class="st">"col"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_pct_formatting</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["decision"],"name":[1],"type":["fct"],"align":["left"]},{"label":["male"],"name":[2],"type":["chr"],"align":["left"]},{"label":["female"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"promoted","2":"87.5%","3":"58.3%","_rn_":"1"},{"1":"not promoted","2":"12.5%","3":"41.7%","_rn_":"2"},{"1":"Total","2":"100.0%","3":"100.0%","_rn_":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 </section>
@@ -671,17 +663,17 @@ $ decision &lt;fct&gt; promoted, promoted, promoted, promoted, promoted, promote
 <h3 data-number="10.9.1" class="anchored" data-anchor-id="hypothesis1-ex-compute-test-stat"><span class="header-section-number">10.9.1</span> Compute the test statistic.</h3>
 <p>We let <code>infer</code> do the work here:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>obs_diff <span class="ot">&lt;-</span> sex_discrimination <span class="sc">%&gt;%</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">observe</span>(decision <span class="sc">~</span> sex, <span class="at">success =</span> <span class="st">"promoted"</span>,</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">stat =</span> <span class="st">"diff in props"</span>, <span class="at">order =</span> <span class="fu">c</span>(<span class="st">"male"</span>, <span class="st">"female"</span>))</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>obs_diff</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Response: decision (factor)
-Explanatory: sex (factor)
-# A tibble: 1 × 1
-   stat
-  &lt;dbl&gt;
-1 0.292</code></pre>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>obs_diff <span class="ot">&lt;-</span> sex_discrimination <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">observe</span>(decision <span class="sc">~</span> sex, <span class="at">success =</span> <span class="st">"promoted"</span>,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">stat =</span> <span class="st">"diff in props"</span>, <span class="at">order =</span> <span class="fu">c</span>(<span class="st">"male"</span>, <span class="st">"female"</span>))</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>obs_diff</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["stat"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.2916667"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>Note: <code>obs_diff</code> is a tibble, albeit a small one, having only one column and one row. That tibble is what we need to feed into the visualization later. However, for reporting the value by itself, we have to pull it out of the tibble. We will do this below using the <code>pull</code> function. See the inline code in the next subsection.</p>
@@ -696,37 +688,26 @@ Explanatory: sex (factor)
 <p>Don’t forget to set the seed. We are using randomization to permute the values of the predictor variable in order to break any association that might exist in the data. This will allow us to explore the sampling distribution created under the assumption of the null hypothesis.</p>
 <p>When you get to the <code>visualize</code> step, leave the number of bins out. (Just type <code>visualize()</code> with empty parentheses.) If you determine that the default binning is not optimal, you can add back <code>bins</code> and experiment with the number. We know from the previous chapter that 9 bins is good here.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">9999</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>decision_sex_test <span class="ot">&lt;-</span> sex_discrimination <span class="sc">%&gt;%</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">specify</span>(decision <span class="sc">~</span> sex, <span class="at">success =</span> <span class="st">"promoted"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hypothesize</span>(<span class="at">null =</span> <span class="st">"independence"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">generate</span>(<span class="at">reps =</span> <span class="dv">1000</span>, <span class="at">type =</span> <span class="st">"permute"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"diff in props"</span>, <span class="at">order =</span> <span class="fu">c</span>(<span class="st">"male"</span>, <span class="st">"female"</span>))</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>decision_sex_test</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Response: decision (factor)
-Explanatory: sex (factor)
-Null Hypothesis: independence
-# A tibble: 1,000 × 2
-   replicate    stat
-       &lt;int&gt;   &lt;dbl&gt;
- 1         1 -0.0417
- 2         2  0.208 
- 3         3  0.0417
- 4         4 -0.125 
- 5         5 -0.0417
- 6         6 -0.208 
- 7         7 -0.208 
- 8         8  0.0417
- 9         9 -0.292 
-10        10  0.125 
-# ℹ 990 more rows</code></pre>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">9999</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>decision_sex_test <span class="ot">&lt;-</span> sex_discrimination <span class="sc">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">specify</span>(decision <span class="sc">~</span> sex, <span class="at">success =</span> <span class="st">"promoted"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hypothesize</span>(<span class="at">null =</span> <span class="st">"independence"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">generate</span>(<span class="at">reps =</span> <span class="dv">1000</span>, <span class="at">type =</span> <span class="st">"permute"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"diff in props"</span>, <span class="at">order =</span> <span class="fu">c</span>(<span class="st">"male"</span>, <span class="st">"female"</span>))</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>decision_sex_test</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["replicate"],"name":[1],"type":["int"],"align":["right"]},{"label":["stat"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"-0.04166667"},{"1":"2","2":"0.20833333"},{"1":"3","2":"0.04166667"},{"1":"4","2":"-0.12500000"},{"1":"5","2":"-0.04166667"},{"1":"6","2":"-0.20833333"},{"1":"7","2":"-0.20833333"},{"1":"8","2":"0.04166667"},{"1":"9","2":"-0.29166667"},{"1":"10","2":"0.12500000"},{"1":"11","2":"0.12500000"},{"1":"12","2":"0.29166667"},{"1":"13","2":"0.04166667"},{"1":"14","2":"-0.04166667"},{"1":"15","2":"-0.04166667"},{"1":"16","2":"0.04166667"},{"1":"17","2":"0.12500000"},{"1":"18","2":"0.04166667"},{"1":"19","2":"-0.04166667"},{"1":"20","2":"-0.04166667"},{"1":"21","2":"-0.12500000"},{"1":"22","2":"-0.04166667"},{"1":"23","2":"0.04166667"},{"1":"24","2":"-0.12500000"},{"1":"25","2":"0.12500000"},{"1":"26","2":"0.29166667"},{"1":"27","2":"-0.20833333"},{"1":"28","2":"0.12500000"},{"1":"29","2":"0.04166667"},{"1":"30","2":"0.04166667"},{"1":"31","2":"0.04166667"},{"1":"32","2":"0.12500000"},{"1":"33","2":"0.04166667"},{"1":"34","2":"0.04166667"},{"1":"35","2":"-0.12500000"},{"1":"36","2":"0.04166667"},{"1":"37","2":"0.04166667"},{"1":"38","2":"-0.04166667"},{"1":"39","2":"-0.12500000"},{"1":"40","2":"-0.12500000"},{"1":"41","2":"-0.04166667"},{"1":"42","2":"-0.04166667"},{"1":"43","2":"0.04166667"},{"1":"44","2":"-0.04166667"},{"1":"45","2":"-0.04166667"},{"1":"46","2":"-0.29166667"},{"1":"47","2":"0.12500000"},{"1":"48","2":"-0.04166667"},{"1":"49","2":"-0.12500000"},{"1":"50","2":"0.12500000"},{"1":"51","2":"-0.04166667"},{"1":"52","2":"-0.12500000"},{"1":"53","2":"0.20833333"},{"1":"54","2":"0.29166667"},{"1":"55","2":"-0.04166667"},{"1":"56","2":"0.04166667"},{"1":"57","2":"0.20833333"},{"1":"58","2":"0.12500000"},{"1":"59","2":"-0.12500000"},{"1":"60","2":"0.04166667"},{"1":"61","2":"0.04166667"},{"1":"62","2":"0.04166667"},{"1":"63","2":"-0.20833333"},{"1":"64","2":"-0.04166667"},{"1":"65","2":"0.12500000"},{"1":"66","2":"0.29166667"},{"1":"67","2":"-0.12500000"},{"1":"68","2":"-0.20833333"},{"1":"69","2":"0.04166667"},{"1":"70","2":"0.12500000"},{"1":"71","2":"-0.12500000"},{"1":"72","2":"0.12500000"},{"1":"73","2":"0.12500000"},{"1":"74","2":"0.20833333"},{"1":"75","2":"0.20833333"},{"1":"76","2":"0.04166667"},{"1":"77","2":"0.12500000"},{"1":"78","2":"0.04166667"},{"1":"79","2":"0.20833333"},{"1":"80","2":"-0.04166667"},{"1":"81","2":"0.12500000"},{"1":"82","2":"0.12500000"},{"1":"83","2":"0.29166667"},{"1":"84","2":"0.12500000"},{"1":"85","2":"-0.12500000"},{"1":"86","2":"0.04166667"},{"1":"87","2":"0.12500000"},{"1":"88","2":"-0.04166667"},{"1":"89","2":"-0.12500000"},{"1":"90","2":"-0.04166667"},{"1":"91","2":"-0.04166667"},{"1":"92","2":"-0.04166667"},{"1":"93","2":"-0.04166667"},{"1":"94","2":"-0.20833333"},{"1":"95","2":"0.04166667"},{"1":"96","2":"-0.04166667"},{"1":"97","2":"0.12500000"},{"1":"98","2":"0.12500000"},{"1":"99","2":"0.04166667"},{"1":"100","2":"-0.04166667"},{"1":"101","2":"0.04166667"},{"1":"102","2":"0.12500000"},{"1":"103","2":"-0.04166667"},{"1":"104","2":"-0.12500000"},{"1":"105","2":"0.20833333"},{"1":"106","2":"0.04166667"},{"1":"107","2":"0.12500000"},{"1":"108","2":"0.04166667"},{"1":"109","2":"-0.12500000"},{"1":"110","2":"-0.04166667"},{"1":"111","2":"0.04166667"},{"1":"112","2":"0.20833333"},{"1":"113","2":"0.04166667"},{"1":"114","2":"0.12500000"},{"1":"115","2":"0.12500000"},{"1":"116","2":"0.12500000"},{"1":"117","2":"0.12500000"},{"1":"118","2":"0.12500000"},{"1":"119","2":"-0.04166667"},{"1":"120","2":"-0.04166667"},{"1":"121","2":"0.12500000"},{"1":"122","2":"0.04166667"},{"1":"123","2":"0.12500000"},{"1":"124","2":"-0.12500000"},{"1":"125","2":"0.04166667"},{"1":"126","2":"-0.29166667"},{"1":"127","2":"0.12500000"},{"1":"128","2":"-0.04166667"},{"1":"129","2":"0.20833333"},{"1":"130","2":"-0.04166667"},{"1":"131","2":"0.29166667"},{"1":"132","2":"-0.04166667"},{"1":"133","2":"-0.12500000"},{"1":"134","2":"0.04166667"},{"1":"135","2":"-0.04166667"},{"1":"136","2":"-0.20833333"},{"1":"137","2":"0.04166667"},{"1":"138","2":"0.12500000"},{"1":"139","2":"0.20833333"},{"1":"140","2":"0.20833333"},{"1":"141","2":"-0.12500000"},{"1":"142","2":"0.12500000"},{"1":"143","2":"0.20833333"},{"1":"144","2":"-0.04166667"},{"1":"145","2":"0.12500000"},{"1":"146","2":"0.12500000"},{"1":"147","2":"-0.04166667"},{"1":"148","2":"0.12500000"},{"1":"149","2":"0.12500000"},{"1":"150","2":"-0.20833333"},{"1":"151","2":"0.12500000"},{"1":"152","2":"-0.04166667"},{"1":"153","2":"-0.04166667"},{"1":"154","2":"-0.12500000"},{"1":"155","2":"-0.04166667"},{"1":"156","2":"-0.04166667"},{"1":"157","2":"-0.20833333"},{"1":"158","2":"0.12500000"},{"1":"159","2":"0.12500000"},{"1":"160","2":"-0.12500000"},{"1":"161","2":"0.12500000"},{"1":"162","2":"0.04166667"},{"1":"163","2":"-0.04166667"},{"1":"164","2":"0.12500000"},{"1":"165","2":"0.04166667"},{"1":"166","2":"0.04166667"},{"1":"167","2":"0.12500000"},{"1":"168","2":"0.04166667"},{"1":"169","2":"-0.20833333"},{"1":"170","2":"0.12500000"},{"1":"171","2":"-0.12500000"},{"1":"172","2":"0.04166667"},{"1":"173","2":"0.20833333"},{"1":"174","2":"-0.20833333"},{"1":"175","2":"-0.20833333"},{"1":"176","2":"0.04166667"},{"1":"177","2":"-0.12500000"},{"1":"178","2":"-0.12500000"},{"1":"179","2":"0.12500000"},{"1":"180","2":"0.12500000"},{"1":"181","2":"-0.04166667"},{"1":"182","2":"0.12500000"},{"1":"183","2":"-0.04166667"},{"1":"184","2":"-0.04166667"},{"1":"185","2":"-0.04166667"},{"1":"186","2":"-0.04166667"},{"1":"187","2":"-0.04166667"},{"1":"188","2":"0.04166667"},{"1":"189","2":"-0.04166667"},{"1":"190","2":"0.04166667"},{"1":"191","2":"-0.12500000"},{"1":"192","2":"-0.04166667"},{"1":"193","2":"0.04166667"},{"1":"194","2":"-0.04166667"},{"1":"195","2":"-0.12500000"},{"1":"196","2":"0.04166667"},{"1":"197","2":"-0.12500000"},{"1":"198","2":"-0.12500000"},{"1":"199","2":"0.04166667"},{"1":"200","2":"0.04166667"},{"1":"201","2":"-0.04166667"},{"1":"202","2":"0.04166667"},{"1":"203","2":"-0.12500000"},{"1":"204","2":"-0.04166667"},{"1":"205","2":"0.12500000"},{"1":"206","2":"-0.12500000"},{"1":"207","2":"-0.12500000"},{"1":"208","2":"0.04166667"},{"1":"209","2":"-0.04166667"},{"1":"210","2":"0.20833333"},{"1":"211","2":"-0.04166667"},{"1":"212","2":"0.04166667"},{"1":"213","2":"0.12500000"},{"1":"214","2":"-0.04166667"},{"1":"215","2":"-0.12500000"},{"1":"216","2":"-0.12500000"},{"1":"217","2":"0.04166667"},{"1":"218","2":"-0.04166667"},{"1":"219","2":"0.04166667"},{"1":"220","2":"-0.12500000"},{"1":"221","2":"-0.04166667"},{"1":"222","2":"-0.04166667"},{"1":"223","2":"0.12500000"},{"1":"224","2":"-0.04166667"},{"1":"225","2":"0.12500000"},{"1":"226","2":"-0.04166667"},{"1":"227","2":"-0.12500000"},{"1":"228","2":"-0.04166667"},{"1":"229","2":"0.12500000"},{"1":"230","2":"0.20833333"},{"1":"231","2":"0.29166667"},{"1":"232","2":"0.12500000"},{"1":"233","2":"0.04166667"},{"1":"234","2":"-0.04166667"},{"1":"235","2":"-0.04166667"},{"1":"236","2":"0.12500000"},{"1":"237","2":"0.04166667"},{"1":"238","2":"0.12500000"},{"1":"239","2":"0.04166667"},{"1":"240","2":"-0.04166667"},{"1":"241","2":"-0.12500000"},{"1":"242","2":"-0.04166667"},{"1":"243","2":"0.04166667"},{"1":"244","2":"-0.04166667"},{"1":"245","2":"-0.12500000"},{"1":"246","2":"0.12500000"},{"1":"247","2":"-0.12500000"},{"1":"248","2":"0.04166667"},{"1":"249","2":"0.04166667"},{"1":"250","2":"-0.04166667"},{"1":"251","2":"0.04166667"},{"1":"252","2":"0.29166667"},{"1":"253","2":"0.04166667"},{"1":"254","2":"0.04166667"},{"1":"255","2":"-0.04166667"},{"1":"256","2":"0.12500000"},{"1":"257","2":"0.04166667"},{"1":"258","2":"0.12500000"},{"1":"259","2":"0.20833333"},{"1":"260","2":"-0.12500000"},{"1":"261","2":"0.12500000"},{"1":"262","2":"-0.04166667"},{"1":"263","2":"-0.04166667"},{"1":"264","2":"0.12500000"},{"1":"265","2":"0.04166667"},{"1":"266","2":"-0.20833333"},{"1":"267","2":"-0.12500000"},{"1":"268","2":"-0.04166667"},{"1":"269","2":"0.12500000"},{"1":"270","2":"-0.20833333"},{"1":"271","2":"0.29166667"},{"1":"272","2":"-0.04166667"},{"1":"273","2":"-0.04166667"},{"1":"274","2":"0.12500000"},{"1":"275","2":"0.04166667"},{"1":"276","2":"-0.20833333"},{"1":"277","2":"-0.04166667"},{"1":"278","2":"-0.12500000"},{"1":"279","2":"0.04166667"},{"1":"280","2":"-0.12500000"},{"1":"281","2":"0.04166667"},{"1":"282","2":"-0.29166667"},{"1":"283","2":"-0.04166667"},{"1":"284","2":"-0.12500000"},{"1":"285","2":"0.04166667"},{"1":"286","2":"0.04166667"},{"1":"287","2":"-0.04166667"},{"1":"288","2":"0.20833333"},{"1":"289","2":"-0.12500000"},{"1":"290","2":"0.04166667"},{"1":"291","2":"0.12500000"},{"1":"292","2":"0.29166667"},{"1":"293","2":"-0.04166667"},{"1":"294","2":"0.04166667"},{"1":"295","2":"0.04166667"},{"1":"296","2":"0.12500000"},{"1":"297","2":"0.04166667"},{"1":"298","2":"-0.04166667"},{"1":"299","2":"-0.04166667"},{"1":"300","2":"-0.04166667"},{"1":"301","2":"0.20833333"},{"1":"302","2":"0.04166667"},{"1":"303","2":"0.29166667"},{"1":"304","2":"0.12500000"},{"1":"305","2":"0.12500000"},{"1":"306","2":"-0.12500000"},{"1":"307","2":"-0.04166667"},{"1":"308","2":"-0.12500000"},{"1":"309","2":"0.12500000"},{"1":"310","2":"-0.04166667"},{"1":"311","2":"-0.12500000"},{"1":"312","2":"-0.04166667"},{"1":"313","2":"-0.04166667"},{"1":"314","2":"0.12500000"},{"1":"315","2":"0.12500000"},{"1":"316","2":"-0.04166667"},{"1":"317","2":"-0.04166667"},{"1":"318","2":"0.04166667"},{"1":"319","2":"-0.20833333"},{"1":"320","2":"-0.20833333"},{"1":"321","2":"-0.12500000"},{"1":"322","2":"0.04166667"},{"1":"323","2":"0.04166667"},{"1":"324","2":"0.20833333"},{"1":"325","2":"-0.12500000"},{"1":"326","2":"0.04166667"},{"1":"327","2":"0.12500000"},{"1":"328","2":"-0.20833333"},{"1":"329","2":"-0.20833333"},{"1":"330","2":"-0.12500000"},{"1":"331","2":"0.12500000"},{"1":"332","2":"-0.12500000"},{"1":"333","2":"0.04166667"},{"1":"334","2":"0.20833333"},{"1":"335","2":"-0.04166667"},{"1":"336","2":"-0.29166667"},{"1":"337","2":"0.12500000"},{"1":"338","2":"-0.04166667"},{"1":"339","2":"0.04166667"},{"1":"340","2":"0.12500000"},{"1":"341","2":"-0.04166667"},{"1":"342","2":"-0.12500000"},{"1":"343","2":"-0.29166667"},{"1":"344","2":"0.04166667"},{"1":"345","2":"-0.04166667"},{"1":"346","2":"0.04166667"},{"1":"347","2":"0.04166667"},{"1":"348","2":"-0.04166667"},{"1":"349","2":"0.12500000"},{"1":"350","2":"0.04166667"},{"1":"351","2":"0.04166667"},{"1":"352","2":"0.29166667"},{"1":"353","2":"-0.04166667"},{"1":"354","2":"0.04166667"},{"1":"355","2":"0.12500000"},{"1":"356","2":"0.12500000"},{"1":"357","2":"0.12500000"},{"1":"358","2":"-0.04166667"},{"1":"359","2":"-0.12500000"},{"1":"360","2":"-0.29166667"},{"1":"361","2":"0.20833333"},{"1":"362","2":"0.04166667"},{"1":"363","2":"0.20833333"},{"1":"364","2":"-0.29166667"},{"1":"365","2":"-0.12500000"},{"1":"366","2":"-0.04166667"},{"1":"367","2":"-0.12500000"},{"1":"368","2":"0.04166667"},{"1":"369","2":"0.04166667"},{"1":"370","2":"0.04166667"},{"1":"371","2":"-0.20833333"},{"1":"372","2":"0.20833333"},{"1":"373","2":"0.04166667"},{"1":"374","2":"-0.04166667"},{"1":"375","2":"0.04166667"},{"1":"376","2":"0.04166667"},{"1":"377","2":"0.04166667"},{"1":"378","2":"-0.04166667"},{"1":"379","2":"0.12500000"},{"1":"380","2":"0.12500000"},{"1":"381","2":"-0.20833333"},{"1":"382","2":"0.12500000"},{"1":"383","2":"-0.20833333"},{"1":"384","2":"-0.12500000"},{"1":"385","2":"-0.04166667"},{"1":"386","2":"-0.04166667"},{"1":"387","2":"-0.12500000"},{"1":"388","2":"-0.12500000"},{"1":"389","2":"0.20833333"},{"1":"390","2":"-0.20833333"},{"1":"391","2":"-0.04166667"},{"1":"392","2":"0.20833333"},{"1":"393","2":"-0.04166667"},{"1":"394","2":"0.04166667"},{"1":"395","2":"-0.04166667"},{"1":"396","2":"0.20833333"},{"1":"397","2":"-0.20833333"},{"1":"398","2":"-0.12500000"},{"1":"399","2":"0.20833333"},{"1":"400","2":"0.04166667"},{"1":"401","2":"-0.04166667"},{"1":"402","2":"-0.37500000"},{"1":"403","2":"0.20833333"},{"1":"404","2":"0.12500000"},{"1":"405","2":"0.20833333"},{"1":"406","2":"-0.04166667"},{"1":"407","2":"-0.04166667"},{"1":"408","2":"0.04166667"},{"1":"409","2":"-0.04166667"},{"1":"410","2":"0.04166667"},{"1":"411","2":"-0.04166667"},{"1":"412","2":"-0.12500000"},{"1":"413","2":"0.04166667"},{"1":"414","2":"0.12500000"},{"1":"415","2":"-0.12500000"},{"1":"416","2":"0.12500000"},{"1":"417","2":"0.04166667"},{"1":"418","2":"0.20833333"},{"1":"419","2":"0.12500000"},{"1":"420","2":"0.04166667"},{"1":"421","2":"0.04166667"},{"1":"422","2":"-0.20833333"},{"1":"423","2":"0.29166667"},{"1":"424","2":"-0.12500000"},{"1":"425","2":"0.12500000"},{"1":"426","2":"0.04166667"},{"1":"427","2":"-0.04166667"},{"1":"428","2":"0.04166667"},{"1":"429","2":"0.04166667"},{"1":"430","2":"-0.04166667"},{"1":"431","2":"-0.04166667"},{"1":"432","2":"0.20833333"},{"1":"433","2":"-0.12500000"},{"1":"434","2":"-0.12500000"},{"1":"435","2":"-0.04166667"},{"1":"436","2":"0.04166667"},{"1":"437","2":"0.04166667"},{"1":"438","2":"-0.20833333"},{"1":"439","2":"-0.12500000"},{"1":"440","2":"0.04166667"},{"1":"441","2":"0.12500000"},{"1":"442","2":"0.12500000"},{"1":"443","2":"-0.12500000"},{"1":"444","2":"0.04166667"},{"1":"445","2":"-0.04166667"},{"1":"446","2":"-0.12500000"},{"1":"447","2":"0.04166667"},{"1":"448","2":"-0.04166667"},{"1":"449","2":"-0.04166667"},{"1":"450","2":"0.04166667"},{"1":"451","2":"0.04166667"},{"1":"452","2":"-0.04166667"},{"1":"453","2":"0.20833333"},{"1":"454","2":"0.04166667"},{"1":"455","2":"0.04166667"},{"1":"456","2":"-0.12500000"},{"1":"457","2":"-0.04166667"},{"1":"458","2":"-0.12500000"},{"1":"459","2":"0.20833333"},{"1":"460","2":"0.20833333"},{"1":"461","2":"-0.04166667"},{"1":"462","2":"-0.12500000"},{"1":"463","2":"0.12500000"},{"1":"464","2":"-0.12500000"},{"1":"465","2":"0.12500000"},{"1":"466","2":"0.04166667"},{"1":"467","2":"-0.12500000"},{"1":"468","2":"-0.04166667"},{"1":"469","2":"0.04166667"},{"1":"470","2":"0.04166667"},{"1":"471","2":"-0.12500000"},{"1":"472","2":"-0.12500000"},{"1":"473","2":"0.12500000"},{"1":"474","2":"-0.12500000"},{"1":"475","2":"0.04166667"},{"1":"476","2":"0.12500000"},{"1":"477","2":"-0.29166667"},{"1":"478","2":"-0.04166667"},{"1":"479","2":"0.04166667"},{"1":"480","2":"-0.04166667"},{"1":"481","2":"-0.12500000"},{"1":"482","2":"0.04166667"},{"1":"483","2":"-0.12500000"},{"1":"484","2":"0.04166667"},{"1":"485","2":"-0.04166667"},{"1":"486","2":"-0.12500000"},{"1":"487","2":"0.20833333"},{"1":"488","2":"0.04166667"},{"1":"489","2":"0.04166667"},{"1":"490","2":"-0.04166667"},{"1":"491","2":"-0.04166667"},{"1":"492","2":"0.04166667"},{"1":"493","2":"-0.04166667"},{"1":"494","2":"0.20833333"},{"1":"495","2":"-0.04166667"},{"1":"496","2":"-0.04166667"},{"1":"497","2":"-0.20833333"},{"1":"498","2":"-0.12500000"},{"1":"499","2":"0.04166667"},{"1":"500","2":"0.04166667"},{"1":"501","2":"-0.04166667"},{"1":"502","2":"-0.12500000"},{"1":"503","2":"-0.04166667"},{"1":"504","2":"-0.20833333"},{"1":"505","2":"-0.04166667"},{"1":"506","2":"-0.12500000"},{"1":"507","2":"-0.04166667"},{"1":"508","2":"-0.04166667"},{"1":"509","2":"0.20833333"},{"1":"510","2":"-0.04166667"},{"1":"511","2":"0.37500000"},{"1":"512","2":"-0.04166667"},{"1":"513","2":"0.04166667"},{"1":"514","2":"0.12500000"},{"1":"515","2":"0.12500000"},{"1":"516","2":"0.04166667"},{"1":"517","2":"0.20833333"},{"1":"518","2":"0.20833333"},{"1":"519","2":"-0.20833333"},{"1":"520","2":"-0.04166667"},{"1":"521","2":"0.04166667"},{"1":"522","2":"-0.29166667"},{"1":"523","2":"-0.04166667"},{"1":"524","2":"-0.04166667"},{"1":"525","2":"0.04166667"},{"1":"526","2":"0.04166667"},{"1":"527","2":"0.20833333"},{"1":"528","2":"0.04166667"},{"1":"529","2":"0.12500000"},{"1":"530","2":"0.04166667"},{"1":"531","2":"-0.12500000"},{"1":"532","2":"-0.20833333"},{"1":"533","2":"0.12500000"},{"1":"534","2":"0.12500000"},{"1":"535","2":"0.12500000"},{"1":"536","2":"-0.04166667"},{"1":"537","2":"0.04166667"},{"1":"538","2":"0.04166667"},{"1":"539","2":"0.20833333"},{"1":"540","2":"-0.04166667"},{"1":"541","2":"-0.04166667"},{"1":"542","2":"-0.12500000"},{"1":"543","2":"0.04166667"},{"1":"544","2":"-0.04166667"},{"1":"545","2":"0.20833333"},{"1":"546","2":"0.29166667"},{"1":"547","2":"0.04166667"},{"1":"548","2":"0.04166667"},{"1":"549","2":"-0.04166667"},{"1":"550","2":"0.04166667"},{"1":"551","2":"0.20833333"},{"1":"552","2":"-0.04166667"},{"1":"553","2":"-0.04166667"},{"1":"554","2":"0.12500000"},{"1":"555","2":"0.04166667"},{"1":"556","2":"0.20833333"},{"1":"557","2":"0.12500000"},{"1":"558","2":"0.04166667"},{"1":"559","2":"-0.04166667"},{"1":"560","2":"-0.12500000"},{"1":"561","2":"-0.04166667"},{"1":"562","2":"-0.20833333"},{"1":"563","2":"-0.04166667"},{"1":"564","2":"-0.04166667"},{"1":"565","2":"0.12500000"},{"1":"566","2":"0.12500000"},{"1":"567","2":"-0.04166667"},{"1":"568","2":"-0.12500000"},{"1":"569","2":"0.20833333"},{"1":"570","2":"-0.20833333"},{"1":"571","2":"-0.20833333"},{"1":"572","2":"0.20833333"},{"1":"573","2":"-0.04166667"},{"1":"574","2":"0.04166667"},{"1":"575","2":"0.04166667"},{"1":"576","2":"-0.12500000"},{"1":"577","2":"-0.12500000"},{"1":"578","2":"0.04166667"},{"1":"579","2":"0.12500000"},{"1":"580","2":"0.12500000"},{"1":"581","2":"-0.04166667"},{"1":"582","2":"0.04166667"},{"1":"583","2":"-0.20833333"},{"1":"584","2":"0.12500000"},{"1":"585","2":"-0.29166667"},{"1":"586","2":"0.12500000"},{"1":"587","2":"-0.12500000"},{"1":"588","2":"0.04166667"},{"1":"589","2":"0.20833333"},{"1":"590","2":"0.04166667"},{"1":"591","2":"-0.12500000"},{"1":"592","2":"0.04166667"},{"1":"593","2":"-0.04166667"},{"1":"594","2":"0.12500000"},{"1":"595","2":"0.04166667"},{"1":"596","2":"-0.20833333"},{"1":"597","2":"-0.12500000"},{"1":"598","2":"0.04166667"},{"1":"599","2":"0.04166667"},{"1":"600","2":"-0.12500000"},{"1":"601","2":"-0.04166667"},{"1":"602","2":"-0.04166667"},{"1":"603","2":"0.04166667"},{"1":"604","2":"0.04166667"},{"1":"605","2":"0.04166667"},{"1":"606","2":"0.12500000"},{"1":"607","2":"0.04166667"},{"1":"608","2":"-0.04166667"},{"1":"609","2":"0.04166667"},{"1":"610","2":"-0.12500000"},{"1":"611","2":"-0.04166667"},{"1":"612","2":"-0.12500000"},{"1":"613","2":"-0.20833333"},{"1":"614","2":"0.12500000"},{"1":"615","2":"0.12500000"},{"1":"616","2":"-0.12500000"},{"1":"617","2":"-0.04166667"},{"1":"618","2":"0.12500000"},{"1":"619","2":"0.04166667"},{"1":"620","2":"-0.04166667"},{"1":"621","2":"-0.20833333"},{"1":"622","2":"-0.04166667"},{"1":"623","2":"0.04166667"},{"1":"624","2":"0.04166667"},{"1":"625","2":"0.04166667"},{"1":"626","2":"0.20833333"},{"1":"627","2":"-0.04166667"},{"1":"628","2":"0.12500000"},{"1":"629","2":"0.12500000"},{"1":"630","2":"0.12500000"},{"1":"631","2":"-0.04166667"},{"1":"632","2":"-0.04166667"},{"1":"633","2":"0.04166667"},{"1":"634","2":"-0.04166667"},{"1":"635","2":"0.29166667"},{"1":"636","2":"0.12500000"},{"1":"637","2":"-0.12500000"},{"1":"638","2":"0.04166667"},{"1":"639","2":"-0.12500000"},{"1":"640","2":"-0.04166667"},{"1":"641","2":"-0.20833333"},{"1":"642","2":"-0.04166667"},{"1":"643","2":"-0.04166667"},{"1":"644","2":"0.12500000"},{"1":"645","2":"-0.12500000"},{"1":"646","2":"-0.12500000"},{"1":"647","2":"0.12500000"},{"1":"648","2":"-0.12500000"},{"1":"649","2":"-0.20833333"},{"1":"650","2":"-0.04166667"},{"1":"651","2":"0.12500000"},{"1":"652","2":"0.20833333"},{"1":"653","2":"0.04166667"},{"1":"654","2":"0.04166667"},{"1":"655","2":"-0.12500000"},{"1":"656","2":"-0.12500000"},{"1":"657","2":"0.04166667"},{"1":"658","2":"0.12500000"},{"1":"659","2":"-0.04166667"},{"1":"660","2":"-0.12500000"},{"1":"661","2":"-0.04166667"},{"1":"662","2":"0.12500000"},{"1":"663","2":"-0.12500000"},{"1":"664","2":"0.20833333"},{"1":"665","2":"0.04166667"},{"1":"666","2":"0.12500000"},{"1":"667","2":"0.12500000"},{"1":"668","2":"-0.12500000"},{"1":"669","2":"0.20833333"},{"1":"670","2":"-0.12500000"},{"1":"671","2":"0.04166667"},{"1":"672","2":"-0.12500000"},{"1":"673","2":"-0.04166667"},{"1":"674","2":"0.04166667"},{"1":"675","2":"-0.29166667"},{"1":"676","2":"-0.12500000"},{"1":"677","2":"-0.04166667"},{"1":"678","2":"0.04166667"},{"1":"679","2":"-0.12500000"},{"1":"680","2":"-0.12500000"},{"1":"681","2":"-0.04166667"},{"1":"682","2":"0.04166667"},{"1":"683","2":"-0.04166667"},{"1":"684","2":"0.04166667"},{"1":"685","2":"-0.20833333"},{"1":"686","2":"-0.20833333"},{"1":"687","2":"0.12500000"},{"1":"688","2":"0.12500000"},{"1":"689","2":"0.12500000"},{"1":"690","2":"-0.12500000"},{"1":"691","2":"0.04166667"},{"1":"692","2":"0.04166667"},{"1":"693","2":"0.12500000"},{"1":"694","2":"-0.12500000"},{"1":"695","2":"-0.04166667"},{"1":"696","2":"-0.12500000"},{"1":"697","2":"-0.04166667"},{"1":"698","2":"0.04166667"},{"1":"699","2":"-0.12500000"},{"1":"700","2":"0.04166667"},{"1":"701","2":"0.29166667"},{"1":"702","2":"0.12500000"},{"1":"703","2":"0.04166667"},{"1":"704","2":"-0.04166667"},{"1":"705","2":"0.04166667"},{"1":"706","2":"0.04166667"},{"1":"707","2":"0.12500000"},{"1":"708","2":"0.12500000"},{"1":"709","2":"-0.04166667"},{"1":"710","2":"-0.20833333"},{"1":"711","2":"-0.04166667"},{"1":"712","2":"0.04166667"},{"1":"713","2":"0.04166667"},{"1":"714","2":"0.12500000"},{"1":"715","2":"0.04166667"},{"1":"716","2":"0.29166667"},{"1":"717","2":"0.12500000"},{"1":"718","2":"0.20833333"},{"1":"719","2":"0.12500000"},{"1":"720","2":"-0.20833333"},{"1":"721","2":"-0.04166667"},{"1":"722","2":"0.12500000"},{"1":"723","2":"0.04166667"},{"1":"724","2":"-0.20833333"},{"1":"725","2":"-0.12500000"},{"1":"726","2":"0.20833333"},{"1":"727","2":"-0.29166667"},{"1":"728","2":"0.04166667"},{"1":"729","2":"0.04166667"},{"1":"730","2":"0.04166667"},{"1":"731","2":"0.12500000"},{"1":"732","2":"-0.12500000"},{"1":"733","2":"0.04166667"},{"1":"734","2":"0.04166667"},{"1":"735","2":"-0.04166667"},{"1":"736","2":"-0.12500000"},{"1":"737","2":"-0.20833333"},{"1":"738","2":"-0.12500000"},{"1":"739","2":"0.04166667"},{"1":"740","2":"0.04166667"},{"1":"741","2":"0.04166667"},{"1":"742","2":"-0.12500000"},{"1":"743","2":"-0.04166667"},{"1":"744","2":"-0.12500000"},{"1":"745","2":"-0.20833333"},{"1":"746","2":"0.04166667"},{"1":"747","2":"0.04166667"},{"1":"748","2":"-0.04166667"},{"1":"749","2":"-0.04166667"},{"1":"750","2":"-0.12500000"},{"1":"751","2":"0.04166667"},{"1":"752","2":"0.04166667"},{"1":"753","2":"0.04166667"},{"1":"754","2":"-0.04166667"},{"1":"755","2":"0.12500000"},{"1":"756","2":"-0.12500000"},{"1":"757","2":"-0.20833333"},{"1":"758","2":"0.04166667"},{"1":"759","2":"0.12500000"},{"1":"760","2":"0.12500000"},{"1":"761","2":"-0.12500000"},{"1":"762","2":"-0.12500000"},{"1":"763","2":"-0.04166667"},{"1":"764","2":"0.29166667"},{"1":"765","2":"-0.20833333"},{"1":"766","2":"-0.12500000"},{"1":"767","2":"0.29166667"},{"1":"768","2":"0.04166667"},{"1":"769","2":"0.12500000"},{"1":"770","2":"0.12500000"},{"1":"771","2":"0.20833333"},{"1":"772","2":"0.04166667"},{"1":"773","2":"-0.12500000"},{"1":"774","2":"-0.04166667"},{"1":"775","2":"0.04166667"},{"1":"776","2":"0.20833333"},{"1":"777","2":"0.29166667"},{"1":"778","2":"-0.12500000"},{"1":"779","2":"-0.12500000"},{"1":"780","2":"0.12500000"},{"1":"781","2":"-0.04166667"},{"1":"782","2":"0.04166667"},{"1":"783","2":"-0.04166667"},{"1":"784","2":"-0.04166667"},{"1":"785","2":"-0.04166667"},{"1":"786","2":"0.04166667"},{"1":"787","2":"0.12500000"},{"1":"788","2":"-0.37500000"},{"1":"789","2":"0.20833333"},{"1":"790","2":"-0.20833333"},{"1":"791","2":"-0.04166667"},{"1":"792","2":"0.29166667"},{"1":"793","2":"-0.04166667"},{"1":"794","2":"0.04166667"},{"1":"795","2":"-0.04166667"},{"1":"796","2":"-0.20833333"},{"1":"797","2":"-0.20833333"},{"1":"798","2":"-0.12500000"},{"1":"799","2":"0.04166667"},{"1":"800","2":"0.12500000"},{"1":"801","2":"-0.12500000"},{"1":"802","2":"0.12500000"},{"1":"803","2":"-0.04166667"},{"1":"804","2":"-0.12500000"},{"1":"805","2":"-0.04166667"},{"1":"806","2":"0.04166667"},{"1":"807","2":"0.04166667"},{"1":"808","2":"0.20833333"},{"1":"809","2":"0.12500000"},{"1":"810","2":"0.04166667"},{"1":"811","2":"-0.12500000"},{"1":"812","2":"-0.12500000"},{"1":"813","2":"-0.12500000"},{"1":"814","2":"-0.20833333"},{"1":"815","2":"-0.20833333"},{"1":"816","2":"-0.04166667"},{"1":"817","2":"0.04166667"},{"1":"818","2":"-0.12500000"},{"1":"819","2":"-0.12500000"},{"1":"820","2":"-0.12500000"},{"1":"821","2":"0.12500000"},{"1":"822","2":"0.12500000"},{"1":"823","2":"-0.12500000"},{"1":"824","2":"-0.04166667"},{"1":"825","2":"-0.04166667"},{"1":"826","2":"0.04166667"},{"1":"827","2":"-0.12500000"},{"1":"828","2":"-0.04166667"},{"1":"829","2":"0.04166667"},{"1":"830","2":"-0.04166667"},{"1":"831","2":"-0.04166667"},{"1":"832","2":"-0.04166667"},{"1":"833","2":"-0.12500000"},{"1":"834","2":"-0.20833333"},{"1":"835","2":"0.20833333"},{"1":"836","2":"0.04166667"},{"1":"837","2":"-0.12500000"},{"1":"838","2":"0.12500000"},{"1":"839","2":"0.04166667"},{"1":"840","2":"-0.04166667"},{"1":"841","2":"0.04166667"},{"1":"842","2":"-0.04166667"},{"1":"843","2":"0.04166667"},{"1":"844","2":"0.04166667"},{"1":"845","2":"0.04166667"},{"1":"846","2":"-0.20833333"},{"1":"847","2":"-0.04166667"},{"1":"848","2":"-0.04166667"},{"1":"849","2":"0.12500000"},{"1":"850","2":"0.12500000"},{"1":"851","2":"-0.12500000"},{"1":"852","2":"-0.04166667"},{"1":"853","2":"0.04166667"},{"1":"854","2":"-0.04166667"},{"1":"855","2":"-0.04166667"},{"1":"856","2":"-0.20833333"},{"1":"857","2":"0.04166667"},{"1":"858","2":"0.12500000"},{"1":"859","2":"-0.12500000"},{"1":"860","2":"0.04166667"},{"1":"861","2":"0.04166667"},{"1":"862","2":"0.20833333"},{"1":"863","2":"-0.04166667"},{"1":"864","2":"0.12500000"},{"1":"865","2":"0.04166667"},{"1":"866","2":"-0.20833333"},{"1":"867","2":"0.04166667"},{"1":"868","2":"0.04166667"},{"1":"869","2":"-0.12500000"},{"1":"870","2":"0.04166667"},{"1":"871","2":"0.12500000"},{"1":"872","2":"-0.12500000"},{"1":"873","2":"0.12500000"},{"1":"874","2":"0.12500000"},{"1":"875","2":"-0.04166667"},{"1":"876","2":"-0.12500000"},{"1":"877","2":"-0.04166667"},{"1":"878","2":"0.04166667"},{"1":"879","2":"-0.04166667"},{"1":"880","2":"-0.12500000"},{"1":"881","2":"0.12500000"},{"1":"882","2":"0.04166667"},{"1":"883","2":"-0.04166667"},{"1":"884","2":"-0.04166667"},{"1":"885","2":"0.12500000"},{"1":"886","2":"-0.20833333"},{"1":"887","2":"-0.12500000"},{"1":"888","2":"0.12500000"},{"1":"889","2":"0.20833333"},{"1":"890","2":"0.20833333"},{"1":"891","2":"0.20833333"},{"1":"892","2":"0.04166667"},{"1":"893","2":"0.12500000"},{"1":"894","2":"0.04166667"},{"1":"895","2":"0.04166667"},{"1":"896","2":"-0.12500000"},{"1":"897","2":"-0.04166667"},{"1":"898","2":"0.12500000"},{"1":"899","2":"-0.04166667"},{"1":"900","2":"-0.12500000"},{"1":"901","2":"0.04166667"},{"1":"902","2":"0.12500000"},{"1":"903","2":"0.20833333"},{"1":"904","2":"0.04166667"},{"1":"905","2":"0.29166667"},{"1":"906","2":"-0.04166667"},{"1":"907","2":"-0.04166667"},{"1":"908","2":"0.04166667"},{"1":"909","2":"-0.20833333"},{"1":"910","2":"-0.12500000"},{"1":"911","2":"0.04166667"},{"1":"912","2":"0.04166667"},{"1":"913","2":"0.12500000"},{"1":"914","2":"-0.12500000"},{"1":"915","2":"0.12500000"},{"1":"916","2":"-0.12500000"},{"1":"917","2":"0.04166667"},{"1":"918","2":"-0.12500000"},{"1":"919","2":"-0.04166667"},{"1":"920","2":"-0.12500000"},{"1":"921","2":"-0.12500000"},{"1":"922","2":"-0.04166667"},{"1":"923","2":"0.12500000"},{"1":"924","2":"0.12500000"},{"1":"925","2":"0.12500000"},{"1":"926","2":"-0.04166667"},{"1":"927","2":"-0.12500000"},{"1":"928","2":"-0.12500000"},{"1":"929","2":"0.04166667"},{"1":"930","2":"0.12500000"},{"1":"931","2":"-0.04166667"},{"1":"932","2":"-0.04166667"},{"1":"933","2":"0.12500000"},{"1":"934","2":"-0.04166667"},{"1":"935","2":"-0.20833333"},{"1":"936","2":"-0.04166667"},{"1":"937","2":"-0.04166667"},{"1":"938","2":"0.12500000"},{"1":"939","2":"0.20833333"},{"1":"940","2":"0.04166667"},{"1":"941","2":"-0.12500000"},{"1":"942","2":"0.04166667"},{"1":"943","2":"-0.12500000"},{"1":"944","2":"-0.20833333"},{"1":"945","2":"-0.04166667"},{"1":"946","2":"-0.04166667"},{"1":"947","2":"0.04166667"},{"1":"948","2":"-0.12500000"},{"1":"949","2":"-0.04166667"},{"1":"950","2":"-0.04166667"},{"1":"951","2":"-0.12500000"},{"1":"952","2":"0.12500000"},{"1":"953","2":"-0.12500000"},{"1":"954","2":"-0.04166667"},{"1":"955","2":"-0.12500000"},{"1":"956","2":"0.04166667"},{"1":"957","2":"-0.20833333"},{"1":"958","2":"-0.04166667"},{"1":"959","2":"-0.04166667"},{"1":"960","2":"-0.04166667"},{"1":"961","2":"0.12500000"},{"1":"962","2":"-0.12500000"},{"1":"963","2":"0.04166667"},{"1":"964","2":"0.12500000"},{"1":"965","2":"0.04166667"},{"1":"966","2":"-0.04166667"},{"1":"967","2":"0.12500000"},{"1":"968","2":"0.37500000"},{"1":"969","2":"-0.12500000"},{"1":"970","2":"-0.12500000"},{"1":"971","2":"0.04166667"},{"1":"972","2":"-0.04166667"},{"1":"973","2":"-0.12500000"},{"1":"974","2":"-0.04166667"},{"1":"975","2":"0.12500000"},{"1":"976","2":"0.04166667"},{"1":"977","2":"0.04166667"},{"1":"978","2":"-0.12500000"},{"1":"979","2":"0.12500000"},{"1":"980","2":"-0.04166667"},{"1":"981","2":"-0.04166667"},{"1":"982","2":"0.04166667"},{"1":"983","2":"0.12500000"},{"1":"984","2":"0.04166667"},{"1":"985","2":"0.12500000"},{"1":"986","2":"-0.12500000"},{"1":"987","2":"0.04166667"},{"1":"988","2":"-0.12500000"},{"1":"989","2":"0.12500000"},{"1":"990","2":"0.04166667"},{"1":"991","2":"-0.12500000"},{"1":"992","2":"0.12500000"},{"1":"993","2":"0.12500000"},{"1":"994","2":"0.04166667"},{"1":"995","2":"0.04166667"},{"1":"996","2":"0.04166667"},{"1":"997","2":"-0.12500000"},{"1":"998","2":"-0.04166667"},{"1":"999","2":"-0.04166667"},{"1":"1000","2":"0.12500000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>decision_sex_test <span class="sc">%&gt;%</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visualize</span>(<span class="at">bins =</span> <span class="dv">9</span>) <span class="sc">+</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">shade_p_value</span>(<span class="at">obs_stat =</span> obs_diff, <span class="at">direction =</span> <span class="st">"two-sided"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>decision_sex_test <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visualize</span>(<span class="at">bins =</span> <span class="dv">9</span>) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">shade_p_value</span>(<span class="at">obs_stat =</span> obs_diff, <span class="at">direction =</span> <span class="st">"two-sided"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="10-hypothesis_testing_with_randomization_1-web_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -736,14 +717,16 @@ Null Hypothesis: independence
 <section id="hypothesis1-ex-calculate-p" class="level3" data-number="10.9.4">
 <h3 data-number="10.9.4" class="anchored" data-anchor-id="hypothesis1-ex-calculate-p"><span class="header-section-number">10.9.4</span> Calculate the P-value.</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> decision_sex_test <span class="sc">%&gt;%</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_p_value</span>(<span class="at">obs_stat =</span> obs_diff, <span class="at">direction =</span> <span class="st">"two-sided"</span>)</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>P</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 1
-  p_value
-    &lt;dbl&gt;
-1   0.048</code></pre>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> decision_sex_test <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_p_value</span>(<span class="at">obs_stat =</span> obs_diff, <span class="at">direction =</span> <span class="st">"two-sided"</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>P</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["p_value"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.048"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>Note: as with the test statistic above, the P-value appears above in a 1x1 tibble. That’s fine for this step, but in the inline code below, we will need to use <code>pull</code> again to extract the value.</p>
@@ -785,35 +768,39 @@ Null Hypothesis: independence
 <h2 data-number="10.11" class="anchored" data-anchor-id="hypothesis1-one-sided-two-sided"><span class="header-section-number">10.11</span> More on one-sided and two-sided tests</h2>
 <p>I want to emphasize again the difference between conducting a one-sided versus a two-sided test. You may recall that in “Introduction to simulation, Part 2”, we calculated this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">9999</span>)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>sex_discrimination <span class="sc">%&gt;%</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">specify</span>(decision <span class="sc">~</span> sex, <span class="at">success =</span> <span class="st">"promoted"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hypothesize</span>(<span class="at">null =</span> <span class="st">"independence"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">generate</span>(<span class="at">reps =</span> <span class="dv">1000</span>, <span class="at">type =</span> <span class="st">"permute"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"diff in props"</span>, <span class="at">order =</span> <span class="fu">c</span>(<span class="st">"male"</span>, <span class="st">"female"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_p_value</span>(<span class="at">obs_stat =</span> obs_diff, <span class="at">direction =</span> <span class="st">"greater"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 1
-  p_value
-    &lt;dbl&gt;
-1   0.024</code></pre>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">9999</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>sex_discrimination <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">specify</span>(decision <span class="sc">~</span> sex, <span class="at">success =</span> <span class="st">"promoted"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hypothesize</span>(<span class="at">null =</span> <span class="st">"independence"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">generate</span>(<span class="at">reps =</span> <span class="dv">1000</span>, <span class="at">type =</span> <span class="st">"permute"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"diff in props"</span>, <span class="at">order =</span> <span class="fu">c</span>(<span class="st">"male"</span>, <span class="st">"female"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_p_value</span>(<span class="at">obs_stat =</span> obs_diff, <span class="at">direction =</span> <span class="st">"greater"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["p_value"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.024"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>The justification was that, back then, we already suspected that male files were more likely to be promoted, and it appears that our evidence (the test statistic, or our observed difference) was pretty far in that direction. (Actually, we may get a slightly different number each time. Remember that we are randomizing. Therefore, we won’t expect to get the exact same numbers each time.)</p>
 <p>By way of contrast, in this chapter we computed the two-sided P-value:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">9999</span>)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>sex_discrimination <span class="sc">%&gt;%</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">specify</span>(decision <span class="sc">~</span> sex, <span class="at">success =</span> <span class="st">"promoted"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hypothesize</span>(<span class="at">null =</span> <span class="st">"independence"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">generate</span>(<span class="at">reps =</span> <span class="dv">1000</span>, <span class="at">type =</span> <span class="st">"permute"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"diff in props"</span>, <span class="at">order =</span> <span class="fu">c</span>(<span class="st">"male"</span>, <span class="st">"female"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_p_value</span>(<span class="at">obs_stat =</span> obs_diff, <span class="at">direction =</span> <span class="st">"two-sided"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 1
-  p_value
-    &lt;dbl&gt;
-1   0.048</code></pre>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">9999</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>sex_discrimination <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">specify</span>(decision <span class="sc">~</span> sex, <span class="at">success =</span> <span class="st">"promoted"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hypothesize</span>(<span class="at">null =</span> <span class="st">"independence"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">generate</span>(<span class="at">reps =</span> <span class="dv">1000</span>, <span class="at">type =</span> <span class="st">"permute"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"diff in props"</span>, <span class="at">order =</span> <span class="fu">c</span>(<span class="st">"male"</span>, <span class="st">"female"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_p_value</span>(<span class="at">obs_stat =</span> obs_diff, <span class="at">direction =</span> <span class="st">"two-sided"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["p_value"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.048"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>The only change to the code is the word “two-sided” (versus “greater”) in the last line.</p>
@@ -833,11 +820,11 @@ Null Hypothesis: independence
 <p>As always, use a significance level of <span class="math inline">\(\alpha = 0.05\)</span>.</p>
 <p>Here is the data import:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>ucb_admit <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://vectorposse.github.io/intro_stats/data/ucb_admit.csv"</span>,</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">col_types =</span> <span class="fu">list</span>(</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Admit =</span> <span class="fu">col_factor</span>(),</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Gender =</span> <span class="fu">col_factor</span>(),</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dept =</span> <span class="fu">col_factor</span>()))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>ucb_admit <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://vectorposse.github.io/intro_stats/data/ucb_admit.csv"</span>,</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">col_types =</span> <span class="fu">list</span>(</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Admit =</span> <span class="fu">col_factor</span>(),</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Gender =</span> <span class="fu">col_factor</span>(),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">Dept =</span> <span class="fu">col_factor</span>()))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>I have copied the template below. You need to fill in each step. Some of the steps will be the same or similar to steps in the example above. It is perfectly okay to copy and paste R code, making the necessary changes. It is <strong>not</strong> okay to copy and paste text. You need to put everything into your own words. Also, don’t copy and paste the parts that are labeled as “Notes”. That is information to help you understand each step, but it’s not part of the statistical analysis itself.</p>
 <p>The template below is exactly the same as in the <a href="#appendix-rubric">Appendix</a> up to the part about confidence intervals which we haven’t learned yet.</p>
@@ -848,10 +835,10 @@ Null Hypothesis: independence
 <div class="answer">
 <p>Please write up your answer here</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to print the data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to print the data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to glimpse the variables</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to glimpse the variables</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -859,7 +846,7 @@ Null Hypothesis: independence
 <h6 class="unnumbered anchored" data-anchor-id="prepare-the-data-for-analysis.-not-always-necessary.">Prepare the data for analysis. [Not always necessary.]</h6>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to prepare the data for analysis.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to prepare the data for analysis.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -867,7 +854,7 @@ Null Hypothesis: independence
 <h6 class="unnumbered anchored" data-anchor-id="make-tables-or-plots-to-explore-the-data-visually.">Make tables or plots to explore the data visually.</h6>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to make tables or plots.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to make tables or plots.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -916,7 +903,7 @@ Null Hypothesis: independence
 <h6 class="unnumbered anchored" data-anchor-id="compute-the-test-statistic.">Compute the test statistic.</h6>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to compute the test statistic.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to compute the test statistic.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -930,12 +917,12 @@ Null Hypothesis: independence
 <h6 class="unnumbered anchored" data-anchor-id="plot-the-null-distribution.">Plot the null distribution.</h6>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">9999</span>)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to simulate the null distribution.</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Run 1000 reps like in the earlier example.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">9999</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to simulate the null distribution.</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Run 1000 reps like in the earlier example.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to plot the null distribution.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to plot the null distribution.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -943,7 +930,7 @@ Null Hypothesis: independence
 <h6 class="unnumbered anchored" data-anchor-id="calculate-the-p-value.">Calculate the P-value.</h6>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to calculate the P-value.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to calculate the P-value.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>

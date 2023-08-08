@@ -96,7 +96,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
+
+<link rel="stylesheet" href="custom.css">
 </head>
 
 <body class="nav-sidebar floating">
@@ -504,49 +508,55 @@ $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <p>The <code>table</code> command stops being convenient if you want proportions instead of counts. Instead, we will use the <code>tabyl</code> command from the <code>janitor</code> package that was loaded near the top of the chapter. The syntax for this command is a little different. The tibble goes first, followed by a comma, followed by the variable you want to summarize:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(penguins, species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   species   n   percent
-    Adelie 152 0.4418605
- Chinstrap  68 0.1976744
-    Gentoo 124 0.3604651</code></pre>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["species"],"name":[1],"type":["fct"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["percent"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"Adelie","2":"152","3":"0.4418605"},{"1":"Chinstrap","2":"68","3":"0.1976744"},{"1":"Gentoo","2":"124","3":"0.3604651"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>Now you get both counts and proportions. Note that in the output above, it’s a little misleading to call the last column “percent”. These are actually proportions, and we would have to multiply by 100 to get percentages.</p>
 <p>It’s usually nice to have the column totals. We can achieve that by using an <code>adorn</code> function to get them as follows:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(penguins, species) <span class="sc">%&gt;%</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   species   n   percent
-    Adelie 152 0.4418605
- Chinstrap  68 0.1976744
-    Gentoo 124 0.3604651
-     Total 344 1.0000000</code></pre>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(penguins, species) <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["species"],"name":[1],"type":["fct"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["percent"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"Adelie","2":"152","3":"0.4418605","_rn_":"1"},{"1":"Chinstrap","2":"68","3":"0.1976744","_rn_":"2"},{"1":"Gentoo","2":"124","3":"0.3604651","_rn_":"3"},{"1":"Total","2":"344","3":"1.0000000","_rn_":"4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>We’ll always include the totals at the bottom.</p>
 <p>If you really want percentages, we can use a different <code>adorn</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(penguins, species) <span class="sc">%&gt;%</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_pct_formatting</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   species   n percent
-    Adelie 152   44.2%
- Chinstrap  68   19.8%
-    Gentoo 124   36.0%</code></pre>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(penguins, species) <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_pct_formatting</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["species"],"name":[1],"type":["fct"],"align":["left"]},{"label":["n"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["percent"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"Adelie","2":"152","3":"44.2%"},{"1":"Chinstrap","2":"68","3":"19.8%"},{"1":"Gentoo","2":"124","3":"36.0%"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>Again, we’ll also include <code>adorn_totals</code> so that we get the column totals.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(penguins, species) <span class="sc">%&gt;%</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_totals</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_pct_formatting</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   species   n percent
-    Adelie 152   44.2%
- Chinstrap  68   19.8%
-    Gentoo 124   36.0%
-     Total 344  100.0%</code></pre>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(penguins, species) <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_totals</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_pct_formatting</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["species"],"name":[1],"type":["fct"],"align":["left"]},{"label":["n"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["percent"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"Adelie","2":"152","3":"44.2%","_rn_":"1"},{"1":"Chinstrap","2":"68","3":"19.8%","_rn_":"2"},{"1":"Gentoo","2":"124","3":"36.0%","_rn_":"3"},{"1":"Total","2":"344","3":"100.0%","_rn_":"4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>The syntax above looks a little confusing with the unusual <code>%&gt;%</code> symbols everywhere. You will learn more about that weird set of symbols in a later chapter. For now, you can just copy and paste this code and make any necessary changes to the tibble and/or variables names as needed.</p>
@@ -555,7 +565,7 @@ $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <p>Use the <code>tabyl</code> command as above to create a frequency table for the sex of the penguins. Include the column totals at the bottom. (You will also get a relative frequency table for free.)</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a frequency table for sex</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a frequency table for sex</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -571,7 +581,7 @@ $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <p>Now create a relative frequency table for sex that reports percentages and not proportions (still including the column totals at the bottom).</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here that reports percentages instead of proportions</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here that reports percentages instead of proportions</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -594,8 +604,8 @@ $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <p>In an introductory course, we won’t get too fancy with these graphs. But be aware that there’s a whole field of data visualization that studies clear and interesting ways to understand data graphically.</p>
 <p>It will be easier to explain the <code>ggplot</code> syntax in the context of specific graph types, so let’s create a bar chart for species.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> species)) <span class="sc">+</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> species)) <span class="sc">+</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="03-categorical_data-web_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -608,8 +618,8 @@ $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 </ul>
 <p>This can be modified somewhat to give proportions (relative frequencies) on the y-axis instead of counts. Unfortunately, the <code>ggplot</code> syntax is not very transparent here. My recommendation is to copy and paste the code below if you need to make a relative frequency bar chart in the future, making the necessary changes to the tibble and variable names, of course.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> species, <span class="at">y =</span> ..prop.., <span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> species, <span class="at">y =</span> ..prop.., <span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: The dot-dot notation (`..prop..`) was deprecated in ggplot2 3.4.0.
 ℹ Please use `after_stat(prop)` instead.</code></pre>
@@ -642,14 +652,15 @@ $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <p>Most research questions that involve two or more variables are fundamentally questions of whether a response variable is associated with one or more predictor variables, or whether they are independent.</p>
 <p>Let’s check the contingency table. The <code>tabyl</code> command will place the first variable listed across the rows and the second one listed down the columns. Since we always include column totals, we want the predictor variable to be the column variable so we can see how the predictor groups are distributed in the data. <strong>Always list the response variable first</strong>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(penguins, sex, species) <span class="sc">%&gt;%</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>    sex Adelie Chinstrap Gentoo
- female     73        34     58
-   male     73        34     61
-   &lt;NA&gt;      6         0      5
-  Total    152        68    124</code></pre>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(penguins, sex, species) <span class="sc">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["sex"],"name":[1],"type":["fct"],"align":["left"]},{"label":["Adelie"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Chinstrap"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Gentoo"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"female","2":"73","3":"34","4":"58","_rn_":"1"},{"1":"male","2":"73","3":"34","4":"61","_rn_":"2"},{"1":"NA","2":"6","3":"0","4":"5","_rn_":"3"},{"1":"Total","2":"152","3":"68","4":"124","_rn_":"4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>Each column is a group, and our question is whether the distribution of sexes in each column is similar.</p>
@@ -663,29 +674,31 @@ $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <hr>
 <p>A more fair way to compare across columns is to create relative frequencies. We can do this with a slightly different <code>adorn</code> command. The following code says that we want to compute column proportions (yes, I know the command is called <code>adorn_percentages</code>, but these are proportions):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(penguins, sex, species) <span class="sc">%&gt;%</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_totals</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_percentages</span>(<span class="st">"col"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>    sex     Adelie Chinstrap     Gentoo
- female 0.48026316       0.5 0.46774194
-   male 0.48026316       0.5 0.49193548
-   &lt;NA&gt; 0.03947368       0.0 0.04032258
-  Total 1.00000000       1.0 1.00000000</code></pre>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(penguins, sex, species) <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_totals</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_percentages</span>(<span class="st">"col"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["sex"],"name":[1],"type":["fct"],"align":["left"]},{"label":["Adelie"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Chinstrap"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Gentoo"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"female","2":"0.48026316","3":"0.5","4":"0.46774194","_rn_":"1"},{"1":"male","2":"0.48026316","3":"0.5","4":"0.49193548","_rn_":"2"},{"1":"NA","2":"0.03947368","3":"0.0","4":"0.04032258","_rn_":"3"},{"1":"Total","2":"1.00000000","3":"1.0","4":"1.00000000","_rn_":"4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>If we actually want percentages, we need one more line of code. This command—<code>adorn_pct_formatting</code>—is the same as we used before with frequency tables.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(penguins, sex, species) <span class="sc">%&gt;%</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_totals</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_percentages</span>(<span class="st">"col"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_pct_formatting</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>    sex Adelie Chinstrap Gentoo
- female  48.0%     50.0%  46.8%
-   male  48.0%     50.0%  49.2%
-   &lt;NA&gt;   3.9%      0.0%   4.0%
-  Total 100.0%    100.0% 100.0%</code></pre>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(penguins, sex, species) <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_totals</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_percentages</span>(<span class="st">"col"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_pct_formatting</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["sex"],"name":[1],"type":["fct"],"align":["left"]},{"label":["Adelie"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Chinstrap"],"name":[3],"type":["chr"],"align":["left"]},{"label":["Gentoo"],"name":[4],"type":["chr"],"align":["left"]}],"data":[{"1":"female","2":"48.0%","3":"50.0%","4":"46.8%","_rn_":"1"},{"1":"male","2":"48.0%","3":"50.0%","4":"49.2%","_rn_":"2"},{"1":"NA","2":"3.9%","3":"0.0%","4":"4.0%","_rn_":"3"},{"1":"Total","2":"100.0%","3":"100.0%","4":"100.0%","_rn_":"4"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>Now we can see that each column adds up to 100%. In other words, each species is now on equal footing, and only the distribution of sexes within each group matters.</p>
@@ -723,7 +736,7 @@ $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <p>Create a contingency table with percentages. List <code>species</code> first, followed by <code>island</code>. (Hey, that’s hint in case you need to go back and change your answer to part (a).)</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a contingency table with percentages.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a contingency table with percentages.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -739,8 +752,8 @@ $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <h2 data-number="3.7" class="anchored" data-anchor-id="categorical-graphing-two"><span class="header-section-number">3.7</span> Graphing two categorical variables</h2>
 <p>A somewhat effective way to display two categorical variables is with a side-by-side bar chart. Here is the <code>ggplot</code> code for the relationship between <code>sex</code> and <code>species</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">fill =</span> sex, <span class="at">x =</span> species)) <span class="sc">+</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">fill =</span> sex, <span class="at">x =</span> species)) <span class="sc">+</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="03-categorical_data-web_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -753,8 +766,8 @@ $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 </ul>
 <p>Another unusual feature is the argument <code>position = "dodge"</code> in the <code>geom_bar</code> layer. Let’s see what happens if we remove it.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">fill =</span> sex, <span class="at">x =</span> species)) <span class="sc">+</span> </span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">fill =</span> sex, <span class="at">x =</span> species)) <span class="sc">+</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="03-categorical_data-web_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -763,8 +776,8 @@ $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <p>So let’s agree to use side-by-side bar charts. There is still one aspect of the side-by-side bar chart that is misleading, though. For example, the red bar for Adelie penguins is bigger than the red bar for Gentoo penguins. Does this mean Adelie penguins are more likely to be female?</p>
 <p>This is the same issue we identified in an exercise above. To fix this problem, a better option here would be to use relative frequencies (i.e., proportions/percentages within each group) instead of counts on the y-axis. This is analogous to using proportions/percentages in a contingency table. Unfortunately, it is rather difficult to do this with <code>ggplot</code>. A compromise is available: by using <code>position = fill</code>, you can create a stacked bar chart that scales every group to 100%. Making comparisons across groups can still be hard, as explained above for any kind of stacked bar chart, but it works okay if there are only two categories in the response variable (as is almost the case with <code>sex</code> here, although the missing data distorts things a little at the bottom).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">fill =</span> sex, <span class="at">x =</span> species)) <span class="sc">+</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"fill"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">fill =</span> sex, <span class="at">x =</span> species)) <span class="sc">+</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"fill"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="03-categorical_data-web_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -775,7 +788,7 @@ $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <p>Using <code>species</code> and <code>island</code>, create a side-by-side bar chart. Be careful, though, to change the sample code above to make sure <code>species</code> is now the response variable (using the <code>fill</code> aesthetic) and that <code>island</code> is the explanatory variable (using <code>x</code>). (Hey, that’s another hint to go back and look at the previous exercise and make sure you got part (a) right!)</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to make a side-by-side bar chart.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to make a side-by-side bar chart.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -791,7 +804,7 @@ $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <h2 data-number="3.8" class="anchored" data-anchor-id="categorical-recoding"><span class="header-section-number">3.8</span> Recoding factor variables</h2>
 <p>As mentioned earlier, there are situations where a categorical variable is not recorded in R as a factor variable. Let’s look at the <code>year</code> variable:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(penguins<span class="sc">$</span>year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(penguins<span class="sc">$</span>year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> int [1:344] 2007 2007 2007 2007 2007 2007 2007 2007 2007 2007 ...</code></pre>
 </div>
@@ -802,7 +815,7 @@ $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <p>Use the <code>tabyl</code> command to create a frequency table for <code>year</code>.</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to make a frequency table for year.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to make a frequency table for year.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -817,9 +830,9 @@ $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <p>The code below uses a command called <code>mutate</code> that takes an old variable and creates a new variable. (You’ll learn more about this command in a later chapter. For now, you can just copy and paste this code if you need it again.) The name of the new variable can be anything we want; we’ll just call it <code>year_fct</code>. Then the real work is being done by the <code>as_factor</code> command that concerts the numeric <code>year</code> variable into a factor variable.</p>
 <p>Observe the effect below:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="ot">&lt;-</span> penguins <span class="sc">%&gt;%</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">year_fct =</span> <span class="fu">as_factor</span>(year))</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(penguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="ot">&lt;-</span> penguins <span class="sc">%&gt;%</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">year_fct =</span> <span class="fu">as_factor</span>(year))</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(penguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 344
 Columns: 9
@@ -840,7 +853,7 @@ $ year_fct          &lt;fct&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <p>Make a contingency table of the species measured in each year using counts. Use the <code>species</code> variable first, followed by the new factor variable <code>year_fct</code>. (Think about why that order makes sense. <strong>We will always list the response variable first so that the categories of interest will be the rows and the groups will be the columns.</strong>)</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to make a contingency table for species and year with counts.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to make a contingency table for species and year with counts.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -849,7 +862,7 @@ $ year_fct          &lt;fct&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <p>Make a contingency table of the species measured in each year using column percentages (<em>not</em> proportions). (Again, be sure to use the new factor variable <code>year_fct</code>, not the old variable <code>year</code>.)</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to make a contingency table for species and year with percentages.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to make a contingency table for species and year with percentages.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -865,19 +878,19 @@ $ year_fct          &lt;fct&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <h2 data-number="3.9" class="anchored" data-anchor-id="categorical-pub"><span class="header-section-number">3.9</span> Publication-ready graphics</h2>
 <p>Let’s go back to the first relative frequency bar chart from this chapter.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> species, <span class="at">y =</span> ..prop.., <span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> species, <span class="at">y =</span> ..prop.., <span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="03-categorical_data-web_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>The variable name <code>species</code> is already informative, but the y-axis is labeled with “prop”. Also note that this graph could use a title. We can do all this with <code>labs</code> (for labels). Observe:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> species, <span class="at">y =</span> ..prop.., <span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of species"</span>,</span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Proportion"</span>,</span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> species, <span class="at">y =</span> ..prop.., <span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of species"</span>,</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Proportion"</span>,</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="03-categorical_data-web_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -887,10 +900,10 @@ $ year_fct          &lt;fct&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <p>Modify the following side-by-side bar chart by adding a title and labels for both the fill variable and the x-axis variable. (Hint: you can use <code>fill = sex</code> inside the <code>labs</code> command just like you used <code>title</code>, <code>y</code>, and <code>x</code>.)</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify the following side-by-side bar chart by adding a title and </span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="co"># labels for both the x-axis and the fill variable.</span></span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">fill =</span> sex, <span class="at">x =</span> species)) <span class="sc">+</span></span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify the following side-by-side bar chart by adding a title and </span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co"># labels for both the x-axis and the fill variable.</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">fill =</span> sex, <span class="at">x =</span> species)) <span class="sc">+</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="03-categorical_data-web_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -931,25 +944,25 @@ $ year_fct          &lt;fct&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 </ol>
 <p>To answer the first question, we show you how to create your own tibble. Here is the syntax:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>penguin_species_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">species =</span> <span class="fu">c</span>(<span class="st">"Adelie"</span>, <span class="st">"Chinstrap"</span>, <span class="st">"Gentoo"</span>),</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">count =</span> <span class="fu">c</span>(<span class="dv">152</span>, <span class="dv">68</span>, <span class="dv">124</span>)</span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>penguin_species_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 2
-  species   count
-  &lt;chr&gt;     &lt;dbl&gt;
-1 Adelie      152
-2 Chinstrap    68
-3 Gentoo      124</code></pre>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>penguin_species_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">species =</span> <span class="fu">c</span>(<span class="st">"Adelie"</span>, <span class="st">"Chinstrap"</span>, <span class="st">"Gentoo"</span>),</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">count =</span> <span class="fu">c</span>(<span class="dv">152</span>, <span class="dv">68</span>, <span class="dv">124</span>)</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>penguin_species_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["species"],"name":[1],"type":["chr"],"align":["left"]},{"label":["count"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Adelie","2":"152"},{"1":"Chinstrap","2":"68"},{"1":"Gentoo","2":"124"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>Basically, the <code>tibble</code> command creates a new tibble. Then each column of data must be entered manually as a “vector” using the <code>c</code> to group all the data values together for each column. Be careful about the placement of quotation marks, commas, and parentheses.</p>
 <p>Once we have our summary data, we want to make a bar chart. But this won’t work:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguin_species_table, <span class="fu">aes</span>(<span class="at">x =</span> species)) <span class="sc">+</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguin_species_table, <span class="fu">aes</span>(<span class="at">x =</span> species)) <span class="sc">+</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="03-categorical_data-web_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -963,8 +976,8 @@ $ year_fct          &lt;fct&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <hr>
 <p>Instead, we need to use <code>geom_col</code>. This works a lot like <code>geom_bar</code> except that it also requires a <code>y</code> value in its aesthetics to force the command to look for the counts in some other variable in the data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguin_species_table, <span class="fu">aes</span>(<span class="at">x =</span> species, <span class="at">y =</span> count)) <span class="sc">+</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguin_species_table, <span class="fu">aes</span>(<span class="at">x =</span> species, <span class="at">y =</span> count)) <span class="sc">+</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="03-categorical_data-web_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -975,7 +988,7 @@ $ year_fct          &lt;fct&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <p>Use the <code>tabyl</code> command to create a frequency table for <code>island</code>.</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a frequency table for island</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a frequency table for island</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -984,7 +997,7 @@ $ year_fct          &lt;fct&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <p>Use the <code>tibble</code> command to create a new tibble manually that contains the frequency data for the <code>island</code> variable. It should have two columns, one called <code>island</code> and the other called <code>count</code>. Name it <code>penguin_island_table</code>.</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a tibble with frequency data for island</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a tibble with frequency data for island</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -993,7 +1006,7 @@ $ year_fct          &lt;fct&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <p>Use <code>ggplot</code> with <code>geom_col</code> to create a bar chart for island.</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a bar chart for island</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a bar chart for island</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -1003,48 +1016,42 @@ $ year_fct          &lt;fct&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <p>Sometimes we come across summary data instead of raw data. We’ve learned how to manually create tibbles with that summary data and use <code>geom_col</code> instead of <code>geom_bar</code> to graph it, but sometimes it is also useful to recover what the raw data <em>would</em> have been. Fortunately there are R tools to do exactly that.</p>
 <p>We’ll continue with our example <code>penguin_species_table</code>, which we’ll reprint here for reference:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>penguin_species_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 2
-  species   count
-  &lt;chr&gt;     &lt;dbl&gt;
-1 Adelie      152
-2 Chinstrap    68
-3 Gentoo      124</code></pre>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>penguin_species_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["species"],"name":[1],"type":["chr"],"align":["left"]},{"label":["count"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Adelie","2":"152"},{"1":"Chinstrap","2":"68"},{"1":"Gentoo","2":"124"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>From this table, we know what the raw data for this variable should look like: there should be 152 rows that say “Adelie,” 68 rows that say “Chinstrap,” and 124 rows that say “Gentoo.” It would be very annoying, though, to make that whole tibble by hand. Fortunately, there are R tools that will create it for us.</p>
 <p>The first thing we will need to do is turn our tibble into a tabyl. (I would like to apologize for how ridiculous that sentence sounds.)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>penguin_species_tabyl <span class="ot">&lt;-</span> <span class="fu">as_tabyl</span>(penguin_species_table)</span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>penguin_species_tabyl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   species count
-    Adelie   152
- Chinstrap    68
-    Gentoo   124</code></pre>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>penguin_species_tabyl <span class="ot">&lt;-</span> <span class="fu">as_tabyl</span>(penguin_species_table)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>penguin_species_tabyl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["species"],"name":[1],"type":["chr"],"align":["left"]},{"label":["count"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"Adelie","2":"152"},{"1":"Chinstrap","2":"68"},{"1":"Gentoo","2":"124"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>The hero of the day is the function <code>uncount</code> from the <code>tidyr</code> package:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>penguin_species_raw <span class="ot">&lt;-</span> penguin_species_tabyl <span class="sc">%&gt;%</span></span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">uncount</span>(count)</span>
-<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>penguin_species_raw</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 344 × 1
-   species
-   &lt;chr&gt;  
- 1 Adelie 
- 2 Adelie 
- 3 Adelie 
- 4 Adelie 
- 5 Adelie 
- 6 Adelie 
- 7 Adelie 
- 8 Adelie 
- 9 Adelie 
-10 Adelie 
-# ℹ 334 more rows</code></pre>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>penguin_species_raw <span class="ot">&lt;-</span> penguin_species_tabyl <span class="sc">%&gt;%</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">uncount</span>(count)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>penguin_species_raw</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["species"],"name":[1],"type":["chr"],"align":["left"]}],"data":[{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Adelie"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Chinstrap"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"},{"1":"Gentoo"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>Click through the rows of this table and you’ll see that it’s exactly what we wanted: “Adelie” is repeated 152 times, “Chinstrap” is repeated 68 times, and “Gentoo” is repeated 124 times. Neat!</p>
@@ -1079,96 +1086,86 @@ $ year_fct          &lt;fct&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <p>Again, we can imagine what the raw data would look like: there would be 73 rows where the <code>species</code> variable would say “Adelie” and the <code>sex</code> variable would say “female,” then 34 rows where the <code>species</code> variable would say “Chinstrap” and the <code>sex</code> variable would say “female,” and so on.</p>
 <p>We can start by building a tibble with this information in the same way we built the tibble of penguin species counts. Note that the species labels now become the column headers.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>penguin_species_sex_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">sex =</span> <span class="fu">c</span>(<span class="st">"female"</span>, <span class="st">"male"</span>),</span>
-<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Adelie =</span> <span class="fu">c</span>(<span class="dv">73</span>, <span class="dv">73</span>),</span>
-<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Chinstrap =</span> <span class="fu">c</span>(<span class="dv">34</span>, <span class="dv">34</span>),</span>
-<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Gentoo =</span> <span class="fu">c</span>(<span class="dv">58</span>, <span class="dv">61</span>)</span>
-<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>penguin_species_sex_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 4
-  sex    Adelie Chinstrap Gentoo
-  &lt;chr&gt;   &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;
-1 female     73        34     58
-2 male       73        34     61</code></pre>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>penguin_species_sex_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">sex =</span> <span class="fu">c</span>(<span class="st">"female"</span>, <span class="st">"male"</span>),</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Adelie =</span> <span class="fu">c</span>(<span class="dv">73</span>, <span class="dv">73</span>),</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Chinstrap =</span> <span class="fu">c</span>(<span class="dv">34</span>, <span class="dv">34</span>),</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Gentoo =</span> <span class="fu">c</span>(<span class="dv">58</span>, <span class="dv">61</span>)</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>penguin_species_sex_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["sex"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Adelie"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Chinstrap"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Gentoo"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"female","2":"73","3":"34","4":"58"},{"1":"male","2":"73","3":"34","4":"61"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>Once again, we’ll want to turn this tibble into a tabyl:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>penguin_species_sex_tabyl <span class="ot">&lt;-</span> <span class="fu">as_tabyl</span>(penguin_species_sex_table)</span>
-<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>penguin_species_sex_tabyl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>    sex Adelie Chinstrap Gentoo
- female     73        34     58
-   male     73        34     61</code></pre>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>penguin_species_sex_tabyl <span class="ot">&lt;-</span> <span class="fu">as_tabyl</span>(penguin_species_sex_table)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>penguin_species_sex_tabyl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["sex"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Adelie"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Chinstrap"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Gentoo"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"female","2":"73","3":"34","4":"58"},{"1":"male","2":"73","3":"34","4":"61"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>In order for the <code>uncount</code> function to work correctly, we need to have all the counts in a single column, but since this is a contingency table, our counts are spread out across several columns. To solve this problem, we’ll need to “pivot” the columns, turning them into rows. The command is called <code>pivot_longer</code>. (There is also a <code>pivot_wider</code> command that turns rows into columns, but we won’t need that one.)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>penguin_species_sex_tabyl <span class="sc">%&gt;%</span></span>
-<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"Adelie"</span>, <span class="st">"Chinstrap"</span>, <span class="st">"Gentoo"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 3
-  sex    name      value
-  &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt;
-1 female Adelie       73
-2 female Chinstrap    34
-3 female Gentoo       58
-4 male   Adelie       73
-5 male   Chinstrap    34
-6 male   Gentoo       61</code></pre>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>penguin_species_sex_tabyl <span class="sc">%&gt;%</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"Adelie"</span>, <span class="st">"Chinstrap"</span>, <span class="st">"Gentoo"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["sex"],"name":[1],"type":["chr"],"align":["left"]},{"label":["name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["value"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"female","2":"Adelie","3":"73"},{"1":"female","2":"Chinstrap","3":"34"},{"1":"female","2":"Gentoo","3":"58"},{"1":"male","2":"Adelie","3":"73"},{"1":"male","2":"Chinstrap","3":"34"},{"1":"male","2":"Gentoo","3":"61"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>If we want a little more control over the names of the newly created columnds, we can add those as follows:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>penguin_species_sex_tabyl <span class="sc">%&gt;%</span></span>
-<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"Adelie"</span>, <span class="st">"Chinstrap"</span>, <span class="st">"Gentoo"</span>),</span>
-<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"species"</span>,</span>
-<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 3
-  sex    species   count
-  &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt;
-1 female Adelie       73
-2 female Chinstrap    34
-3 female Gentoo       58
-4 male   Adelie       73
-5 male   Chinstrap    34
-6 male   Gentoo       61</code></pre>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>penguin_species_sex_tabyl <span class="sc">%&gt;%</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"Adelie"</span>, <span class="st">"Chinstrap"</span>, <span class="st">"Gentoo"</span>),</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"species"</span>,</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["sex"],"name":[1],"type":["chr"],"align":["left"]},{"label":["species"],"name":[2],"type":["chr"],"align":["left"]},{"label":["count"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"female","2":"Adelie","3":"73"},{"1":"female","2":"Chinstrap","3":"34"},{"1":"female","2":"Gentoo","3":"58"},{"1":"male","2":"Adelie","3":"73"},{"1":"male","2":"Chinstrap","3":"34"},{"1":"male","2":"Gentoo","3":"61"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>Now our data is in the form that <code>uncount</code> knows how to deal with. And indeed, we can assemble all these steps together into a pipeline. First, we should build the tibble. Then, we should turn the tibble into a tabyl (sorry), then <code>pivot</code> the tabyl, and finally <code>uncount</code> to get back to the raw data. Finally, we should store the result as a new tibble. Here are all the steps put together:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>penguin_species_sex_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">sex =</span> <span class="fu">c</span>(<span class="st">"female"</span>, <span class="st">"male"</span>),</span>
-<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Adelie =</span> <span class="fu">c</span>(<span class="dv">73</span>, <span class="dv">73</span>),</span>
-<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Chinstrap =</span> <span class="fu">c</span>(<span class="dv">34</span>, <span class="dv">34</span>),</span>
-<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Gentoo =</span> <span class="fu">c</span>(<span class="dv">58</span>, <span class="dv">61</span>)</span>
-<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>) </span>
-<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>penguin_species_sex_table <span class="sc">%&gt;%</span></span>
-<span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tabyl</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb69-9"><a href="#cb69-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"Adelie"</span>, <span class="st">"Chinstrap"</span>, <span class="st">"Gentoo"</span>),</span>
-<span id="cb69-10"><a href="#cb69-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"species"</span>,</span>
-<span id="cb69-11"><a href="#cb69-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"count"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb69-12"><a href="#cb69-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">uncount</span>(count) <span class="ot">-&gt;</span> penguin_species_sex_raw</span>
-<span id="cb69-13"><a href="#cb69-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb69-14"><a href="#cb69-14" aria-hidden="true" tabindex="-1"></a>penguin_species_sex_raw</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 333 × 2
-   sex    species
-   &lt;chr&gt;  &lt;chr&gt;  
- 1 female Adelie 
- 2 female Adelie 
- 3 female Adelie 
- 4 female Adelie 
- 5 female Adelie 
- 6 female Adelie 
- 7 female Adelie 
- 8 female Adelie 
- 9 female Adelie 
-10 female Adelie 
-# ℹ 323 more rows</code></pre>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>penguin_species_sex_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">sex =</span> <span class="fu">c</span>(<span class="st">"female"</span>, <span class="st">"male"</span>),</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Adelie =</span> <span class="fu">c</span>(<span class="dv">73</span>, <span class="dv">73</span>),</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Chinstrap =</span> <span class="fu">c</span>(<span class="dv">34</span>, <span class="dv">34</span>),</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Gentoo =</span> <span class="fu">c</span>(<span class="dv">58</span>, <span class="dv">61</span>)</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>) </span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>penguin_species_sex_table <span class="sc">%&gt;%</span></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tabyl</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"Adelie"</span>, <span class="st">"Chinstrap"</span>, <span class="st">"Gentoo"</span>),</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"species"</span>,</span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"count"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">uncount</span>(count) <span class="ot">-&gt;</span> penguin_species_sex_raw</span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>penguin_species_sex_raw</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["sex"],"name":[1],"type":["chr"],"align":["left"]},{"label":["species"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Adelie"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Chinstrap"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"female","2":"Gentoo"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Adelie"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Chinstrap"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"},{"1":"male","2":"Gentoo"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>Indeed, this new tibble looks just like how we wanted it to look.</p>

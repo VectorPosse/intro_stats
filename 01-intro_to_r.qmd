@@ -1,10 +1,13 @@
+---
+execute: 
+  eval: false
+---
+
 # Introduction to R
 
-<style>div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>
+::: {.callout-note}
 
-::: {.summary}
-
-### Functions introduced in this chapter: {-}
+### Functions introduced in this chapter {-}
 `<-`, `c`, `sum`, `mean`, `library`, `?`, `??`, `View`, `head`, `tail`, `str`, `NROW`,  `NCOL`, `summary`, `$`
 
 :::
@@ -25,8 +28,9 @@ The greatest thing about R is that it is free and open source. This means that y
 
 R has also become a standard tool for statistical analysis, from academia to industry to government. Although some commercial packages are still widely used, many practitioners are switching to R due to its cost (free!) and relative ease of use. After this course, you will be able to list some R experience on your r&eacute;sum&eacute; and your future employer will value this. It might even help get you a job!
 
+## Posit Workbench and RStudio
 
-## RStudio
+TODO
 
 RStudio is an "Integrated Development Environment," or IDE for short. An IDE is a tool for working with a programming language that is fancier than just a simple text editor. Most IDEs give you shortcuts, menus, debugging facilities, syntax highlighting, and other things to make your life as easy as possible.
 
@@ -47,7 +51,7 @@ Now look at the lower-right corner of the screen. There are likely five tabs her
 
 So let's do something in R! Go back to the Console and at the command prompt (the ">" symbol with the blinking cursor), type
 
-```{r, eval = FALSE}
+```{r}
 1+1
 ```
 
@@ -57,7 +61,7 @@ Congratulations! You just ran your first command in R. It's all downhill from he
 
 Okay, let's do something slightly more sophisticated. It's important to note that R is case-sensitive, which means that lowercase letters and uppercase letters are treated differently. Type the following, making sure you use a lowercase `c`, and hit Enter:
 
-```{r, eval = FALSE}
+```{r}
 x <- c(1, 3, 4, 7, 9)
 ```
 
@@ -67,13 +71,13 @@ Check out the "Environment" pane now. You should see the vector `x` that you jus
 
 At the command prompt in the Console, type
 
-```{r, eval = FALSE}
+```{r}
 x
 ```
 
 and hit Enter. Yup, `x` is there. R knows what it is. You may be wondering about the `[1]` that appears at the beginning of the line. To see what that means, try typing this (and hit Enter---at some point here I'm going to stop reminding you to hit Enter after everything you type):
 
-```{r, eval = FALSE}
+```{r}
 y <- letters
 ```
 
@@ -81,7 +85,7 @@ R is clever, so the alphabet is built in under the name `letters`.
 
 Type
 
-```{r, eval = FALSE}
+```{r}
 y
 ```
 
@@ -93,7 +97,7 @@ When we want to re-use an old command, it has usually not been that long since w
 
 Let's do something with `x`. Type
 
-```{r, eval = FALSE}
+```{r}
 sum(x)
 ```
 
@@ -101,19 +105,19 @@ I bet you figured out what just happened.
 
 Now try
 
-```{r, eval = FALSE}
+```{r}
 mean(x)
 ```
 
 What if we wanted to save the mean of those five numbers for use later? We can assign the result to another variable! Type the following and observe the effect in the Environment.
 
-```{r, eval = FALSE}
+```{r}
 m <- mean(x)
 ```
 
 It makes no difference what letter or combination of letters we use to name our variables. For example,
 
-```{r, eval = FALSE}
+```{r}
 mean_x <- mean(x)
 ```
 
@@ -124,11 +128,12 @@ just saves the mean to a differently named variable. In general, variable names 
 
 Packages are collections of commands, functions, and sometimes data that people all over the world write and maintain. These packages extend the capabilities of R and add useful tools. For example, we would like to use the `palmerpenguins` package because it includes an interesting data set on penguins.
 
-If you have installed R and RStudio on your own machine instead of accessing RStudio Workbench through a browser, you'll need to type `install.packages("palmerpenguins")` if you've never used the `palmerpenguins` package before. If you are using RStudio Workbench through a browser, you may not be able to install packages because you may not have admin privileges. If you need a package that is not installed, contact the person who administers your server.
+If you have installed R and RStudio on your own machine instead of accessing RStudio through a browser, you'll need to type `install.packages("palmerpenguins")` if you've never used the `palmerpenguins` package before. If you are using RStudio through a browser, you may not be able to install packages because you may not have admin privileges. If you need a package that is not installed, contact the person who administers your server.
 
 The data set is called `penguins`. Let's see what happens when we try to access this data set without loading the package that contains it. Try typing this:
 
-```{r, eval = FALSE, error = TRUE}
+```{r}
+#| error: true
 penguins
 ```
 
@@ -136,7 +141,7 @@ You should have received an error. That makes sense because R doesn't know anyth
 
 Now---assuming you have the `palmerpenguins` package installed---type this at the command prompt:
 
-```{r, eval = FALSE}
+```{r}
 library(palmerpenguins)
 ```
 
@@ -144,7 +149,7 @@ It didn't look like anything happened. However, in the background, all the stuff
 
 Let's test that claim. Hit the up arrow twice and get back to where you see this at the Console (or you can manually re-type it, but that's no fun!):
 
-```{r, eval = FALSE}
+```{r}
 penguins
 ```
 
@@ -152,7 +157,7 @@ Now R knows about the `penguins` data, so the last command printed some of it to
 
 Go look at the "Packages" tab in the pane in the lower-right corner of the screen. Scroll down a little until you get to the "P"s. You should be able to find the `palmerpenguins` package. You'll also notice a check mark by it, indicating that this package is loaded into your current R session.
 
-You must use the `library` command in every new R session in which you want to use a package.^[If you have installed R and RStudio on your own machine instead of accessing RStudio Workbench through a browser, you'll want to know that `install.packages` only has to be run once, the first time you want to install a package. If you're using RStudio Workbench, you don't even need to type that because your server admin will have already done it for you.] If you terminate your R session, R forgets about the package. If you are ever in a situation where you are trying to use a command and you know you're typing it correctly, but you're still getting an error, check to see if the package containing that command has been loaded with `library`.  (Many R commands are "base R" commands, meaning they come with R and no special package is required to access them. The set of `letters` you used above is one such example.)
+You must use the `library` command in every new R session in which you want to use a package.^[If you have installed R and RStudio on your own machine instead of accessing RStudio through a browser, you'll want to know that `install.packages` only has to be run once, the first time you want to install a package. If you're using RStudio Workbench, you don't even need to type that because your server admin will have already done it for you.] If you terminate your R session, R forgets about the package. If you are ever in a situation where you are trying to use a command and you know you're typing it correctly, but you're still getting an error, check to see if the package containing that command has been loaded with `library`.  (Many R commands are "base R" commands, meaning they come with R and no special package is required to access them. The set of `letters` you used above is one such example.)
 
 
 ## Getting help
@@ -163,7 +168,7 @@ Help files are only as good as their authors. Fortunately, most package develope
 
 The second way of getting help is from the Console. Go to the Console and type
 
-```{r, eval = FALSE}
+```{r}
 ?letters
 ```
 
@@ -171,21 +176,21 @@ The question mark tells R you need help with the R command `letters`. This will 
 
 Sometimes, you don't know exactly what the name of the command is. For example, suppose we misremembered the name and thought it was `letter` instead of `letters`. Try typing this:
 
-```{r, eval = FALSE}
+```{r}
 ?letter
 ```
 
 You should have received an error because there is no command called `letter`. Try this instead:
 
-```{r, eval = FALSE}
+```{r}
 ??letter
 ```
 
 and scroll down a bit in the Help pane. Two question marks tell R not to be too picky about the spelling. This will bring up a whole bunch of possibilities in the Help pane, representing R's best guess as to what you might be searching for. (In this case, it's not easy to find. You'd have to know that the help file for `letters` appeared on a help page called `base::Constants`.)
 
-The fourth way to get help---and often the most useful way---is to use your best friend Google. You don't want to just search for "R". (That's the downside of using a single letter of the alphabet for the name of a programming language.) However, if you type "R __________" where you fill in the blank with the topic of interest, Google usually does a pretty good job sending you to relevant pages. Within the first few hits, in fact, you'll often see an online copy of the same help file you see in R. Frequently, the next few hits lead to [StackOverflow](https://stackoverflow.com) where very knowledgeable people post very helpful responses to common questions.
+The fourth way to get help---and often the most useful way---is to use your best friend, the search engine. You don't want to just search for "R". (That's the downside of using a single letter of the alphabet for the name of a programming language.) However, if you type "R __________" where you fill in the blank with the topic of interest, search engines usually do a pretty good job sending you to relevant pages. Within the first few hits, in fact, you'll often see an online copy of the same help file you see in R. Frequently, the next few hits lead to [StackOverflow](https://stackoverflow.com) where very knowledgeable people post very helpful responses to common questions.
 
-Use Google to find out how to take the square root of a number in R. Test out your newly-discovered function on a few numbers to make sure it works.
+Use a search engine to find out how to take the square root of a number in R. Test out your newly-discovered function on a few numbers to make sure it works.
 
 
 ## Understanding the data
@@ -200,13 +205,13 @@ The word "tibble" is an R-specific term that describes data organized in a speci
 
 Each row of a data frame represents a single object or observation. So in the `penguins` data, each row represents a penguin. If you have survey data, each row will usually represent a single person. But an "object" can be anything about which we collect data. State-level data might have 50 rows and each row represents an entire state.
 
-Each column of a data frame represents a *variable*, which is a property, attribute, or measurement made about the objects in the data. For example, the help file mentions that various pieces of information are recorded about each penguin, like species, bill length, flipper length, boy mass, sex, and so on. These are examples of variables. In a survey, for example, the variables will likely be the responses to individual questions.
+Each column of a data frame represents a *variable*, which is a property, attribute, or measurement made about the objects in the data. For example, the help file mentions that various pieces of information are recorded about each penguin, like species, bill length, flipper length, body mass, sex, and so on. These are examples of variables. In a survey, for example, the variables will likely be the responses to individual questions.
 
 We will use the terms tibble and data frame interchangeably in this course. They are not quite synonyms: tibbles are R-specific implementations of data frames, the latter being a more general term that applies in all statistical contexts. Nevertheless, there are no situations (at least not encountered in this course) where it makes any difference if a data set is called a tibble or a data frame.
 
 We can also look at the data frame in "spreadsheet" form. Type
 
-```{r, eval = FALSE}
+```{r}
 View(penguins)
 ```
 
@@ -214,25 +219,27 @@ View(penguins)
 
 Sometimes, we just need a little peek at the data. Try this to print just a few rows of data to the Console:
 
-```{r, eval = FALSE}
+```{r}
 head(penguins)
 ```
 
 We can customize this by specifying the number of rows to print. (Don't forget about the up arrow trick!)
 
-```{r, eval = FALSE}
+```{r}
 head(penguins, n = 10)
 ```
 
 The `tail` command does something similar.
 
-```{r, eval = FALSE}
+```{r}
 tail(penguins)
 ```
 
 When we're working with HTML documents like this one, it's usually not necessary to use `View`, `head`, or `tail` because the HTML format will print the data frame a lot more neatly than it did in the Console. You do not need to type the following code; just look below it for the table that appears.
 
-```{r, echo = FALSE}
+```{r}
+#| eval: true
+#| echo: false
 library(palmerpenguins)
 ```
 
@@ -244,17 +251,17 @@ You can scroll through the rows by using the numbers at the bottom or the "Next"
 
 We want to understand the "structure" of our data. For this, we use the `str` command. Try it:
 
-```{r, eval = FALSE}
+```{r}
 str(penguins)
 ```
 
 This tells us several important things. First it says that we are looking at a tibble with 344 observations of 8 variables. We can isolate those pieces of information separately as well, if needed:
 
-```{r, eval = FALSE}
+```{r}
 NROW(penguins)
 ```
 
-```{r, eval = FALSE}
+```{r}
 NCOL(penguins)
 ```
 
@@ -264,7 +271,7 @@ The `str` command also tells us about each of the variables in our data set. We'
 
 We need to be able to summarize variables in the data set. The `summary` command is one way to do it:
 
-```{r, eval = FALSE}
+```{r}
 summary(penguins)
 ```
 
@@ -275,19 +282,19 @@ You may not recognize terms like "Median" or "1st Qu." or "3rd Qu." yet. Neverth
 
 When we want to look at only one variable at a time, we use the dollar sign to grab it. Try this:
 
-```{r, eval = FALSE}
+```{r}
 penguins$body_mass_g
 ```
 
 This will list the entire `body_mass_g` column, in other words, the body masses (in grams) of all the penguins in this particular study. If we only want to see the first few, we can use `head` like before.
 
-```{r, eval = FALSE}
+```{r}
 head(penguins$body_mass_g)
 ```
 
 If we want the structure of the variable `body_mass_g`, we do this:
 
-```{r, eval = FALSE}
+```{r}
 str(penguins$body_mass_g)
 ```
 
@@ -301,7 +308,7 @@ There are other data types, but the ones above are by far the most common that y
 
 If we want to summarize only the variable `body_mass_g`, we can do this:
 
-```{r, eval = FALSE}
+```{r}
 summary(penguins$body_mass_g)
 ```
 
@@ -316,7 +323,7 @@ One way of ensuring that files are all located where R can find them is to organ
 
 Open the drop-down menu here and select `New Project`. When the dialog box opens, select `New Directory`, then `New Project`.
 
-You'll need to give your project a name. In general, this should be a descriptive name---one that could still remind you in several years what the project was about. The only thing to remember is that project names and file names should not have any spaces in them. In fact, you should avoid other kinds of special characters as well, like commas, number signs, etc. Stick to letters and numerals and you should be just fine. If you want a multi-word project name or file name, I recommend using underscores. R will allow you to name projects with spaces and modern operating systems are set up to handle file names with spaces, but there are certain things that either don't work at all or require awkward workarounds when file names have spaces. In this case, let's type `intro_stats` for the "Directory name". Leave everything else alone and click `Create Project`.
+You'll need to give your project a name. In this case, let's type `intro_stats` for the "Directory name". In general, this should be a descriptive name---one that could still remind you in several years what the project was about. The only thing to remember is that project names and file names should not have any spaces in them. In fact, you should avoid other kinds of special characters as well, like commas, number signs, etc. Stick to letters and numerals and you should be just fine. If you want a multi-word project name or file name, I recommend using underscores. R will allow you to name projects with spaces and modern operating systems are set up to handle file names with spaces, but there are certain things that either don't work at all or require awkward workarounds when file names have spaces. Leave everything else alone and click `Create Project`.
 
 You will see the screen refresh and R will restart.
 
@@ -324,7 +331,7 @@ You will see a new file called `intro_stats.Rproj` in the Files pane, but **you 
 
 If everything works the way it should, creating a new project will create a new folder, put you in that folder, and automatically make it your working directory.
 
-Any additional files you need for your project should be placed in this directory. In all future chapters, the first thing you will do is download the chapter file from the book website and place it here in your project folder. If you have installed R and RStudio on your own machine, you'll need to navigate your system to find the downloaded file and move or copy it to your project working directory. (This is done most easily using File Explorer in Windows and the Finder in MacOS.) If you are using RStudio Workbench through a web browser, you'll need to upload it to your project folder using the "Upload" button in the Files tab.
+Any additional files you need for your project should be placed in this directory. In all future chapters, the first thing you will do is download the chapter file from the book website and place it here in your project folder. If you have installed R and RStudio on your own machine, you'll need to navigate your system to find the downloaded file and move or copy it to your project working directory. (It's likely in a folder called "Downloads". But if it's not and you need to find it elsewhere, this is done most easily using File Explorer in Windows and the Finder in MacOS.) If you are using RStudio through a web browser, you'll need to upload it to your project folder using the "Upload" button in the Files tab.
 
 
 ## Conclusion

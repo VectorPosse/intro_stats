@@ -96,9 +96,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
+<link rel="stylesheet" href="custom.css">
 </head>
 
 <body class="nav-sidebar floating">
@@ -613,30 +617,32 @@ Coefficients:
 <p>The problem is that the results of <code>lm</code> just print the output in an unstructured way. If we want structured input, we can use the <code>tidy</code> command from the <code>broom</code> package. This will take the results of <code>lm</code> and organize the output into a tibble.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(involact_race_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 5
-  term        estimate std.error statistic      p.value
-  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;
-1 (Intercept)   0.129    0.0966       1.34 0.188       
-2 race          0.0139   0.00203      6.84 0.0000000178</code></pre>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"0.12921803","3":"0.09661059","4":"1.337514","5":"0.18777606076934"},{"1":"race","2":"0.01388235","3":"0.00203073","4":"6.836139","5":"0.00000001783815"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>Let’s store that tibble so we can refer to it in the future.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>involact_race_tidy <span class="ot">&lt;-</span> <span class="fu">tidy</span>(involact_race_lm)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>involact_race_tidy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 5
-  term        estimate std.error statistic      p.value
-  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;
-1 (Intercept)   0.129    0.0966       1.34 0.188       
-2 race          0.0139   0.00203      6.84 0.0000000178</code></pre>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>involact_race_tidy <span class="ot">&lt;-</span> <span class="fu">tidy</span>(involact_race_lm)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>involact_race_tidy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"0.12921803","3":"0.09661059","4":"1.337514","5":"0.18777606076934"},{"1":"race","2":"0.01388235","3":"0.00203073","4":"6.836139","5":"0.00000001783815"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>The intercept is stored in the <code>estimate</code> column, in the first row. The slope is stored in the same column, but in the second row. (There is a lot more information here to the right of the <code>estimate</code> column, but we will not know what these numbers mean until later in the course.)</p>
 <p>We can grab the <code>estimate</code> column with the dollar sign as we’ve seen before:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>involact_race_tidy<span class="sc">$</span>estimate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>involact_race_tidy<span class="sc">$</span>estimate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.12921803 0.01388235</code></pre>
 </div>
@@ -644,13 +650,13 @@ Coefficients:
 <p>This is a “vector” of two values, the intercept and the slope, respectively.</p>
 <p>What if we want only one value at a time? We can grab individual elements of a vector using square brackets as follows:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>involact_race_tidy<span class="sc">$</span>estimate[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>involact_race_tidy<span class="sc">$</span>estimate[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.129218</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>involact_race_tidy<span class="sc">$</span>estimate[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>involact_race_tidy<span class="sc">$</span>estimate[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.01388235</code></pre>
 </div>
@@ -677,15 +683,15 @@ Coefficients:
 <h2 data-number="7.9" class="anchored" data-anchor-id="regression-residuals"><span class="header-section-number">7.9</span> Residuals</h2>
 <p>Earlier, we promised to revisit the topic of residuals. Residuals are measured as the vertical distances from each data point to the regression line. We can see that visually below. (Don’t worry about the complexity of the <code>ggplot</code> code used to create this picture. You will not need to create a plot like this on your own, so just focus on the graph that is created below.)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chredlin, <span class="fu">aes</span>(<span class="at">y =</span> involact, <span class="at">x =</span> race)) <span class="sc">+</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="at">x =</span> <span class="fl">35.1</span>, <span class="at">xend  =</span> <span class="fl">35.1</span>,</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">y =</span> <span class="fl">0.6164886</span>, <span class="at">yend =</span> <span class="fl">0.6164886</span> <span class="sc">+</span> <span class="fl">0.38351139</span>,</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="at">x =</span> <span class="fl">66.1</span>, <span class="at">xend =</span> <span class="fl">66.1</span>,</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">y =</span> <span class="fl">1.0468415</span>, <span class="at">yend =</span> <span class="fl">1.0468415</span> <span class="sc">-</span> <span class="fl">0.64684154</span>,</span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chredlin, <span class="fu">aes</span>(<span class="at">y =</span> involact, <span class="at">x =</span> race)) <span class="sc">+</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="at">x =</span> <span class="fl">35.1</span>, <span class="at">xend  =</span> <span class="fl">35.1</span>,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">y =</span> <span class="fl">0.6164886</span>, <span class="at">yend =</span> <span class="fl">0.6164886</span> <span class="sc">+</span> <span class="fl">0.38351139</span>,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="at">x =</span> <span class="fl">66.1</span>, <span class="at">xend =</span> <span class="fl">66.1</span>,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">y =</span> <span class="fl">1.0468415</span>, <span class="at">yend =</span> <span class="fl">1.0468415</span> <span class="sc">-</span> <span class="fl">0.64684154</span>,</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
 ℹ Please use `linewidth` instead.</code></pre>
@@ -724,23 +730,15 @@ e = y - \hat{y}
 <p>We know that some of the points are going to lie above the line (positive residuals) and some of the points will lie below the line (negative residuals). What we need is for the spread of the residuals to be pretty balanced across the length of the regression line and for the residuals not to form any kind of curved pattern.</p>
 <p>To check this condition, we’ll need to calculate the residuals first. To do so, we introduce a new function from the <code>broom</code> package. Whereas <code>tidy</code> serves up information about the intercept and the slope of the regression line, <code>augment</code> gives us extra information for each data point.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>involact_race_aug <span class="ot">&lt;-</span> <span class="fu">augment</span>(involact_race_lm)</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>involact_race_aug</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 47 × 9
-   .rownames involact  race .fitted .resid   .hat .sigma .cooksd .std.resid
-   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;      &lt;dbl&gt;
- 1 60626          0    10     0.268 -0.268 0.0341  0.452 0.00651     -0.608
- 2 60640          0.1  22.2   0.437 -0.337 0.0246  0.451 0.00731     -0.761
- 3 60613          1.2  19.6   0.401  0.799 0.0261  0.437 0.0436       1.80 
- 4 60657          0.5  17.3   0.369  0.131 0.0277  0.453 0.00124      0.295
- 5 60614          0.7  24.5   0.469  0.231 0.0235  0.453 0.00326      0.520
- 6 60610          0.3  54     0.879 -0.579 0.0287  0.445 0.0253      -1.31 
- 7 60611          0     4.9   0.197 -0.197 0.0398  0.453 0.00417     -0.448
- 8 60625          0     7.1   0.228 -0.228 0.0372  0.453 0.00517     -0.517
- 9 60618          0.4   5.3   0.203  0.197 0.0393  0.453 0.00411      0.448
-10 60647          1.1  21.5   0.428  0.672 0.0250  0.442 0.0295       1.52 
-# ℹ 37 more rows</code></pre>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>involact_race_aug <span class="ot">&lt;-</span> <span class="fu">augment</span>(involact_race_lm)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>involact_race_aug</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[".rownames"],"name":[1],"type":["chr"],"align":["left"]},{"label":["involact"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["race"],"name":[3],"type":["dbl"],"align":["right"]},{"label":[".fitted"],"name":[4],"type":["dbl"],"align":["right"]},{"label":[".resid"],"name":[5],"type":["dbl"],"align":["right"]},{"label":[".hat"],"name":[6],"type":["dbl"],"align":["right"]},{"label":[".sigma"],"name":[7],"type":["dbl"],"align":["right"]},{"label":[".cooksd"],"name":[8],"type":["dbl"],"align":["right"]},{"label":[".std.resid"],"name":[9],"type":["dbl"],"align":["right"]}],"data":[{"1":"60626","2":"0.0","3":"10.0","4":"0.2680416","5":"-0.26804156","6":"0.03405567","7":"0.4520376","8":"0.0065086692","9":"-0.60763450"},{"1":"60640","2":"0.1","3":"22.2","4":"0.4374063","5":"-0.33740626","6":"0.02462275","7":"0.4509720","8":"0.0073130785","9":"-0.76117263"},{"1":"60613","2":"1.2","3":"19.6","4":"0.4013121","5":"0.79868786","6":"0.02612209","7":"0.4371976","8":"0.0436069516","9":"1.80318864"},{"1":"60657","2":"0.5","3":"17.3","4":"0.3693827","5":"0.13061727","6":"0.02767914","7":"0.4534641","8":"0.0012397588","9":"0.29512917"},{"1":"60614","2":"0.7","3":"24.5","4":"0.4693357","5":"0.23066433","6":"0.02352711","7":"0.4525374","8":"0.0032584559","9":"0.52007584"},{"1":"60610","2":"0.3","3":"54.0","4":"0.8788651","5":"-0.57886508","6":"0.02867818","7":"0.4451831","8":"0.0252803288","9":"-1.30861567"},{"1":"60611","2":"0.0","3":"4.9","4":"0.1972416","5":"-0.19724156","6":"0.03980509","7":"0.4528881","8":"0.0041688796","9":"-0.44847172"},{"1":"60625","2":"0.0","3":"7.1","4":"0.2277827","5":"-0.22778273","6":"0.03719434","7":"0.4525524","8":"0.0051670651","9":"-0.51721109"},{"1":"60618","2":"0.4","3":"5.3","4":"0.2027945","5":"0.19720550","6":"0.03931567","7":"0.4528889","8":"0.0041119233","9":"0.44827551"},{"1":"60647","2":"1.1","3":"21.5","4":"0.4276886","5":"0.67231139","6":"0.02499919","7":"0.4421451","8":"0.0295025539","9":"1.51699559"},{"1":"60622","2":"1.9","3":"43.1","4":"0.7275474","5":"1.17245257","6":"0.02262464","7":"0.4172089","8":"0.0808075725","9":"2.64229271"},{"1":"60631","2":"0.0","3":"1.1","4":"0.1444886","5":"-0.14448862","6":"0.04478130","7":"0.4533561","8":"0.0025430857","9":"-0.32938102"},{"1":"60646","2":"0.0","3":"1.0","4":"0.1431004","5":"-0.14310038","6":"0.04492023","7":"0.4533665","8":"0.0025029201","9":"-0.32624008"},{"1":"60656","2":"0.0","3":"1.7","4":"0.1528180","5":"-0.15281803","6":"0.04395628","7":"0.4532916","8":"0.0027875153","9":"-0.34821867"},{"1":"60630","2":"0.0","3":"1.6","4":"0.1514298","5":"-0.15142979","6":"0.04409276","7":"0.4533026","8":"0.0027463829","9":"-0.34508001"},{"1":"60634","2":"0.0","3":"1.5","4":"0.1500416","5":"-0.15004156","6":"0.04422965","7":"0.4533135","8":"0.0027054043","9":"-0.34194096"},{"1":"60641","2":"0.0","3":"1.8","4":"0.1542063","5":"-0.15420627","6":"0.04382021","7":"0.4532805","8":"0.0028287985","9":"-0.35135697"},{"1":"60635","2":"0.0","3":"1.0","4":"0.1431004","5":"-0.14310038","6":"0.04492023","7":"0.4533665","8":"0.0025029201","9":"-0.32624008"},{"1":"60639","2":"0.2","3":"2.5","4":"0.1639239","5":"0.03607609","6":"0.04287918","7":"0.4538695","8":"0.0001512009","9":"0.08215848"},{"1":"60651","2":"0.8","3":"13.4","4":"0.3152416","5":"0.48475844","6":"0.03081433","7":"0.4477923","8":"0.0191334054","9":"1.09707983"},{"1":"60644","2":"0.8","3":"59.8","4":"0.9593827","5":"-0.15938272","6":"0.03388215","7":"0.4532448","8":"0.0022887370","9":"-0.36127884"},{"1":"60624","2":"1.8","3":"94.4","4":"1.4397121","5":"0.36028787","6":"0.09354154","7":"0.4503041","8":"0.0366784255","9":"0.84312512"},{"1":"60612","2":"1.8","3":"86.2","4":"1.3258768","5":"0.47412317","6":"0.07497107","7":"0.4477783","8":"0.0488841540","9":"1.09832244"},{"1":"60607","2":"0.9","3":"50.2","4":"0.8261121","5":"0.07388786","6":"0.02601547","7":"0.4537632","8":"0.0003716006","9":"0.16680667"},{"1":"60623","2":"1.9","3":"74.2","4":"1.1592886","5":"0.74071140","6":"0.05275691","7":"0.4391635","8":"0.0800676782","9":"1.69564387"},{"1":"60608","2":"1.5","3":"55.5","4":"0.8996886","5":"0.60031139","6":"0.02989200","7":"0.4445062","8":"0.0284099605","9":"1.35794719"},{"1":"60616","2":"0.6","3":"62.3","4":"0.9940886","5":"-0.39408860","6":"0.03655001","7":"0.4498498","8":"0.0151781749","9":"-0.89453148"},{"1":"60632","2":"0.3","3":"4.4","4":"0.1903004","5":"0.10969962","6":"0.04042608","7":"0.4535895","8":"0.0013113470","9":"0.24950671"},{"1":"60609","2":"1.3","3":"46.2","4":"0.7705827","5":"0.52941727","6":"0.02385130","7":"0.4466573","8":"0.0174132162","9":"1.19386840"},{"1":"60653","2":"0.9","3":"99.7","4":"1.5132886","5":"-0.61328860","6":"0.10700910","7":"0.4432334","8":"0.1252734721","9":"-1.44596477"},{"1":"60615","2":"0.4","3":"73.5","4":"1.1495710","5":"-0.74957096","6":"0.05164307","7":"0.4388207","8":"0.0800749424","9":"-1.71491729"},{"1":"60638","2":"0.0","3":"10.7","4":"0.2777592","5":"-0.27775920","6":"0.03334965","7":"0.4519010","8":"0.0068342682","9":"-0.62943384"},{"1":"60629","2":"0.0","3":"1.5","4":"0.1500416","5":"-0.15004156","6":"0.04422965","7":"0.4533135","8":"0.0027054043","9":"-0.34194096"},{"1":"60636","2":"1.4","3":"48.8","4":"0.8066768","5":"0.59332316","6":"0.02518349","7":"0.4447707","8":"0.0231555723","9":"1.33889402"},{"1":"60621","2":"2.2","3":"98.9","4":"1.5021827","5":"0.69781729","6":"0.10490257","7":"0.4400732","8":"0.1582455924","9":"1.64332290"},{"1":"60637","2":"0.8","3":"90.6","4":"1.3869592","5":"-0.58695919","6":"0.08459344","7":"0.4443814","8":"0.0863231206","9":"-1.36683859"},{"1":"60652","2":"0.0","3":"1.4","4":"0.1486533","5":"-0.14865332","6":"0.04436694","7":"0.4533243","8":"0.0026645822","9":"-0.33880154"},{"1":"60620","2":"0.9","3":"71.2","4":"1.1176415","5":"-0.21764154","6":"0.04812457","7":"0.4526560","8":"0.0062444310","9":"-0.49701338"},{"1":"60619","2":"0.9","3":"94.1","4":"1.4355474","5":"-0.53554742","6":"0.09281362","7":"0.4459183","8":"0.0802818194","9":"-1.25275461"},{"1":"60649","2":"0.4","3":"66.1","4":"1.0468415","5":"-0.64684154","6":"0.04109523","7":"0.4428450","8":"0.0464129236","9":"-1.47172445"},{"1":"60617","2":"0.9","3":"36.4","4":"0.6345357","5":"0.26546433","6":"0.02131758","7":"0.4520973","8":"0.0038928646","9":"0.59786292"},{"1":"60655","2":"0.0","3":"1.0","4":"0.1431004","5":"-0.14310038","6":"0.04492023","7":"0.4533665","8":"0.0025029201","9":"-0.32624008"},{"1":"60643","2":"0.5","3":"42.5","4":"0.7192180","5":"-0.21921802","6":"0.02243266","7":"0.4526712","8":"0.0027999007","9":"-0.49399124"},{"1":"60628","2":"1.0","3":"35.1","4":"0.6164886","5":"0.38351139","6":"0.02127687","7":"0.4501256","8":"0.0081086240","9":"0.86370350"},{"1":"60627","2":"0.2","3":"47.4","4":"0.7872415","5":"-0.58724155","6":"0.02443177","7":"0.4449658","8":"0.0219723154","9":"-1.32465959"},{"1":"60633","2":"0.3","3":"34.0","4":"0.6012180","5":"-0.30121802","6":"0.02129646","7":"0.4515766","8":"0.0050069092","9":"-0.67837793"},{"1":"60645","2":"0.0","3":"3.1","4":"0.1722533","5":"-0.17225332","6":"0.04208855","7":"0.4531274","8":"0.0033779335","9":"-0.39212205"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>The first three columns consist of the row names (the ZIP codes) followed by the actual data values we started with for <code>involact</code> and <code>race</code>. But now we’ve “augmented” the original data with some new stuff too. (We won’t learn about anything past the fifth column in this course, though.)</p>
@@ -761,9 +759,9 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <p>Yup, it works!</p>
 <p>To check for patterns in the residuals, we’ll create a <em>residual plot</em>. A residual plot graphs the residuals above each value along the x-axis. (In the command below, we also add a blue horizontal reference line so that it is clear which points have positive or negative residuals.)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(involact_race_aug, <span class="fu">aes</span>(<span class="at">y =</span> .resid, <span class="at">x =</span> race)) <span class="sc">+</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(involact_race_aug, <span class="fu">aes</span>(<span class="at">y =</span> .resid, <span class="at">x =</span> race)) <span class="sc">+</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="07-regression-web_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -783,11 +781,11 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <p>Other than the weird cluster of points at the left, the rest of the residual plot looks pretty good. Ignoring those ZIP codes with 0 FAIR policies, the rest of the residuals stretch, on average, about the same height above and below the line across the whole width of the plot. There is only one slightly large residual at about the 40% mark, but it’s not extreme, and it doesn’t look like a severe outlier in the original scatterplot.</p>
 <p>What does a bad residual plot look like? The code below will run an ill-advised regression analysis on <code>fire</code>, the number of fires (per 100 housing units), against <code>age</code>, the percent of housing units built before 1939. The residual plot appears below.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>fire_age_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(fire <span class="sc">~</span> age, <span class="at">data =</span> chredlin)</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>fire_age_aug <span class="ot">&lt;-</span> <span class="fu">augment</span>(fire_age_lm)</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fire_age_aug, <span class="fu">aes</span>(<span class="at">y =</span> .resid, <span class="at">x =</span> age)) <span class="sc">+</span></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>fire_age_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(fire <span class="sc">~</span> age, <span class="at">data =</span> chredlin)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>fire_age_aug <span class="ot">&lt;-</span> <span class="fu">augment</span>(fire_age_lm)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fire_age_aug, <span class="fu">aes</span>(<span class="at">y =</span> .resid, <span class="at">x =</span> age)) <span class="sc">+</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="07-regression-web_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -807,7 +805,7 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <p>If you were truly interested in investigating an association between the fire risk and the age of buildings in a ZIP code, the first thing you would do is create a scatterplot. Go ahead and do that below. Use <code>fire</code> as the response variable and <code>age</code> as the predictor.</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a scatterplot of fire against age</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a scatterplot of fire against age</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -833,14 +831,15 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <p>On the other hand, when we square the correlation coefficient, we <em>do</em> get an interpretable number. For some reason, instead of writing <span class="math inline">\(r^2\)</span>, statisticians write <span class="math inline">\(R^2\)</span>, with a capital R. (I can’t find the historical reason why this is so.) In any event, <span class="math inline">\(R^2\)</span> can be interpreted as a percentage! It represents the percent of variation in the y variable that can be explained by variation in the x variable.</p>
 <p>Here we introduce the last of the <code>broom</code> functions: <code>glance</code>. Whereas <code>tidy</code> reports the intercept and slope, and <code>augment</code> reports values associated to each data point separately, the <code>glance</code> function gathers up summaries for the entire model. (Do not confuse <code>glance</code> with <code>glimpse</code>. The latter is a nicer version of <code>str</code> that just summarizes the variables in a tibble.)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>involact_race_glance <span class="ot">&lt;-</span> <span class="fu">glance</span>(involact_race_lm)</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>involact_race_glance</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 12
-  r.squared adj.r.squared sigma statistic      p.value    df logLik   AIC   BIC
-      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1     0.509         0.499 0.449      46.7 0.0000000178     1  -28.0  62.0  67.6
-# ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>involact_race_glance <span class="ot">&lt;-</span> <span class="fu">glance</span>(involact_race_lm)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>involact_race_glance</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["r.squared"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["adj.r.squared"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sigma"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["logLik"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[11],"type":["int"],"align":["right"]},{"label":["nobs"],"name":[12],"type":["int"],"align":["right"]}],"data":[{"1":"0.5094448","2":"0.4985436","3":"0.4488318","4":"46.7328","5":"0.00000001783815","6":"1","7":"-28.01618","8":"62.03237","9":"67.58281","10":"9.065251","11":"45","12":"47"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>A more advanced statistics course might discuss the other model summaries present in the <code>glance</code> output. The <span class="math inline">\(R^{2}\)</span> value is stored in the <code>r.squared</code> (inexplicably, now written with a lowercase r). Its value is 0.51. We will word it this way:</p>
@@ -855,10 +854,10 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <p>In a separate code chunk, square that value using the command <code>r^2</code>. Verify that the square of the correlation coefficient is the same as the <span class="math inline">\(R^2\)</span> value reported in the <code>glance</code> output above.</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to calculate the correlation coefficient</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to calculate the correlation coefficient</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to square the correlation coefficient</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to square the correlation coefficient</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -869,8 +868,8 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <p>The answer is yes, and the statistical technique involved is called multiple regression. Multiple regression is a deep subject, worthy of entire courses. Suffice it to say here that more advanced stats courses go into the ways in which multiple predictors can be included in a regression.</p>
 <p>One easy thing we can do is incorporate a categorical variable into a graph and see if that categorical variable might play a role in the regression analysis. For example, there is a variance called <code>side</code> in <code>chredlin</code> that indicates whether the ZIP code is on the north side (n) or south side(s) of Chicago. As described in an earlier chapter, we can use color to distinguish between the ZIP codes.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chredlin, <span class="fu">aes</span>(<span class="at">y =</span> involact, <span class="at">x =</span> race, <span class="at">color =</span> side)) <span class="sc">+</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chredlin, <span class="fu">aes</span>(<span class="at">y =</span> involact, <span class="at">x =</span> race, <span class="at">color =</span> side)) <span class="sc">+</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="07-regression-web_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -884,9 +883,9 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <hr>
 <p>Does this affect the regression? We haven’t checked the conditions carefully for this new question, so we will exercise caution in coming to any definitive conclusions. But visually, there does appear to be a difference in the models generated for ZIP codes on the north versus south sides:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chredlin, <span class="fu">aes</span>(<span class="at">y =</span> involact, <span class="at">x =</span> race, <span class="at">color =</span> side)) <span class="sc">+</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chredlin, <span class="fu">aes</span>(<span class="at">y =</span> involact, <span class="at">x =</span> race, <span class="at">color =</span> side)) <span class="sc">+</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
@@ -911,7 +910,7 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <p>Create a scatterplot of the data. Do <em>not</em> include a regression line yet. (In other words, there should be no <code>geom_smooth</code> in this plot.)</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a scatterplot of the data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a scatterplot of the data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -932,16 +931,16 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <p>Then use <code>tidy</code>, <code>augment</code>, and <code>glance</code> respectively on the output. Assign the output to the names <code>fl_bm_tidy</code>, <code>fl_bm_aug</code>, and <code>fl_bm_glance</code>. Again, in each code chunk, type the output variable name on its own line to ensure that it prints in this file.</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to generate and print regression output with lm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to generate and print regression output with lm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to "tidy" and print the output from lm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to "tidy" and print the output from lm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to "augment" and print the output from lm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to "augment" and print the output from lm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to "glance" at and print the output from lm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to "glance" at and print the output from lm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -950,7 +949,7 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <p>Use the <code>augment</code> output from above to create a residual plot with a blue horizontal reference line.</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a residual plot</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a residual plot</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -966,7 +965,7 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <p>With all the conditions met, plot the regression line on top of the scatterplot of the data. (Use <code>geom_smooth</code> with <code>method = lm</code> and <code>se = FALSE</code> as in the examples earlier.)</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to plot the regression line on the scatterplot</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to plot the regression line on the scatterplot</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -1012,7 +1011,7 @@ write-math-here
 <p>Add <code>color = species</code> to the <code>aes</code> portion of the <code>ggplot</code> command to look at the regression lines for the three different species separately. Comment on the slopes of those three regression lines.</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to plot regressions by species</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to plot regressions by species</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Please write up your answer here.</p>
 </div>
