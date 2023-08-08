@@ -42,7 +42,7 @@ We'll return to the Console in a moment.
 
 Next, look at the upper-right corner of the screen. There are at least three tabs in this pane starting with "Environment", "History", and "Connections". The "Environment" (also called the "Global Environment") keeps track of things you define while working with R. There's nothing to see there yet because we haven't defined anything! The "History" tab will likewise be empty; again, we haven't done anything yet. We won't use the "Connections" tab in this course. (Depending on the version of RStudio you are using and its configuration, you may see additional tabs, but we won't need them for this course.)
 
-Now look at the lower-right corner of the screen. There are likely five tabs here: "Files", "Plots", "Packages", "Help", and "Viewer". The "Files" tab will eventually contain the files you upload or create. "Plots" will show you the result of commands that produce graphs and charts. "Packages" will be explained later. "Help" is precisely what it sounds like; this will be a very useful place for you to get to know. We will never use the "Viewer" tab, so don't worry about it.
+Now look at the lower-right corner of the screen. There are likely six tabs here: "Files", "Plots", "Packages", "Help", "Viewer", and "Presentation". The "Files" tab will eventually contain the files you upload or create. "Plots" will show you the result of commands that produce graphs and charts. "Packages" will be explained later. "Help" is precisely what it sounds like; this will be a very useful place for you to get to know. We will never use the "Viewer" or "Presentation" tabs, so don't worry about them.
 
 
 ## Try something!
@@ -57,7 +57,7 @@ and hit Enter.
 
 Congratulations! You just ran your first command in R. It's all downhill from here. R really is nothing more than a glorified calculator.
 
-Okay, let's do something slightly more sophisticated. It's important to note that R is case-sensitive, which means that lowercase letters and uppercase letters are treated differently. Type the following, making sure you use a lowercase `c`, and hit Enter:
+Okay, let's do something slightly more sophisticated. It's important to note that R is case-sensitive, which means that lowercase letters and uppercase letters are treated differently. Type the following, making sure you use a lowercase `x` and lowercase `c`, and hit Enter:
 
 ```{r}
 x <- c(1, 3, 4, 7, 9)
@@ -119,16 +119,16 @@ It makes no difference what letter or combination of letters we use to name our 
 mean_x <- mean(x)
 ```
 
-just saves the mean to a differently named variable. In general, variable names can be any combination of characters that are letters, numbers, underscore symbols (`_`), and dots (`.`). (In this course, we will prefer underscores over dots.) You cannot use spaces or any other special character in the names of variables.^[The official spec says that a valid variable name "consists of letters, numbers and the dot or underline characters and starts with a letter or the dot not followed by a number."] You should avoid variable names that are the same words as predefined R functions; for example, we should not type `mean <- mean(x)`.
+just saves the mean to a differently named variable. In general, variable names can be any combination of characters that are letters, numbers, underscore symbols (`_`), and dots (`.`). (In this course, we will prefer underscores over dots.) You cannot use spaces or any other special characters in the names of variables.^[The official spec says that a valid variable name "consists of letters, numbers and the dot or underline characters and starts with a letter or the dot not followed by a number."] You should avoid variable names that are the same words as predefined R functions; for example, we should not type `mean <- mean(x)`.
 
 
 ## Load packages
 
 Packages are collections of commands, functions, and sometimes data that people all over the world write and maintain. These packages extend the capabilities of R and add useful tools. For example, we would like to use the `palmerpenguins` package because it includes an interesting data set on penguins.
 
-If you have installed R and RStudio on your own machine instead of accessing RStudio through a browser, you'll need to type `install.packages("palmerpenguins")` if you've never used the `palmerpenguins` package before. If you are using RStudio through a browser, you may not be able to install packages because you may not have admin privileges. If you need a package that is not installed, contact the person who administers your server.
+If you have installed R and RStudio on your own machine instead of accessing RStudio through a browser, you'll need to type `install.packages("palmerpenguins")` at the Console. (This is assuming you've never used the `palmerpenguins` package before. Once a package is installed the first time, it never has to be installed again.) If you are using RStudio through a browser, the packages you need should be pre-installed for you. In fact, you may not be able to install packages yourself because you may not have admin privileges. If you need a package that is not installed, contact the person who administers your server.
 
-The data set is called `penguins`. Let's see what happens when we try to access this data set without loading the package that contains it. Try typing this:
+After we've installed the package (a one-time process), we will need to load the package in every R session in which we want to use it. For example, the `palmerpenguins` package contains a data set called `penguins`. Let's see what happens when we try to access this data set without loading the package that contains it. Try typing this:
 
 ```{r}
 #| error: true
@@ -155,12 +155,12 @@ Now R knows about the `penguins` data, so the last command printed some of it to
 
 Go look at the "Packages" tab in the pane in the lower-right corner of the screen. Scroll down a little until you get to the "P"s. You should be able to find the `palmerpenguins` package. You'll also notice a check mark by it, indicating that this package is loaded into your current R session.
 
-You must use the `library` command in every new R session in which you want to use a package.^[If you have installed R and RStudio on your own machine instead of accessing RStudio through a browser, you'll want to know that `install.packages` only has to be run once, the first time you want to install a package. If you're using RStudio Workbench, you don't even need to type that because your server admin will have already done it for you.] If you terminate your R session, R forgets about the package. If you are ever in a situation where you are trying to use a command and you know you're typing it correctly, but you're still getting an error, check to see if the package containing that command has been loaded with `library`.  (Many R commands are "base R" commands, meaning they come with R and no special package is required to access them. The set of `letters` you used above is one such example.)
+You must use the `library` command in every new R session in which you want to use a package. If you terminate your R session, R forgets about the package. If you are ever in a situation where you are trying to use a command and you know you're typing it correctly, but you're still getting an error, check to see if the package containing that command has been loaded with `library`.  (Many R commands are "base R" commands, meaning they come with R and no special package is required to access them. The set of `letters` you used above is one such example.)
 
 
 ## Getting help
 
-There are four important ways to get help with R. The first is the obvious "Help" tab in the lower-right pane on your screen. Click on that tab now. In the search bar at the right, type `penguins` and hit Enter. Take a few minutes to read the help file.
+There are three important ways to get help with R. The first is the obvious "Help" tab in the lower-right pane on your screen. Click on that tab now. In the search bar at the right, type `penguins` and hit Enter. Take a few minutes to read the help file.
 
 Help files are only as good as their authors. Fortunately, most package developers are conscientious enough to write decent help files. But don't be surprised if the help file doesn't quite tell you what you want to know. And for highly technical R functions, sometimes the help files are downright inscrutable. Try looking at the help file for the `grep` function. Can you honestly say you have any idea what this command does or how you might use it? Over time, as you become more knowledgeable about how R works, these help files get less mysterious.
 
@@ -186,7 +186,7 @@ You should have received an error because there is no command called `letter`. T
 
 and scroll down a bit in the Help pane. Two question marks tell R not to be too picky about the spelling. This will bring up a whole bunch of possibilities in the Help pane, representing R's best guess as to what you might be searching for. (In this case, it's not easy to find. You'd have to know that the help file for `letters` appeared on a help page called `base::Constants`.)
 
-The fourth way to get help---and often the most useful way---is to use your best friend, the search engine. You don't want to just search for "R". (That's the downside of using a single letter of the alphabet for the name of a programming language.) However, if you type "R __________" where you fill in the blank with the topic of interest, search engines usually do a pretty good job sending you to relevant pages. Within the first few hits, in fact, you'll often see an online copy of the same help file you see in R. Frequently, the next few hits lead to [StackOverflow](https://stackoverflow.com) where very knowledgeable people post very helpful responses to common questions.
+The third way to get help---and often the most useful way---is to use your best friend, the internet. You don't want to just type "R" into a search engine. (That's the downside of using a single letter of the alphabet for the name of a programming language.) However, if you type "R __________" where you fill in the blank with the topic of interest, search engines usually do a pretty good job sending you to relevant pages. Within the first few hits, in fact, you'll often see an online copy of the same help file you see in R. Frequently, the next few hits lead to [StackOverflow](https://stackoverflow.com) where very knowledgeable people post very helpful responses to common questions.
 
 Use a search engine to find out how to take the square root of a number in R. Test out your newly-discovered function on a few numbers to make sure it works.
 
@@ -227,7 +227,7 @@ We can customize this by specifying the number of rows to print. (Don't forget a
 head(penguins, n = 10)
 ```
 
-The `tail` command does something similar.
+The `tail` command does something similar, but for data from the last few rows.
 
 ```{r}
 tail(penguins)
@@ -242,10 +242,11 @@ library(palmerpenguins)
 ```
 
 ```{r}
+#| eval: true
 penguins
 ```
 
-You can scroll through the rows by using the numbers at the bottom or the "Next" button. You can scroll through the variables by clicked the little black arrow pointed to the right in the upper-right corner. The only thing you can't do here that you can do with `View` is sort the columns.
+You can scroll through the rows by using the numbers at the bottom or the "Next" button. You can scroll through the variables by clicking the little black arrow pointed to the right in the upper-right corner. The only thing you can't do here that you can do with `View` is sort the columns.
 
 We want to understand the "structure" of our data. For this, we use the `str` command. Try it:
 
