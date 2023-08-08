@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Introduction to Statistics: an integrated textbook and workbook using R - 15&nbsp; Inference for one proportion</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./16-inference_for_two_proportions-web.html" rel="next">
+<link href="./14-sampling_distribution_models-web.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="custom.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./15-inference_for_one_proportion-web.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Inference for one proportion</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Introduction to Statistics: an integrated textbook and workbook using R</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/VectorPosse/intro_stats" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-intro_to_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-using_quarto-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Using Quarto</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-categorical_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Categorical data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-numerical_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Numerical data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-manipulating_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Manipulating data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-correlation-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Correlation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-regression-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Regression</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-intro_to_randomization_1-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to randomization, Part 1</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-intro_to_randomization_2-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to randomization, Part 2</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-hypothesis_testing_with_randomization_1-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Hypothesis testing with randomization, Part 1</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-hypothesis_testing_with_randomization_2-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Hypothesis testing with randomization, Part 2</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-confidence_intervals-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Confidence intervals</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-normal_models-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Normal models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14-sampling_distribution_models-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Sampling distribution models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15-inference_for_one_proportion-web.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Inference for one proportion</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16-inference_for_two_proportions-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Inference for two proportions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17-chi_square_goodness_of_fit-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Chi-square goodness-of-fit test</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18-chi_square_test_for_independence-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Chi-square test for independence</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19-inference_for_one_mean-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Inference for one mean</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20-inference_for_paired_data-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Inference for paired data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21-inference_for_two_independent_means-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Inference for two independent means</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22-anova-web.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">ANOVA</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rubric.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Rubric for inference</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Concordance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Concordance with <em>Introduction to Modern Statistics</em> (IMS)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#functions-introduced-in-this-chapter" id="toc-functions-introduced-in-this-chapter" class="nav-link active" data-scroll-target="#functions-introduced-in-this-chapter">Functions introduced in this chapter</a></li>
+  <li><a href="#one-prop-intro" id="toc-one-prop-intro" class="nav-link" data-scroll-target="#one-prop-intro"><span class="header-section-number">15.1</span> Introduction</a>
+  <ul class="collapse">
+  <li><a href="#one-prop-install" id="toc-one-prop-install" class="nav-link" data-scroll-target="#one-prop-install"><span class="header-section-number">15.1.1</span> Install new packages</a></li>
+  <li><a href="#one-prop-download" id="toc-one-prop-download" class="nav-link" data-scroll-target="#one-prop-download"><span class="header-section-number">15.1.2</span> Download the R notebook file</a></li>
+  <li><a href="#one-prop-restart" id="toc-one-prop-restart" class="nav-link" data-scroll-target="#one-prop-restart"><span class="header-section-number">15.1.3</span> Restart R and run all chunks</a></li>
+  </ul></li>
+  <li><a href="#one-prop-load" id="toc-one-prop-load" class="nav-link" data-scroll-target="#one-prop-load"><span class="header-section-number">15.2</span> Load packages</a></li>
+  <li><a href="#one-prop-rubric" id="toc-one-prop-rubric" class="nav-link" data-scroll-target="#one-prop-rubric"><span class="header-section-number">15.3</span> Revisiting the rubric for inference</a></li>
+  <li><a href="#one-prop-question" id="toc-one-prop-question" class="nav-link" data-scroll-target="#one-prop-question"><span class="header-section-number">15.4</span> Research question</a></li>
+  <li><a href="#one-prop-ex-eda" id="toc-one-prop-ex-eda" class="nav-link" data-scroll-target="#one-prop-ex-eda"><span class="header-section-number">15.5</span> Exploratory data analysis</a>
+  <ul class="collapse">
+  <li><a href="#one-prop-ex-documentation" id="toc-one-prop-ex-documentation" class="nav-link" data-scroll-target="#one-prop-ex-documentation"><span class="header-section-number">15.5.1</span> Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.</a></li>
+  <li><a href="#one-prop-ex-prepare" id="toc-one-prop-ex-prepare" class="nav-link" data-scroll-target="#one-prop-ex-prepare"><span class="header-section-number">15.5.2</span> Prepare the data for analysis.</a></li>
+  <li><a href="#one-prop-ex-plots" id="toc-one-prop-ex-plots" class="nav-link" data-scroll-target="#one-prop-ex-plots"><span class="header-section-number">15.5.3</span> Make tables or plots to explore the data visually.</a></li>
+  </ul></li>
+  <li><a href="#one-prop-ex-hypotheses" id="toc-one-prop-ex-hypotheses" class="nav-link" data-scroll-target="#one-prop-ex-hypotheses"><span class="header-section-number">15.6</span> Hypotheses</a>
+  <ul class="collapse">
+  <li><a href="#one-prop-ex-sample-pop" id="toc-one-prop-ex-sample-pop" class="nav-link" data-scroll-target="#one-prop-ex-sample-pop"><span class="header-section-number">15.6.1</span> Identify the sample (or samples) and a reasonable population (or populations) of interest.</a></li>
+  <li><a href="#one-prop-ex-express-words" id="toc-one-prop-ex-express-words" class="nav-link" data-scroll-target="#one-prop-ex-express-words"><span class="header-section-number">15.6.2</span> Express the null and alternative hypotheses as contextually meaningful full sentences.</a></li>
+  <li><a href="#one-prop-ex-express-math" id="toc-one-prop-ex-express-math" class="nav-link" data-scroll-target="#one-prop-ex-express-math"><span class="header-section-number">15.6.3</span> Express the null and alternative hypotheses in symbols (when possible).</a></li>
+  </ul></li>
+  <li><a href="#one-prop-ex-model" id="toc-one-prop-ex-model" class="nav-link" data-scroll-target="#one-prop-ex-model"><span class="header-section-number">15.7</span> Model</a>
+  <ul class="collapse">
+  <li><a href="#one-prop-ex-sampling-dist-model" id="toc-one-prop-ex-sampling-dist-model" class="nav-link" data-scroll-target="#one-prop-ex-sampling-dist-model"><span class="header-section-number">15.7.1</span> Identify the sampling distribution model.</a></li>
+  <li><a href="#one-prop-ex-ht-conditions" id="toc-one-prop-ex-ht-conditions" class="nav-link" data-scroll-target="#one-prop-ex-ht-conditions"><span class="header-section-number">15.7.2</span> Check the relevant conditions to ensure that model assumptions are met.</a></li>
+  </ul></li>
+  <li><a href="#one-prop-ex-mechanics" id="toc-one-prop-ex-mechanics" class="nav-link" data-scroll-target="#one-prop-ex-mechanics"><span class="header-section-number">15.8</span> Mechanics</a>
+  <ul class="collapse">
+  <li><a href="#one-prop-ex-compute-test-stat" id="toc-one-prop-ex-compute-test-stat" class="nav-link" data-scroll-target="#one-prop-ex-compute-test-stat"><span class="header-section-number">15.8.1</span> Compute the test statistic.</a></li>
+  <li><a href="#one-prop-ex-report-test-stat" id="toc-one-prop-ex-report-test-stat" class="nav-link" data-scroll-target="#one-prop-ex-report-test-stat"><span class="header-section-number">15.8.2</span> Report the test statistic in context (when possible).</a></li>
+  <li><a href="#one-prop-ex-plot_null" id="toc-one-prop-ex-plot_null" class="nav-link" data-scroll-target="#one-prop-ex-plot_null"><span class="header-section-number">15.8.3</span> Plot the null distribution.</a></li>
+  <li><a href="#one-prop-ex-calculate-p" id="toc-one-prop-ex-calculate-p" class="nav-link" data-scroll-target="#one-prop-ex-calculate-p"><span class="header-section-number">15.8.4</span> Calculate the P-value.</a></li>
+  <li><a href="#one-prop-ex-interpret-p" id="toc-one-prop-ex-interpret-p" class="nav-link" data-scroll-target="#one-prop-ex-interpret-p"><span class="header-section-number">15.8.5</span> Interpret the P-value as a probability given the null.</a></li>
+  </ul></li>
+  <li><a href="#one-prop-ex-ht-conclusion" id="toc-one-prop-ex-ht-conclusion" class="nav-link" data-scroll-target="#one-prop-ex-ht-conclusion"><span class="header-section-number">15.9</span> Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#one-prop-ex-stat-conclusion" id="toc-one-prop-ex-stat-conclusion" class="nav-link" data-scroll-target="#one-prop-ex-stat-conclusion"><span class="header-section-number">15.9.1</span> State the statistical conclusion.</a></li>
+  <li><a href="#one-prop-ex-context-conclusion" id="toc-one-prop-ex-context-conclusion" class="nav-link" data-scroll-target="#one-prop-ex-context-conclusion"><span class="header-section-number">15.9.2</span> State (but do not overstate) a contextually meaningful conclusion.</a></li>
+  <li><a href="#one-prop-ex-reservations" id="toc-one-prop-ex-reservations" class="nav-link" data-scroll-target="#one-prop-ex-reservations"><span class="header-section-number">15.9.3</span> Express reservations or uncertainty about the generalizability of the conclusion.</a></li>
+  <li><a href="#one-prop-ex-errors" id="toc-one-prop-ex-errors" class="nav-link" data-scroll-target="#one-prop-ex-errors"><span class="header-section-number">15.9.4</span> Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.</a></li>
+  </ul></li>
+  <li><a href="#one-prop-ex-ci" id="toc-one-prop-ex-ci" class="nav-link" data-scroll-target="#one-prop-ex-ci"><span class="header-section-number">15.10</span> Confidence interval</a>
+  <ul class="collapse">
+  <li><a href="#one-prop-ex-ci-conditions" id="toc-one-prop-ex-ci-conditions" class="nav-link" data-scroll-target="#one-prop-ex-ci-conditions"><span class="header-section-number">15.10.1</span> Check the relevant conditions to ensure that model assumptions are met.</a></li>
+  <li><a href="#one-prop-ex-ci-calculate" id="toc-one-prop-ex-ci-calculate" class="nav-link" data-scroll-target="#one-prop-ex-ci-calculate"><span class="header-section-number">15.10.2</span> Calculate and graph the confidence interval.</a></li>
+  <li><a href="#one-prop-ex-ci-interpret" id="toc-one-prop-ex-ci-interpret" class="nav-link" data-scroll-target="#one-prop-ex-ci-interpret"><span class="header-section-number">15.10.3</span> State (but do not overstate) a contextually meaningful interpretation.</a></li>
+  <li><a href="#one-prop-ex-two-sided" id="toc-one-prop-ex-two-sided" class="nav-link" data-scroll-target="#one-prop-ex-two-sided"><span class="header-section-number">15.10.4</span> If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.</a></li>
+  <li><a href="#one-prop-ex-effect" id="toc-one-prop-ex-effect" class="nav-link" data-scroll-target="#one-prop-ex-effect"><span class="header-section-number">15.10.5</span> When comparing two groups, comment on the effect size and the practical significance of the result.</a></li>
+  </ul></li>
+  <li><a href="#one-prop-your-turn" id="toc-one-prop-your-turn" class="nav-link" data-scroll-target="#one-prop-your-turn"><span class="header-section-number">15.11</span> Your turn</a></li>
+  <li><a href="#one-prop-conclusion" id="toc-one-prop-conclusion" class="nav-link" data-scroll-target="#one-prop-conclusion"><span class="header-section-number">15.12</span> Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#one-prop-prep" id="toc-one-prop-prep" class="nav-link" data-scroll-target="#one-prop-prep"><span class="header-section-number">15.12.1</span> Preparing and submitting your assignment</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/VectorPosse/intro_stats/edit/main/15-inference_for_one_proportion-web.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/VectorPosse/intro_stats/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="one-prop" class="quarto-section-identifier"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Inference for one proportion</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<!-- Please don't mess with the next few lines! -->
+<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>
+<p style="color:#ffffff">
+2.0
+</p>
+<!-- Please don't mess with the previous few lines! -->
+<section id="functions-introduced-in-this-chapter" class="level3 unnumbered summary">
+<h3 class="unnumbered anchored" data-anchor-id="functions-introduced-in-this-chapter">Functions introduced in this chapter</h3>
+<p>No new R functions are introduced here.</p>
+</section>
+<section id="one-prop-intro" class="level2" data-number="15.1">
+<h2 data-number="15.1" class="anchored" data-anchor-id="one-prop-intro"><span class="header-section-number">15.1</span> Introduction</h2>
+<p>Our earlier work with simulations showed us that when the number of successes and failures is large enough, we can use a normal model as our sampling distribution model.</p>
+<p>We revisit hypothesis tests for a single proportion, but now, instead of running a simulation to compute the P-value, we take the shortcut of computing the P-value directly from a normal model.</p>
+<p>There are no new concepts here. All we are doing is revisiting the rubric for inference and making the necessary changes.</p>
+<section id="one-prop-install" class="level3" data-number="15.1.1">
+<h3 data-number="15.1.1" class="anchored" data-anchor-id="one-prop-install"><span class="header-section-number">15.1.1</span> Install new packages</h3>
+<p>There are no new packages used in this chapter.</p>
+</section>
+<section id="one-prop-download" class="level3" data-number="15.1.2">
+<h3 data-number="15.1.2" class="anchored" data-anchor-id="one-prop-download"><span class="header-section-number">15.1.2</span> Download the R notebook file</h3>
+<p>Check the upper-right corner in RStudio to make sure you’re in your <code>intro_stats</code> project. Then click on the following link to download this chapter as an R notebook file (<code>.Rmd</code>).</p>
+<p><a href="https://vectorposse.github.io/intro_stats/chapter_downloads/15-inference_for_one_proportion.Rmd" download="">https://vectorposse.github.io/intro_stats/chapter_downloads/15-inference_for_one_proportion.Rmd</a></p>
+<p>Once the file is downloaded, move it to your project folder in RStudio and open it there.</p>
+</section>
+<section id="one-prop-restart" class="level3" data-number="15.1.3">
+<h3 data-number="15.1.3" class="anchored" data-anchor-id="one-prop-restart"><span class="header-section-number">15.1.3</span> Restart R and run all chunks</h3>
+<p>In RStudio, select “Restart R and Run All Chunks” from the “Run” menu.</p>
+</section>
+</section>
+<section id="one-prop-load" class="level2" data-number="15.2">
+<h2 data-number="15.2" class="anchored" data-anchor-id="one-prop-load"><span class="header-section-number">15.2</span> Load packages</h2>
+<p>We load the standard <code>tidyverse</code>, <code>janitor</code> and <code>infer</code> packages as well as the <code>openintro</code> package to access data on heart transplant candidates. We’ll include <code>mosaic</code> for one spot below when we compare the results of <code>infer</code> to the results of graphing a normal distribution using <code>qdist</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.2     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'janitor'
+
+The following objects are masked from 'package:stats':
+
+    chisq.test, fisher.test</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(infer)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(openintro)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: airports
+Loading required package: cherryblossom
+Loading required package: usdata</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mosaic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'mosaic' was built under R version 4.3.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered S3 method overwritten by 'mosaic':
+  method                           from   
+  fortify.SpatialPolygonsDataFrame ggplot2
+
+The 'mosaic' package masks several functions from core packages in order to add 
+additional features.  The original behavior of these functions should not be affected by this.
+
+Attaching package: 'mosaic'
+
+The following object is masked from 'package:Matrix':
+
+    mean
+
+The following object is masked from 'package:openintro':
+
+    dotPlot
+
+The following objects are masked from 'package:infer':
+
+    prop_test, t_test
+
+The following objects are masked from 'package:dplyr':
+
+    count, do, tally
+
+The following object is masked from 'package:purrr':
+
+    cross
+
+The following object is masked from 'package:ggplot2':
+
+    stat
+
+The following objects are masked from 'package:stats':
+
+    binom.test, cor, cor.test, cov, fivenum, IQR, median, prop.test,
+    quantile, sd, t.test, var
+
+The following objects are masked from 'package:base':
+
+    max, mean, min, prod, range, sample, sum</code></pre>
+</div>
+</div>
+</section>
+<section id="one-prop-rubric" class="level2" data-number="15.3">
+<h2 data-number="15.3" class="anchored" data-anchor-id="one-prop-rubric"><span class="header-section-number">15.3</span> Revisiting the rubric for inference</h2>
+<p>Instead of running a simulation, we are going to assume that the sampling distribution can be modeled with a normal model as long as the conditions for using a normal model are met.</p>
+<p>Although the rubric has not changed, the use of a normal model changes quite a bit about the way we go through the other steps. For example, we won’t have simulated values to give us a histogram of the null model. Instead, we’ll go straight to graphing a normal model. We won’t compute the percent of our simulated samples that are at least as extreme as our test statistic to get the P-value. The P-value from a normal model is found directly from shading the model.</p>
+<p>What follows is a fully-worked example of inference for one proportion. After the hypothesis test (sometimes called a one-proportion z-test for reasons that will become clear), we also follow up by computing a confidence interval. <strong>From now on, we will consider inference to consist of a hypothesis test and a confidence interval.</strong> Whenever you’re asked a question that requires statistical inference, you should follow both the rubric steps for a hypothesis test and for a confidence interval.</p>
+<p>The example below will pause frequently for commentary on the steps, especially where their execution will be different from what you’ve seen before when you used simulation. When it’s your turn to work through another example on your own, you should follow the outline of the rubric, but you should <strong>not</strong> copy and paste the commentary that accompanies it.</p>
+</section>
+<section id="one-prop-question" class="level2" data-number="15.4">
+<h2 data-number="15.4" class="anchored" data-anchor-id="one-prop-question"><span class="header-section-number">15.4</span> Research question</h2>
+<p>Data from the Stanford University Heart Transplant Study is located in the <code>openintro</code> package in a data frame called <code>heart_transplant</code>. From the help file we learn, “Each patient entering the program was designated officially a heart transplant candidate, meaning that he was gravely ill and would most likely benefit from a new heart.” Survival rates are not good for this population, although they are better for those who receive a heart transplant. Do heart transplant recipients still have less than a 50% chance of survival?</p>
+</section>
+<section id="one-prop-ex-eda" class="level2" data-number="15.5">
+<h2 data-number="15.5" class="anchored" data-anchor-id="one-prop-ex-eda"><span class="header-section-number">15.5</span> Exploratory data analysis</h2>
+<section id="one-prop-ex-documentation" class="level3" data-number="15.5.1">
+<h3 data-number="15.5.1" class="anchored" data-anchor-id="one-prop-ex-documentation"><span class="header-section-number">15.5.1</span> Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.</h3>
+<p>Start by typing <code>?heart_transplant</code> at the Console or searching for <code>heart_translplant</code> in the Help tab to read the help file.</p>
+<section id="exercise-1" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-1">Exercise 1</h5>
+<p>Click on the link under “Source” in the help file. Why is this not helpful for determining the provenance of the data?</p>
+<p>Now try to do an internet search to find the original research article from 1974. Why is this search process also not likely to help you determine the provenance of the data?</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+<hr>
+<p>Now that we have learned everything we can reasonably learn about the data, we print it out and look at the variables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>heart_transplant</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["acceptyear"],"name":[2],"type":["int"],"align":["right"]},{"label":["age"],"name":[3],"type":["int"],"align":["right"]},{"label":["survived"],"name":[4],"type":["fct"],"align":["left"]},{"label":["survtime"],"name":[5],"type":["int"],"align":["right"]},{"label":["prior"],"name":[6],"type":["fct"],"align":["left"]},{"label":["transplant"],"name":[7],"type":["fct"],"align":["left"]},{"label":["wait"],"name":[8],"type":["int"],"align":["right"]}],"data":[{"1":"15","2":"68","3":"53","4":"dead","5":"1","6":"no","7":"control","8":"NA"},{"1":"43","2":"70","3":"43","4":"dead","5":"2","6":"no","7":"control","8":"NA"},{"1":"61","2":"71","3":"52","4":"dead","5":"2","6":"no","7":"control","8":"NA"},{"1":"75","2":"72","3":"52","4":"dead","5":"2","6":"no","7":"control","8":"NA"},{"1":"6","2":"68","3":"54","4":"dead","5":"3","6":"no","7":"control","8":"NA"},{"1":"42","2":"70","3":"36","4":"dead","5":"3","6":"no","7":"control","8":"NA"},{"1":"54","2":"71","3":"47","4":"dead","5":"3","6":"no","7":"control","8":"NA"},{"1":"38","2":"70","3":"41","4":"dead","5":"5","6":"no","7":"treatment","8":"5"},{"1":"85","2":"73","3":"47","4":"dead","5":"5","6":"no","7":"control","8":"NA"},{"1":"2","2":"68","3":"51","4":"dead","5":"6","6":"no","7":"control","8":"NA"},{"1":"103","2":"67","3":"39","4":"dead","5":"6","6":"no","7":"control","8":"NA"},{"1":"12","2":"68","3":"53","4":"dead","5":"8","6":"no","7":"control","8":"NA"},{"1":"48","2":"71","3":"56","4":"dead","5":"9","6":"no","7":"control","8":"NA"},{"1":"102","2":"74","3":"40","4":"alive","5":"11","6":"no","7":"control","8":"NA"},{"1":"35","2":"70","3":"43","4":"dead","5":"12","6":"no","7":"control","8":"NA"},{"1":"95","2":"73","3":"40","4":"dead","5":"16","6":"no","7":"treatment","8":"2"},{"1":"31","2":"69","3":"54","4":"dead","5":"16","6":"no","7":"control","8":"NA"},{"1":"3","2":"68","3":"54","4":"dead","5":"16","6":"no","7":"treatment","8":"1"},{"1":"74","2":"72","3":"29","4":"dead","5":"17","6":"no","7":"treatment","8":"5"},{"1":"5","2":"68","3":"20","4":"dead","5":"18","6":"no","7":"control","8":"NA"},{"1":"77","2":"72","3":"41","4":"dead","5":"21","6":"no","7":"control","8":"NA"},{"1":"99","2":"73","3":"49","4":"dead","5":"21","6":"no","7":"control","8":"NA"},{"1":"20","2":"69","3":"55","4":"dead","5":"28","6":"no","7":"treatment","8":"1"},{"1":"70","2":"72","3":"52","4":"dead","5":"30","6":"no","7":"treatment","8":"5"},{"1":"101","2":"74","3":"49","4":"alive","5":"31","6":"no","7":"control","8":"NA"},{"1":"66","2":"72","3":"53","4":"dead","5":"32","6":"no","7":"control","8":"NA"},{"1":"29","2":"69","3":"50","4":"dead","5":"35","6":"no","7":"control","8":"NA"},{"1":"17","2":"68","3":"20","4":"dead","5":"36","6":"no","7":"control","8":"NA"},{"1":"19","2":"68","3":"59","4":"dead","5":"37","6":"no","7":"control","8":"NA"},{"1":"4","2":"68","3":"40","4":"dead","5":"39","6":"no","7":"treatment","8":"36"},{"1":"100","2":"74","3":"35","4":"alive","5":"39","6":"yes","7":"treatment","8":"38"},{"1":"8","2":"68","3":"45","4":"dead","5":"40","6":"no","7":"control","8":"NA"},{"1":"44","2":"70","3":"42","4":"dead","5":"40","6":"no","7":"control","8":"NA"},{"1":"16","2":"68","3":"56","4":"dead","5":"43","6":"no","7":"treatment","8":"20"},{"1":"45","2":"71","3":"36","4":"dead","5":"45","6":"no","7":"treatment","8":"1"},{"1":"1","2":"67","3":"30","4":"dead","5":"50","6":"no","7":"control","8":"NA"},{"1":"22","2":"69","3":"42","4":"dead","5":"51","6":"no","7":"treatment","8":"12"},{"1":"39","2":"70","3":"50","4":"dead","5":"53","6":"no","7":"treatment","8":"2"},{"1":"10","2":"68","3":"42","4":"dead","5":"58","6":"no","7":"treatment","8":"12"},{"1":"35","2":"71","3":"52","4":"dead","5":"61","6":"no","7":"treatment","8":"10"},{"1":"37","2":"70","3":"61","4":"dead","5":"66","6":"no","7":"treatment","8":"19"},{"1":"68","2":"72","3":"45","4":"dead","5":"68","6":"no","7":"treatment","8":"3"},{"1":"60","2":"71","3":"49","4":"dead","5":"68","6":"no","7":"treatment","8":"3"},{"1":"62","2":"71","3":"39","4":"dead","5":"69","6":"no","7":"control","8":"NA"},{"1":"28","2":"69","3":"53","4":"dead","5":"72","6":"no","7":"treatment","8":"71"},{"1":"47","2":"71","3":"47","4":"dead","5":"72","6":"no","7":"treatment","8":"21"},{"1":"32","2":"69","3":"64","4":"dead","5":"77","6":"no","7":"treatment","8":"17"},{"1":"65","2":"72","3":"51","4":"dead","5":"78","6":"no","7":"treatment","8":"12"},{"1":"83","2":"73","3":"53","4":"dead","5":"80","6":"no","7":"treatment","8":"32"},{"1":"13","2":"68","3":"54","4":"dead","5":"81","6":"no","7":"treatment","8":"17"},{"1":"9","2":"68","3":"47","4":"dead","5":"85","6":"no","7":"control","8":"NA"},{"1":"73","2":"72","3":"56","4":"dead","5":"90","6":"no","7":"treatment","8":"27"},{"1":"79","2":"72","3":"53","4":"dead","5":"96","6":"no","7":"treatment","8":"67"},{"1":"36","2":"70","3":"48","4":"dead","5":"100","6":"no","7":"treatment","8":"46"},{"1":"32","2":"71","3":"41","4":"dead","5":"102","6":"no","7":"control","8":"NA"},{"1":"98","2":"73","3":"28","4":"alive","5":"109","6":"no","7":"treatment","8":"96"},{"1":"87","2":"73","3":"46","4":"dead","5":"110","6":"no","7":"treatment","8":"60"},{"1":"97","2":"73","3":"23","4":"alive","5":"131","6":"no","7":"treatment","8":"21"},{"1":"37","2":"71","3":"41","4":"dead","5":"149","6":"no","7":"control","8":"NA"},{"1":"11","2":"68","3":"47","4":"dead","5":"153","6":"no","7":"treatment","8":"26"},{"1":"94","2":"73","3":"43","4":"dead","5":"165","6":"yes","7":"treatment","8":"4"},{"1":"96","2":"73","3":"26","4":"alive","5":"180","6":"no","7":"treatment","8":"13"},{"1":"90","2":"73","3":"52","4":"dead","5":"186","6":"yes","7":"treatment","8":"160"},{"1":"53","2":"71","3":"47","4":"dead","5":"188","6":"no","7":"treatment","8":"41"},{"1":"89","2":"73","3":"51","4":"dead","5":"207","6":"no","7":"treatment","8":"139"},{"1":"24","2":"69","3":"51","4":"dead","5":"219","6":"no","7":"treatment","8":"83"},{"1":"27","2":"69","3":"8","4":"dead","5":"263","6":"no","7":"control","8":"NA"},{"1":"93","2":"73","3":"47","4":"alive","5":"265","6":"no","7":"treatment","8":"28"},{"1":"51","2":"71","3":"48","4":"dead","5":"285","6":"no","7":"treatment","8":"32"},{"1":"67","2":"73","3":"19","4":"dead","5":"285","6":"no","7":"treatment","8":"57"},{"1":"16","2":"68","3":"49","4":"dead","5":"308","6":"no","7":"treatment","8":"28"},{"1":"84","2":"73","3":"42","4":"dead","5":"334","6":"no","7":"treatment","8":"37"},{"1":"91","2":"73","3":"47","4":"dead","5":"340","6":"no","7":"control","8":"NA"},{"1":"92","2":"73","3":"44","4":"alive","5":"340","6":"no","7":"treatment","8":"310"},{"1":"58","2":"71","3":"47","4":"dead","5":"342","6":"yes","7":"treatment","8":"21"},{"1":"88","2":"73","3":"54","4":"alive","5":"370","6":"no","7":"treatment","8":"31"},{"1":"86","2":"73","3":"48","4":"alive","5":"397","6":"no","7":"treatment","8":"8"},{"1":"82","2":"71","3":"29","4":"alive","5":"427","6":"no","7":"control","8":"NA"},{"1":"81","2":"73","3":"52","4":"alive","5":"445","6":"no","7":"treatment","8":"6"},{"1":"80","2":"72","3":"46","4":"alive","5":"482","6":"yes","7":"treatment","8":"26"},{"1":"78","2":"72","3":"48","4":"alive","5":"515","6":"no","7":"treatment","8":"210"},{"1":"76","2":"72","3":"52","4":"alive","5":"545","6":"yes","7":"treatment","8":"46"},{"1":"64","2":"72","3":"48","4":"dead","5":"583","6":"yes","7":"treatment","8":"32"},{"1":"72","2":"72","3":"26","4":"alive","5":"596","6":"no","7":"treatment","8":"4"},{"1":"71","2":"72","3":"47","4":"alive","5":"630","6":"no","7":"treatment","8":"31"},{"1":"69","2":"72","3":"47","4":"alive","5":"670","6":"no","7":"treatment","8":"10"},{"1":"7","2":"68","3":"50","4":"dead","5":"675","6":"no","7":"treatment","8":"51"},{"1":"23","2":"69","3":"58","4":"dead","5":"733","6":"no","7":"treatment","8":"3"},{"1":"63","2":"71","3":"32","4":"alive","5":"841","6":"no","7":"treatment","8":"27"},{"1":"30","2":"69","3":"44","4":"dead","5":"852","6":"no","7":"treatment","8":"16"},{"1":"59","2":"71","3":"41","4":"alive","5":"915","6":"no","7":"treatment","8":"78"},{"1":"56","2":"71","3":"38","4":"alive","5":"941","6":"no","7":"treatment","8":"67"},{"1":"50","2":"71","3":"45","4":"dead","5":"979","6":"yes","7":"treatment","8":"83"},{"1":"46","2":"71","3":"48","4":"dead","5":"995","6":"yes","7":"treatment","8":"2"},{"1":"21","2":"69","3":"43","4":"dead","5":"1032","6":"no","7":"treatment","8":"8"},{"1":"49","2":"71","3":"36","4":"alive","5":"1141","6":"yes","7":"treatment","8":"36"},{"1":"41","2":"70","3":"45","4":"alive","5":"1321","6":"yes","7":"treatment","8":"58"},{"1":"14","2":"68","3":"53","4":"dead","5":"1386","6":"no","7":"treatment","8":"37"},{"1":"26","2":"69","3":"30","4":"alive","5":"1400","6":"no","7":"control","8":"NA"},{"1":"40","2":"70","3":"48","4":"alive","5":"1407","6":"yes","7":"treatment","8":"41"},{"1":"34","2":"69","3":"40","4":"alive","5":"1571","6":"no","7":"treatment","8":"23"},{"1":"33","2":"69","3":"48","4":"alive","5":"1586","6":"no","7":"treatment","8":"51"},{"1":"25","2":"69","3":"33","4":"alive","5":"1799","6":"no","7":"treatment","8":"25"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(heart_transplant)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 103
+Columns: 8
+$ id         &lt;int&gt; 15, 43, 61, 75, 6, 42, 54, 38, 85, 2, 103, 12, 48, 102, 35,…
+$ acceptyear &lt;int&gt; 68, 70, 71, 72, 68, 70, 71, 70, 73, 68, 67, 68, 71, 74, 70,…
+$ age        &lt;int&gt; 53, 43, 52, 52, 54, 36, 47, 41, 47, 51, 39, 53, 56, 40, 43,…
+$ survived   &lt;fct&gt; dead, dead, dead, dead, dead, dead, dead, dead, dead, dead,…
+$ survtime   &lt;int&gt; 1, 2, 2, 2, 3, 3, 3, 5, 5, 6, 6, 8, 9, 11, 12, 16, 16, 16, …
+$ prior      &lt;fct&gt; no, no, no, no, no, no, no, no, no, no, no, no, no, no, no,…
+$ transplant &lt;fct&gt; control, control, control, control, control, control, contr…
+$ wait       &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, 5, NA, NA, NA, NA, NA, NA, NA, …</code></pre>
+</div>
+</div>
+<p>Commentary: The variable of interest is <code>survived</code>, which is coded as a factor variable with two categories, “alive” and “dead”. Keep in mind that because we are interested in survival rates, the “alive” condition will be considered the “success” condition.</p>
+<p>There are 103 patients, but we are not considering all these patients. Our sample should consist of only those patients who actually received the transplant. The following table shows that only 69 patients were in the “treatment” group (meaning that they received a heart transplant).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(heart_transplant, transplant) <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_totals</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["transplant"],"name":[1],"type":["fct"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["percent"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"control","2":"34","3":"0.3300971","_rn_":"1"},{"1":"treatment","2":"69","3":"0.6699029","_rn_":"2"},{"1":"Total","2":"103","3":"1.0000000","_rn_":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="one-prop-ex-prepare" class="level3" data-number="15.5.2">
+<h3 data-number="15.5.2" class="anchored" data-anchor-id="one-prop-ex-prepare"><span class="header-section-number">15.5.2</span> Prepare the data for analysis.</h3>
+<p><strong>CAUTION: If you are copying and pasting from this example to use for another research question, the following code chunk is specific to this research question and not applicable in other contexts.</strong></p>
+<p>We need to use <code>filter</code> so we get only the patients who actually received the heart transplant.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Do not copy and paste this code for future work</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>heart_transplant2 <span class="ot">&lt;-</span> heart_transplant <span class="sc">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(transplant <span class="sc">==</span> <span class="st">"treatment"</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>heart_transplant2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["acceptyear"],"name":[2],"type":["int"],"align":["right"]},{"label":["age"],"name":[3],"type":["int"],"align":["right"]},{"label":["survived"],"name":[4],"type":["fct"],"align":["left"]},{"label":["survtime"],"name":[5],"type":["int"],"align":["right"]},{"label":["prior"],"name":[6],"type":["fct"],"align":["left"]},{"label":["transplant"],"name":[7],"type":["fct"],"align":["left"]},{"label":["wait"],"name":[8],"type":["int"],"align":["right"]}],"data":[{"1":"38","2":"70","3":"41","4":"dead","5":"5","6":"no","7":"treatment","8":"5"},{"1":"95","2":"73","3":"40","4":"dead","5":"16","6":"no","7":"treatment","8":"2"},{"1":"3","2":"68","3":"54","4":"dead","5":"16","6":"no","7":"treatment","8":"1"},{"1":"74","2":"72","3":"29","4":"dead","5":"17","6":"no","7":"treatment","8":"5"},{"1":"20","2":"69","3":"55","4":"dead","5":"28","6":"no","7":"treatment","8":"1"},{"1":"70","2":"72","3":"52","4":"dead","5":"30","6":"no","7":"treatment","8":"5"},{"1":"4","2":"68","3":"40","4":"dead","5":"39","6":"no","7":"treatment","8":"36"},{"1":"100","2":"74","3":"35","4":"alive","5":"39","6":"yes","7":"treatment","8":"38"},{"1":"16","2":"68","3":"56","4":"dead","5":"43","6":"no","7":"treatment","8":"20"},{"1":"45","2":"71","3":"36","4":"dead","5":"45","6":"no","7":"treatment","8":"1"},{"1":"22","2":"69","3":"42","4":"dead","5":"51","6":"no","7":"treatment","8":"12"},{"1":"39","2":"70","3":"50","4":"dead","5":"53","6":"no","7":"treatment","8":"2"},{"1":"10","2":"68","3":"42","4":"dead","5":"58","6":"no","7":"treatment","8":"12"},{"1":"35","2":"71","3":"52","4":"dead","5":"61","6":"no","7":"treatment","8":"10"},{"1":"37","2":"70","3":"61","4":"dead","5":"66","6":"no","7":"treatment","8":"19"},{"1":"68","2":"72","3":"45","4":"dead","5":"68","6":"no","7":"treatment","8":"3"},{"1":"60","2":"71","3":"49","4":"dead","5":"68","6":"no","7":"treatment","8":"3"},{"1":"28","2":"69","3":"53","4":"dead","5":"72","6":"no","7":"treatment","8":"71"},{"1":"47","2":"71","3":"47","4":"dead","5":"72","6":"no","7":"treatment","8":"21"},{"1":"32","2":"69","3":"64","4":"dead","5":"77","6":"no","7":"treatment","8":"17"},{"1":"65","2":"72","3":"51","4":"dead","5":"78","6":"no","7":"treatment","8":"12"},{"1":"83","2":"73","3":"53","4":"dead","5":"80","6":"no","7":"treatment","8":"32"},{"1":"13","2":"68","3":"54","4":"dead","5":"81","6":"no","7":"treatment","8":"17"},{"1":"73","2":"72","3":"56","4":"dead","5":"90","6":"no","7":"treatment","8":"27"},{"1":"79","2":"72","3":"53","4":"dead","5":"96","6":"no","7":"treatment","8":"67"},{"1":"36","2":"70","3":"48","4":"dead","5":"100","6":"no","7":"treatment","8":"46"},{"1":"98","2":"73","3":"28","4":"alive","5":"109","6":"no","7":"treatment","8":"96"},{"1":"87","2":"73","3":"46","4":"dead","5":"110","6":"no","7":"treatment","8":"60"},{"1":"97","2":"73","3":"23","4":"alive","5":"131","6":"no","7":"treatment","8":"21"},{"1":"11","2":"68","3":"47","4":"dead","5":"153","6":"no","7":"treatment","8":"26"},{"1":"94","2":"73","3":"43","4":"dead","5":"165","6":"yes","7":"treatment","8":"4"},{"1":"96","2":"73","3":"26","4":"alive","5":"180","6":"no","7":"treatment","8":"13"},{"1":"90","2":"73","3":"52","4":"dead","5":"186","6":"yes","7":"treatment","8":"160"},{"1":"53","2":"71","3":"47","4":"dead","5":"188","6":"no","7":"treatment","8":"41"},{"1":"89","2":"73","3":"51","4":"dead","5":"207","6":"no","7":"treatment","8":"139"},{"1":"24","2":"69","3":"51","4":"dead","5":"219","6":"no","7":"treatment","8":"83"},{"1":"93","2":"73","3":"47","4":"alive","5":"265","6":"no","7":"treatment","8":"28"},{"1":"51","2":"71","3":"48","4":"dead","5":"285","6":"no","7":"treatment","8":"32"},{"1":"67","2":"73","3":"19","4":"dead","5":"285","6":"no","7":"treatment","8":"57"},{"1":"16","2":"68","3":"49","4":"dead","5":"308","6":"no","7":"treatment","8":"28"},{"1":"84","2":"73","3":"42","4":"dead","5":"334","6":"no","7":"treatment","8":"37"},{"1":"92","2":"73","3":"44","4":"alive","5":"340","6":"no","7":"treatment","8":"310"},{"1":"58","2":"71","3":"47","4":"dead","5":"342","6":"yes","7":"treatment","8":"21"},{"1":"88","2":"73","3":"54","4":"alive","5":"370","6":"no","7":"treatment","8":"31"},{"1":"86","2":"73","3":"48","4":"alive","5":"397","6":"no","7":"treatment","8":"8"},{"1":"81","2":"73","3":"52","4":"alive","5":"445","6":"no","7":"treatment","8":"6"},{"1":"80","2":"72","3":"46","4":"alive","5":"482","6":"yes","7":"treatment","8":"26"},{"1":"78","2":"72","3":"48","4":"alive","5":"515","6":"no","7":"treatment","8":"210"},{"1":"76","2":"72","3":"52","4":"alive","5":"545","6":"yes","7":"treatment","8":"46"},{"1":"64","2":"72","3":"48","4":"dead","5":"583","6":"yes","7":"treatment","8":"32"},{"1":"72","2":"72","3":"26","4":"alive","5":"596","6":"no","7":"treatment","8":"4"},{"1":"71","2":"72","3":"47","4":"alive","5":"630","6":"no","7":"treatment","8":"31"},{"1":"69","2":"72","3":"47","4":"alive","5":"670","6":"no","7":"treatment","8":"10"},{"1":"7","2":"68","3":"50","4":"dead","5":"675","6":"no","7":"treatment","8":"51"},{"1":"23","2":"69","3":"58","4":"dead","5":"733","6":"no","7":"treatment","8":"3"},{"1":"63","2":"71","3":"32","4":"alive","5":"841","6":"no","7":"treatment","8":"27"},{"1":"30","2":"69","3":"44","4":"dead","5":"852","6":"no","7":"treatment","8":"16"},{"1":"59","2":"71","3":"41","4":"alive","5":"915","6":"no","7":"treatment","8":"78"},{"1":"56","2":"71","3":"38","4":"alive","5":"941","6":"no","7":"treatment","8":"67"},{"1":"50","2":"71","3":"45","4":"dead","5":"979","6":"yes","7":"treatment","8":"83"},{"1":"46","2":"71","3":"48","4":"dead","5":"995","6":"yes","7":"treatment","8":"2"},{"1":"21","2":"69","3":"43","4":"dead","5":"1032","6":"no","7":"treatment","8":"8"},{"1":"49","2":"71","3":"36","4":"alive","5":"1141","6":"yes","7":"treatment","8":"36"},{"1":"41","2":"70","3":"45","4":"alive","5":"1321","6":"yes","7":"treatment","8":"58"},{"1":"14","2":"68","3":"53","4":"dead","5":"1386","6":"no","7":"treatment","8":"37"},{"1":"40","2":"70","3":"48","4":"alive","5":"1407","6":"yes","7":"treatment","8":"41"},{"1":"34","2":"69","3":"40","4":"alive","5":"1571","6":"no","7":"treatment","8":"23"},{"1":"33","2":"69","3":"48","4":"alive","5":"1586","6":"no","7":"treatment","8":"51"},{"1":"25","2":"69","3":"33","4":"alive","5":"1799","6":"no","7":"treatment","8":"25"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Commentary: don’t forget the double equal sign (<code>==</code>) that checks whether the <code>treatment</code> variable is equal to the value “treatment”. (See the Chapter 5 if you’ve forgotten how to use <code>filter</code>.)</p>
+<p>Again, this step isn’t something you need to do for other research questions. This question is peculiar because it asks only about patients who received a heart transplant, and that only involves a subset of the data we have in the <code>heart_transplant</code> data frame.</p>
+</section>
+<section id="one-prop-ex-plots" class="level3" data-number="15.5.3">
+<h3 data-number="15.5.3" class="anchored" data-anchor-id="one-prop-ex-plots"><span class="header-section-number">15.5.3</span> Make tables or plots to explore the data visually.</h3>
+<p>Making sure that we refer from now on to the <code>heart_transplant2</code> data frame and not the original <code>heart_transplant</code> data frame:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tabyl</span>(heart_transplant2, survived) <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adorn_totals</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["survived"],"name":[1],"type":["fct"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["percent"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"alive","2":"24","3":"0.3478261","_rn_":"1"},{"1":"dead","2":"45","3":"0.6521739","_rn_":"2"},{"1":"Total","2":"69","3":"1.0000000","_rn_":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="one-prop-ex-hypotheses" class="level2" data-number="15.6">
+<h2 data-number="15.6" class="anchored" data-anchor-id="one-prop-ex-hypotheses"><span class="header-section-number">15.6</span> Hypotheses</h2>
+<section id="one-prop-ex-sample-pop" class="level3" data-number="15.6.1">
+<h3 data-number="15.6.1" class="anchored" data-anchor-id="one-prop-ex-sample-pop"><span class="header-section-number">15.6.1</span> Identify the sample (or samples) and a reasonable population (or populations) of interest.</h3>
+<p>The sample consists of 69 heart transplant recipients in a study at Stanford University. The population of interest is presumably all heart transplants recipients.</p>
+</section>
+<section id="one-prop-ex-express-words" class="level3" data-number="15.6.2">
+<h3 data-number="15.6.2" class="anchored" data-anchor-id="one-prop-ex-express-words"><span class="header-section-number">15.6.2</span> Express the null and alternative hypotheses as contextually meaningful full sentences.</h3>
+<p><span class="math inline">\(H_{0}:\)</span> Heart transplant recipients have a 50% chance of survival.</p>
+<p><span class="math inline">\(H_{A}:\)</span> Heart transplant recipients have less than a 50% chance of survival.</p>
+<p>Commentary: It is slightly unusual that we are conducting a one-sided test. The standard default is typically a two-sided test. However, it is not for us to choose: the proposed research question is unequivocal in hypothesizing “less than 50%” survival.</p>
+</section>
+<section id="one-prop-ex-express-math" class="level3" data-number="15.6.3">
+<h3 data-number="15.6.3" class="anchored" data-anchor-id="one-prop-ex-express-math"><span class="header-section-number">15.6.3</span> Express the null and alternative hypotheses in symbols (when possible).</h3>
+<p><span class="math inline">\(H_{0}: p_{alive} = 0.5\)</span></p>
+<p><span class="math inline">\(H_{A}: p_{alive} &lt; 0.5\)</span></p>
+</section>
+</section>
+<section id="one-prop-ex-model" class="level2" data-number="15.7">
+<h2 data-number="15.7" class="anchored" data-anchor-id="one-prop-ex-model"><span class="header-section-number">15.7</span> Model</h2>
+<section id="one-prop-ex-sampling-dist-model" class="level3" data-number="15.7.1">
+<h3 data-number="15.7.1" class="anchored" data-anchor-id="one-prop-ex-sampling-dist-model"><span class="header-section-number">15.7.1</span> Identify the sampling distribution model.</h3>
+<p>We will use a normal model.</p>
+<p>Commentary: In past chapters, we have simulated the sampling distribution or applied some kind of randomization to simulate the effect of the null hypothesis. The point of this chapter is that we can—when the conditions are met—substitute a normal model to replace the unimodal and symmetric histogram that resulted from randomization and simulation.</p>
+</section>
+<section id="one-prop-ex-ht-conditions" class="level3" data-number="15.7.2">
+<h3 data-number="15.7.2" class="anchored" data-anchor-id="one-prop-ex-ht-conditions"><span class="header-section-number">15.7.2</span> Check the relevant conditions to ensure that model assumptions are met.</h3>
+<ul>
+<li>Random
+<ul>
+<li>Since the 69 patients are from a study at Stanford, we do not have a random sample of all heart transplant recipients. We hope that the patients recruited to this study were physiologically similar to other heart patients so that they are a representative sample. Without more information, we have no real way of knowing.</li>
+</ul></li>
+<li>10%
+<ul>
+<li>69 patients are definitely less than 10% of all heart transplant recipients.</li>
+</ul></li>
+<li>Success/failure</li>
+</ul>
+<p><span class="math display">\[
+np_{alive} = 69(0.5) = 34.5 \geq 10
+\]</span></p>
+<p><span class="math display">\[
+n(1 - p_{alive}) = 69(0.5) = 34.5 \geq 10
+\]</span></p>
+<p>Commentary: Notice something interesting here. Why did we not use the 24 patients who survived and the 45 who died as the successes and failures? In other words, why did we use <span class="math inline">\(np_{alive}\)</span> and <span class="math inline">\(n(1 - p_{alive})\)</span> instead of <span class="math inline">\(n \hat{p}_{alive}\)</span> and <span class="math inline">\(n(1 - \hat{p}_{alive})\)</span>?</p>
+<p>Remember the logic of inference and the philosophy of the null hypothesis. To convince the skeptics, we must assume the null hypothesis throughout the process. It’s only after we present sufficient evidence that can we reject the null and fall back on the alternative hypothesis that encapsulates our research question.</p>
+<p>Therefore, under the assumption of the null, the sampling distribution is the <em>null distribution</em>, meaning that it’s centered at 0.5. All work we do with the normal model, including checking conditions, must use the null model with <span class="math inline">\(p_{alive}= 0.5\)</span>.</p>
+<p>That’s also why the numbers don’t have to be whole numbers. If the null states that of the 69 patients, 50% are expected to survive, then we expect 50% of 69, or 34.5, to survive. Of course, you can’t have half of a survivor. But these are not <em>actual</em> survivors. Rather, they are the expected number of survivors in a group of 69 patients <em>on average</em> under the assumption of the null.</p>
+</section>
+</section>
+<section id="one-prop-ex-mechanics" class="level2" data-number="15.8">
+<h2 data-number="15.8" class="anchored" data-anchor-id="one-prop-ex-mechanics"><span class="header-section-number">15.8</span> Mechanics</h2>
+<section id="one-prop-ex-compute-test-stat" class="level3" data-number="15.8.1">
+<h3 data-number="15.8.1" class="anchored" data-anchor-id="one-prop-ex-compute-test-stat"><span class="header-section-number">15.8.1</span> Compute the test statistic.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>alive_prop <span class="ot">&lt;-</span> heart_transplant2 <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">specify</span>(<span class="at">response =</span> survived, <span class="at">succes =</span> <span class="st">"alive"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"prop"</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>alive_prop</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["stat"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.3478261"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>We’ll also compute the corresponding z score.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>alive_z <span class="ot">&lt;-</span> heart_transplant2 <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">specify</span>(<span class="at">response =</span> survived, <span class="at">success =</span> <span class="st">"alive"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hypothesize</span>(<span class="at">null =</span> <span class="st">"point"</span>, <span class="at">p =</span> <span class="fl">0.5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"z"</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>alive_z</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["stat"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"-2.528103"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Commentary: The sample proportion code is straightforward and we’ve seen it before. To get the z score, we also have to tell <code>infer</code> what the null hypothesis is so that it knows where the center of our normal distribution will be. In the <code>hypothesize</code> function, we tell <code>infer</code> to use a “point” null hypothesis with <code>p = 0.5</code>. All this means is that the null is a specific point: 0.5. (Contrast this to hypothesis tests with two variables when we had <code>null = "independence"</code>.)</p>
+<p>We can confirm the calculation of the z score manually. It’s easiest to compute the standard error first. Recall that the standard error is</p>
+<p><span class="math display">\[
+SE = \sqrt{\frac{p_{alive}(1 - p_{alive})}{n}} = \sqrt{\frac{0.5(1 - 0.5)}{69}}
+\]</span></p>
+<p><strong>Remember that are working under the assumption of the null hypothesis.</strong> This means that we use <span class="math inline">\(p_{alive} = 0.5\)</span> everywhere in the formula for the standard error.</p>
+<p>We can do the math in R and store our result as <code>SE</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>SE <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fl">0.5</span><span class="sc">*</span>(<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.5</span>)<span class="sc">/</span><span class="dv">69</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>SE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.06019293</code></pre>
+</div>
+</div>
+<p>Then our z score is</p>
+<p><span class="math display">\[
+z = \frac{(\hat{p}_{alive} - p_{alive})}{SE} =  \frac{(\hat{p}_{alive} - p_{alive})}{\sqrt{\frac{p_{alive} (1 - p_{alive})}{n}}} = \frac{(0.348 - 0.5)}{\sqrt{\frac{0.5 (1 - 0.5)}{69}}} =  -2.53.
+\]</span></p>
+<p>Using the values of <code>alive_prop</code> and <code>SE</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> (alive_prop <span class="sc">-</span> <span class="fl">0.5</span>)<span class="sc">/</span>SE</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>z</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["stat"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"-2.528103"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Both the sample proportion <span class="math inline">\(\hat{p}_{alive}\)</span> (stored above as <code>alive_prop</code>) and the corresponding z-score can be considered the “test statistic”. If we use <span class="math inline">\(\hat{p}_{alive}\)</span> as the test statistic, then we’re considering the null model to be</p>
+<p><span class="math display">\[
+N\left(0.5, \sqrt{\frac{0.5 (1 - 0.5)}{69}}\right).
+\]</span></p>
+<p>If we use z as the test statistic, then we’re considering the null model to be the <em>standard normal model</em>:</p>
+<p><span class="math display">\[
+N(0, 1).
+\]</span></p>
+<p>The standard normal model is more intuitive and easier to work with, both conceptually and in R. Generally, then, we will consider z as the test statistic so that we can consider our null model to be the standard normal model. For example, knowing that our test statistic is two and a half standard deviations to the left of the null value already tells us a lot. We can anticipate a small P-value leading to rejection of the null. Nevertheless, for this type of hypothesis test, we’ll compute both in this section of the rubric.</p>
+</section>
+<section id="one-prop-ex-report-test-stat" class="level3" data-number="15.8.2">
+<h3 data-number="15.8.2" class="anchored" data-anchor-id="one-prop-ex-report-test-stat"><span class="header-section-number">15.8.2</span> Report the test statistic in context (when possible).</h3>
+<p>The test statistic is 0.3478261. In other words, 34.7826087% of heart transplant recipients were alive at the end of the study.</p>
+<p>The z score is -2.5281029. The proportion of survivors is about 2.5 standard errors below the null value.</p>
+</section>
+<section id="one-prop-ex-plot_null" class="level3" data-number="15.8.3">
+<h3 data-number="15.8.3" class="anchored" data-anchor-id="one-prop-ex-plot_null"><span class="header-section-number">15.8.3</span> Plot the null distribution.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>alive_test <span class="ot">&lt;-</span> heart_transplant2 <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">specify</span>(<span class="at">response =</span> survived, <span class="at">success =</span> <span class="st">"alive"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hypothesize</span>(<span class="at">null =</span> <span class="st">"point"</span>, <span class="at">p =</span> <span class="fl">0.5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">assume</span>(<span class="at">distribution =</span> <span class="st">"z"</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>alive_test</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A Z distribution.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>alive_test <span class="sc">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visualize</span>() <span class="sc">+</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">shade_p_value</span>(<span class="at">obs_stat =</span> alive_z, <span class="at">direction =</span> <span class="st">"less"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="15-inference_for_one_proportion-web_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Commentary: In past chapters, we have used the <code>generate</code> verb to get many repetitions (usually 1000) of some kind of random process to simulate the sampling distribution model. In this chapter, we have used the verb <code>assume</code> instead to assume that the sampling distribution is a normal model. As long as the conditions hold, this is a reasonable assumption. This also means that we don’t have to use <code>set.seed</code> as there is no random process to reproduce.</p>
+<p>Compare the graph above to what we would see if we simulated the sampling distribution. (Now we do need <code>set.seed</code>!)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">6789</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>alive_test_draw <span class="ot">&lt;-</span> heart_transplant2 <span class="sc">%&gt;%</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">specify</span>(<span class="at">response =</span> survived, <span class="at">success =</span> <span class="st">"alive"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hypothesize</span>(<span class="at">null =</span> <span class="st">"point"</span>, <span class="at">p =</span> <span class="fl">0.5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">generate</span>(<span class="at">reps =</span> <span class="dv">1000</span>, <span class="at">type =</span> <span class="st">"draw"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"prop"</span>)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>alive_test_draw</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["replicate"],"name":[1],"type":["fct"],"align":["left"]},{"label":["stat"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"0.4927536"},{"1":"2","2":"0.4057971"},{"1":"3","2":"0.4347826"},{"1":"4","2":"0.5797101"},{"1":"5","2":"0.5217391"},{"1":"6","2":"0.5072464"},{"1":"7","2":"0.5797101"},{"1":"8","2":"0.4347826"},{"1":"9","2":"0.5507246"},{"1":"10","2":"0.4347826"},{"1":"11","2":"0.4927536"},{"1":"12","2":"0.6086957"},{"1":"13","2":"0.5797101"},{"1":"14","2":"0.5797101"},{"1":"15","2":"0.4927536"},{"1":"16","2":"0.4927536"},{"1":"17","2":"0.5942029"},{"1":"18","2":"0.4057971"},{"1":"19","2":"0.5217391"},{"1":"20","2":"0.5942029"},{"1":"21","2":"0.4492754"},{"1":"22","2":"0.4202899"},{"1":"23","2":"0.5217391"},{"1":"24","2":"0.6376812"},{"1":"25","2":"0.3913043"},{"1":"26","2":"0.5507246"},{"1":"27","2":"0.3768116"},{"1":"28","2":"0.5652174"},{"1":"29","2":"0.4927536"},{"1":"30","2":"0.5217391"},{"1":"31","2":"0.5362319"},{"1":"32","2":"0.4782609"},{"1":"33","2":"0.4782609"},{"1":"34","2":"0.5217391"},{"1":"35","2":"0.3623188"},{"1":"36","2":"0.5507246"},{"1":"37","2":"0.4782609"},{"1":"38","2":"0.5362319"},{"1":"39","2":"0.4347826"},{"1":"40","2":"0.4492754"},{"1":"41","2":"0.3623188"},{"1":"42","2":"0.4637681"},{"1":"43","2":"0.4637681"},{"1":"44","2":"0.4927536"},{"1":"45","2":"0.5072464"},{"1":"46","2":"0.5652174"},{"1":"47","2":"0.5362319"},{"1":"48","2":"0.5362319"},{"1":"49","2":"0.5217391"},{"1":"50","2":"0.4782609"},{"1":"51","2":"0.4927536"},{"1":"52","2":"0.4347826"},{"1":"53","2":"0.4637681"},{"1":"54","2":"0.4927536"},{"1":"55","2":"0.4347826"},{"1":"56","2":"0.4347826"},{"1":"57","2":"0.4927536"},{"1":"58","2":"0.4782609"},{"1":"59","2":"0.5797101"},{"1":"60","2":"0.3768116"},{"1":"61","2":"0.5362319"},{"1":"62","2":"0.4782609"},{"1":"63","2":"0.3768116"},{"1":"64","2":"0.4927536"},{"1":"65","2":"0.4637681"},{"1":"66","2":"0.4492754"},{"1":"67","2":"0.4637681"},{"1":"68","2":"0.5072464"},{"1":"69","2":"0.6376812"},{"1":"70","2":"0.5942029"},{"1":"71","2":"0.4492754"},{"1":"72","2":"0.5362319"},{"1":"73","2":"0.4492754"},{"1":"74","2":"0.5942029"},{"1":"75","2":"0.5072464"},{"1":"76","2":"0.4927536"},{"1":"77","2":"0.5217391"},{"1":"78","2":"0.4782609"},{"1":"79","2":"0.6086957"},{"1":"80","2":"0.5217391"},{"1":"81","2":"0.4637681"},{"1":"82","2":"0.3768116"},{"1":"83","2":"0.5507246"},{"1":"84","2":"0.4492754"},{"1":"85","2":"0.5942029"},{"1":"86","2":"0.4202899"},{"1":"87","2":"0.4782609"},{"1":"88","2":"0.5652174"},{"1":"89","2":"0.4492754"},{"1":"90","2":"0.6086957"},{"1":"91","2":"0.4492754"},{"1":"92","2":"0.4782609"},{"1":"93","2":"0.5362319"},{"1":"94","2":"0.3768116"},{"1":"95","2":"0.5072464"},{"1":"96","2":"0.5072464"},{"1":"97","2":"0.4782609"},{"1":"98","2":"0.5942029"},{"1":"99","2":"0.5072464"},{"1":"100","2":"0.4637681"},{"1":"101","2":"0.4202899"},{"1":"102","2":"0.5362319"},{"1":"103","2":"0.3913043"},{"1":"104","2":"0.5072464"},{"1":"105","2":"0.5942029"},{"1":"106","2":"0.4637681"},{"1":"107","2":"0.5942029"},{"1":"108","2":"0.4492754"},{"1":"109","2":"0.4637681"},{"1":"110","2":"0.4492754"},{"1":"111","2":"0.4782609"},{"1":"112","2":"0.4202899"},{"1":"113","2":"0.4202899"},{"1":"114","2":"0.5652174"},{"1":"115","2":"0.4347826"},{"1":"116","2":"0.3913043"},{"1":"117","2":"0.5072464"},{"1":"118","2":"0.3913043"},{"1":"119","2":"0.5507246"},{"1":"120","2":"0.4492754"},{"1":"121","2":"0.4057971"},{"1":"122","2":"0.5507246"},{"1":"123","2":"0.4927536"},{"1":"124","2":"0.5072464"},{"1":"125","2":"0.5072464"},{"1":"126","2":"0.4637681"},{"1":"127","2":"0.4782609"},{"1":"128","2":"0.4637681"},{"1":"129","2":"0.5072464"},{"1":"130","2":"0.5652174"},{"1":"131","2":"0.3768116"},{"1":"132","2":"0.5072464"},{"1":"133","2":"0.4927536"},{"1":"134","2":"0.5942029"},{"1":"135","2":"0.4927536"},{"1":"136","2":"0.3768116"},{"1":"137","2":"0.5362319"},{"1":"138","2":"0.4347826"},{"1":"139","2":"0.5507246"},{"1":"140","2":"0.5072464"},{"1":"141","2":"0.5507246"},{"1":"142","2":"0.3333333"},{"1":"143","2":"0.5217391"},{"1":"144","2":"0.5362319"},{"1":"145","2":"0.5217391"},{"1":"146","2":"0.4927536"},{"1":"147","2":"0.4782609"},{"1":"148","2":"0.5652174"},{"1":"149","2":"0.5942029"},{"1":"150","2":"0.4202899"},{"1":"151","2":"0.5072464"},{"1":"152","2":"0.5072464"},{"1":"153","2":"0.5362319"},{"1":"154","2":"0.3913043"},{"1":"155","2":"0.5362319"},{"1":"156","2":"0.4927536"},{"1":"157","2":"0.4347826"},{"1":"158","2":"0.4637681"},{"1":"159","2":"0.4202899"},{"1":"160","2":"0.4927536"},{"1":"161","2":"0.5072464"},{"1":"162","2":"0.5362319"},{"1":"163","2":"0.5362319"},{"1":"164","2":"0.4492754"},{"1":"165","2":"0.4927536"},{"1":"166","2":"0.4927536"},{"1":"167","2":"0.4782609"},{"1":"168","2":"0.6086957"},{"1":"169","2":"0.5507246"},{"1":"170","2":"0.6231884"},{"1":"171","2":"0.5217391"},{"1":"172","2":"0.4782609"},{"1":"173","2":"0.5362319"},{"1":"174","2":"0.4637681"},{"1":"175","2":"0.5217391"},{"1":"176","2":"0.6086957"},{"1":"177","2":"0.5217391"},{"1":"178","2":"0.4637681"},{"1":"179","2":"0.4637681"},{"1":"180","2":"0.5507246"},{"1":"181","2":"0.4637681"},{"1":"182","2":"0.5797101"},{"1":"183","2":"0.4927536"},{"1":"184","2":"0.4057971"},{"1":"185","2":"0.4782609"},{"1":"186","2":"0.4637681"},{"1":"187","2":"0.5942029"},{"1":"188","2":"0.4492754"},{"1":"189","2":"0.5652174"},{"1":"190","2":"0.4782609"},{"1":"191","2":"0.6231884"},{"1":"192","2":"0.5362319"},{"1":"193","2":"0.4202899"},{"1":"194","2":"0.4347826"},{"1":"195","2":"0.5072464"},{"1":"196","2":"0.6376812"},{"1":"197","2":"0.4347826"},{"1":"198","2":"0.4202899"},{"1":"199","2":"0.5507246"},{"1":"200","2":"0.4927536"},{"1":"201","2":"0.5797101"},{"1":"202","2":"0.5072464"},{"1":"203","2":"0.5797101"},{"1":"204","2":"0.4202899"},{"1":"205","2":"0.5797101"},{"1":"206","2":"0.4927536"},{"1":"207","2":"0.5072464"},{"1":"208","2":"0.4492754"},{"1":"209","2":"0.6086957"},{"1":"210","2":"0.5652174"},{"1":"211","2":"0.4782609"},{"1":"212","2":"0.4637681"},{"1":"213","2":"0.5652174"},{"1":"214","2":"0.5652174"},{"1":"215","2":"0.5797101"},{"1":"216","2":"0.5507246"},{"1":"217","2":"0.4927536"},{"1":"218","2":"0.4637681"},{"1":"219","2":"0.5942029"},{"1":"220","2":"0.4347826"},{"1":"221","2":"0.4637681"},{"1":"222","2":"0.5652174"},{"1":"223","2":"0.5217391"},{"1":"224","2":"0.5217391"},{"1":"225","2":"0.5652174"},{"1":"226","2":"0.4492754"},{"1":"227","2":"0.5797101"},{"1":"228","2":"0.3913043"},{"1":"229","2":"0.5362319"},{"1":"230","2":"0.3623188"},{"1":"231","2":"0.5652174"},{"1":"232","2":"0.5362319"},{"1":"233","2":"0.5217391"},{"1":"234","2":"0.4782609"},{"1":"235","2":"0.3623188"},{"1":"236","2":"0.4637681"},{"1":"237","2":"0.5507246"},{"1":"238","2":"0.4492754"},{"1":"239","2":"0.3913043"},{"1":"240","2":"0.4927536"},{"1":"241","2":"0.5072464"},{"1":"242","2":"0.4347826"},{"1":"243","2":"0.4637681"},{"1":"244","2":"0.4347826"},{"1":"245","2":"0.5362319"},{"1":"246","2":"0.4347826"},{"1":"247","2":"0.5797101"},{"1":"248","2":"0.5072464"},{"1":"249","2":"0.5652174"},{"1":"250","2":"0.4492754"},{"1":"251","2":"0.4492754"},{"1":"252","2":"0.4057971"},{"1":"253","2":"0.4202899"},{"1":"254","2":"0.5507246"},{"1":"255","2":"0.5217391"},{"1":"256","2":"0.5217391"},{"1":"257","2":"0.5362319"},{"1":"258","2":"0.4202899"},{"1":"259","2":"0.4492754"},{"1":"260","2":"0.4782609"},{"1":"261","2":"0.5942029"},{"1":"262","2":"0.6086957"},{"1":"263","2":"0.5942029"},{"1":"264","2":"0.4202899"},{"1":"265","2":"0.4927536"},{"1":"266","2":"0.4637681"},{"1":"267","2":"0.5362319"},{"1":"268","2":"0.6231884"},{"1":"269","2":"0.5072464"},{"1":"270","2":"0.4782609"},{"1":"271","2":"0.5942029"},{"1":"272","2":"0.5362319"},{"1":"273","2":"0.5072464"},{"1":"274","2":"0.4927536"},{"1":"275","2":"0.5217391"},{"1":"276","2":"0.3333333"},{"1":"277","2":"0.5507246"},{"1":"278","2":"0.6231884"},{"1":"279","2":"0.5362319"},{"1":"280","2":"0.4927536"},{"1":"281","2":"0.4927536"},{"1":"282","2":"0.3913043"},{"1":"283","2":"0.5072464"},{"1":"284","2":"0.4637681"},{"1":"285","2":"0.4637681"},{"1":"286","2":"0.5362319"},{"1":"287","2":"0.5217391"},{"1":"288","2":"0.5362319"},{"1":"289","2":"0.5217391"},{"1":"290","2":"0.4057971"},{"1":"291","2":"0.5652174"},{"1":"292","2":"0.5362319"},{"1":"293","2":"0.4782609"},{"1":"294","2":"0.4782609"},{"1":"295","2":"0.5072464"},{"1":"296","2":"0.5797101"},{"1":"297","2":"0.5507246"},{"1":"298","2":"0.5362319"},{"1":"299","2":"0.5072464"},{"1":"300","2":"0.5652174"},{"1":"301","2":"0.5362319"},{"1":"302","2":"0.5072464"},{"1":"303","2":"0.5072464"},{"1":"304","2":"0.5072464"},{"1":"305","2":"0.4492754"},{"1":"306","2":"0.3623188"},{"1":"307","2":"0.6086957"},{"1":"308","2":"0.4782609"},{"1":"309","2":"0.4927536"},{"1":"310","2":"0.4202899"},{"1":"311","2":"0.4347826"},{"1":"312","2":"0.5652174"},{"1":"313","2":"0.4057971"},{"1":"314","2":"0.3478261"},{"1":"315","2":"0.5072464"},{"1":"316","2":"0.4637681"},{"1":"317","2":"0.4057971"},{"1":"318","2":"0.3768116"},{"1":"319","2":"0.5072464"},{"1":"320","2":"0.4202899"},{"1":"321","2":"0.4927536"},{"1":"322","2":"0.5217391"},{"1":"323","2":"0.5797101"},{"1":"324","2":"0.5072464"},{"1":"325","2":"0.5362319"},{"1":"326","2":"0.5652174"},{"1":"327","2":"0.4492754"},{"1":"328","2":"0.5072464"},{"1":"329","2":"0.4637681"},{"1":"330","2":"0.4782609"},{"1":"331","2":"0.4347826"},{"1":"332","2":"0.4637681"},{"1":"333","2":"0.5507246"},{"1":"334","2":"0.4057971"},{"1":"335","2":"0.5072464"},{"1":"336","2":"0.4347826"},{"1":"337","2":"0.4927536"},{"1":"338","2":"0.5507246"},{"1":"339","2":"0.4637681"},{"1":"340","2":"0.4782609"},{"1":"341","2":"0.4927536"},{"1":"342","2":"0.5072464"},{"1":"343","2":"0.4637681"},{"1":"344","2":"0.5217391"},{"1":"345","2":"0.5652174"},{"1":"346","2":"0.5072464"},{"1":"347","2":"0.5507246"},{"1":"348","2":"0.5217391"},{"1":"349","2":"0.4637681"},{"1":"350","2":"0.5507246"},{"1":"351","2":"0.5942029"},{"1":"352","2":"0.5072464"},{"1":"353","2":"0.5652174"},{"1":"354","2":"0.5072464"},{"1":"355","2":"0.4782609"},{"1":"356","2":"0.4927536"},{"1":"357","2":"0.4637681"},{"1":"358","2":"0.5217391"},{"1":"359","2":"0.5362319"},{"1":"360","2":"0.4492754"},{"1":"361","2":"0.6376812"},{"1":"362","2":"0.4927536"},{"1":"363","2":"0.4927536"},{"1":"364","2":"0.4782609"},{"1":"365","2":"0.4927536"},{"1":"366","2":"0.4927536"},{"1":"367","2":"0.4057971"},{"1":"368","2":"0.4782609"},{"1":"369","2":"0.5942029"},{"1":"370","2":"0.4927536"},{"1":"371","2":"0.4782609"},{"1":"372","2":"0.4927536"},{"1":"373","2":"0.5507246"},{"1":"374","2":"0.5217391"},{"1":"375","2":"0.6086957"},{"1":"376","2":"0.5217391"},{"1":"377","2":"0.5217391"},{"1":"378","2":"0.5217391"},{"1":"379","2":"0.4927536"},{"1":"380","2":"0.5797101"},{"1":"381","2":"0.5217391"},{"1":"382","2":"0.4782609"},{"1":"383","2":"0.5362319"},{"1":"384","2":"0.5942029"},{"1":"385","2":"0.4782609"},{"1":"386","2":"0.4927536"},{"1":"387","2":"0.5507246"},{"1":"388","2":"0.4927536"},{"1":"389","2":"0.4637681"},{"1":"390","2":"0.3768116"},{"1":"391","2":"0.5072464"},{"1":"392","2":"0.4637681"},{"1":"393","2":"0.4202899"},{"1":"394","2":"0.5217391"},{"1":"395","2":"0.5942029"},{"1":"396","2":"0.5072464"},{"1":"397","2":"0.4782609"},{"1":"398","2":"0.5217391"},{"1":"399","2":"0.4347826"},{"1":"400","2":"0.5797101"},{"1":"401","2":"0.5507246"},{"1":"402","2":"0.5507246"},{"1":"403","2":"0.4782609"},{"1":"404","2":"0.5507246"},{"1":"405","2":"0.4927536"},{"1":"406","2":"0.4347826"},{"1":"407","2":"0.5362319"},{"1":"408","2":"0.6086957"},{"1":"409","2":"0.4637681"},{"1":"410","2":"0.4637681"},{"1":"411","2":"0.4347826"},{"1":"412","2":"0.4927536"},{"1":"413","2":"0.4782609"},{"1":"414","2":"0.5072464"},{"1":"415","2":"0.5072464"},{"1":"416","2":"0.3913043"},{"1":"417","2":"0.3768116"},{"1":"418","2":"0.5797101"},{"1":"419","2":"0.5507246"},{"1":"420","2":"0.4202899"},{"1":"421","2":"0.4492754"},{"1":"422","2":"0.5217391"},{"1":"423","2":"0.4637681"},{"1":"424","2":"0.3623188"},{"1":"425","2":"0.5507246"},{"1":"426","2":"0.4927536"},{"1":"427","2":"0.5362319"},{"1":"428","2":"0.5942029"},{"1":"429","2":"0.4927536"},{"1":"430","2":"0.5072464"},{"1":"431","2":"0.4347826"},{"1":"432","2":"0.4492754"},{"1":"433","2":"0.4782609"},{"1":"434","2":"0.4927536"},{"1":"435","2":"0.4637681"},{"1":"436","2":"0.5507246"},{"1":"437","2":"0.5942029"},{"1":"438","2":"0.4927536"},{"1":"439","2":"0.4782609"},{"1":"440","2":"0.3913043"},{"1":"441","2":"0.5652174"},{"1":"442","2":"0.3913043"},{"1":"443","2":"0.5362319"},{"1":"444","2":"0.4492754"},{"1":"445","2":"0.4202899"},{"1":"446","2":"0.5652174"},{"1":"447","2":"0.3623188"},{"1":"448","2":"0.5072464"},{"1":"449","2":"0.4782609"},{"1":"450","2":"0.5652174"},{"1":"451","2":"0.4927536"},{"1":"452","2":"0.4927536"},{"1":"453","2":"0.5217391"},{"1":"454","2":"0.4782609"},{"1":"455","2":"0.4927536"},{"1":"456","2":"0.5072464"},{"1":"457","2":"0.5362319"},{"1":"458","2":"0.5072464"},{"1":"459","2":"0.4637681"},{"1":"460","2":"0.4202899"},{"1":"461","2":"0.4782609"},{"1":"462","2":"0.4347826"},{"1":"463","2":"0.4782609"},{"1":"464","2":"0.5217391"},{"1":"465","2":"0.5217391"},{"1":"466","2":"0.4782609"},{"1":"467","2":"0.4927536"},{"1":"468","2":"0.5362319"},{"1":"469","2":"0.3913043"},{"1":"470","2":"0.4927536"},{"1":"471","2":"0.4927536"},{"1":"472","2":"0.5362319"},{"1":"473","2":"0.4927536"},{"1":"474","2":"0.4782609"},{"1":"475","2":"0.4927536"},{"1":"476","2":"0.4927536"},{"1":"477","2":"0.4782609"},{"1":"478","2":"0.4782609"},{"1":"479","2":"0.4782609"},{"1":"480","2":"0.4782609"},{"1":"481","2":"0.4202899"},{"1":"482","2":"0.4927536"},{"1":"483","2":"0.4782609"},{"1":"484","2":"0.5652174"},{"1":"485","2":"0.4637681"},{"1":"486","2":"0.5797101"},{"1":"487","2":"0.5217391"},{"1":"488","2":"0.4202899"},{"1":"489","2":"0.4637681"},{"1":"490","2":"0.5072464"},{"1":"491","2":"0.5072464"},{"1":"492","2":"0.5072464"},{"1":"493","2":"0.4202899"},{"1":"494","2":"0.5507246"},{"1":"495","2":"0.5072464"},{"1":"496","2":"0.5217391"},{"1":"497","2":"0.4492754"},{"1":"498","2":"0.4347826"},{"1":"499","2":"0.4782609"},{"1":"500","2":"0.4637681"},{"1":"501","2":"0.5217391"},{"1":"502","2":"0.5217391"},{"1":"503","2":"0.5072464"},{"1":"504","2":"0.4637681"},{"1":"505","2":"0.4782609"},{"1":"506","2":"0.4927536"},{"1":"507","2":"0.4927536"},{"1":"508","2":"0.4492754"},{"1":"509","2":"0.4782609"},{"1":"510","2":"0.5362319"},{"1":"511","2":"0.4927536"},{"1":"512","2":"0.5507246"},{"1":"513","2":"0.5362319"},{"1":"514","2":"0.4492754"},{"1":"515","2":"0.5362319"},{"1":"516","2":"0.6086957"},{"1":"517","2":"0.4057971"},{"1":"518","2":"0.5217391"},{"1":"519","2":"0.3913043"},{"1":"520","2":"0.5942029"},{"1":"521","2":"0.5362319"},{"1":"522","2":"0.5652174"},{"1":"523","2":"0.5507246"},{"1":"524","2":"0.4927536"},{"1":"525","2":"0.5362319"},{"1":"526","2":"0.5072464"},{"1":"527","2":"0.5362319"},{"1":"528","2":"0.6086957"},{"1":"529","2":"0.5507246"},{"1":"530","2":"0.4492754"},{"1":"531","2":"0.5217391"},{"1":"532","2":"0.5797101"},{"1":"533","2":"0.4637681"},{"1":"534","2":"0.5942029"},{"1":"535","2":"0.4637681"},{"1":"536","2":"0.4637681"},{"1":"537","2":"0.5217391"},{"1":"538","2":"0.4057971"},{"1":"539","2":"0.5652174"},{"1":"540","2":"0.5217391"},{"1":"541","2":"0.6231884"},{"1":"542","2":"0.4782609"},{"1":"543","2":"0.4347826"},{"1":"544","2":"0.5217391"},{"1":"545","2":"0.5652174"},{"1":"546","2":"0.5217391"},{"1":"547","2":"0.4637681"},{"1":"548","2":"0.5507246"},{"1":"549","2":"0.4637681"},{"1":"550","2":"0.4202899"},{"1":"551","2":"0.3913043"},{"1":"552","2":"0.5072464"},{"1":"553","2":"0.4782609"},{"1":"554","2":"0.5217391"},{"1":"555","2":"0.5797101"},{"1":"556","2":"0.4637681"},{"1":"557","2":"0.4782609"},{"1":"558","2":"0.6521739"},{"1":"559","2":"0.5072464"},{"1":"560","2":"0.5072464"},{"1":"561","2":"0.4347826"},{"1":"562","2":"0.4637681"},{"1":"563","2":"0.5072464"},{"1":"564","2":"0.5217391"},{"1":"565","2":"0.5072464"},{"1":"566","2":"0.4057971"},{"1":"567","2":"0.4347826"},{"1":"568","2":"0.4782609"},{"1":"569","2":"0.4637681"},{"1":"570","2":"0.5362319"},{"1":"571","2":"0.4057971"},{"1":"572","2":"0.4492754"},{"1":"573","2":"0.4492754"},{"1":"574","2":"0.5797101"},{"1":"575","2":"0.5797101"},{"1":"576","2":"0.4782609"},{"1":"577","2":"0.5507246"},{"1":"578","2":"0.4492754"},{"1":"579","2":"0.4782609"},{"1":"580","2":"0.5362319"},{"1":"581","2":"0.5072464"},{"1":"582","2":"0.5217391"},{"1":"583","2":"0.4927536"},{"1":"584","2":"0.4492754"},{"1":"585","2":"0.4492754"},{"1":"586","2":"0.4637681"},{"1":"587","2":"0.5217391"},{"1":"588","2":"0.5072464"},{"1":"589","2":"0.5217391"},{"1":"590","2":"0.4782609"},{"1":"591","2":"0.4927536"},{"1":"592","2":"0.5652174"},{"1":"593","2":"0.5072464"},{"1":"594","2":"0.4347826"},{"1":"595","2":"0.4347826"},{"1":"596","2":"0.4347826"},{"1":"597","2":"0.5072464"},{"1":"598","2":"0.4202899"},{"1":"599","2":"0.4057971"},{"1":"600","2":"0.4492754"},{"1":"601","2":"0.5072464"},{"1":"602","2":"0.4927536"},{"1":"603","2":"0.5217391"},{"1":"604","2":"0.4637681"},{"1":"605","2":"0.4347826"},{"1":"606","2":"0.5507246"},{"1":"607","2":"0.4782609"},{"1":"608","2":"0.4927536"},{"1":"609","2":"0.5362319"},{"1":"610","2":"0.4782609"},{"1":"611","2":"0.4202899"},{"1":"612","2":"0.4057971"},{"1":"613","2":"0.5362319"},{"1":"614","2":"0.5217391"},{"1":"615","2":"0.5072464"},{"1":"616","2":"0.4782609"},{"1":"617","2":"0.4927536"},{"1":"618","2":"0.4927536"},{"1":"619","2":"0.5217391"},{"1":"620","2":"0.5217391"},{"1":"621","2":"0.3913043"},{"1":"622","2":"0.3478261"},{"1":"623","2":"0.3913043"},{"1":"624","2":"0.4927536"},{"1":"625","2":"0.5072464"},{"1":"626","2":"0.5507246"},{"1":"627","2":"0.5072464"},{"1":"628","2":"0.4927536"},{"1":"629","2":"0.4927536"},{"1":"630","2":"0.4782609"},{"1":"631","2":"0.4782609"},{"1":"632","2":"0.4927536"},{"1":"633","2":"0.5507246"},{"1":"634","2":"0.4927536"},{"1":"635","2":"0.5362319"},{"1":"636","2":"0.5507246"},{"1":"637","2":"0.5072464"},{"1":"638","2":"0.4637681"},{"1":"639","2":"0.4927536"},{"1":"640","2":"0.3478261"},{"1":"641","2":"0.4492754"},{"1":"642","2":"0.3768116"},{"1":"643","2":"0.5652174"},{"1":"644","2":"0.5652174"},{"1":"645","2":"0.5507246"},{"1":"646","2":"0.4637681"},{"1":"647","2":"0.4202899"},{"1":"648","2":"0.4347826"},{"1":"649","2":"0.5072464"},{"1":"650","2":"0.5072464"},{"1":"651","2":"0.5362319"},{"1":"652","2":"0.3913043"},{"1":"653","2":"0.5217391"},{"1":"654","2":"0.4637681"},{"1":"655","2":"0.4202899"},{"1":"656","2":"0.5507246"},{"1":"657","2":"0.4782609"},{"1":"658","2":"0.6086957"},{"1":"659","2":"0.5072464"},{"1":"660","2":"0.4637681"},{"1":"661","2":"0.4347826"},{"1":"662","2":"0.4637681"},{"1":"663","2":"0.3913043"},{"1":"664","2":"0.5217391"},{"1":"665","2":"0.5072464"},{"1":"666","2":"0.4492754"},{"1":"667","2":"0.5072464"},{"1":"668","2":"0.4637681"},{"1":"669","2":"0.4347826"},{"1":"670","2":"0.5072464"},{"1":"671","2":"0.4782609"},{"1":"672","2":"0.5072464"},{"1":"673","2":"0.5797101"},{"1":"674","2":"0.5507246"},{"1":"675","2":"0.4782609"},{"1":"676","2":"0.4782609"},{"1":"677","2":"0.4347826"},{"1":"678","2":"0.4637681"},{"1":"679","2":"0.5072464"},{"1":"680","2":"0.4492754"},{"1":"681","2":"0.5507246"},{"1":"682","2":"0.5362319"},{"1":"683","2":"0.6086957"},{"1":"684","2":"0.5072464"},{"1":"685","2":"0.5072464"},{"1":"686","2":"0.5362319"},{"1":"687","2":"0.5362319"},{"1":"688","2":"0.4927536"},{"1":"689","2":"0.5652174"},{"1":"690","2":"0.4927536"},{"1":"691","2":"0.5652174"},{"1":"692","2":"0.4782609"},{"1":"693","2":"0.3913043"},{"1":"694","2":"0.4927536"},{"1":"695","2":"0.5942029"},{"1":"696","2":"0.4202899"},{"1":"697","2":"0.5797101"},{"1":"698","2":"0.4347826"},{"1":"699","2":"0.4202899"},{"1":"700","2":"0.5507246"},{"1":"701","2":"0.4637681"},{"1":"702","2":"0.5072464"},{"1":"703","2":"0.5797101"},{"1":"704","2":"0.5217391"},{"1":"705","2":"0.5217391"},{"1":"706","2":"0.6521739"},{"1":"707","2":"0.4492754"},{"1":"708","2":"0.5217391"},{"1":"709","2":"0.4782609"},{"1":"710","2":"0.4492754"},{"1":"711","2":"0.3623188"},{"1":"712","2":"0.5072464"},{"1":"713","2":"0.4637681"},{"1":"714","2":"0.5217391"},{"1":"715","2":"0.6521739"},{"1":"716","2":"0.4782609"},{"1":"717","2":"0.6231884"},{"1":"718","2":"0.4202899"},{"1":"719","2":"0.4202899"},{"1":"720","2":"0.4927536"},{"1":"721","2":"0.5072464"},{"1":"722","2":"0.5217391"},{"1":"723","2":"0.5507246"},{"1":"724","2":"0.5362319"},{"1":"725","2":"0.4782609"},{"1":"726","2":"0.5362319"},{"1":"727","2":"0.4782609"},{"1":"728","2":"0.5942029"},{"1":"729","2":"0.4927536"},{"1":"730","2":"0.4782609"},{"1":"731","2":"0.4347826"},{"1":"732","2":"0.5072464"},{"1":"733","2":"0.6231884"},{"1":"734","2":"0.5072464"},{"1":"735","2":"0.5507246"},{"1":"736","2":"0.6811594"},{"1":"737","2":"0.5652174"},{"1":"738","2":"0.5072464"},{"1":"739","2":"0.5217391"},{"1":"740","2":"0.4637681"},{"1":"741","2":"0.4782609"},{"1":"742","2":"0.5507246"},{"1":"743","2":"0.6086957"},{"1":"744","2":"0.5072464"},{"1":"745","2":"0.5797101"},{"1":"746","2":"0.5797101"},{"1":"747","2":"0.6231884"},{"1":"748","2":"0.5217391"},{"1":"749","2":"0.5072464"},{"1":"750","2":"0.4782609"},{"1":"751","2":"0.5362319"},{"1":"752","2":"0.4492754"},{"1":"753","2":"0.5652174"},{"1":"754","2":"0.3623188"},{"1":"755","2":"0.4202899"},{"1":"756","2":"0.5797101"},{"1":"757","2":"0.5217391"},{"1":"758","2":"0.4927536"},{"1":"759","2":"0.4347826"},{"1":"760","2":"0.4492754"},{"1":"761","2":"0.4782609"},{"1":"762","2":"0.4927536"},{"1":"763","2":"0.4637681"},{"1":"764","2":"0.5072464"},{"1":"765","2":"0.5942029"},{"1":"766","2":"0.5217391"},{"1":"767","2":"0.4347826"},{"1":"768","2":"0.5072464"},{"1":"769","2":"0.4492754"},{"1":"770","2":"0.4057971"},{"1":"771","2":"0.4492754"},{"1":"772","2":"0.5362319"},{"1":"773","2":"0.4637681"},{"1":"774","2":"0.4782609"},{"1":"775","2":"0.3768116"},{"1":"776","2":"0.5362319"},{"1":"777","2":"0.4347826"},{"1":"778","2":"0.5797101"},{"1":"779","2":"0.5362319"},{"1":"780","2":"0.5362319"},{"1":"781","2":"0.5507246"},{"1":"782","2":"0.5362319"},{"1":"783","2":"0.4492754"},{"1":"784","2":"0.5797101"},{"1":"785","2":"0.4927536"},{"1":"786","2":"0.4637681"},{"1":"787","2":"0.3623188"},{"1":"788","2":"0.4347826"},{"1":"789","2":"0.5217391"},{"1":"790","2":"0.4057971"},{"1":"791","2":"0.4782609"},{"1":"792","2":"0.5217391"},{"1":"793","2":"0.4637681"},{"1":"794","2":"0.5072464"},{"1":"795","2":"0.5362319"},{"1":"796","2":"0.4637681"},{"1":"797","2":"0.5217391"},{"1":"798","2":"0.4782609"},{"1":"799","2":"0.5217391"},{"1":"800","2":"0.4782609"},{"1":"801","2":"0.5217391"},{"1":"802","2":"0.4057971"},{"1":"803","2":"0.6231884"},{"1":"804","2":"0.4202899"},{"1":"805","2":"0.4927536"},{"1":"806","2":"0.5217391"},{"1":"807","2":"0.5072464"},{"1":"808","2":"0.5072464"},{"1":"809","2":"0.5217391"},{"1":"810","2":"0.5652174"},{"1":"811","2":"0.4782609"},{"1":"812","2":"0.4347826"},{"1":"813","2":"0.6521739"},{"1":"814","2":"0.4927536"},{"1":"815","2":"0.6231884"},{"1":"816","2":"0.5217391"},{"1":"817","2":"0.5942029"},{"1":"818","2":"0.5797101"},{"1":"819","2":"0.5362319"},{"1":"820","2":"0.3913043"},{"1":"821","2":"0.5362319"},{"1":"822","2":"0.4782609"},{"1":"823","2":"0.4927536"},{"1":"824","2":"0.5797101"},{"1":"825","2":"0.5507246"},{"1":"826","2":"0.5507246"},{"1":"827","2":"0.4202899"},{"1":"828","2":"0.4057971"},{"1":"829","2":"0.5362319"},{"1":"830","2":"0.4057971"},{"1":"831","2":"0.4782609"},{"1":"832","2":"0.5942029"},{"1":"833","2":"0.5362319"},{"1":"834","2":"0.4492754"},{"1":"835","2":"0.4927536"},{"1":"836","2":"0.3768116"},{"1":"837","2":"0.5507246"},{"1":"838","2":"0.5507246"},{"1":"839","2":"0.5072464"},{"1":"840","2":"0.5797101"},{"1":"841","2":"0.5217391"},{"1":"842","2":"0.5797101"},{"1":"843","2":"0.4782609"},{"1":"844","2":"0.5797101"},{"1":"845","2":"0.4492754"},{"1":"846","2":"0.5072464"},{"1":"847","2":"0.4202899"},{"1":"848","2":"0.5797101"},{"1":"849","2":"0.5217391"},{"1":"850","2":"0.5217391"},{"1":"851","2":"0.4782609"},{"1":"852","2":"0.5217391"},{"1":"853","2":"0.4202899"},{"1":"854","2":"0.6086957"},{"1":"855","2":"0.4782609"},{"1":"856","2":"0.4202899"},{"1":"857","2":"0.5217391"},{"1":"858","2":"0.5507246"},{"1":"859","2":"0.3768116"},{"1":"860","2":"0.6086957"},{"1":"861","2":"0.3623188"},{"1":"862","2":"0.5797101"},{"1":"863","2":"0.5507246"},{"1":"864","2":"0.5797101"},{"1":"865","2":"0.4347826"},{"1":"866","2":"0.4637681"},{"1":"867","2":"0.5652174"},{"1":"868","2":"0.4637681"},{"1":"869","2":"0.5072464"},{"1":"870","2":"0.4492754"},{"1":"871","2":"0.4057971"},{"1":"872","2":"0.4492754"},{"1":"873","2":"0.5217391"},{"1":"874","2":"0.5362319"},{"1":"875","2":"0.5217391"},{"1":"876","2":"0.4927536"},{"1":"877","2":"0.4492754"},{"1":"878","2":"0.5652174"},{"1":"879","2":"0.5652174"},{"1":"880","2":"0.5072464"},{"1":"881","2":"0.5797101"},{"1":"882","2":"0.5217391"},{"1":"883","2":"0.4927536"},{"1":"884","2":"0.4782609"},{"1":"885","2":"0.4492754"},{"1":"886","2":"0.6086957"},{"1":"887","2":"0.4927536"},{"1":"888","2":"0.4347826"},{"1":"889","2":"0.5507246"},{"1":"890","2":"0.4202899"},{"1":"891","2":"0.4202899"},{"1":"892","2":"0.5507246"},{"1":"893","2":"0.4927536"},{"1":"894","2":"0.5072464"},{"1":"895","2":"0.5072464"},{"1":"896","2":"0.4057971"},{"1":"897","2":"0.5942029"},{"1":"898","2":"0.4782609"},{"1":"899","2":"0.5362319"},{"1":"900","2":"0.4492754"},{"1":"901","2":"0.3768116"},{"1":"902","2":"0.5217391"},{"1":"903","2":"0.5797101"},{"1":"904","2":"0.4492754"},{"1":"905","2":"0.3913043"},{"1":"906","2":"0.4927536"},{"1":"907","2":"0.4927536"},{"1":"908","2":"0.5072464"},{"1":"909","2":"0.3913043"},{"1":"910","2":"0.4637681"},{"1":"911","2":"0.4202899"},{"1":"912","2":"0.4492754"},{"1":"913","2":"0.4927536"},{"1":"914","2":"0.6231884"},{"1":"915","2":"0.5652174"},{"1":"916","2":"0.4492754"},{"1":"917","2":"0.4492754"},{"1":"918","2":"0.5217391"},{"1":"919","2":"0.5362319"},{"1":"920","2":"0.5652174"},{"1":"921","2":"0.5072464"},{"1":"922","2":"0.4347826"},{"1":"923","2":"0.4492754"},{"1":"924","2":"0.4057971"},{"1":"925","2":"0.5072464"},{"1":"926","2":"0.5217391"},{"1":"927","2":"0.4782609"},{"1":"928","2":"0.4492754"},{"1":"929","2":"0.4782609"},{"1":"930","2":"0.4782609"},{"1":"931","2":"0.5652174"},{"1":"932","2":"0.4637681"},{"1":"933","2":"0.3913043"},{"1":"934","2":"0.4782609"},{"1":"935","2":"0.4492754"},{"1":"936","2":"0.4927536"},{"1":"937","2":"0.4927536"},{"1":"938","2":"0.4057971"},{"1":"939","2":"0.5362319"},{"1":"940","2":"0.4637681"},{"1":"941","2":"0.4347826"},{"1":"942","2":"0.6376812"},{"1":"943","2":"0.3768116"},{"1":"944","2":"0.4347826"},{"1":"945","2":"0.4637681"},{"1":"946","2":"0.4782609"},{"1":"947","2":"0.4782609"},{"1":"948","2":"0.4347826"},{"1":"949","2":"0.4782609"},{"1":"950","2":"0.5507246"},{"1":"951","2":"0.3478261"},{"1":"952","2":"0.5652174"},{"1":"953","2":"0.4637681"},{"1":"954","2":"0.4492754"},{"1":"955","2":"0.4782609"},{"1":"956","2":"0.3478261"},{"1":"957","2":"0.3623188"},{"1":"958","2":"0.5507246"},{"1":"959","2":"0.5942029"},{"1":"960","2":"0.3623188"},{"1":"961","2":"0.5652174"},{"1":"962","2":"0.5362319"},{"1":"963","2":"0.5507246"},{"1":"964","2":"0.4347826"},{"1":"965","2":"0.5072464"},{"1":"966","2":"0.5362319"},{"1":"967","2":"0.4347826"},{"1":"968","2":"0.5217391"},{"1":"969","2":"0.5652174"},{"1":"970","2":"0.4927536"},{"1":"971","2":"0.4492754"},{"1":"972","2":"0.5362319"},{"1":"973","2":"0.5217391"},{"1":"974","2":"0.4492754"},{"1":"975","2":"0.4202899"},{"1":"976","2":"0.5507246"},{"1":"977","2":"0.5217391"},{"1":"978","2":"0.4927536"},{"1":"979","2":"0.4057971"},{"1":"980","2":"0.4782609"},{"1":"981","2":"0.5217391"},{"1":"982","2":"0.5507246"},{"1":"983","2":"0.5217391"},{"1":"984","2":"0.4347826"},{"1":"985","2":"0.6231884"},{"1":"986","2":"0.6521739"},{"1":"987","2":"0.5652174"},{"1":"988","2":"0.5217391"},{"1":"989","2":"0.4492754"},{"1":"990","2":"0.4782609"},{"1":"991","2":"0.5217391"},{"1":"992","2":"0.5797101"},{"1":"993","2":"0.4057971"},{"1":"994","2":"0.4347826"},{"1":"995","2":"0.5072464"},{"1":"996","2":"0.5652174"},{"1":"997","2":"0.4637681"},{"1":"998","2":"0.4202899"},{"1":"999","2":"0.5507246"},{"1":"1000","2":"0.4492754"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>alive_test_draw <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visualize</span>() <span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">shade_p_value</span>(<span class="at">obs_stat =</span> alive_prop, <span class="at">direction =</span> <span class="st">"less"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="15-inference_for_one_proportion-web_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>This is essentially the same picture, although the model above is centered on the null value 0.5 instead of the z score of 0. This also means that the <code>obs_stat</code> had to be the sample proportion <code>alive_prop</code> and not the z score <code>alive_z</code>.</p>
+</section>
+<section id="one-prop-ex-calculate-p" class="level3" data-number="15.8.4">
+<h3 data-number="15.8.4" class="anchored" data-anchor-id="one-prop-ex-calculate-p"><span class="header-section-number">15.8.4</span> Calculate the P-value.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>alive_test_p <span class="ot">&lt;-</span> alive_test <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_p_value</span>(<span class="at">obs_stat =</span> alive_z, <span class="at">direction =</span> <span class="st">"less"</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>alive_test_p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["p_value"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.005734037"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Commentary: compare this to the P-value we get from simulating random draws:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>alive_test_draw <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_p_value</span>(<span class="at">obs_stat =</span> alive_prop, <span class="at">direction =</span> <span class="st">"less"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["p_value"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.007"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>The values are not exactly the same. And a new simulation with a different seed would likely give another slightly different P-value. The takeaway here is that the P-value itself has some uncertainty, so you should never take the value too seriously.</p>
+</section>
+<section id="one-prop-ex-interpret-p" class="level3" data-number="15.8.5">
+<h3 data-number="15.8.5" class="anchored" data-anchor-id="one-prop-ex-interpret-p"><span class="header-section-number">15.8.5</span> Interpret the P-value as a probability given the null.</h3>
+<p>The P-value is 0.005734. If there were truly a 50% chance of survival among heart transplant patients, there would only be a 0.5734037% chance of seeing data at least as extreme as we saw.</p>
+</section>
+</section>
+<section id="one-prop-ex-ht-conclusion" class="level2" data-number="15.9">
+<h2 data-number="15.9" class="anchored" data-anchor-id="one-prop-ex-ht-conclusion"><span class="header-section-number">15.9</span> Conclusion</h2>
+<section id="one-prop-ex-stat-conclusion" class="level3" data-number="15.9.1">
+<h3 data-number="15.9.1" class="anchored" data-anchor-id="one-prop-ex-stat-conclusion"><span class="header-section-number">15.9.1</span> State the statistical conclusion.</h3>
+<p>We reject the null hypothesis.</p>
+</section>
+<section id="one-prop-ex-context-conclusion" class="level3" data-number="15.9.2">
+<h3 data-number="15.9.2" class="anchored" data-anchor-id="one-prop-ex-context-conclusion"><span class="header-section-number">15.9.2</span> State (but do not overstate) a contextually meaningful conclusion.</h3>
+<p>We have sufficient evidence that heart transplant recipients have less than a 50% chance of survival.</p>
+</section>
+<section id="one-prop-ex-reservations" class="level3" data-number="15.9.3">
+<h3 data-number="15.9.3" class="anchored" data-anchor-id="one-prop-ex-reservations"><span class="header-section-number">15.9.3</span> Express reservations or uncertainty about the generalizability of the conclusion.</h3>
+<p>Because we know nearly nothing about the provenance of the data, it’s hard to generalize the conclusion. We know the data is from 1974, so it’s also very likely that survival rates for heart transplant patients then are not the same as they are today. The most we could hope for is that the Stanford data was representative for heart transplant patients in 1974. Our sample size (69) is also quite small.</p>
+</section>
+<section id="one-prop-ex-errors" class="level3" data-number="15.9.4">
+<h3 data-number="15.9.4" class="anchored" data-anchor-id="one-prop-ex-errors"><span class="header-section-number">15.9.4</span> Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.</h3>
+<p>As we rejected the null, we run the risk of making a Type I error. It is possible that the null is true and that there is a 50% chance of survival for these patients, but we got an unusual sample that appears to have a much smaller chance of survival.</p>
+</section>
+</section>
+<section id="one-prop-ex-ci" class="level2" data-number="15.10">
+<h2 data-number="15.10" class="anchored" data-anchor-id="one-prop-ex-ci"><span class="header-section-number">15.10</span> Confidence interval</h2>
+<section id="one-prop-ex-ci-conditions" class="level3" data-number="15.10.1">
+<h3 data-number="15.10.1" class="anchored" data-anchor-id="one-prop-ex-ci-conditions"><span class="header-section-number">15.10.1</span> Check the relevant conditions to ensure that model assumptions are met.</h3>
+<ul>
+<li>Random
+<ul>
+<li>Same as above.</li>
+</ul></li>
+<li>10%
+<ul>
+<li>Same as above.</li>
+</ul></li>
+<li>Success/failure
+<ul>
+<li>There were 24 patients who survived and 45 who died in our sample. Both are larger than 10.</li>
+</ul></li>
+</ul>
+<p>Commentary: In the “Confidence interval” section of the rubric, there is no need to recheck conditions that have already been checked. The sample has not changed; if it met the “Random” and “10%” conditions before, it will meet them now.</p>
+<p>So why recheck the success/failure condition?</p>
+<p>Keep in mind that in a hypothesis test, we temporarily assume the null is true. The null states that <span class="math inline">\(p = 0.5\)</span> and the resulting null distribution is, therefore, centered at <span class="math inline">\(p = 0.5\)</span>. The success/failure condition is a condition that applies to the normal model we’re using, and for a hypothesis test, that’s the null model.</p>
+<p>By contrast, a confidence interval is making no assumption about the “true” value of <span class="math inline">\(p\)</span>. The inferential goal of a confidence interval is to try to capture the true value of <span class="math inline">\(p\)</span>, so we certainly cannot make any assumptions about it. Therefore, we go back to the original way we learned about the success/failure condition. That is, we check the actual number of successes and failures.</p>
+</section>
+<section id="one-prop-ex-ci-calculate" class="level3" data-number="15.10.2">
+<h3 data-number="15.10.2" class="anchored" data-anchor-id="one-prop-ex-ci-calculate"><span class="header-section-number">15.10.2</span> Calculate and graph the confidence interval.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>alive_ci <span class="ot">&lt;-</span> alive_test <span class="sc">%&gt;%</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">get_confidence_interval</span>(<span class="at">point_estimate =</span> alive_prop, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>alive_ci</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["lower_ci"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["upper_ci"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.2354468","2":"0.4602054"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>alive_test <span class="sc">%&gt;%</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">visualize</span>() <span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">shade_confidence_interval</span>(<span class="at">endpoints =</span> alive_ci)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="15-inference_for_one_proportion-web_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Commentary: when we use a theoretical normal distribution, we have to compute the confidence interval a different way.</p>
+<p>When we bootstrapped, we had many repetitions of a process that resulted in a sampling distribution. From all those, we could find the 2.5th percentile and the 97.5th percentile. Although we let the computer do it for us, the process is straightforward enough that we could do it by hand if we needed to. Just put all 1000 bootstrapped values in order, then go to the 25th and 975th position in the list.</p>
+<p>We don’t have a list of 1000 values when we use an abstract curve to represent our sampling distribution. Nevertheless, we can find the 2.5th percentile and the 97.5th percentile using the area under the normal curve as we saw in the last two chapters. We can do this “manually” with the <code>qdist</code> command, but we need the standard error first.</p>
+<p>Didn’t we calculate this earlier?</p>
+<p><span class="math display">\[
+SE = \sqrt{\frac{p_{alive}(1 - p_{alive})}{n}} = \sqrt{\frac{0.5(1 - 0.5)}{69}}
+\]</span></p>
+<p>Well…sort of. The value of <span class="math inline">\(p_{alive}\)</span> here is the value of the null hypothesis from the hypothesis test above. <em>However</em>, the hypothesis test is done. For a confidence interval, we have no information about any “null” value. There is no null anymore. It’s irrelevant.</p>
+<p>So what is the standard error for a confidence interval? Since we don’t have <span class="math inline">\(p_{alive}\)</span>, the best we can do is replace it with <span class="math inline">\(\hat{p}_{alive}\)</span>:</p>
+<p><span class="math display">\[
+SE = \sqrt{\frac{\hat{p}_{alive} (1 - \hat{p}_{alive})}{n}} = \sqrt{\frac{0.3478261 (1 - 0.3478261 )}{69}}.
+\]</span></p>
+<p>We can let R do the heavy lifting here:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>SE2 <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(alive_prop <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> alive_prop) <span class="sc">/</span> <span class="dv">69</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>SE2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["stat"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.05733743"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>And now this number can go into <code>qdist</code> as our standard deviation:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qdist</span>(<span class="st">"norm"</span>, <span class="at">p =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>), <span class="at">mean =</span> <span class="fl">0.3478261</span>, <span class="at">sd =</span> <span class="fl">0.05733743</span>, <span class="at">plot =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2354468 0.4602054</code></pre>
+</div>
+</div>
+<p>The numbers above are identical to the ones computed by the <code>infer</code> commands.</p>
+</section>
+<section id="one-prop-ex-ci-interpret" class="level3" data-number="15.10.3">
+<h3 data-number="15.10.3" class="anchored" data-anchor-id="one-prop-ex-ci-interpret"><span class="header-section-number">15.10.3</span> State (but do not overstate) a contextually meaningful interpretation.</h3>
+<p>We are 95% confident that the true percentage of heart transplant recipients who survive is captured in the interval (23.5446784%, 46.020539%).</p>
+<p>Commentary: Note that when we state our contextually meaningful conclusion, we also convert the decimal proportions to percentages. Humans like percentages a lot better.</p>
+</section>
+<section id="one-prop-ex-two-sided" class="level3" data-number="15.10.4">
+<h3 data-number="15.10.4" class="anchored" data-anchor-id="one-prop-ex-two-sided"><span class="header-section-number">15.10.4</span> If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.</h3>
+<p>We are not running a two-sided test, so this step is not applicable.</p>
+</section>
+<section id="one-prop-ex-effect" class="level3" data-number="15.10.5">
+<h3 data-number="15.10.5" class="anchored" data-anchor-id="one-prop-ex-effect"><span class="header-section-number">15.10.5</span> When comparing two groups, comment on the effect size and the practical significance of the result.</h3>
+<p>This is not applicable here because we are not comparing two groups. We are looking at the survival percentage in only one group of patients, those who had a heart transplant.</p>
+</section>
+</section>
+<section id="one-prop-your-turn" class="level2" data-number="15.11">
+<h2 data-number="15.11" class="anchored" data-anchor-id="one-prop-your-turn"><span class="header-section-number">15.11</span> Your turn</h2>
+<p>Follow the rubric to answer the following research question:</p>
+<p>Some heart transplant candidates have already had a prior surgery. Use the variable <code>prior</code> in the <code>heart_transplant</code> data set to determine if fewer than 50% of patients have had a prior surgery. (To be clear, you are being asked to perform a one-sided test again.) <strong>Be sure to use the full <code>heart_transplant</code> data, not the modified <code>heart_transplant2</code> from the previous example.</strong></p>
+<p>The rubric outline is reproduced below. You may refer to the worked example above and modify it accordingly. Remember to strip out all the commentary. That is just exposition for your benefit in understanding the steps, but is not meant to form part of the formal inference process.</p>
+<p>Another word of warning: the copy/paste process is not a substitute for your brain. You will often need to modify more than just the names of the tibbles and variables to adapt the worked examples to your own work. For example, if you run a two-sided test instead of a one-sided test, there are a few places that have to be adjusted accordingly. Understanding the sampling distribution model and the computation of the P-value goes a long way toward understanding the changes that must be made. Do not blindly copy and paste code without understanding what it does. And you should <strong>never</strong> copy and paste text. All the sentences and paragraphs you write are expressions of your own analysis. They must reflect your own understanding of the inferential process.</p>
+<p><strong>Also, so that your answers here don’t mess up the code chunks above, use new variable names everywhere. In particular, you should use <code>prior_test</code>(instead of <code>alive_test</code>) to store the results of your hypothesis test. Make other corresponding changes as necessary, like <code>prior_test_p</code> instead of <code>alive_test_p</code>, for example.</strong></p>
+<section id="exploratory-data-analysis" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exploratory-data-analysis">Exploratory data analysis</h5>
+<section id="use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.">Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to print the data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to glimpse the variables</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="prepare-the-data-for-analysis.-not-always-necessary." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="prepare-the-data-for-analysis.-not-always-necessary.">Prepare the data for analysis. [Not always necessary.]</h6>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to prepare the data for analysis.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="make-tables-or-plots-to-explore-the-data-visually." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="make-tables-or-plots-to-explore-the-data-visually.">Make tables or plots to explore the data visually.</h6>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to make tables or plots.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="hypotheses" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="hypotheses">Hypotheses</h5>
+<section id="identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.">Identify the sample (or samples) and a reasonable population (or populations) of interest.</h6>
+<p>[Remember that you are using the full <code>heart_transplant</code> data, so your sample size should be larger here than in the example above.]</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences.">Express the null and alternative hypotheses as contextually meaningful full sentences.</h6>
+<div class="answer">
+<p><span class="math inline">\(H_{0}:\)</span> Null hypothesis goes here.</p>
+<p><span class="math inline">\(H_{A}:\)</span> Alternative hypothesis goes here.</p>
+</div>
+</section>
+<section id="express-the-null-and-alternative-hypotheses-in-symbols-when-possible." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="express-the-null-and-alternative-hypotheses-in-symbols-when-possible.">Express the null and alternative hypotheses in symbols (when possible).</h6>
+<div class="answer">
+<p><span class="math inline">\(H_{0}: math\)</span></p>
+<p><span class="math inline">\(H_{A}: math\)</span></p>
+</div>
+</section>
+</section>
+<section id="model" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="model">Model</h5>
+<section id="identify-the-sampling-distribution-model." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="identify-the-sampling-distribution-model.">Identify the sampling distribution model.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.">Check the relevant conditions to ensure that model assumptions are met.</h6>
+<p>[Remember that you are using the full <code>heart_transplant</code> data, so the number of successes and failures will be different here than in the example above.]</p>
+<div class="answer">
+<p>Please write up your answer here. (Some conditions may require R code as well.)</p>
+</div>
+</section>
+</section>
+<section id="mechanics" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="mechanics">Mechanics</h5>
+<p>[Be sure to use <code>heart_transplant</code> everywhere and not <code>heart_transplant2</code>!]</p>
+<section id="compute-the-test-statistic." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="compute-the-test-statistic.">Compute the test statistic.</h6>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to compute the test statistic.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="report-the-test-statistic-in-context-when-possible." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="report-the-test-statistic-in-context-when-possible.">Report the test statistic in context (when possible).</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="plot-the-null-distribution." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="plot-the-null-distribution.">Plot the null distribution.</h6>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to plot the null distribution.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="calculate-the-p-value." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="calculate-the-p-value.">Calculate the P-value.</h6>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to calculate the P-value.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="interpret-the-p-value-as-a-probability-given-the-null." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="interpret-the-p-value-as-a-probability-given-the-null.">Interpret the P-value as a probability given the null.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+</section>
+<section id="conclusion" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="conclusion">Conclusion</h5>
+<section id="state-the-statistical-conclusion." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="state-the-statistical-conclusion.">State the statistical conclusion.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="state-but-do-not-overstate-a-contextually-meaningful-conclusion." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="state-but-do-not-overstate-a-contextually-meaningful-conclusion.">State (but do not overstate) a contextually meaningful conclusion.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion.">Express reservations or uncertainty about the generalizability of the conclusion.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses.">Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+</section>
+<section id="confidence-interval" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="confidence-interval">Confidence interval</h5>
+<section id="check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-1">Check the relevant conditions to ensure that model assumptions are met.</h6>
+<div class="answer">
+<p>Please write up your answer here. (Some conditions may require R code as well.)</p>
+</div>
+</section>
+<section id="calculate-the-confidence-interval." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="calculate-the-confidence-interval.">Calculate the confidence interval.</h6>
+<div class="answer">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to calculate the confidence interval.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="state-but-do-not-overstate-a-contextually-meaningful-interpretation." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="state-but-do-not-overstate-a-contextually-meaningful-interpretation.">State (but do not overstate) a contextually meaningful interpretation.</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.-not-always-applicable." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test.-not-always-applicable.">If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test. [Not always applicable.]</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-not-always-applicable." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-not-always-applicable.">When comparing two groups, comment on the effect size and the practical significance of the result. [Not always applicable.]</h6>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+</section>
+</section>
+<section id="one-prop-conclusion" class="level2" data-number="15.12">
+<h2 data-number="15.12" class="anchored" data-anchor-id="one-prop-conclusion"><span class="header-section-number">15.12</span> Conclusion</h2>
+<p>When certain conditions are met, we can use a theoretical normal model—a perfectly symmetric bell curve—as a sampling distribution model in hypothesis testing. Because this does not require drawing many samples, it is faster and cleaner than simulation. Of course, on modern computing devices, drawing even thousands of simulated samples is not very time consuming, and the code we write doesn’t really change much. Given the additional success/failure condition that has to met, it’s worth considering the pros and cons of using a normal model instead of simulating the sampling distribution. Similarly, confidence intervals can be obtained directly from the percentiles of the normal model without the need to obtain bootstrapped samples.</p>
+<section id="one-prop-prep" class="level3" data-number="15.12.1">
+<h3 data-number="15.12.1" class="anchored" data-anchor-id="one-prop-prep"><span class="header-section-number">15.12.1</span> Preparing and submitting your assignment</h3>
+<ol type="1">
+<li>From the “Run” menu, select “Restart R and Run All Chunks”.</li>
+<li>Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.</li>
+<li>Spell check your document by clicking the icon with “ABC” and a check mark.</li>
+<li>Hit the “Preview” button one last time to generate the final draft of the <code>.nb.html</code> file.</li>
+<li>Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1–5 again.</li>
+</ol>
+<p>If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./14-sampling_distribution_models-web.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Sampling distribution models</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./16-inference_for_two_proportions-web.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Inference for two proportions</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
