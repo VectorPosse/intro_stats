@@ -124,11 +124,74 @@
 <span class="header-section-number">19.2</span> Load packages<a class="anchor" aria-label="anchor" href="#load-packages-3"><i class="fas fa-link"></i></a>
 </h2>
 <p>We load the standard <code>tidyverse</code> and <code>infer</code> packages as well as the <code>mosaic</code> package to run some simulation. The <code>openintro</code> package contains the <code>teacher</code> data and the <code>hsb2</code> data.</p>
-<div class="sourceCode" id="cb702"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/infer">infer</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ProjectMOSAIC/mosaic">mosaic</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://openintrostat.github.io/openintro/">openintro</a></span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb752"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span></code></pre></div>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.2     ✔ readr     2.1.4
+## ✔ forcats   1.0.0     ✔ stringr   1.5.0
+## ✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+## ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+## ✔ purrr     1.0.2     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<div class="sourceCode" id="cb754"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/infer">infer</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ProjectMOSAIC/mosaic">mosaic</a></span><span class="op">)</span></span></code></pre></div>
+<pre><code>## Warning: package 'mosaic' was built under R version 4.3.1</code></pre>
+<pre><code>## Registered S3 method overwritten by 'mosaic':
+##   method                           from   
+##   fortify.SpatialPolygonsDataFrame ggplot2
+## 
+## The 'mosaic' package masks several functions from core packages in order to add 
+## additional features.  The original behavior of these functions should not be affected by this.
+## 
+## Attaching package: 'mosaic'
+## 
+## The following object is masked from 'package:Matrix':
+## 
+##     mean
+## 
+## The following objects are masked from 'package:infer':
+## 
+##     prop_test, t_test
+## 
+## The following objects are masked from 'package:dplyr':
+## 
+##     count, do, tally
+## 
+## The following object is masked from 'package:purrr':
+## 
+##     cross
+## 
+## The following object is masked from 'package:ggplot2':
+## 
+##     stat
+## 
+## The following objects are masked from 'package:stats':
+## 
+##     binom.test, cor, cor.test, cov, fivenum, IQR, median, prop.test,
+##     quantile, sd, t.test, var
+## 
+## The following objects are masked from 'package:base':
+## 
+##     max, mean, min, prod, range, sample, sum</code></pre>
+<div class="sourceCode" id="cb757"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://openintrostat.github.io/openintro/">openintro</a></span><span class="op">)</span></span></code></pre></div>
+<pre><code>## Loading required package: airports
+## Loading required package: cherryblossom
+## Loading required package: usdata
+## 
+## Attaching package: 'openintro'
+## 
+## The following object is masked from 'package:mosaic':
+## 
+##     dotPlot
+## 
+## The following objects are masked from 'package:lattice':
+## 
+##     ethanol, lsegments</code></pre>
 </div>
 <div id="simulating-means" class="section level2" number="19.3">
 <h2>
@@ -136,21 +199,21 @@
 </h2>
 <p>Systolic blood pressure (SBP) for women in the U.S. and Canada follows a normal distribution with a mean of 114 and a standard deviation of 14.</p>
 <p>Suppose we gather a random sample of 4 women and measure their SBP. We can simulate doing that with the <code>rnorm</code> command:</p>
-<div class="sourceCode" id="cb703"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb759"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">5151977</span><span class="op">)</span></span>
 <span><span class="va">SBP_sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">4</span>, mean <span class="op">=</span> <span class="fl">114</span>, sd <span class="op">=</span> <span class="fl">14</span><span class="op">)</span></span>
 <span><span class="va">SBP_sample</span></span></code></pre></div>
 <pre><code>## [1]  99.75130 126.47739  99.53632 115.05247</code></pre>
 <p>We summarize our sample by taking the mean and standard deviation:</p>
-<div class="sourceCode" id="cb705"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb761"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">mean</span><span class="op">(</span><span class="va">SBP_sample</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## [1] 110.2044</code></pre>
-<div class="sourceCode" id="cb707"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb763"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/aggregating.html">sd</a></span><span class="op">(</span><span class="va">SBP_sample</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## [1] 13.05615</code></pre>
 <p>The sample mean <span class="math inline">\(\bar{y}\)</span> = 110.2043696 is somewhat close to the true population mean <span class="math inline">\(\mu = 114\)</span> and the sample standard deviation <span class="math inline">\(s\)</span> = 13.0561519 is somewhat close to the true population standard deviation <span class="math inline">\(\sigma = 14\)</span>. (<span class="math inline">\(\mu\)</span> is the Greek letter “mu” and <span class="math inline">\(\sigma\)</span> is the Greek letter “sigma”.)</p>
 <p>Let’s simulate lots of samples of size 4. For each sample, we calculate the sample mean.</p>
-<div class="sourceCode" id="cb709"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb765"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">5151977</span><span class="op">)</span></span>
 <span><span class="va">sims</span> <span class="op">&lt;-</span> <span class="fu">do</span><span class="op">(</span><span class="fl">2000</span><span class="op">)</span> <span class="op">*</span> <span class="fu">mean</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">4</span>, mean <span class="op">=</span> <span class="fl">114</span>, sd <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">sims</span></span></code></pre></div>
@@ -160,13 +223,13 @@
   </script>
 </div>
 <p>Again, we see that the sample means are close to 114, but there is some variability. Naturally, not every sample is going to have an average of exactly 114. So how much variability do we expect? Let’s graph and find out. We’re going to set the x-axis manually so that we can do some comparisons later.</p>
-<div class="sourceCode" id="cb710"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb766"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">sims</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">mean</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">86</span>, <span class="fl">142</span><span class="op">)</span>,</span>
 <span>                       breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">93</span>, <span class="fl">100</span>, <span class="fl">107</span>, <span class="fl">114</span>, <span class="fl">121</span>, <span class="fl">128</span>, <span class="fl">135</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: Removed 2 rows containing missing values (`geom_bar()`).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-512-1.png" width="672"></div>
+<div class="inline-figure"><img src="19-inference_for_one_mean-web_files/figure-html/unnamed-chunk-6-1.png" width="672"></div>
 <p>Most sample means are around 114, but there is a good range of possibilities from around 93 to 135. The population standard deviation <span class="math inline">\(\sigma\)</span> is 14, but the standard deviation in this graph is clearly much smaller than that. (A large majority of the samples are within 14 of the mean!)</p>
 <p>With some fancy mathematics, one can show that the standard deviation of this sampling distribution is not <span class="math inline">\(\sigma\)</span>, but rather <span class="math inline">\(\sigma/\sqrt{n}\)</span>. In other words, this sampling distribution of the mean has a standard error of</p>
 <p><span class="math display">\[
@@ -174,7 +237,7 @@
 \]</span></p>
 <p>This makes sense: as the sample size increases, we expect the sample mean to be more and more accurate, so the standard error should shrink with large sample sizes.</p>
 <p>Let’s re-scale the y-axis to use percentages instead of counts. Then we should be able to superimpose the normal model <span class="math inline">\(N(114, 7)\)</span> to check visually that it’s the right fit.</p>
-<div class="sourceCode" id="cb712"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb768"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Don't worry about the syntax here.</span></span>
 <span><span class="co"># You won't need to know how to do this on your own.</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">sims</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">mean</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -183,15 +246,25 @@
 <span>                       breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">93</span>, <span class="fl">100</span>, <span class="fl">107</span>, <span class="fl">114</span>, <span class="fl">121</span>, <span class="fl">128</span>, <span class="fl">135</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_function.html">stat_function</a></span><span class="op">(</span>fun <span class="op">=</span> <span class="va">dnorm</span>, args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="fl">114</span>, sd <span class="op">=</span> <span class="fl">7</span><span class="op">)</span>,</span>
 <span>                  color <span class="op">=</span> <span class="st">"red"</span>, size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<pre><code>## Warning: The dot-dot notation (`..density..`) was deprecated in ggplot2 3.4.0.
+## ℹ Please use `after_stat(density)` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
 <pre><code>## Warning: Removed 2 rows containing missing values (`geom_bar()`).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-513-1.png" width="672"></div>
+<div class="inline-figure"><img src="19-inference_for_one_mean-web_files/figure-html/unnamed-chunk-7-1.png" width="672"></div>
 <p>Looks pretty good!</p>
 <p>All we do now is convert everything to z scores. In other words, suppose we sample 4 individuals from a population distributed according to the normal model <span class="math inline">\(N(0, 1)\)</span>. Now the standard error of the sampling distribution is</p>
 <p><span class="math display">\[
 \frac{\sigma}{\sqrt{n}} = \frac{1}{\sqrt{4}} = 0.5.
 \]</span></p>
 <p>The following code will accomplish all of this. (Don’t worry about the messy syntax. All I’m doing here is making sure that this graph looks exactly the same as the previous graph, except now centered at <span class="math inline">\(\mu = 0\)</span> instead of <span class="math inline">\(\mu = 114\)</span>.)</p>
-<div class="sourceCode" id="cb714"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb772"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Don't worry about the syntax here.</span></span>
 <span><span class="co"># You won't need to know how to do this on your own.</span></span>
 <span><span class="va">sims_z</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="va">sims</span><span class="op">$</span><span class="va">mean</span>, center <span class="op">=</span> <span class="fl">114</span>, scale <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span></span>
@@ -202,7 +275,7 @@
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_function.html">stat_function</a></span><span class="op">(</span>fun <span class="op">=</span> <span class="va">dnorm</span>, args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,</span>
 <span>                  color <span class="op">=</span> <span class="st">"red"</span>,  size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: Removed 2 rows containing missing values (`geom_bar()`).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-514-1.png" width="672"></div>
+<div class="inline-figure"><img src="19-inference_for_one_mean-web_files/figure-html/unnamed-chunk-8-1.png" width="672"></div>
 <p>Remember that this is not the standard normal model <span class="math inline">\(N(0, 1)\)</span>. The standard deviation in the graph above is not 1, but 0.5 because that is the standard error when using samples of size 4. (<span class="math inline">\(1/\sqrt{4} = 0.5\)</span>.)</p>
 </div>
 <div id="unknown-standard-errors" class="section level2" number="19.4">
@@ -230,7 +303,7 @@ t = \frac{(\bar{y} - \mu)}{s/\sqrt{n}} = \frac{(110.2 - 114)}{13.06/\sqrt{4}} = 
 </h2>
 <p>Let’s run the simulation again, but this time with the added uncertainty of using <span class="math inline">\(s\)</span> to estimate <span class="math inline">\(\sigma\)</span>.</p>
 <p>The first step is to write a little function of our own to compute simulated t scores. This function will take a sample of size <span class="math inline">\(n\)</span> from the true population <span class="math inline">\(N(\mu, \sigma)\)</span>, calculate the sample mean and sample standard deviation, then compute the t score. Don’t worry: you won’t be required to do anything like this on your own.</p>
-<div class="sourceCode" id="cb716"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb774"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Don't worry about the syntax here.</span></span>
 <span><span class="co"># You won't need to know how to do this on your own.</span></span>
 <span><span class="va">sim_t</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">n</span>, <span class="va">mu</span>, <span class="va">sigma</span><span class="op">)</span> <span class="op">{</span></span>
@@ -240,7 +313,7 @@ t = \frac{(\bar{y} - \mu)}{s/\sqrt{n}} = \frac{(110.2 - 114)}{13.06/\sqrt{4}} = 
 <span>    <span class="va">t</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">y_bar</span> <span class="op">-</span> <span class="va">mu</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="va">s</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>Now we can simulate doing this 2000 times.</p>
-<div class="sourceCode" id="cb717"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb775"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">5151977</span><span class="op">)</span></span>
 <span><span class="va">sims_t</span> <span class="op">&lt;-</span> <span class="fu">do</span><span class="op">(</span><span class="fl">2000</span><span class="op">)</span> <span class="op">*</span> <span class="fu">sim_t</span><span class="op">(</span><span class="fl">4</span>, mu <span class="op">=</span> <span class="fl">114</span>, sigma <span class="op">=</span> <span class="fl">14</span><span class="op">)</span> </span>
 <span><span class="va">sims_t</span></span></code></pre></div>
@@ -250,7 +323,7 @@ t = \frac{(\bar{y} - \mu)}{s/\sqrt{n}} = \frac{(110.2 - 114)}{13.06/\sqrt{4}} = 
   </script>
 </div>
 <p>Let’s plot our simulated t scores alongside a normal distribution.</p>
-<div class="sourceCode" id="cb718"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb776"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Don't worry about the syntax here.</span></span>
 <span><span class="co"># You won't need to know how to do this on your own.</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">sims_t</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">sim_t</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -261,7 +334,7 @@ t = \frac{(\bar{y} - \mu)}{s/\sqrt{n}} = \frac{(110.2 - 114)}{13.06/\sqrt{4}} = 
 <span>                  color <span class="op">=</span> <span class="st">"red"</span>, size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: Removed 19 rows containing non-finite values (`stat_bin()`).</code></pre>
 <pre><code>## Warning: Removed 2 rows containing missing values (`geom_bar()`).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-517-1.png" width="672"></div>
+<div class="inline-figure"><img src="19-inference_for_one_mean-web_files/figure-html/unnamed-chunk-11-1.png" width="672"></div>
 <p>These t scores are somewhat close to the normal model we had when we knew <span class="math inline">\(\sigma\)</span>, but the fit doesn’t look quite right. The peak of the simulated values isn’t quite high enough, and the tails seem to spill out over the much thinner tails of the normal model.</p>
 <p>William Gosset figured this all out in the early 20th century. While working for the Guinness brewery in Dublin, Ireland, he started noticing that his quality control tests (using very small sample sizes) didn’t yield statistical results consistent with the normal models that were universally used at the time. At the encouragement of the company, which saw his work as a potential source of cost savings, he took some time off to study and consult with other statisticians. As a result, he found a new function that is similar to a normal distribution but is more spread out. This new function accounts for the extra variability one gets when using the sample standard deviation <span class="math inline">\(s\)</span> as an estimate for the true population standard deviation <span class="math inline">\(\sigma\)</span>. Guinness considered the result a “trade secret”, so they wouldn’t allow Gosset to publish under his own name. But they did permit him to publish his findings under the pseudonym “Student”. He used data sets unrelated to brewing and submitted his work to the top statistical journal of the time.</p>
 <p>The new function Gosset discovered became known as the <em>Student t distribution</em>. He realized that the spread of the t distribution depends on the sample size. This makes sense: the accuracy of <span class="math inline">\(s\)</span> will be greater when we have a larger sample. In fact, for large enough samples, the t distribution is very close to a normal model.</p>
@@ -270,7 +343,7 @@ t = \frac{(\bar{y} - \mu)}{s/\sqrt{n}} = \frac{(110.2 - 114)}{13.06/\sqrt{4}} = 
 df = n - 1.
 \]</span></p>
 <p>So is the t model correct for our simulated t scores? Our sample size was 4, so we should use a t model with 3 degrees of freedom. Let’s plot it in green on top of our previous graph and see:</p>
-<div class="sourceCode" id="cb721"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb779"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Don't worry about the syntax here.</span></span>
 <span><span class="co"># You won't need to know how to do this on your own.</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">sims_t</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">sim_t</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -283,7 +356,7 @@ df = n - 1.
 <span>                  color <span class="op">=</span> <span class="st">"green"</span>, size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: Removed 19 rows containing non-finite values (`stat_bin()`).</code></pre>
 <pre><code>## Warning: Removed 2 rows containing missing values (`geom_bar()`).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-518-1.png" width="672"></div>
+<div class="inline-figure"><img src="19-inference_for_one_mean-web_files/figure-html/unnamed-chunk-12-1.png" width="672"></div>
 <p>The green curve fits the simulated values much better.</p>
 </div>
 <div id="inference-for-one-mean-1" class="section level2" number="19.6">
@@ -321,14 +394,14 @@ df = n - 1.
 </h3>
 <p>You should type <code><a href="https://openintrostat.github.io/openintro/reference/teacher.html">?teacher</a></code> at the Console to read the help file. Unfortunately, the help file does not give us a lot of information about how the data was collected. The only source listed is a website that no longer contains this data set. Besides, that website is just an open repository for data, so it’s not clear that the site would have contained any additional information about the provenance of the data. We will have to assume that the data was collected accurately.</p>
 <p>Here is the data set:</p>
-<div class="sourceCode" id="cb724"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb782"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">teacher</span></span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["id"],"name":[1],"type":["fct"],"align":["left"]},{"label":["degree"],"name":[2],"type":["fct"],"align":["left"]},{"label":["fte"],"name":[3],"type":["fct"],"align":["left"]},{"label":["years"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["base"],"name":[5],"type":["int"],"align":["right"]},{"label":["fica"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["retirement"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["total"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"01","2":"BA","3":"1","4":"5.0","5":"45388","6":"3472.18","7":"7688.73","8":"56548.91","_rn_":"1"},{"1":"02","2":"MA","3":"1","4":"15.0","5":"60649","6":"4639.65","7":"10273.94","8":"75562.59","_rn_":"2"},{"1":"03","2":"MA","3":"1","4":"16.0","5":"60649","6":"4639.65","7":"10273.94","8":"75562.59","_rn_":"3"},{"1":"04","2":"BA","3":"1","4":"10.0","5":"54466","6":"4166.65","7":"9226.54","8":"67859.19","_rn_":"4"},{"1":"05","2":"BA","3":"1","4":"26.0","5":"65360","6":"5000.04","7":"11071.98","8":"81432.02","_rn_":"5"},{"1":"06","2":"BA","3":"1","4":"28.5","5":"65360","6":"5000.04","7":"11071.98","8":"81432.02","_rn_":"6"},{"1":"07","2":"BA","3":"1","4":"12.0","5":"58097","6":"4444.42","7":"9841.63","8":"72383.05","_rn_":"7"},{"1":"08","2":"MA","3":"1","4":"32.0","5":"68230","6":"5219.60","7":"11558.16","8":"85007.76","_rn_":"8"},{"1":"09","2":"BA","3":"1","4":"25.0","5":"65360","6":"5000.04","7":"11071.98","8":"81432.02","_rn_":"9"},{"1":"11","2":"BA","3":"1","4":"12.0","5":"58097","6":"4444.42","7":"9841.63","8":"72383.05","_rn_":"10"},{"1":"12","2":"BA","3":"1","4":"0.0","5":"35427","6":"2710.17","7":"6001.33","8":"44138.50","_rn_":"11"},{"1":"13","2":"BA","3":"1","4":"7.5","5":"49929","6":"3819.57","7":"8457.97","8":"62206.54","_rn_":"12"},{"1":"14","2":"BA","3":"1","4":"40.0","5":"65360","6":"5000.04","7":"11071.98","8":"81432.02","_rn_":"13"},{"1":"15","2":"BA","3":"1","4":"4.0","5":"43575","6":"3333.49","7":"7381.60","8":"54290.09","_rn_":"14"},{"1":"16","2":"MA","3":"1","4":"7.0","5":"51174","6":"3914.81","7":"8668.88","8":"63757.69","_rn_":"15"},{"1":"17","2":"BA","3":"1","4":"34.0","5":"65360","6":"5000.04","7":"11071.98","8":"81432.02","_rn_":"16"},{"1":"18","2":"MA","3":"1","4":"36.0","5":"68230","6":"5219.60","7":"11558.16","8":"85007.76","_rn_":"17"},{"1":"19","2":"MA","3":"1","4":"20.0","5":"64440","6":"4929.66","7":"10916.14","8":"80285.80","_rn_":"18"},{"1":"20","2":"MA","3":"1","4":"28.5","5":"68230","6":"5219.60","7":"11558.16","8":"85007.76","_rn_":"19"},{"1":"21","2":"MA","3":"1","4":"8.0","5":"51174","6":"3914.81","7":"8668.88","8":"63757.69","_rn_":"20"},{"1":"22","2":"MA","3":"1","4":"4.0","5":"45486","6":"3479.68","7":"7705.33","8":"56671.01","_rn_":"21"},{"1":"23","2":"BA","3":"1","4":"28.0","5":"65360","6":"5000.04","7":"11071.98","8":"81432.02","_rn_":"22"},{"1":"24","2":"BA","3":"1","4":"25.0","5":"65360","6":"5000.04","7":"11071.98","8":"81432.02","_rn_":"23"},{"1":"25","2":"MA","3":"1","4":"9.0","5":"54962","6":"4204.59","7":"9310.56","8":"68477.15","_rn_":"24"},{"1":"26","2":"BA","3":"1","4":"33.0","5":"65360","6":"5000.04","7":"11071.98","8":"81432.02","_rn_":"25"},{"1":"27","2":"BA","3":"1","4":"9.0","5":"52653","6":"4027.95","7":"8919.42","8":"65600.37","_rn_":"26"},{"1":"28","2":"MA","3":"1","4":"31.0","5":"68230","6":"5219.60","7":"11558.16","8":"85007.76","_rn_":"27"},{"1":"29","2":"BA","3":"1","4":"32.0","5":"65360","6":"5000.04","7":"11071.98","8":"81432.02","_rn_":"28"},{"1":"30","2":"MA","3":"1","4":"8.0","5":"53067","6":"4059.63","7":"8989.55","8":"66116.18","_rn_":"29"},{"1":"31","2":"BA","3":"1","4":"20.0","5":"61729","6":"4722.27","7":"10456.89","8":"76908.16","_rn_":"30"},{"1":"32","2":"MA","3":"1","4":"28.0","5":"68230","6":"5219.60","7":"11558.16","8":"85007.76","_rn_":"31"},{"1":"33","2":"BA","3":"1","4":"16.0","5":"59914","6":"4583.42","7":"10149.43","8":"74646.85","_rn_":"32"},{"1":"34","2":"MA","3":"1","4":"37.0","5":"68230","6":"5219.60","7":"11558.16","8":"85007.76","_rn_":"33"},{"1":"35","2":"MA","3":"1","4":"11.0","5":"58752","6":"4494.53","7":"9952.59","8":"73199.12","_rn_":"34"},{"1":"36","2":"MA","3":"1","4":"17.0","5":"62545","6":"4784.69","7":"10595.12","8":"77924.81","_rn_":"35"},{"1":"37","2":"MA","3":"0.5","4":"1.0","5":"19900","6":"1522.35","7":"3371.06","8":"24793.41","_rn_":"36"},{"1":"38","2":"MA","3":"1","4":"2.0","5":"41695","6":"3189.67","7":"7063.13","8":"51947.80","_rn_":"37"},{"1":"39","2":"MA","3":"1","4":"3.0","5":"43593","6":"3334.86","7":"7384.65","8":"54312.51","_rn_":"38"},{"1":"40","2":"BA","3":"1","4":"29.0","5":"65360","6":"5000.04","7":"11071.98","8":"81432.02","_rn_":"39"},{"1":"41","2":"BA","3":"1","4":"1.0","5":"37199","6":"2845.72","7":"6301.51","8":"46346.23","_rn_":"40"},{"1":"42","2":"BA","3":"1","4":"19.0","5":"59914","6":"4583.42","7":"10149.43","8":"74646.85","_rn_":"41"},{"1":"43","2":"BA","3":"1","4":"15.0","5":"58097","6":"4444.42","7":"9841.63","8":"72383.05","_rn_":"42"},{"1":"44","2":"BA","3":"1","4":"19.0","5":"59914","6":"4583.42","7":"10149.43","8":"74646.85","_rn_":"43"},{"1":"45","2":"BA","3":"1","4":"18.0","5":"59914","6":"4583.42","7":"10149.43","8":"74646.85","_rn_":"44"},{"1":"46","2":"MA","3":"1","4":"9.0","5":"54962","6":"4204.59","7":"9310.56","8":"68477.15","_rn_":"45"},{"1":"47","2":"MA","3":"1","4":"8.0","5":"53067","6":"4059.63","7":"8989.55","8":"66116.18","_rn_":"46"},{"1":"48","2":"BA","3":"1","4":"3.0","5":"40739","6":"3116.53","7":"6901.19","8":"50756.72","_rn_":"47"},{"1":"49","2":"MA","3":"1","4":"14.0","5":"60649","6":"4639.65","7":"10273.94","8":"75562.59","_rn_":"48"},{"1":"50","2":"BA","3":"1","4":"7.5","5":"48710","6":"3726.32","7":"8251.47","8":"60687.79","_rn_":"49"},{"1":"51","2":"MA","3":"1","4":"8.0","5":"53067","6":"4059.63","7":"8989.55","8":"66116.18","_rn_":"50"},{"1":"52","2":"BA","3":"1","4":"31.0","5":"65360","6":"5000.04","7":"11071.98","8":"81432.02","_rn_":"51"},{"1":"53","2":"MA","3":"1","4":"15.0","5":"60649","6":"4639.65","7":"10273.94","8":"75562.59","_rn_":"52"},{"1":"54","2":"BA","3":"1","4":"3.0","5":"40739","6":"3116.53","7":"6901.19","8":"50756.72","_rn_":"53"},{"1":"55","2":"MA","3":"1","4":"10.5","5":"57806","6":"4422.16","7":"9792.34","8":"72020.50","_rn_":"54"},{"1":"56","2":"BA","3":"1","4":"15.0","5":"58097","6":"4444.42","7":"9841.63","8":"72383.05","_rn_":"55"},{"1":"57","2":"BA","3":"1","4":"0.0","5":"35427","6":"2710.17","7":"6001.33","8":"44138.50","_rn_":"56"},{"1":"58","2":"MA","3":"1","4":"9.0","5":"54962","6":"4204.59","7":"9310.56","8":"68477.15","_rn_":"57"},{"1":"59","2":"BA","3":"1","4":"9.0","5":"54962","6":"4204.59","7":"9310.56","8":"68477.15","_rn_":"58"},{"1":"60","2":"MA","3":"1","4":"13.0","5":"61216","6":"4683.02","7":"10369.99","8":"76269.01","_rn_":"59"},{"1":"61","2":"BA","3":"1","4":"22.0","5":"61729","6":"4722.27","7":"10456.89","8":"76908.16","_rn_":"60"},{"1":"62","2":"MA","3":"1","4":"14.0","5":"60649","6":"4639.65","7":"10273.94","8":"75562.59","_rn_":"61"},{"1":"63","2":"MA","3":"1","4":"7.0","5":"51174","6":"3914.81","7":"8668.88","8":"63757.69","_rn_":"62"},{"1":"64","2":"BA","3":"1","4":"7.0","5":"49020","6":"3750.03","7":"8303.99","8":"61074.02","_rn_":"63"},{"1":"65","2":"BA","3":"1","4":"29.0","5":"65360","6":"5000.04","7":"11071.98","8":"81432.02","_rn_":"64"},{"1":"66","2":"BA","3":"1","4":"16.0","5":"59914","6":"4583.42","7":"10149.43","8":"74646.85","_rn_":"65"},{"1":"67","2":"BA","3":"1","4":"23.0","5":"61729","6":"4722.27","7":"10456.89","8":"76908.16","_rn_":"66"},{"1":"68","2":"MA","3":"1","4":"7.0","5":"49279","6":"3769.84","7":"8347.86","8":"61396.70","_rn_":"67"},{"1":"69","2":"BA","3":"1","4":"2.0","5":"38968","6":"2981.05","7":"6601.18","8":"48550.23","_rn_":"68"},{"1":"70","2":"BA","3":"1","4":"31.0","5":"65360","6":"5000.04","7":"11071.98","8":"81432.02","_rn_":"69"},{"1":"71","2":"MA","3":"1","4":"5.5","5":"48330","6":"3697.24","7":"8187.10","8":"60214.34","_rn_":"70"},{"1":"72","2":"MA","3":"1","4":"27.0","5":"68230","6":"5219.60","7":"11558.16","8":"85007.76","_rn_":"71"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb725"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb783"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">teacher</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Rows: 71
 ## Columns: 8
@@ -341,7 +414,7 @@ df = n - 1.
 ## $ retirement &lt;dbl&gt; 7688.73, 10273.94, 10273.94, 9226.54, 11071.98, 11071.98, 9…
 ## $ total      &lt;dbl&gt; 56548.91, 75562.59, 75562.59, 67859.19, 81432.02, 81432.02,…</code></pre>
 <p>Since <code>total</code> is a numerical variable, we can use the <code>summary</code> function to produce the five-number summary. (The function also reports the mean.)</p>
-<div class="sourceCode" id="cb727"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb785"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">teacher</span><span class="op">$</span><span class="va">total</span><span class="op">)</span></span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   24793   63758   74647   70289   81432   85008</code></pre>
@@ -357,23 +430,23 @@ df = n - 1.
 <span class="header-section-number">19.9.3</span> Make tables or plots to explore the data visually.<a class="anchor" aria-label="anchor" href="#make-tables-or-plots-to-explore-the-data-visually.-9"><i class="fas fa-link"></i></a>
 </h3>
 <p>Here is a histogram.</p>
-<div class="sourceCode" id="cb729"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb787"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">teacher</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">total</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">5000</span>, boundary <span class="op">=</span> <span class="fl">60000</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-522-1.png" width="672"></div>
+<div class="inline-figure"><img src="19-inference_for_one_mean-web_files/figure-html/unnamed-chunk-16-1.png" width="672"></div>
 <p>And here is a QQ plot.</p>
-<div class="sourceCode" id="cb730"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb788"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">teacher</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">total</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq_line</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-523-1.png" width="672"></div>
+<div class="inline-figure"><img src="19-inference_for_one_mean-web_files/figure-html/unnamed-chunk-17-1.png" width="672"></div>
 <p>This distribution is quite skewed to the left. Of even more concern is the extreme outlier on the left.</p>
 <p>With any outlier, we need to investigate.</p>
 <div id="exercise-1-15" class="section level5 unnumbered">
 <h5>Exercise 1<a class="anchor" aria-label="anchor" href="#exercise-1-15"><i class="fas fa-link"></i></a>
 </h5>
 <p>Let’s sort the data by <code>total</code> (ascending) using the <code>arrange</code> command.</p>
-<div class="sourceCode" id="cb731"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb789"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">teacher</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">total</span><span class="op">)</span></span></code></pre></div>
 <div data-pagedtable="false">
@@ -388,25 +461,25 @@ df = n - 1.
 <hr>
 <p>Based on your answer to the above exercise, hopefully it’s clear that this is an outlier for which we can easily justify exclusion. We can use the <code>filter</code> command to get only the rows we want. There are lots of ways to do this, but it’s easy enough to grab only salaries above $30,000. (There’s only one salary below $30,000, so that outlier will be excluded.)</p>
 <p><strong>CAUTION: If you are copying and pasting from this example to use for another research question, the following code chuck is specific to this research question and not applicable in other contexts.</strong></p>
-<div class="sourceCode" id="cb732"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb790"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">teacher2</span> <span class="op">&lt;-</span> <span class="va">teacher</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">total</span> <span class="op">&gt;</span> <span class="fl">30000</span><span class="op">)</span></span></code></pre></div>
 <p>Check to make sure this had the desired effect:</p>
-<div class="sourceCode" id="cb733"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb791"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">teacher2</span><span class="op">$</span><span class="va">total</span><span class="op">)</span></span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   44139   63758   74647   70939   81432   85008</code></pre>
 <p>Notice how the min is no longer $24,793.41.</p>
 <p>Here are the new plots:</p>
-<div class="sourceCode" id="cb735"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb793"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">teacher2</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">total</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">5000</span>, boundary <span class="op">=</span> <span class="fl">60000</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-527-1.png" width="672"></div>
-<div class="sourceCode" id="cb736"><pre class="downlit sourceCode r">
+<div class="inline-figure"><img src="19-inference_for_one_mean-web_files/figure-html/unnamed-chunk-21-1.png" width="672"></div>
+<div class="sourceCode" id="cb794"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">teacher2</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">total</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq_line</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-528-1.png" width="672"></div>
+<div class="inline-figure"><img src="19-inference_for_one_mean-web_files/figure-html/unnamed-chunk-22-1.png" width="672"></div>
 <p>The left skew is still present, but we have removed the outlier.</p>
 </div>
 </div>
@@ -478,7 +551,7 @@ df = n - 1.
 <h3>
 <span class="header-section-number">19.12.1</span> Compute the test statistic.<a class="anchor" aria-label="anchor" href="#compute-the-test-statistic.-9"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb737"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb795"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">total_mean</span> <span class="op">&lt;-</span> <span class="va">teacher2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/specify.html">specify</a></span><span class="op">(</span>response <span class="op">=</span> <span class="va">total</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/calculate.html">calculate</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span>
@@ -488,7 +561,7 @@ df = n - 1.
 {"columns":[{"label":["stat"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"70938.57"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb738"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb796"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">total_t</span> <span class="op">&lt;-</span> <span class="va">teacher2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/specify.html">specify</a></span><span class="op">(</span>response <span class="op">=</span> <span class="va">total</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/hypothesize.html">hypothesize</a></span><span class="op">(</span>null <span class="op">=</span> <span class="st">"point"</span>, mu <span class="op">=</span> <span class="fl">63024</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
@@ -511,24 +584,24 @@ df = n - 1.
 <h3>
 <span class="header-section-number">19.12.3</span> Plot the null distribution.<a class="anchor" aria-label="anchor" href="#plot-the-null-distribution.-9"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb739"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb797"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">total_test</span> <span class="op">&lt;-</span> <span class="va">teacher2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/specify.html">specify</a></span><span class="op">(</span>response <span class="op">=</span> <span class="va">total</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/assume.html">assume</a></span><span class="op">(</span><span class="st">"t"</span><span class="op">)</span></span>
 <span><span class="va">total_test</span></span></code></pre></div>
 <pre><code>## A T distribution with 69 degrees of freedom.</code></pre>
-<div class="sourceCode" id="cb741"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb799"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">total_test</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/visualize.html">visualize</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/shade_p_value.html">shade_p_value</a></span><span class="op">(</span>obs_stat <span class="op">=</span> <span class="va">total_t</span>, direction <span class="op">=</span> <span class="st">"two-sided"</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-532-1.png" width="672"></div>
+<div class="inline-figure"><img src="19-inference_for_one_mean-web_files/figure-html/unnamed-chunk-26-1.png" width="672"></div>
 <p>Commentary: Although we are conducting a two-sided test, the area in the tails is so small that it can’t really be seen in the picture above.</p>
 </div>
 <div id="calculate-the-p-value.-9" class="section level3" number="19.12.4">
 <h3>
 <span class="header-section-number">19.12.4</span> Calculate the P-value.<a class="anchor" aria-label="anchor" href="#calculate-the-p-value.-9"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb742"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb800"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">total_test_p</span> <span class="op">&lt;-</span> <span class="va">total_test</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/get_p_value.html">get_p_value</a></span><span class="op">(</span>obs_stat <span class="op">=</span> <span class="va">total_t</span>, direction <span class="op">=</span> <span class="st">"two-sided"</span><span class="op">)</span></span>
 <span><span class="va">total_test_p</span></span></code></pre></div>
@@ -589,7 +662,7 @@ df = n - 1.
 <h3>
 <span class="header-section-number">19.14.2</span> Calculate and graph the confidence interval.<a class="anchor" aria-label="anchor" href="#calculate-and-graph-the-confidence-interval.-3"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb743"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb801"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">total_ci</span> <span class="op">&lt;-</span> <span class="va">total_test</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/get_confidence_interval.html">get_confidence_interval</a></span><span class="op">(</span>point_estimate <span class="op">=</span> <span class="va">total_mean</span>, level <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span>
 <span><span class="va">total_ci</span></span></code></pre></div>
@@ -598,11 +671,11 @@ df = n - 1.
 {"columns":[{"label":["lower_ci"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["upper_ci"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"68256.2","2":"73620.95"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<div class="sourceCode" id="cb744"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb802"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">total_test</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/visualize.html">visualize</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://infer.tidymodels.org/reference/shade_confidence_interval.html">shade_confidence_interval</a></span><span class="op">(</span>endpoints <span class="op">=</span> <span class="va">total_ci</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-535-1.png" width="672"></div>
+<div class="inline-figure"><img src="19-inference_for_one_mean-web_files/figure-html/unnamed-chunk-29-1.png" width="672"></div>
 </div>
 <div id="state-but-do-not-overstate-a-contextually-meaningful-interpretation.-4" class="section level3" number="19.14.3">
 <h3>
@@ -640,9 +713,9 @@ df = n - 1.
 </h6>
 <div class="answer">
 <p>Please write up your answer here</p>
-<div class="sourceCode" id="cb745"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb803"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to print the data</span></span></code></pre></div>
-<div class="sourceCode" id="cb746"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb804"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to glimpse the variables</span></span></code></pre></div>
 </div>
 </div>
@@ -650,7 +723,7 @@ df = n - 1.
 <h6>Prepare the data for analysis. [Not always necessary.]<a class="anchor" aria-label="anchor" href="#prepare-the-data-for-analysis.-not-always-necessary.-6"><i class="fas fa-link"></i></a>
 </h6>
 <div class="answer">
-<div class="sourceCode" id="cb747"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb805"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to prepare the data for analysis.</span></span></code></pre></div>
 </div>
 </div>
@@ -658,7 +731,7 @@ df = n - 1.
 <h6>Make tables or plots to explore the data visually.<a class="anchor" aria-label="anchor" href="#make-tables-or-plots-to-explore-the-data-visually.-10"><i class="fas fa-link"></i></a>
 </h6>
 <div class="answer">
-<div class="sourceCode" id="cb748"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb806"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to make tables or plots.</span></span></code></pre></div>
 </div>
 </div>
@@ -715,7 +788,7 @@ df = n - 1.
 <h6>Compute the test statistic.<a class="anchor" aria-label="anchor" href="#compute-the-test-statistic.-10"><i class="fas fa-link"></i></a>
 </h6>
 <div class="answer">
-<div class="sourceCode" id="cb749"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb807"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to compute the test statistic.</span></span></code></pre></div>
 </div>
 </div>
@@ -730,11 +803,11 @@ df = n - 1.
 <h6>Plot the null distribution.<a class="anchor" aria-label="anchor" href="#plot-the-null-distribution.-10"><i class="fas fa-link"></i></a>
 </h6>
 <div class="answer">
-<div class="sourceCode" id="cb750"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb808"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># IF CONDUCTING A SIMULATION...</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co"># Add code here to simulate the null distribution.</span></span></code></pre></div>
-<div class="sourceCode" id="cb751"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb809"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to plot the null distribution.</span></span></code></pre></div>
 </div>
 </div>
@@ -742,7 +815,7 @@ df = n - 1.
 <h6>Calculate the P-value.<a class="anchor" aria-label="anchor" href="#calculate-the-p-value.-10"><i class="fas fa-link"></i></a>
 </h6>
 <div class="answer">
-<div class="sourceCode" id="cb752"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb810"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to calculate the P-value.</span></span></code></pre></div>
 </div>
 </div>
@@ -800,9 +873,9 @@ df = n - 1.
 <h6>Calculate and graph the confidence interval.<a class="anchor" aria-label="anchor" href="#calculate-and-graph-the-confidence-interval.-4"><i class="fas fa-link"></i></a>
 </h6>
 <div class="answer">
-<div class="sourceCode" id="cb753"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb811"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to calculate the confidence interval.</span></span></code></pre></div>
-<div class="sourceCode" id="cb754"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb812"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to graph the confidence interval.</span></span></code></pre></div>
 </div>
 </div>

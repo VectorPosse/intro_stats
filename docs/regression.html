@@ -125,11 +125,26 @@
 <span class="header-section-number">7.1.4</span> Load packages<a class="anchor" aria-label="anchor" href="#regression-load"><i class="fas fa-link"></i></a>
 </h3>
 <p>We load the <code>tidyverse</code> package. The <code>faraway</code> package will give access to the Chicago redlining data introduced in the previous chapter and the <code>palmerpenguins</code> package gives us the <code>penguins</code> data. Finally, the <code>broom</code> package will provide tools for cleaning up the output of the regression analysis we perform.</p>
-<div class="sourceCode" id="cb255"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/julianfaraway/faraway">faraway</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://allisonhorst.github.io/palmerpenguins/">palmerpenguins</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://broom.tidymodels.org/">broom</a></span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb265"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span></code></pre></div>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.2     ✔ readr     2.1.4
+## ✔ forcats   1.0.0     ✔ stringr   1.5.0
+## ✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+## ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+## ✔ purrr     1.0.2     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<div class="sourceCode" id="cb267"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/julianfaraway/faraway">faraway</a></span><span class="op">)</span></span></code></pre></div>
+<pre><code>## Warning: package 'faraway' was built under R version 4.3.1</code></pre>
+<div class="sourceCode" id="cb269"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://allisonhorst.github.io/palmerpenguins/">palmerpenguins</a></span><span class="op">)</span></span></code></pre></div>
+<pre><code>## Warning: package 'palmerpenguins' was built under R version 4.3.1</code></pre>
+<div class="sourceCode" id="cb271"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://broom.tidymodels.org/">broom</a></span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: package 'broom' was built under R version 4.3.1</code></pre>
 </div>
 </div>
@@ -141,10 +156,10 @@
 <p>It will be helpful to model this linear relationship with an actual straight line. Such a line is called a <em>regression line</em>. It is also known as a <em>best-fit line</em> or <em>least-squares line</em> for reasons that we will get to later in the chapter.</p>
 <p>The mathematics involved in figuring out what this line should be is more complicated than we cover in this book. Fortunately, R will do all the complicated calculations for us and we’ll focus on understanding what they mean.</p>
 <p>Recall the <code>chredlin</code> data set from the last chapter investigating the practice of redlining in Chicago in the 1970s. Let’s review the scatterplot of <code>involact</code>, the number of FAIR policies per 100 housing units, against <code>race</code>, the racial composition of each ZIP code as a percentage of minority residents. (Recall that each row of the data represents an entire ZIP code.)</p>
-<div class="sourceCode" id="cb257"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb273"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">chredlin</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">involact</span>, x <span class="op">=</span> <span class="va">race</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-185-1.png" width="672"></div>
+<div class="inline-figure"><img src="07-regression-web_files/figure-html/unnamed-chunk-2-1.png" width="672"></div>
 <div id="exercise-1-4" class="section level5 unnumbered">
 <h5>Exercise 1<a class="anchor" aria-label="anchor" href="#exercise-1-4"><i class="fas fa-link"></i></a>
 </h5>
@@ -154,12 +169,12 @@
 </div>
 <hr>
 <p>If certain conditions are met, we can graph a regression line; just add a <code>geom_smooth</code> layer to the scatterplot:</p>
-<div class="sourceCode" id="cb258"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb274"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">chredlin</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">involact</span>, x <span class="op">=</span> <span class="va">race</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="va">lm</span>, se <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## `geom_smooth()` using formula = 'y ~ x'</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-186-1.png" width="672"></div>
+<div class="inline-figure"><img src="07-regression-web_files/figure-html/unnamed-chunk-3-1.png" width="672"></div>
 <p>The <code>method = lm</code> argument is telling <code>ggplot</code> to use a “linear model”. The <code>se = FALSE</code> argument tells <code>ggplot</code> to draw just the line and nothing else. (What else might it try to draw? You are encouraged to go back to the code above and take out <code>se = FALSE</code> to see for yourself. However, we are not yet in a position to be able to explain the gray band that appears. We will return to this mystery in a future chapter.)</p>
 <p>Of all possible lines, the blue line comes the closest to each point in the scatterplot. If we wiggled the line a little bit, it might get closer to a few points, but the net effect would be to make it further from other points. This is the mathematically optimal line of best fit.</p>
 </div>
@@ -225,7 +240,7 @@
 <li>the predictor variable.</li>
 </ul>
 <p>After a comma, we then specify the data set in which those variables live using <code>data =</code>. Here’s the whole command:</p>
-<div class="sourceCode" id="cb260"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb276"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">involact</span> <span class="op">~</span> <span class="va">race</span>, data <span class="op">=</span> <span class="va">chredlin</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## 
 ## Call:
@@ -236,7 +251,7 @@
 ##     0.12922      0.01388</code></pre>
 <p><strong>The response variable always goes before the tilde and the predictor variable always goes after.</strong></p>
 <p>Let’s store that result for future use. The convention we’ll use in this book is to name things using the variables involved. For example,</p>
-<div class="sourceCode" id="cb262"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb278"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">involact_race_lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">involact</span> <span class="op">~</span> <span class="va">race</span>, data <span class="op">=</span> <span class="va">chredlin</span><span class="op">)</span></span>
 <span><span class="va">involact_race_lm</span></span></code></pre></div>
 <pre><code>## 
@@ -277,7 +292,7 @@
 </h5>
 <p>Use the <code>arrange</code> command from <code>dplyr</code> to sort the <code>chredlin</code> data frame by race (using the default ascending order). What is the value of <code>race</code> for the three ZIP codes with the smallest percentage of minority residents?</p>
 <div class="answer">
-<div class="sourceCode" id="cb264"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb280"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to sort by race</span></span></code></pre></div>
 <p>Please write up your answer here.</p>
 </div>
@@ -321,7 +336,7 @@
 <span class="header-section-number">7.8</span> The <code>tidy</code> command<a class="anchor" aria-label="anchor" href="#regression-tidy"><i class="fas fa-link"></i></a>
 </h2>
 <p>Recall the output of the <code>lm</code> command:</p>
-<div class="sourceCode" id="cb265"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb281"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">involact_race_lm</span></span></code></pre></div>
 <pre><code>## 
 ## Call:
@@ -333,7 +348,7 @@
 <p>(We did not have to run <code>lm</code> again. We had this output stored in the variable <code>involact_race_lm</code>.)</p>
 <p>That summary is fine, but what if we needed to reference the slope and intercept using inline code? Or what if we wanted to grab those numbers and use them in further calculations?</p>
 <p>The problem is that the results of <code>lm</code> just print the output in an unstructured way. If we want structured input, we can use the <code>tidy</code> command from the <code>broom</code> package. This will take the results of <code>lm</code> and organize the output into a tibble.</p>
-<div class="sourceCode" id="cb267"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb283"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span><span class="va">involact_race_lm</span><span class="op">)</span></span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -341,7 +356,7 @@
   </script>
 </div>
 <p>Let’s store that tibble so we can refer to it in the future.</p>
-<div class="sourceCode" id="cb268"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb284"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">involact_race_tidy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span><span class="va">involact_race_lm</span><span class="op">)</span></span>
 <span><span class="va">involact_race_tidy</span></span></code></pre></div>
 <div data-pagedtable="false">
@@ -351,15 +366,15 @@
 </div>
 <p>The intercept is stored in the <code>estimate</code> column, in the first row. The slope is stored in the same column, but in the second row. (There is a lot more information here to the right of the <code>estimate</code> column, but we will not know what these numbers mean until later in the course.)</p>
 <p>We can grab the <code>estimate</code> column with the dollar sign as we’ve seen before:</p>
-<div class="sourceCode" id="cb269"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb285"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">involact_race_tidy</span><span class="op">$</span><span class="va">estimate</span></span></code></pre></div>
 <pre><code>## [1] 0.12921803 0.01388235</code></pre>
 <p>This is a “vector” of two values, the intercept and the slope, respectively.</p>
 <p>What if we want only one value at a time? We can grab individual elements of a vector using square brackets as follows:</p>
-<div class="sourceCode" id="cb271"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb287"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">involact_race_tidy</span><span class="op">$</span><span class="va">estimate</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span></code></pre></div>
 <pre><code>## [1] 0.129218</code></pre>
-<div class="sourceCode" id="cb273"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb289"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">involact_race_tidy</span><span class="op">$</span><span class="va">estimate</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span></code></pre></div>
 <pre><code>## [1] 0.01388235</code></pre>
 <p>Here is the interpretation of the slope again, but this time, we’ll use inline code:</p>
@@ -386,7 +401,7 @@
 <span class="header-section-number">7.9</span> Residuals<a class="anchor" aria-label="anchor" href="#regression-residuals"><i class="fas fa-link"></i></a>
 </h2>
 <p>Earlier, we promised to revisit the topic of residuals. Residuals are measured as the vertical distances from each data point to the regression line. We can see that visually below. (Don’t worry about the complexity of the <code>ggplot</code> code used to create this picture. You will not need to create a plot like this on your own, so just focus on the graph that is created below.)</p>
-<div class="sourceCode" id="cb275"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb291"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">chredlin</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">involact</span>, x <span class="op">=</span> <span class="va">race</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html">geom_segment</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">35.1</span>, xend  <span class="op">=</span> <span class="fl">35.1</span>,</span>
 <span>                 y <span class="op">=</span> <span class="fl">0.6164886</span>, yend <span class="op">=</span> <span class="fl">0.6164886</span> <span class="op">+</span> <span class="fl">0.38351139</span>,</span>
@@ -396,14 +411,13 @@
 <span>                 color <span class="op">=</span> <span class="st">"red"</span>, size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="va">lm</span>, se <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2
-## 3.4.0.
+<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
 ## ℹ Please use `linewidth` instead.
 ## This warning is displayed once every 8 hours.
-## Call `lifecycle::last_lifecycle_warnings()` to see where this
-## warning was generated.</code></pre>
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
 <pre><code>## `geom_smooth()` using formula = 'y ~ x'</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-196-1.png" width="672"></div>
+<div class="inline-figure"><img src="07-regression-web_files/figure-html/unnamed-chunk-13-1.png" width="672"></div>
 <p>The graph above shows the regression line and two of the residuals as red line segments. (There is a residual for all 47 ZIP codes; only two are shown in this graph.) The one on the left corresponds to ZIP code with 35% racial minority. The regression line predicts that, if the model were true, such a ZIP code would have a value of <code>involact</code> of about 0.6. But the actual data for that ZIP code has an <code>involact</code> value of 1. The residual is the difference, about 0.4. In other words, the true data point is 0.4 units higher than the model prediction. This represents a <em>positive</em> residual; the actual data is 0.4 units <em>above</em> the line. Data points that lie below the regression line have <em>negative</em> residuals.</p>
 <div id="exercise-8-2" class="section level5 unnumbered">
 <h5>Exercise 8<a class="anchor" aria-label="anchor" href="#exercise-8-2"><i class="fas fa-link"></i></a>
@@ -432,7 +446,7 @@ e = y - \hat{y}
 <p>Recall earlier when we mentioned that there was one additional condition to check in order for linear regression to make sense. This condition is that <strong>there should not be any kind of pattern in the residuals</strong>.</p>
 <p>We know that some of the points are going to lie above the line (positive residuals) and some of the points will lie below the line (negative residuals). What we need is for the spread of the residuals to be pretty balanced across the length of the regression line and for the residuals not to form any kind of curved pattern.</p>
 <p>To check this condition, we’ll need to calculate the residuals first. To do so, we introduce a new function from the <code>broom</code> package. Whereas <code>tidy</code> serves up information about the intercept and the slope of the regression line, <code>augment</code> gives us extra information for each data point.</p>
-<div class="sourceCode" id="cb278"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb294"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">involact_race_aug</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span><span class="va">involact_race_lm</span><span class="op">)</span></span>
 <span><span class="va">involact_race_aug</span></span></code></pre></div>
 <div data-pagedtable="false">
@@ -457,11 +471,11 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 \]</span></p>
 <p>Yup, it works!</p>
 <p>To check for patterns in the residuals, we’ll create a <em>residual plot</em>. A residual plot graphs the residuals above each value along the x-axis. (In the command below, we also add a blue horizontal reference line so that it is clear which points have positive or negative residuals.)</p>
-<div class="sourceCode" id="cb279"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb295"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">involact_race_aug</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">.resid</span>, x <span class="op">=</span> <span class="va">race</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span>, color <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-198-1.png" width="672"></div>
+<div class="inline-figure"><img src="07-regression-web_files/figure-html/unnamed-chunk-15-1.png" width="672"></div>
 <p>Pay close attention to the <code>ggplot</code> code. Notice that the tibble in the first slot is <em>not</em> <code>chredlin</code> as it was before. The residuals we need to plot are not stored in the raw <code>chredlin</code> data. We had to calculate the residuals using the <code>augment</code> command, and those residuals are then stored in a different place that we named <code>involact_race_aug</code>. In the latter tibble, the residuals themselves are stored in a variable called <code>.resid</code>. (Don’t forget the dot in <code>.resid</code>.)</p>
 <p>We are looking for systematic patterns in the residuals. A good residual plot should look like the most boring plot you’ve ever seen.</p>
 <p>For the most part, the residual plot above looks pretty good. The one exception is the clustering near the left edge of the graph.</p>
@@ -477,13 +491,13 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <p>Residual patterns that are problematic often involve curved data (where the dots follow a curve around the horizontal reference line instead of spreading evenly around it) and <em>heteroscedasticity</em>, which is a fanning out pattern from left to right.</p>
 <p>Other than the weird cluster of points at the left, the rest of the residual plot looks pretty good. Ignoring those ZIP codes with 0 FAIR policies, the rest of the residuals stretch, on average, about the same height above and below the line across the whole width of the plot. There is only one slightly large residual at about the 40% mark, but it’s not extreme, and it doesn’t look like a severe outlier in the original scatterplot.</p>
 <p>What does a bad residual plot look like? The code below will run an ill-advised regression analysis on <code>fire</code>, the number of fires (per 100 housing units), against <code>age</code>, the percent of housing units built before 1939. The residual plot appears below.</p>
-<div class="sourceCode" id="cb280"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb296"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fire_age_lm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">fire</span> <span class="op">~</span> <span class="va">age</span>, data <span class="op">=</span> <span class="va">chredlin</span><span class="op">)</span></span>
 <span><span class="va">fire_age_aug</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span><span class="va">fire_age_lm</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">fire_age_aug</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">.resid</span>, x <span class="op">=</span> <span class="va">age</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span>, color <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-199-1.png" width="672"></div>
+<div class="inline-figure"><img src="07-regression-web_files/figure-html/unnamed-chunk-16-1.png" width="672"></div>
 </div>
 <div id="exercise-11-3" class="section level5 unnumbered">
 <h5>Exercise 11<a class="anchor" aria-label="anchor" href="#exercise-11-3"><i class="fas fa-link"></i></a>
@@ -500,7 +514,7 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 </h5>
 <p>If you were truly interested in investigating an association between the fire risk and the age of buildings in a ZIP code, the first thing you would do is create a scatterplot. Go ahead and do that below. Use <code>fire</code> as the response variable and <code>age</code> as the predictor.</p>
 <div class="answer">
-<div class="sourceCode" id="cb281"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb297"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to create a scatterplot of fire against age</span></span></code></pre></div>
 </div>
 </div>
@@ -528,7 +542,7 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <p>We’ve seen that the correlation coefficient r is of limited utility. In addition to being only a single statistic to summarize a linear association, the number doesn’t have any kind of intrinsic meaning. It can only be judged by how close it is to 0 or 1 (or -1) in conjunction with a scatterplot to give you a sense of the strength of the correlation. <strong>In particular, some people try to interpret r as some kind of percentage, but it’s not.</strong></p>
 <p>On the other hand, when we square the correlation coefficient, we <em>do</em> get an interpretable number. For some reason, instead of writing <span class="math inline">\(r^2\)</span>, statisticians write <span class="math inline">\(R^2\)</span>, with a capital R. (I can’t find the historical reason why this is so.) In any event, <span class="math inline">\(R^2\)</span> can be interpreted as a percentage! It represents the percent of variation in the y variable that can be explained by variation in the x variable.</p>
 <p>Here we introduce the last of the <code>broom</code> functions: <code>glance</code>. Whereas <code>tidy</code> reports the intercept and slope, and <code>augment</code> reports values associated to each data point separately, the <code>glance</code> function gathers up summaries for the entire model. (Do not confuse <code>glance</code> with <code>glimpse</code>. The latter is a nicer version of <code>str</code> that just summarizes the variables in a tibble.)</p>
-<div class="sourceCode" id="cb282"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb298"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">involact_race_glance</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/glance.html">glance</a></span><span class="op">(</span><span class="va">involact_race_lm</span><span class="op">)</span></span>
 <span><span class="va">involact_race_glance</span></span></code></pre></div>
 <div data-pagedtable="false">
@@ -548,9 +562,9 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <p>Calculate the correlation coefficient r between <code>involact</code> and <code>race</code> using the <code>cor</code> command. (You might have to look back at the last chapter to remember the syntax.) Store that value as r.</p>
 <p>In a separate code chunk, square that value using the command <code>r^2</code>. Verify that the square of the correlation coefficient is the same as the <span class="math inline">\(R^2\)</span> value reported in the <code>glance</code> output above.</p>
 <div class="answer">
-<div class="sourceCode" id="cb283"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb299"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to calculate the correlation coefficient</span></span></code></pre></div>
-<div class="sourceCode" id="cb284"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb300"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to square the correlation coefficient</span></span></code></pre></div>
 </div>
 </div>
@@ -562,10 +576,10 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <p>The discussion of <span class="math inline">\(R^2\)</span> above highlights the fact that a single predictor will rarely account for all or even most of the variability in a response variable. Is there a way to take other predictors into account?</p>
 <p>The answer is yes, and the statistical technique involved is called multiple regression. Multiple regression is a deep subject, worthy of entire courses. Suffice it to say here that more advanced stats courses go into the ways in which multiple predictors can be included in a regression.</p>
 <p>One easy thing we can do is incorporate a categorical variable into a graph and see if that categorical variable might play a role in the regression analysis. For example, there is a variance called <code>side</code> in <code>chredlin</code> that indicates whether the ZIP code is on the north side (n) or south side(s) of Chicago. As described in an earlier chapter, we can use color to distinguish between the ZIP codes.</p>
-<div class="sourceCode" id="cb285"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb301"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">chredlin</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">involact</span>, x <span class="op">=</span> <span class="va">race</span>, color <span class="op">=</span> <span class="va">side</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-204-1.png" width="672"></div>
+<div class="inline-figure"><img src="07-regression-web_files/figure-html/unnamed-chunk-21-1.png" width="672"></div>
 <div id="exercise-14" class="section level5 unnumbered">
 <h5>Exercise 14<a class="anchor" aria-label="anchor" href="#exercise-14"><i class="fas fa-link"></i></a>
 </h5>
@@ -575,12 +589,12 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 </div>
 <hr>
 <p>Does this affect the regression? We haven’t checked the conditions carefully for this new question, so we will exercise caution in coming to any definitive conclusions. But visually, there does appear to be a difference in the models generated for ZIP codes on the north versus south sides:</p>
-<div class="sourceCode" id="cb286"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb302"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">chredlin</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">involact</span>, x <span class="op">=</span> <span class="va">race</span>, color <span class="op">=</span> <span class="va">side</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="va">lm</span>, se <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## `geom_smooth()` using formula = 'y ~ x'</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-205-1.png" width="672"></div>
+<div class="inline-figure"><img src="07-regression-web_files/figure-html/unnamed-chunk-22-1.png" width="672"></div>
 </div>
 <div id="exercise-15-1" class="section level5 unnumbered">
 <h5>Exercise 15<a class="anchor" aria-label="anchor" href="#exercise-15-1"><i class="fas fa-link"></i></a>
@@ -601,7 +615,7 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 </h5>
 <p>Create a scatterplot of the data. Do <em>not</em> include a regression line yet. (In other words, there should be no <code>geom_smooth</code> in this plot.)</p>
 <div class="answer">
-<div class="sourceCode" id="cb288"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb304"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to create a scatterplot of the data</span></span></code></pre></div>
 </div>
 </div>
@@ -623,13 +637,13 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <p>As we’re reasonably satisfied that the first three conditions are met and regression is worth pursuing, run the <code>lm</code> command to perform the regression analysis. Assign the output to the name <code>fl_bm_lm</code>. Be sure to type the variable name <code>fl_bm_lm</code> on its own line so that the output is printed in this file.</p>
 <p>Then use <code>tidy</code>, <code>augment</code>, and <code>glance</code> respectively on the output. Assign the output to the names <code>fl_bm_tidy</code>, <code>fl_bm_aug</code>, and <code>fl_bm_glance</code>. Again, in each code chunk, type the output variable name on its own line to ensure that it prints in this file.</p>
 <div class="answer">
-<div class="sourceCode" id="cb289"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb305"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to generate and print regression output with lm</span></span></code></pre></div>
-<div class="sourceCode" id="cb290"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb306"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to "tidy" and print the output from lm</span></span></code></pre></div>
-<div class="sourceCode" id="cb291"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb307"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to "augment" and print the output from lm</span></span></code></pre></div>
-<div class="sourceCode" id="cb292"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb308"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to "glance" at and print the output from lm</span></span></code></pre></div>
 </div>
 </div>
@@ -638,7 +652,7 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 </h5>
 <p>Use the <code>augment</code> output from above to create a residual plot with a blue horizontal reference line.</p>
 <div class="answer">
-<div class="sourceCode" id="cb293"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb309"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to create a residual plot</span></span></code></pre></div>
 </div>
 </div>
@@ -655,7 +669,7 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 </h5>
 <p>With all the conditions met, plot the regression line on top of the scatterplot of the data. (Use <code>geom_smooth</code> with <code>method = lm</code> and <code>se = FALSE</code> as in the examples earlier.)</p>
 <div class="answer">
-<div class="sourceCode" id="cb294"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb310"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to plot the regression line on the scatterplot</span></span></code></pre></div>
 </div>
 </div>
@@ -706,7 +720,7 @@ write-math-here
 </h5>
 <p>Add <code>color = species</code> to the <code>aes</code> portion of the <code>ggplot</code> command to look at the regression lines for the three different species separately. Comment on the slopes of those three regression lines.</p>
 <div class="answer">
-<div class="sourceCode" id="cb295"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb311"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to plot regressions by species</span></span></code></pre></div>
 <p>Please write up your answer here.</p>
 </div>

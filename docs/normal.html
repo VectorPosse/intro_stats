@@ -124,9 +124,54 @@
 <span class="header-section-number">13.2</span> Load packages<a class="anchor" aria-label="anchor" href="#normal-load"><i class="fas fa-link"></i></a>
 </h2>
 <p>In addition to <code>tidyverse</code>, we return to the <code>mosaic</code> package to produce some nice visualizations of normal models.</p>
-<div class="sourceCode" id="cb488"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ProjectMOSAIC/mosaic">mosaic</a></span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb505"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span></code></pre></div>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.2     ✔ readr     2.1.4
+## ✔ forcats   1.0.0     ✔ stringr   1.5.0
+## ✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+## ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+## ✔ purrr     1.0.2     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<div class="sourceCode" id="cb507"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ProjectMOSAIC/mosaic">mosaic</a></span><span class="op">)</span></span></code></pre></div>
+<pre><code>## Warning: package 'mosaic' was built under R version 4.3.1</code></pre>
+<pre><code>## Registered S3 method overwritten by 'mosaic':
+##   method                           from   
+##   fortify.SpatialPolygonsDataFrame ggplot2
+## 
+## The 'mosaic' package masks several functions from core packages in order to add 
+## additional features.  The original behavior of these functions should not be affected by this.
+## 
+## Attaching package: 'mosaic'
+## 
+## The following object is masked from 'package:Matrix':
+## 
+##     mean
+## 
+## The following objects are masked from 'package:dplyr':
+## 
+##     count, do, tally
+## 
+## The following object is masked from 'package:purrr':
+## 
+##     cross
+## 
+## The following object is masked from 'package:ggplot2':
+## 
+##     stat
+## 
+## The following objects are masked from 'package:stats':
+## 
+##     binom.test, cor, cor.test, cov, fivenum, IQR, median, prop.test,
+##     quantile, sd, t.test, var
+## 
+## The following objects are masked from 'package:base':
+## 
+##     max, mean, min, prod, range, sample, sum</code></pre>
 </div>
 <div id="normal-clt" class="section level2" number="13.3">
 <h2>
@@ -140,13 +185,13 @@
 <span class="header-section-number">13.4</span> Normal models<a class="anchor" aria-label="anchor" href="#normal-normal"><i class="fas fa-link"></i></a>
 </h2>
 <p>The normal distribution looks like this:</p>
-<div class="sourceCode" id="cb489"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb510"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Don't worry about the syntax here.</span></span>
 <span><span class="co"># You won't need to know how to do this on your own.</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_function.html">stat_function</a></span><span class="op">(</span>fun <span class="op">=</span> <span class="va">dnorm</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="op">-</span><span class="fl">3</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-345-1.png" width="672"></div>
+<div class="inline-figure"><img src="13-normal_models-web_files/figure-html/unnamed-chunk-2-1.png" width="672"></div>
 <p>The curve pictured above is called the <em>standard normal distribution</em>. It has a mean of 0 and a standard deviation of 1. Mathematically, this is written as</p>
 <p><span class="math display">\[
 N(\mu = 0, \sigma = 1),
@@ -166,12 +211,12 @@ N(\mu = 114, \sigma = 14),
 N(114, 14).
 \]</span></p>
 <p>The graph now looks like this:</p>
-<div class="sourceCode" id="cb490"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb511"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Again, don't worry about the syntax here.</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">58</span>, <span class="fl">170</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_function.html">stat_function</a></span><span class="op">(</span>fun <span class="op">=</span> <span class="va">dnorm</span>, args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="fl">114</span>, sd <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">72</span>, <span class="fl">86</span>, <span class="fl">100</span>, <span class="fl">114</span>, <span class="fl">128</span>, <span class="fl">142</span>, <span class="fl">156</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-346-1.png" width="672"></div>
+<div class="inline-figure"><img src="13-normal_models-web_files/figure-html/unnamed-chunk-3-1.png" width="672"></div>
 </div>
 <div id="normal-predictions" class="section level2" number="13.5">
 <h2>
@@ -179,13 +224,13 @@ N(114, 14).
 </h2>
 <p>Using this information, we can estimate the percentage of such women who are expected to have any range of SBP without having access to all such data.</p>
 <p>For example, what percentage of women ages 30–44 in the U.S. and Canada are expected to have SBP under 130 mmHg? The <code>pdist</code> command from the <code>mosaic</code> package will not only help us with this calculation, but it also offers a nice visual representation depending on the arguments we supply to the function:</p>
-<div class="sourceCode" id="cb491"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb512"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/pdist.html">pdist</a></span><span class="op">(</span><span class="st">"norm"</span>, q <span class="op">=</span> <span class="fl">130</span>, mean <span class="op">=</span> <span class="fl">114</span>, sd <span class="op">=</span> <span class="fl">14</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-347-1.png" width="672"></div>
+<div class="inline-figure"><img src="13-normal_models-web_files/figure-html/unnamed-chunk-4-1.png" width="672"></div>
 <pre><code>## [1] 0.873451</code></pre>
 <p>In the notebook view, you have to switch back and forth between the two boxes below the code chunk (above the graph) to see the number versus the graph. In the HTML output, however, both the number and the plot are visible.</p>
 <p>For situations where we really just want to see the number, we can always add <code>plot = FALSE</code> to the function:</p>
-<div class="sourceCode" id="cb493"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb514"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/pdist.html">pdist</a></span><span class="op">(</span><span class="st">"norm"</span>, q <span class="op">=</span> <span class="fl">130</span>, mean <span class="op">=</span> <span class="fl">114</span>, sd <span class="op">=</span> <span class="fl">14</span>, plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## [1] 0.873451</code></pre>
 <p>The other pieces of the <code>pdist</code> function are pretty intuitive: <code>"norm"</code> (and it has to be in quotes) indicates that we want a normal model, <code>q</code> is the value of interest to us, and <code>mean</code> and <code>sd</code> are self-evident. The numerical output gives the area under the curve to the left of our value of interest. This area is 0.873451; in other words, about 87.3% of women are expected to have SBP less than 130.</p>
@@ -203,7 +248,7 @@ N(114, 14).
 <p>Don’t forget to include parentheses. We need to multiply the whole expression by 100.</p>
 <p>Now, here’s a more complicated question: what percentage of women are predicted to have SBP between 110 mmHg and 130 mmHg?</p>
 <p>Recall that the proportion of women predicted to have SBP less than 130 mmHg was 0.873. But this is also counting women with SBP under 110 mmHg, whom we now want to exclude. The proportion of women with SBP under 110 is found with the following code:</p>
-<div class="sourceCode" id="cb495"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb516"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/pdist.html">pdist</a></span><span class="op">(</span><span class="st">"norm"</span>, q <span class="op">=</span> <span class="fl">110</span>, mean <span class="op">=</span> <span class="fl">114</span>, sd <span class="op">=</span> <span class="fl">14</span>, plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## [1] 0.3875485</code></pre>
 <p>Therefore, all we have to do is calculate 0.873 minus 0.388:</p>
@@ -212,24 +257,24 @@ N(114, 14).
 </blockquote>
 <p>(Again, don’t forget the parentheses.)</p>
 <p>What about the pretty picture? Unfortunately, this doesn’t work so well:</p>
-<div class="sourceCode" id="cb497"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb518"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/pdist.html">pdist</a></span><span class="op">(</span><span class="st">"norm"</span>, q <span class="op">=</span> <span class="fl">130</span>, mean <span class="op">=</span> <span class="fl">114</span>, sd <span class="op">=</span> <span class="fl">14</span><span class="op">)</span> <span class="op">-</span> </span>
 <span>    <span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/pdist.html">pdist</a></span><span class="op">(</span><span class="st">"norm"</span>, q <span class="op">=</span> <span class="fl">110</span>, mean <span class="op">=</span> <span class="fl">114</span>, sd <span class="op">=</span> <span class="fl">14</span><span class="op">)</span></span></code></pre></div>
-<p><img src="intro_stats_files/figure-html/unnamed-chunk-350-1.png" width="672"><img src="intro_stats_files/figure-html/unnamed-chunk-350-2.png" width="672"></p>
+<p><img src="13-normal_models-web_files/figure-html/unnamed-chunk-7-1.png" width="672"><img src="13-normal_models-web_files/figure-html/unnamed-chunk-7-2.png" width="672"></p>
 <pre><code>## [1] 0.4859026</code></pre>
 <p>The code is bulky and it prints two pictures, neither of which are quite right for our question.</p>
 <p>Instead, let’s observe that the <code>pdist</code> command can include both values (110 and 130) using the vector notation <code>c</code>:</p>
-<div class="sourceCode" id="cb499"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb520"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/pdist.html">pdist</a></span><span class="op">(</span><span class="st">"norm"</span>, q <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">110</span>, <span class="fl">130</span><span class="op">)</span>, mean <span class="op">=</span> <span class="fl">114</span>, sd <span class="op">=</span> <span class="fl">14</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-351-1.png" width="672"></div>
+<div class="inline-figure"><img src="13-normal_models-web_files/figure-html/unnamed-chunk-8-1.png" width="672"></div>
 <pre><code>## [1] 0.3875485 0.8734510</code></pre>
 <p>Now the picture looks great and you can see the proportion you desire in the area between the two lines at 110 and 130.</p>
 <p>This doesn’t work so well for the numerical output though. Observe:</p>
-<div class="sourceCode" id="cb501"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb522"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/pdist.html">pdist</a></span><span class="op">(</span><span class="st">"norm"</span>, q <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">110</span>, <span class="fl">130</span><span class="op">)</span>, mean <span class="op">=</span> <span class="fl">114</span>, sd <span class="op">=</span> <span class="fl">14</span>, plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## [1] 0.3875485 0.8734510</code></pre>
 <p>There are two numbers shown, but neither is the correct answer. This command shows the percentages below 110 and below 130, respectively, but not the area in between 110 and 130. We still have to subtract. However, R can do this for us easily with the <code>diff</code> command:</p>
-<div class="sourceCode" id="cb503"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb524"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/pdist.html">pdist</a></span><span class="op">(</span><span class="st">"norm"</span>, q <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">110</span>, <span class="fl">130</span><span class="op">)</span>, mean <span class="op">=</span> <span class="fl">114</span>, sd <span class="op">=</span> <span class="fl">14</span>, plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/diff.html">diff</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## [1] 0.4859026</code></pre>
@@ -244,7 +289,7 @@ N(114, 14).
 </h5>
 <p>What percentage of people would you expect to have IQ scores over 80?</p>
 <div class="answer">
-<div class="sourceCode" id="cb505"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb526"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to draw the model.</span></span></code></pre></div>
 <p>Please write up your answer here.</p>
 </div>
@@ -254,7 +299,7 @@ N(114, 14).
 </h5>
 <p>What percentage of people would you expect to have IQ scores under 90?</p>
 <div class="answer">
-<div class="sourceCode" id="cb506"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb527"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to draw the model.</span></span></code></pre></div>
 <p>Please write up your answer here.</p>
 </div>
@@ -264,7 +309,7 @@ N(114, 14).
 </h5>
 <p>What percentage of people would you expect to have IQ scores between 112 and 132?</p>
 <div class="answer">
-<div class="sourceCode" id="cb507"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb528"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to draw the model.</span></span></code></pre></div>
 <p>Please write up your answer here.</p>
 </div>
@@ -277,9 +322,9 @@ N(114, 14).
 <p>Often, the question is reversed: instead of getting a value and being asked what percentage of the population falls above or below it, we are given a percentile and asked about the value to which it corresponds.</p>
 <p>Here is an example using systolic blood pressure: what is the cutoff value of SBP for the lowest 25% of women ages 30–44 in the U.S. and Canada? In other words, what is the 25th percentile of SBP for this group of women?</p>
 <p>The command we need is <code>qdist</code>. It looks a lot like <code>pdist</code>. Observe:</p>
-<div class="sourceCode" id="cb508"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb529"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/qdist.html">qdist</a></span><span class="op">(</span><span class="st">"norm"</span>, p <span class="op">=</span> <span class="fl">0.25</span>, mean <span class="op">=</span> <span class="fl">114</span>, sd <span class="op">=</span> <span class="fl">14</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-357-1.png" width="672"></div>
+<div class="inline-figure"><img src="13-normal_models-web_files/figure-html/unnamed-chunk-14-1.png" width="672"></div>
 <pre><code>## [1] 104.5571</code></pre>
 <p>The only change here is that one of the arguments is <code>p</code> instead of <code>q</code>, and the value of <code>p</code> is a proportion (between 0 and 1) instead of a value of SBP. The <em>output</em> is now an SBP value.</p>
 <p>Here it is inline:</p>
@@ -287,17 +332,17 @@ N(114, 14).
 <p>The model predicts that the 25th percentile for SBP in women ages 30–44 in the U.S. and Canada is 104.5571435 mmHg.</p>
 </blockquote>
 <p>What if we asked about the highest 10% of women? All you have to do is remember that the top 10% is actually the 90th percentile.</p>
-<div class="sourceCode" id="cb510"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb531"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/qdist.html">qdist</a></span><span class="op">(</span><span class="st">"norm"</span>, p <span class="op">=</span> <span class="fl">0.9</span>, mean <span class="op">=</span> <span class="fl">114</span>, sd <span class="op">=</span> <span class="fl">14</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-358-1.png" width="672"></div>
+<div class="inline-figure"><img src="13-normal_models-web_files/figure-html/unnamed-chunk-15-1.png" width="672"></div>
 <pre><code>## [1] 131.9417</code></pre>
 <blockquote>
 <p>The model predicts that the top 10% of SBP in women ages 30–44 in the U.S. and Canada have SBP higher than 131.9417219 mmHg.</p>
 </blockquote>
 <p>Finally, what if we want the middle 50%? This is trickier. The middle 50% lies between the 25th percentile and the 75th percentile. Observe the syntax below:</p>
-<div class="sourceCode" id="cb512"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb533"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/qdist.html">qdist</a></span><span class="op">(</span><span class="st">"norm"</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.25</span>, <span class="fl">0.75</span><span class="op">)</span>, mean <span class="op">=</span> <span class="fl">114</span>, sd <span class="op">=</span> <span class="fl">14</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-359-1.png" width="672"></div>
+<div class="inline-figure"><img src="13-normal_models-web_files/figure-html/unnamed-chunk-16-1.png" width="672"></div>
 <pre><code>## [1] 104.5571 123.4429</code></pre>
 <blockquote>
 <p>Therefore, the model predicts that the middle 50% of SBP for women ages 30–44 in the U.S. and Canada lies between 104.5571435 mmHg and 123.4428565 mmHg.</p>
@@ -309,7 +354,7 @@ N(114, 14).
 </h5>
 <p>What cutoff value bounds the highest 5% of IQ scores?</p>
 <div class="answer">
-<div class="sourceCode" id="cb514"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb535"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to draw the model.</span></span></code></pre></div>
 <p>Please write up your answer here.</p>
 </div>
@@ -319,7 +364,7 @@ N(114, 14).
 </h5>
 <p>What cutoff value bounds the lowest 30% of IQ scores?</p>
 <div class="answer">
-<div class="sourceCode" id="cb515"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb536"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to draw the model.</span></span></code></pre></div>
 <p>Please write up your answer here.</p>
 </div>
@@ -329,7 +374,7 @@ N(114, 14).
 </h5>
 <p>What cutoff values bound the middle 80% of IQ scores?</p>
 <div class="answer">
-<div class="sourceCode" id="cb516"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb537"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to draw the model.</span></span></code></pre></div>
 <p>Please write up your answer here.</p>
 </div>
@@ -349,20 +394,20 @@ z = \frac{x - \mu}{\sigma}.
 z = \frac{100 - 114}{14} = -1.
 \]</span></p>
 <p>What is the z score for an SBP of 132? Look at the graph of the normal model <span class="math inline">\(N(114, 14)\)</span>:</p>
-<div class="sourceCode" id="cb517"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb538"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Don't worry about the syntax here.</span></span>
 <span><span class="co"># You won't need to know how to do this on your own.</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">58</span>, <span class="fl">170</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_function.html">stat_function</a></span><span class="op">(</span>fun <span class="op">=</span> <span class="va">dnorm</span>, args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="fl">114</span>, sd <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">72</span>, <span class="fl">86</span>, <span class="fl">100</span>, <span class="fl">114</span>, <span class="fl">128</span>, <span class="fl">142</span>, <span class="fl">156</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">132</span>, color <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-363-1.png" width="672"></div>
+<div class="inline-figure"><img src="13-normal_models-web_files/figure-html/unnamed-chunk-20-1.png" width="672"></div>
 <p>We can see that 132 lies between 128 and 142, which are 1 and 2 standard deviations above the mean, respectively. The exact z score is</p>
 <p><span class="math display">\[
 z = \frac{132 - 114}{14} = 1.285714.
 \]</span></p>
 <p>The <code>scale</code> function from R also computes z scores. Just note that the function takes arguments <code>center</code> and <code>scale</code>, not <code>mean</code> and <code>sd</code>.</p>
-<div class="sourceCode" id="cb518"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb539"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">100</span>, center <span class="op">=</span> <span class="fl">114</span>, scale <span class="op">=</span> <span class="fl">14</span><span class="op">)</span></span></code></pre></div>
 <pre><code>##      [,1]
 ## [1,]   -1
@@ -370,7 +415,7 @@ z = \frac{132 - 114}{14} = 1.285714.
 ## [1] 114
 ## attr(,"scaled:scale")
 ## [1] 14</code></pre>
-<div class="sourceCode" id="cb520"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb541"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">132</span>, center <span class="op">=</span> <span class="fl">114</span>, scale <span class="op">=</span> <span class="fl">14</span><span class="op">)</span></span></code></pre></div>
 <pre><code>##          [,1]
 ## [1,] 1.285714
@@ -406,9 +451,9 @@ z = \frac{132 - 114}{14} = 1.285714.
 </div>
 <hr>
 <p>Working with z scores also makes it easier to work with normal models. The default settings for <code>pdist</code> and <code>qdist</code> are <code>mean = 0</code> and <code>sd = 1</code>. That saves you some typing. So, for example, we calculated above that an SBP of 100 has a z score of -1. What percentage of women are expected to have SBP lower than 100?</p>
-<div class="sourceCode" id="cb522"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb543"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://www.mosaic-web.org/mosaic/reference/pdist.html">pdist</a></span><span class="op">(</span><span class="st">"norm"</span>, q <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-366-1.png" width="672"></div>
+<div class="inline-figure"><img src="13-normal_models-web_files/figure-html/unnamed-chunk-23-1.png" width="672"></div>
 <pre><code>## [1] 0.1586553</code></pre>
 <blockquote>
 <p>The model predicts that 15.8655254% of women ages 30–44 in the U.S. and Canada will have SBP less than 100.</p>
@@ -431,34 +476,33 @@ z = \frac{132 - 114}{14} = 1.285714.
 <p>We can, of course, use a histogram to check this. But a histogram can be highly sensitive to the choice of bins. Furthermore, for small sample sizes, histograms look “chunky”, making it hard to test this assumption.</p>
 <p>An easier way to check normality is to use a <em>quantile-quantile plot</em>, typically called a <em>QQ plot</em> or sometimes a <em>normal probability plot</em>. We won’t get into the technicalities of how this plot works. Suffice it to say that if data is normally distributed, the points of a QQ plot should lie along a diagonal line.</p>
 <p>Here is an example. The total snowfall in Grand Rapids, Michigan has been recorded every year since 1893. This data is included with the <code>mosaic</code> package in the data frame <code>SnowGR</code>. A histogram (with reasonable binning) shows that the data is nearly normal.</p>
-<div class="sourceCode" id="cb524"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb545"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">SnowGR</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Total</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">10</span>, boundary <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: Removed 1 rows containing non-finite values (`stat_bin()`).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-367-1.png" width="672"></div>
+<div class="inline-figure"><img src="13-normal_models-web_files/figure-html/unnamed-chunk-24-1.png" width="672"></div>
 <p>Here is the QQ plot for the same data. Notice that the aesthetics are a little different; instead of <code>x</code>, we have to use <code>sample</code>.</p>
-<div class="sourceCode" id="cb526"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb547"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">SnowGR</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">Total</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq_line</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: Removed 1 rows containing non-finite values (`stat_qq()`).</code></pre>
-<pre><code>## Warning: Removed 1 rows containing non-finite values
-## (`stat_qq_line()`).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-368-1.png" width="672"></div>
+<pre><code>## Warning: Removed 1 rows containing non-finite values (`stat_qq_line()`).</code></pre>
+<div class="inline-figure"><img src="13-normal_models-web_files/figure-html/unnamed-chunk-25-1.png" width="672"></div>
 <p>(The warning is because there is one missing value in the data.)</p>
 <p>The <code><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq()</a></code> layer plots the dots and the <code><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq_line()</a></code> layer plots a diagonal line that the dots should more or less follow.</p>
 <p>Other than a few points here and there, the bulk of the data is lined up nicely. There’s a minor outlier, and that can be seen in both the histogram and the QQ plot.</p>
 <p>Contrast that with skewed data. For example, the <code>Alcohol</code> data set contains per capita consumption (in liters) of alcohol for various countries over several years. The alcohol consumption variable is highly skewed, as one can see in the histogram.</p>
-<div class="sourceCode" id="cb529"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb550"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">Alcohol</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">alcohol</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">2</span>, boundary <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-369-1.png" width="672"></div>
+<div class="inline-figure"><img src="13-normal_models-web_files/figure-html/unnamed-chunk-26-1.png" width="672"></div>
 <p>It is also apparent in the QQ plot that the data is not normally distributed.</p>
-<div class="sourceCode" id="cb530"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb551"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">Alcohol</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">alcohol</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq_line</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-370-1.png" width="672"></div>
+<div class="inline-figure"><img src="13-normal_models-web_files/figure-html/unnamed-chunk-27-1.png" width="672"></div>
 <p>The path of dots is sharply curved, indicating a lack of normality.</p>
 <div id="exercise-5a-1" class="section level5 unnumbered">
 <h5>Exercise 5(a)<a class="anchor" aria-label="anchor" href="#exercise-5a-1"><i class="fas fa-link"></i></a>
@@ -466,9 +510,9 @@ z = \frac{132 - 114}{14} = 1.285714.
 <p>Find a data set with a numerical variable that is nearly normal in its distribution. (It can be something we’ve already seen in a past chapter, or if you’re really ambitious, you’re welcome to find a new data set.) Plot both a histogram and a QQ plot to demonstrate that the data is nearly normal. No need for a written response. Just plot the graphs.</p>
 <p>Be aware that if you use a data set from a package, you may have to add <code><a href="https://rdrr.io/r/base/library.html">library(PACKAGE)</a></code> to your code. (You replace the word <code>PACKAGE</code> with whatever package you need.)</p>
 <div class="answer">
-<div class="sourceCode" id="cb531"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb552"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to plot a histogram.</span></span></code></pre></div>
-<div class="sourceCode" id="cb532"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb553"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to plot a QQ plot.</span></span></code></pre></div>
 </div>
 </div>
@@ -477,9 +521,9 @@ z = \frac{132 - 114}{14} = 1.285714.
 </h5>
 <p>Now find a data set with a numerical variable that is skewed in its distribution. Plot both a histogram and a QQ plot to demonstrate that the data is not normal. Again, no need for a written response. Just plot the graphs.</p>
 <div class="answer">
-<div class="sourceCode" id="cb533"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb554"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to plot a histogram.</span></span></code></pre></div>
-<div class="sourceCode" id="cb534"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb555"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to plot a QQ plot.</span></span></code></pre></div>
 </div>
 </div>

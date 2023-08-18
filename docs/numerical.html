@@ -123,9 +123,21 @@
 <span class="header-section-number">4.1.4</span> Load packages<a class="anchor" aria-label="anchor" href="#numerical-load"><i class="fas fa-link"></i></a>
 </h3>
 <p>We load the <code>tidyverse</code> package to get <code>ggplot2</code> and the <code>palmerpenguins</code> package to work with the penguin data.</p>
-<div class="sourceCode" id="cb109"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://allisonhorst.github.io/palmerpenguins/">palmerpenguins</a></span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span></code></pre></div>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.2     ✔ readr     2.1.4
+## ✔ forcats   1.0.0     ✔ stringr   1.5.0
+## ✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+## ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+## ✔ purrr     1.0.2     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<div class="sourceCode" id="cb114"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://allisonhorst.github.io/palmerpenguins/">palmerpenguins</a></span><span class="op">)</span></span></code></pre></div>
+<pre><code>## Warning: package 'palmerpenguins' was built under R version 4.3.1</code></pre>
 </div>
 </div>
 <div id="numerical-notation" class="section level2" number="4.2">
@@ -160,11 +172,11 @@ x = \frac{-b \pm \sqrt{b^{2} - 4ac}}{2a}
 <p>This is a measure of center since it estimates the “middle” of a set of numbers. It is calculated in R using the <code>mean</code> command.</p>
 <p>Throughout this chapter, we will be using the <code>penguins</code> data set. (If you need a reminder, look at the help file for <code>penguins</code> using one of the methods discussed in Chapter 2.)</p>
 <p>If we want to calculate the mean body mass of our penguins (in grams), we type the following:</p>
-<div class="sourceCode" id="cb110"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb116"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">$</span><span class="va">body_mass_g</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## [1] NA</code></pre>
 <p>Unfortunately, this didn’t give us an answer. As you may recall from previous chapters, this is because we are missing several values of body mass in this data. We need an extra piece of code to tell R to ignore that missing data and give us the mean of the valid data.</p>
-<div class="sourceCode" id="cb112"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb118"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">$</span><span class="va">body_mass_g</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## [1] 4201.754</code></pre>
 <p>(The term <code>na.rm</code> stands for “NA remove”.)</p>
@@ -177,7 +189,7 @@ s = \sqrt{\frac{\sum (y - \bar{y})^2}{n - 1}}.
 \]</span></p>
 <p>This is a measure of spread because the <span class="math inline">\((y - \bar{y})\)</span> term measures the how far away each data point is from the mean.</p>
 <p>In R, this is calculated with the <code>sd</code> command. Again, we’ll need to add <code>na.rm = TRUE</code>.</p>
-<div class="sourceCode" id="cb114"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb120"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">$</span><span class="va">body_mass_g</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## [1] 801.9545</code></pre>
 <p>“The standard deviation of this group of penguins is about 801 grams.”</p>
@@ -189,7 +201,7 @@ s = \sqrt{\frac{\sum (y - \bar{y})^2}{n - 1}}.
 s^2 = \frac{\sum (y - \bar{y})^2}{n - 1}.
 \]</span></p>
 <p>(Compare this formula to the one for the standard deviation. Nothing has changed except for the removal of the square root.) We rarely use the variance in an introductory stats class because it’s not as interpretable as the standard deviation. The main reason for this is units. If the data units are grams, then both the mean and the standard deviation are also reported in grams. The variance has units of “grams squared”, but what does that even mean? If you need to calculate the variance in R, the command is <code>var</code>.</p>
-<div class="sourceCode" id="cb116"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb122"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">$</span><span class="va">body_mass_g</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## [1] 643131.1</code></pre>
 <p>You can check and see that the number above really is just 801.9545357 squared. Regarding the inline code in the previous sentence, remember, in the R Notebook, you can click inside the inline code and hit Ctrl-Enter or Cmd-Enter. In the HTML document, the number will be calculated and will magically appear.</p>
@@ -200,22 +212,22 @@ s^2 = \frac{\sum (y - \bar{y})^2}{n - 1}.
 </h3>
 <p>Another choice for measuring the center and spread of a data set is the median and the IQR.</p>
 <p>The median is just the middle value if the list of values is ordered. In R, it is calculated using the <code>median</code> command.</p>
-<div class="sourceCode" id="cb118"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb124"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">$</span><span class="va">body_mass_g</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## [1] 4050</code></pre>
 <p>The median body mass of these penguins is 4050 grams.</p>
 <p>The median value depends on whether there are an even or odd number of data points. If there are an odd number, there is a middle value in the list. Convince yourself this is true; for example, look at the numbers 1 through 7.</p>
-<div class="sourceCode" id="cb120"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb126"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span></span></code></pre></div>
 <pre><code>## [1] 1 2 3 4 5 6 7</code></pre>
 <p>The number 4 is in the middle of the list, with three numbers to either side.</p>
 <p>However, if there are an even number of data points, there is no number right in the middle:</p>
-<div class="sourceCode" id="cb122"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb128"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span></span></code></pre></div>
 <pre><code>## [1] 1 2 3 4 5 6 7 8</code></pre>
 <p>The “midpoint” of this list would lie between 4 and 5. If this is the case, we calculate the median by taking the mean of the two numbers straddling the middle. In the case of 1 though 8 above, the median would be 4.5.</p>
 <p>Let’s print out the entire <code>body_mass_g</code> variable, all 342 valid values (not including the missing values, of course). If we’re clever about it, we can see them in order using the <code>sort</code> command.</p>
-<div class="sourceCode" id="cb124"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb130"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">$</span><span class="va">body_mass_g</span><span class="op">)</span></span></code></pre></div>
 <pre><code>##   [1] 2700 2850 2850 2900 2900 2900 2900 2925 2975 3000 3000 3050 3050 3050 3050
 ##  [16] 3075 3100 3150 3150 3150 3150 3175 3175 3200 3200 3200 3200 3200 3250 3250
@@ -253,19 +265,19 @@ s^2 = \frac{\sum (y - \bar{y})^2}{n - 1}.
 IQR = Q3 - Q1
 \]</span></p>
 <p>In R, you can get the IQR by using—are you ready for this?—the <code>IQR</code> command.</p>
-<div class="sourceCode" id="cb126"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb132"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/IQR.html">IQR</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">$</span><span class="va">body_mass_g</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## [1] 1200</code></pre>
 <p>The IQR for this group of penguins is 1200 grams.</p>
 <p>The IQR is a measure of spread because the distance between Q1 and Q3 measures the span of the “middle 50%” of the data.</p>
 <p>A general function for computing any percentile in R is the <code>quantile</code> function. For example, since Q1 is the 25th percentile, you can compute it as follows:</p>
-<div class="sourceCode" id="cb128"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb134"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Q1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">$</span><span class="va">body_mass_g</span>, <span class="fl">0.25</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">Q1</span></span></code></pre></div>
 <pre><code>##  25% 
 ## 3550</code></pre>
 <p>The 25% label is cute, but somewhat unnecessary, and it will mess up a later command, so let’s get rid of it:</p>
-<div class="sourceCode" id="cb130"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb136"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Q1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unname.html">unname</a></span><span class="op">(</span><span class="va">Q1</span><span class="op">)</span></span>
 <span><span class="va">Q1</span></span></code></pre></div>
 <pre><code>## [1] 3550</code></pre>
@@ -275,7 +287,7 @@ IQR = Q3 - Q1
 </h5>
 <p>Now you compute Q3.</p>
 <div class="answer">
-<div class="sourceCode" id="cb132"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb138"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to compute, store, and print out Q3</span></span></code></pre></div>
 </div>
 </div>
@@ -284,7 +296,7 @@ IQR = Q3 - Q1
 </h5>
 <p>Reassign <code>Q3</code> using the <code>unname</code> command as we did above to strip the unnecessary label.</p>
 <div class="answer">
-<div class="sourceCode" id="cb133"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb139"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here that uses the unname command </span></span></code></pre></div>
 </div>
 </div>
@@ -293,7 +305,7 @@ IQR = Q3 - Q1
 </h5>
 <p>Finally, check that the IQR calculated above matches the value you get from subtracting Q3 minus Q1.</p>
 <div class="answer">
-<div class="sourceCode" id="cb134"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb140"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to compute Q3 - Q1.</span></span></code></pre></div>
 </div>
 <hr>
@@ -323,24 +335,24 @@ IQR = Q3 - Q1
 </h3>
 <p>A <em>five-number summary</em> is the minimum, Q1, median, Q3, and maximum of a set of numbers.</p>
 <p>The <code>summary</code> command in R gives you the five-number summary, and throws in the mean for good measure. (Note that it does not require <code>na.rm = TRUE</code>!)</p>
-<div class="sourceCode" id="cb135"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb141"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">$</span><span class="va">body_mass_g</span><span class="op">)</span></span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
 ##    2700    3550    4050    4202    4750    6300       2</code></pre>
 <p>You can, of course, isolate the various pieces of this. You already know most of the commands below. (These individual commands all do require <code>na.rm = TRUE</code>.)</p>
-<div class="sourceCode" id="cb137"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb143"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">$</span><span class="va">body_mass_g</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## [1] 2700</code></pre>
-<div class="sourceCode" id="cb139"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb145"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">$</span><span class="va">body_mass_g</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## [1] 4050</code></pre>
-<div class="sourceCode" id="cb141"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb147"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">$</span><span class="va">body_mass_g</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## [1] 6300</code></pre>
 <p>Remember the <code>quantile</code> function from earlier, where we computed Q1? We’re going to use it in a new way. Instead of what we did earlier,</p>
 <p><code>quantile(penguins$body_mass_g, 0.25, na.rm = TRUE)</code>,</p>
 <p>what about this instead?</p>
-<div class="sourceCode" id="cb143"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb149"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">$</span><span class="va">body_mass_g</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code>##   0%  25%  50%  75% 100% 
 ## 2700 3550 4050 4750 6300</code></pre>
@@ -371,13 +383,12 @@ IQR = Q3 - Q1
 </h2>
 <p>From the <code>penguins</code> data, let’s consider again the body mass in grams. This is clearly a numerical variable.</p>
 <p>The single most useful display of a single numerical variable is a histogram. Here is the <code>ggplot</code> command to do that:</p>
-<div class="sourceCode" id="cb145"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb151"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">body_mass_g</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with
-## `binwidth`.</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 <pre><code>## Warning: Removed 2 rows containing non-finite values (`stat_bin()`).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-107-1.png" width="672"></div>
+<div class="inline-figure"><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-21-1.png" width="672"></div>
 <div id="numerical-shape" class="section level3" number="4.4.1">
 <h3>
 <span class="header-section-number">4.4.1</span> The shape of data<a class="anchor" aria-label="anchor" href="#numerical-shape"><i class="fas fa-link"></i></a>
@@ -411,21 +422,21 @@ IQR = Q3 - Q1
 <p>Instead, we should aim to use bins that show the overall shape of the data and smooth it out a bit. Look back at the scale of the x-axis to assess how wide each bar should be. There’s no one correct answer. In this case, the bins ought to be a little wider. Since our x-axis goes from about 2500 to 6500, maybe we should try a binwidth of 250. And if 250 doesn’t look good, nothing prevents us from trying a different number.</p>
 <p>It’s also easier to interpret the histogram when the bins’ edges line up with numbers that are easy to see in the plot. Use <code>boundary</code> to determine where you want the bin boundaries to fall. For example, if we set the boundary to 3500, that means that one bar will start with its left edge at 3500. This is convenient because there is a tick mark labeled there on the x-axis. The boundary number is pretty arbitrary; once one boundary is set, it determines where all the other bins will line up. With a binwidth of 250, we’d get the same graph if the boundary were set to 3000 or 3250 or 5750, or even 0. Any other multiple of 250 would give the same graph.</p>
 <p>We use <code>binwidth</code> and <code>boundary</code> inside the parentheses of the <code>geom_histogram</code> to modify these parameters.</p>
-<div class="sourceCode" id="cb148"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb154"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">body_mass_g</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">250</span>, boundary <span class="op">=</span> <span class="fl">3500</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: Removed 2 rows containing non-finite values (`stat_bin()`).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-108-1.png" width="672"></div>
+<div class="inline-figure"><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-22-1.png" width="672"></div>
 <p>Even with the smoother look, it appears that there are multiple modes, maybe three? Do these correspond to the three species of penguin? Stay tuned.</p>
 <div id="exercise-6a-1" class="section level5 unnumbered">
 <h5>Exercise 6(a)<a class="anchor" aria-label="anchor" href="#exercise-6a-1"><i class="fas fa-link"></i></a>
 </h5>
 <p>Here is a histogram of the penguin bill lengths (measured in millimeters):</p>
-<div class="sourceCode" id="cb150"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb156"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">bill_length_mm</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">6</span>, boundary <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: Removed 2 rows containing non-finite values (`stat_bin()`).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-109-1.png" width="672"></div>
+<div class="inline-figure"><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-23-1.png" width="672"></div>
 <p>Write a short paragraph describing the shape of the distribution of penguin bill lengths, focusing on the three key shape features (modes, symmetry, and outliers).</p>
 <div class="answer">
 <p>Please write up your answer here.</p>
@@ -437,7 +448,7 @@ IQR = Q3 - Q1
 <p>The last question was a trick question!</p>
 <p>Change the binwidth (no need to change the boundary) to something smaller to see more clearly the bimodal nature of the distribution.</p>
 <div class="answer">
-<div class="sourceCode" id="cb152"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb158"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here that changes the binwidth of the last histogram to see</span></span>
 <span><span class="co"># the bimodal nature of the distribution.</span></span></code></pre></div>
 </div>
@@ -447,7 +458,7 @@ IQR = Q3 - Q1
 </h5>
 <p>Make a histogram of the variable <code>flipper_length_mm</code>. Start with a histogram where you don’t modify the binwidth or boundary.</p>
 <div class="answer">
-<div class="sourceCode" id="cb153"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb159"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to create a histogram of flipper length</span></span></code></pre></div>
 </div>
 </div>
@@ -456,7 +467,7 @@ IQR = Q3 - Q1
 </h5>
 <p>By examining the scale on the x-axis above, repeat the command, but this time change the binwidth and the boundary until you are satisfied that the bins are neither too wide nor too narrow.</p>
 <div class="answer">
-<div class="sourceCode" id="cb154"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb160"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to modify the histogram of flipper length,</span></span>
 <span><span class="co"># adding binwidth and boundary</span></span></code></pre></div>
 </div>
@@ -484,11 +495,11 @@ IQR = Q3 - Q1
 <p>The proper graph for two numerical variables is a scatterplot. We graph the response variable on the y-axis and the predictor variable on the x-axis.</p>
 <p>Let’s consider a possible association between bill length and body mass. For this question, there is not really a strong preference for which variable serves as response and which variable servers as predictor. We’ll consider bill length as the response variable and body mass as the predictor.</p>
 <p>Since we are plotting two variables, we have two aesthetics, one on the y-axis (the response variable) and one on the x-axis (the predictor variable). Since scatterplots use points to plot each data value, the correct layer to add is <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point()</a></code>.</p>
-<div class="sourceCode" id="cb155"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb161"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">bill_length_mm</span>, x <span class="op">=</span> <span class="va">body_mass_g</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: Removed 2 rows containing missing values (`geom_point()`).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-113-1.png" width="672"></div>
+<div class="inline-figure"><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-27-1.png" width="672"></div>
 <p>We are looking for evidence of a relationship between the two variables. This will manifest as a pattern in the data. We are interested in answering the following questions:</p>
 <ol style="list-style-type: decimal">
 <li>Linearity</li>
@@ -518,11 +529,11 @@ IQR = Q3 - Q1
 <h5>Exercise 8<a class="anchor" aria-label="anchor" href="#exercise-8"><i class="fas fa-link"></i></a>
 </h5>
 <p>Here is a scatterplot of</p>
-<div class="sourceCode" id="cb157"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb163"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">flipper_length_mm</span>, x <span class="op">=</span> <span class="va">body_mass_g</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: Removed 2 rows containing missing values (`geom_point()`).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-114-1.png" width="672"></div>
+<div class="inline-figure"><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-28-1.png" width="672"></div>
 <p>Write a short paragraph describing the association of penguin flipper lengths and body mass, focusing on the four key features (linearity, direction, strength, and outliers).</p>
 <div class="answer">
 <p>Please write up your answer here.</p>
@@ -536,37 +547,35 @@ IQR = Q3 - Q1
 <p>Suppose you want to analyze one numerical variable and one categorical variable. Usually, the idea here is that the categorical variable divides up the data into groups and you are interested in understanding the numerical variable for each group separately. Another way to say this is that your numerical variable is response and your categorical variable is predictor. (It is also possible for a categorical variable to be response and a numerical variable to be predictor. This is common in so-called “classification” problems. We will not cover this possibility in this course, but it is covered in more advanced courses.)</p>
 <p>This turns out to be exactly what we need in the penguins data. Throughout the above exercises, there was a concern that the penguin measurements are fundamentally different among three different species of penguin.</p>
 <p>Graphically, there are two good options here. The first is a side-by-side boxplot.</p>
-<div class="sourceCode" id="cb159"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb165"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">body_mass_g</span>, x <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code>## Warning: Removed 2 rows containing non-finite values
-## (`stat_boxplot()`).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-115-1.png" width="672"></div>
+<pre><code>## Warning: Removed 2 rows containing non-finite values (`stat_boxplot()`).</code></pre>
+<div class="inline-figure"><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-29-1.png" width="672"></div>
 <p>Notice the placement of the variables. The y-axis is <code>body_mass_g</code>, the numerical variable. The x-axis variable is <code>species</code>; the groups are placed along the x-axis. This is consistent with other graph types that place the response variable on the y-axis and the predictor variable on the x-axis.</p>
 <p>The other possible graph is a stacked histogram. This uses a feature called “faceting” that creates a different plot for each group. The syntax is a little unusual.</p>
-<div class="sourceCode" id="cb161"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb167"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">body_mass_g</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span><span class="op">(</span><span class="va">species</span> <span class="op">~</span> <span class="va">.</span><span class="op">)</span></span></code></pre></div>
-<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with
-## `binwidth`.</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 <pre><code>## Warning: Removed 2 rows containing non-finite values (`stat_bin()`).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-116-1.png" width="672"></div>
+<div class="inline-figure"><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-30-1.png" width="672"></div>
 <p>The argument <code>species ~ .</code> in the <code>facet_grid</code> function means, “Put each species on a different row.” We’ll explore this notation a little later.</p>
 <p>As always, the default bins suck, so let’s change them.</p>
-<div class="sourceCode" id="cb164"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb170"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">body_mass_g</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">250</span>, boundary <span class="op">=</span> <span class="fl">3500</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span><span class="op">(</span><span class="va">species</span> <span class="op">~</span> <span class="va">.</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: Removed 2 rows containing non-finite values (`stat_bin()`).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-117-1.png" width="672"></div>
+<div class="inline-figure"><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-31-1.png" width="672"></div>
 <p>Consider the following subtle change in notation:</p>
-<div class="sourceCode" id="cb166"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb172"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">body_mass_g</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">250</span>, boundary <span class="op">=</span> <span class="fl">3500</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span><span class="op">(</span><span class="va">.</span> <span class="op">~</span> <span class="va">species</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: Removed 2 rows containing non-finite values (`stat_bin()`).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-118-1.png" width="672"></div>
+<div class="inline-figure"><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-32-1.png" width="672"></div>
 <div id="exercise-9a-1" class="section level5 unnumbered">
 <h5>Exercise 9(a)<a class="anchor" aria-label="anchor" href="#exercise-9a-1"><i class="fas fa-link"></i></a>
 </h5>
@@ -584,13 +593,18 @@ IQR = Q3 - Q1
 </div>
 <hr>
 <p>The other thing that kind of sucks is the fact that the y-axis is showing counts. That makes it harder to see the distribution of body mass among Chinstrap penguins, for example, as there are fewer of them in the data set. It would be nice to scale these using percentages.</p>
-<div class="sourceCode" id="cb168"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb174"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">body_mass_g</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">..density..</span><span class="op">)</span>,</span>
 <span>                   binwidth <span class="op">=</span> <span class="fl">250</span>, boundary <span class="op">=</span> <span class="fl">3500</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span><span class="op">(</span><span class="va">species</span> <span class="op">~</span> <span class="va">.</span><span class="op">)</span></span></code></pre></div>
+<pre><code>## Warning: The dot-dot notation (`..density..`) was deprecated in ggplot2 3.4.0.
+## ℹ Please use `after_stat(density)` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
 <pre><code>## Warning: Removed 2 rows containing non-finite values (`stat_bin()`).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-119-1.png" width="672"></div>
+<div class="inline-figure"><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-33-1.png" width="672"></div>
 <p>Due to some technical issues in <code>ggplot2</code>, these are not strictly proportions. (If you were to add up the heights of all the bars, they would not add up to 100%.) Nevertheless, the graph is still useful because it does scale the groups to put them on equal footing. In other words, it treats each group as if they all had the same sample size.</p>
 </div>
 <div id="exercise-10" class="section level5 unnumbered">
@@ -598,9 +612,9 @@ IQR = Q3 - Q1
 </h5>
 <p>Choose a numerical variable that’s not body mass and a categorical variable that’s not species from the <code>penguins</code> data set. Make both a side-by-side boxplot and a stacked histogram. Discuss the resulting graphs. Comment on the association (or independence) of the two variables. If there is an association, be sure to focus on the four key features (linearity, direction, strength, and outliers).</p>
 <div class="answer">
-<div class="sourceCode" id="cb170"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb177"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to create a side-by-side boxplot.</span></span></code></pre></div>
-<div class="sourceCode" id="cb171"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb178"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to create a stacked histogram.</span></span></code></pre></div>
 <p>Please write up your answer here.</p>
 </div>
@@ -612,13 +626,13 @@ IQR = Q3 - Q1
 </h2>
 <p>The great thing about <code>ggplot2</code> graphics is that they are already quite pretty. To take them from exploratory data analysis to the next level, there are a few things we can do to tidy them up.</p>
 <p>Let’s go back to the first histogram from this chapter.</p>
-<div class="sourceCode" id="cb172"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb179"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">body_mass_g</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">250</span>, boundary <span class="op">=</span> <span class="fl">3500</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: Removed 2 rows containing non-finite values (`stat_bin()`).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-122-1.png" width="672"></div>
+<div class="inline-figure"><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-36-1.png" width="672"></div>
 <p>The variable names of this data set are already pretty informative, but we can do a little better with <code>labs</code> (for labels). Observe:</p>
-<div class="sourceCode" id="cb174"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb181"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">body_mass_g</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">250</span>, boundary <span class="op">=</span> <span class="fl">3500</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Distribution of body mass for adult foraging penguins near</span></span>
@@ -626,26 +640,26 @@ IQR = Q3 - Q1
 <span>         x <span class="op">=</span> <span class="st">"Body mass (in grams)"</span>,</span>
 <span>         y <span class="op">=</span> <span class="st">"Count"</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: Removed 2 rows containing non-finite values (`stat_bin()`).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-123-1.png" width="672"></div>
+<div class="inline-figure"><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-37-1.png" width="672"></div>
 <p>You can also see that we took the opportunity to mention the units of measurement (grams) for our variable in the x-axis label. This is good practice.</p>
 <p>A quick note about formatting in R code chunks. Notice that I put different parts of the last <code>ggplot</code> command on their own separate lines. The command would still work if I did this:</p>
-<div class="sourceCode" id="cb176"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb183"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">body_mass_g</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">250</span>, boundary <span class="op">=</span> <span class="fl">3500</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Distribution of body mass for adult foraging penguins near Palmer Station, Antarctica"</span>, x <span class="op">=</span> <span class="st">"Body mass (in grams)"</span>, y <span class="op">=</span> <span class="st">"Count"</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: Removed 2 rows containing non-finite values (`stat_bin()`).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-124-1.png" width="672"></div>
+<div class="inline-figure"><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-38-1.png" width="672"></div>
 <p>But it’s much harder to read. If you find that your code is “wrapping” to the next line, find some spots like commas or plus signs to break the code. Be sure to break the line after the comma or plus sign.</p>
 <div id="exercise-11-1" class="section level5 unnumbered">
 <h5>Exercise 11<a class="anchor" aria-label="anchor" href="#exercise-11-1"><i class="fas fa-link"></i></a>
 </h5>
 <p>Modify the following scatterplot by adding a title and labels for both the y-axis and x-axis.</p>
 <div class="answer">
-<div class="sourceCode" id="cb178"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb185"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Modify the following scatterplot by adding a title and </span></span>
 <span><span class="co"># labels for both the y-axis and x-axis.</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">bill_length_mm</span>, x <span class="op">=</span> <span class="va">bill_depth_mm</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: Removed 2 rows containing missing values (`geom_point()`).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-125-1.png" width="672"></div>
+<div class="inline-figure"><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-39-1.png" width="672"></div>
 </div>
 </div>
 <div id="exercise-12-1" class="section level5 unnumbered">
@@ -653,12 +667,12 @@ IQR = Q3 - Q1
 </h5>
 <p>The previous scatterplot looked a little funny due to some odd groupings that we suspect (as usual) might be due to multiple species being measures. Add a new aesthetic (so, inside the parentheses following <code>aes</code>) to the following code to assign <code>color = species</code>. Comment on what you see.</p>
 <div class="answer">
-<div class="sourceCode" id="cb180"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb187"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Modify the code below to add color = species</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">bill_length_mm</span>, x <span class="op">=</span> <span class="va">bill_depth_mm</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: Removed 2 rows containing missing values (`geom_point()`).</code></pre>
-<div class="inline-figure"><img src="intro_stats_files/figure-html/unnamed-chunk-126-1.png" width="672"></div>
+<div class="inline-figure"><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-40-1.png" width="672"></div>
 <p>Please write up your answer here.</p>
 </div>
 <hr>

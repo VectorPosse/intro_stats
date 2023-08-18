@@ -125,9 +125,20 @@
 <span class="header-section-number">6.1.4</span> Load packages<a class="anchor" aria-label="anchor" href="#correlation-load"><i class="fas fa-link"></i></a>
 </h3>
 <p>We load the now-standard <code>tidyverse</code> package. We also include the <code>faraway</code> package to access data about Chicago in the 1970s.</p>
-<div class="sourceCode" id="cb241"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/julianfaraway/faraway">faraway</a></span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb249"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span></code></pre></div>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.2     ✔ readr     2.1.4
+## ✔ forcats   1.0.0     ✔ stringr   1.5.0
+## ✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+## ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+## ✔ purrr     1.0.2     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<div class="sourceCode" id="cb251"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/julianfaraway/faraway">faraway</a></span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Warning: package 'faraway' was built under R version 4.3.1</code></pre>
 </div>
 </div>
@@ -158,7 +169,7 @@
 <p>Before we learn about correlation, let’s get to know our data a little better.</p>
 <p>Type <code><a href="https://rdrr.io/pkg/faraway/man/chredlin.html">?chredlin</a></code> at the Console to read the help file. While it’s not very informative about how the data was collected, it does have crucial information about the way the data is structured.</p>
 <p>Here is the data set:</p>
-<div class="sourceCode" id="cb243"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb253"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chredlin</span></span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -182,7 +193,7 @@
 </div>
 <hr>
 <p>The <code>glimpse</code> command gives a concise overview of all the variables present.</p>
-<div class="sourceCode" id="cb244"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb254"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">chredlin</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## Rows: 47
 ## Columns: 7
@@ -225,7 +236,7 @@
 </h5>
 <p>Using <code>ggplot</code> code, create the type of graph you identified above. (Again, refer back to the “Numerical data” chapter for sample code if you’ve forgotten.) After creating the initial plot, be sure to go back and set the <code>binwidth</code> and <code>boundary</code> to sensible values.</p>
 <div class="answer">
-<div class="sourceCode" id="cb246"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb256"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to create a plot of race</span></span></code></pre></div>
 </div>
 </div>
@@ -242,7 +253,7 @@
 </h5>
 <p>Create the same kind of graph as above, but for <code>involact</code>. (Again, go back and set the <code>binwidth</code> and <code>boundary</code> to sensible values.)</p>
 <div class="answer">
-<div class="sourceCode" id="cb247"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb257"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to create a plot of race</span></span></code></pre></div>
 </div>
 </div>
@@ -275,7 +286,7 @@
 </h5>
 <p>Using <code>ggplot</code> code, create the type of graph you identified above. Be sure to put <code>involact</code> on the y-axis and race` on the x-axis.</p>
 <div class="answer">
-<div class="sourceCode" id="cb248"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb258"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to create a plot of involact against race</span></span></code></pre></div>
 </div>
 <hr>
@@ -353,7 +364,7 @@
 <span class="header-section-number">6.5</span> Calculating correlation<a class="anchor" aria-label="anchor" href="#correlation-calculating"><i class="fas fa-link"></i></a>
 </h2>
 <p>Since the conditions are met, We calculate the correlation coefficient using the <code>cor</code> command.</p>
-<div class="sourceCode" id="cb249"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb259"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">chredlin</span><span class="op">$</span><span class="va">race</span>, <span class="va">chredlin</span><span class="op">$</span><span class="va">involact</span><span class="op">)</span></span></code></pre></div>
 <pre><code>## [1] 0.713754</code></pre>
 <p>The order of the variables doesn’t matter; correlation is symmetric, so the r value is the same independent of the choice of response and predictor variables.</p>
@@ -363,7 +374,7 @@
 </h5>
 <p>Create a scatterplot of <code>income</code> against <code>race</code>. (Put <code>income</code> on the y-axis and <code>race</code> on the x-axis.)</p>
 <div class="answer">
-<div class="sourceCode" id="cb251"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb261"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to create a scatterplot of income against race</span></span></code></pre></div>
 </div>
 </div>
@@ -385,7 +396,7 @@
 </h5>
 <p>Create a scatterplot of <code>theft</code> against <code>fire</code>. (Put <code>theft</code> on the y-axis and <code>fire</code> on the x-axis.)</p>
 <div class="answer">
-<div class="sourceCode" id="cb252"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb262"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to create a scatterplot of theft against fire</span></span></code></pre></div>
 </div>
 </div>
@@ -407,7 +418,7 @@
 </h5>
 <p>Even though the conditions are not met, what if you calculated the correlation coefficient anyway? Try it.</p>
 <div class="answer">
-<div class="sourceCode" id="cb253"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb263"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add code here to calculate the correlation coefficient between theft and fire</span></span></code></pre></div>
 </div>
 </div>
