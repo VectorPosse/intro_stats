@@ -53,7 +53,7 @@ Before we can talk about Quarto documents, we need to talk about markdown.
 
 Markdown is a way of using plain text with simple characters to indicate formatting choices in a document. For example, in a markdown file, one can make headers by using number signs (or hashtags as the kids are calling them these days^[Also called "pound signs" or "octothorpes". This is also an example of formatting a footnote!]). The Quarto file itself is just a plain text file. To see the formatting, the file has to be converted to HTML, which is the format used for web pages. (This process is described below.)
 
-Quarto is a special version of markdown that also allows you to include R code alongside the text. Here's an example of a "code chunk":
+Quarto documents are just text files that use markdown. They also allow you to include R code alongside the text. Here's an example of a "code chunk":
 
 ```{r}
 1 + 1
@@ -70,7 +70,7 @@ There is a button in the toolbar right above the text that says "Render". It's n
 
 Once the pretty output is generated, take a few moments to look back and forth between it and the original Quarto document (the plain text in RStudio). You can see some tricks that we won't need much (embedding web links, making lists, etc.) and some tricks that we will use in every chapter (like R code chunks).
 
-At first, you'll want to work back and forth between the Quarto document and the HTML file to get used to how the formatting in the plain text file get translated to output in the HTML file. You can hit the Render button any time you want to update the HTML output with your most recent changes. After a while, you will look at the HTML file less often and work mostly in the Quarto file, only rendering the final HTML output when you are finished and ready to produce your final draft.
+At first, you'll want to work back and forth between the Quarto document and the HTML file to get used to how the formatting in the plain text file get translated to output in the HTML file. You can hit the Render button any time you want to update the HTML output with your most recent changes. After a while, you will look at the HTML file less often and work mostly in the Quarto file, only rendering the final HTML output occasionally, most importantly when you are finished and ready to produce your final draft.
 
 One additional benefit of rendering often is that it also automatically saves your progress. If you choose to render less often, you'll want to save your document manually from time to time just so you don't lose any work in case of a computer malfunction. (The easiest way to save things in pretty much every piece of software anywhere is to use the keyboard shortcut Ctrl-S in Windows or Cmd-S in MacOS.)
 
@@ -91,17 +91,17 @@ Reproducibility should be a minimum prerequisite for all statistical analysis. S
 
 ## Structure of a Quarto document
 
-Let's start from the top. Look at the very beginning of the plain Quarto document. (If you're in RStudio, you are looking at the Quarto document. If you are looking at the pretty HTML file, you'll need to go back to RStudio.) The section at the very top of the file that starts and ends with three hyphens is called the YAML header. (Search for YAML on the internet it if you really care why.) The title of the document appears already, but you'll need to substitute your name in the obvious place. **Scroll up and do that now.** Come back here when you're done.
+Let's start from the top. Look at the very beginning of the plain Quarto document. (If you're in RStudio, you are looking at the Quarto document. If you are looking at the pretty HTML file, you'll need to go back to RStudio.) The section at the very top of the file that starts and ends with three hyphens is called the YAML header. (Search for YAML on the internet it if you really care why.) The title of the document appears already, but you'll need to substitute your name and date in the obvious place. **Scroll up and do that now.** Come back here when you're done.
 
 You've made changes to the document, so you'll need to push the "Render" button again. Once that's done, look at the resulting HTML document. The YAML header has been converted into a nicely formatted document header with the new information you've provided.
 
-Next, you'll see three colons (:::) followed by the text `{.callout-note}`. Then there is some text that lists R functions that will be introduced in the chapter. (There aren't any in this chapter, but there usually will be in future chapters.) Then there are three more colons (:::). **It's very important that you do not modify the three colons or any of the text that appears on the same line in the the curly braces next to the colons!** This will mess up your ability to Render the document.
+Next, you'll see three colons followed by the text `{.callout-note}`. Then there is some text that lists R functions that will be introduced in the chapter. (There aren't any in this chapter, but there usually will be in future chapters.) Then there are three more colons. **It's very important that you do not modify the three colons or any of the text that appears on the same line in the the curly braces next to the colons!** This will mess up your ability to Render the document.
 
-Another place you will see the three colon "tags" will be when providing answers to homework questions. It will start with `::: {.answer}` and and with `:::`. While you should be careful not to modify the light grey text in those lines, you can and should modify the plain text that lies between the colon tag fences. Let's try it: 
+Another place you will see the three colon "tags" will be when providing answers to homework questions. It will start with three colons next to `{.answer}` and end with three colons. While you should be careful not to modify those tags, you can and should modify the plain text that lies between the colon tag fences. Let's try it: 
 
 ::: {.answer}
 
-Replace this text here with something else. (Anything you want to type here is fine.) Then preview the document and see how it appears in the HTML file.
+Replace this text here with something else. (Anything you want to type here is fine.) Then render the document and see how it appears in the HTML file.
 
 :::
 
@@ -133,11 +133,11 @@ You can make bullet-point lists. These can be made with asterisks, but you'll ne
 * First item
 * Second item
 
-If you want sub-items, indent at least two spaces and use a plus sign followed by a space.
+If you want sub-items, indent at least two spaces and use another asterisk followed by a space.
 
 * Item
-  + Sub-item
-  + Sub-item
+  * Sub-item
+  * Sub-item
 * Item
 * Item
 
@@ -147,7 +147,7 @@ Or you can make ordered lists. Just use numbers and Quarto will do all the work 
 2. Second Item
 3. Third Item
 
-We can make horizontal rules. There are lots of ways of doing this, but I prefer a bunch of asterisks in a row:
+We can make horizontal rules. There are lots of ways of doing this, but we prefer a bunch of asterisks in a row (at least three---I've used five for more visual impact in the Quarto document):
 
 *****
 
@@ -172,7 +172,7 @@ After pushing the dark green arrow, you should notice that the output of the R c
 
 **We need to address something here that always confuses people new to R and Quarto.** A number sign (aka "hashtag") in a Quarto document gives us section headers. In R code, however, a number sign indicates a "comment" line. In the R code above, the line `# Here's some sample R code` is not executed as R code. But you can clearly see that the two lines following were executed as R code. So be careful! Number signs inside and outside R code chunks behave very differently.
 
-Typically, the first code chunk that appears in our document will load any packages we need. We will be using a package called `tidyverse` (which is really a collection of lots of different packages) throughout the course. We load it now. Click on the Run button (the dark green, right-facing arrow) in the code chunk below. 
+Typically, the first code chunk that appears in our document will load any packages we need. We will be using a package called `tidyverse` (which is really a collection of lots of different packages) throughout the course. We load it now. Click on the Run button (the dark green, right-facing arrow) in the code chunk below. (If you get an error that says "there is no package called tidyverse" that means you failed to install it earlier. Go back and use `install.packages` as instructed at the top of this document.)
 
 ```{r}
 library(tidyverse)
@@ -180,7 +180,7 @@ library(tidyverse)
 
 The output here consists of a bunch of information generated when trying to load the package. These are not errors, even though one section is labeled "Conflicts". Usually, errors appear with the word "Error", so it's typically clear when something just didn't work. Also note that once you've loaded a package, you don't need to load it again until you restart your R session. For example, if you go back and try to run the code chunk above one more time, the output will disappear. That's because `tidyverse` is already loaded, so the second "run" doesn't actually generate output anymore.
 
-Okay, let's do something interesting now. We'll revisit the `penguins` data set we introduced in the previous chapter. Remember, though, that this data set also lives in a package that needs to be loaded. Run the code chunk below to load the `palmerpenguins` package:
+Okay, let's do something interesting now. We'll revisit the `penguins` data set we introduced in the previous chapter. Remember, though, that this data set also lives in a package that needs to be loaded. Run the code chunk below to load the `palmerpenguins` package. (There may not be any output. But the command worked silently in the background to load the `palmerpenguins` package.)
 
 ```{r}
 library(palmerpenguins)
@@ -293,9 +293,38 @@ But we can also do this inline by using backticks and putting the letter `r` ins
 
 The mean body mass for penguins in the `penguins` data set is `r mean(penguins$body_mass_g, na.rm = TRUE)` grams.
 
-You can (and should) check to make sure your inline R code is working by checking the HTML output, but you don't necessarily need to go to the HTML file to find out. In RStudio, click so that the cursor is somewhere in the middle of the inline code chunk in the paragraph above. Now type Ctrl-Enter or Cmd-Enter (PC or Mac respectively). A little box should pop up that shows you the answer!
+You can (and should) check to make sure your inline R code is working by checking the HTML output, but you don't necessarily need to go to the HTML file to find out. In RStudio, click so that the cursor is somewhere in the middle of the inline code chunk in the paragraph above. (In other words, click on some part of the text in between the backticks.) Now hit Ctrl-Enter or Cmd-Enter (PC or Mac respectively). A little box should pop up that shows you the answer!
 
-Notice that in addition to the inline R command that calculated the mean, I also enclosed `penguins` in backticks to make it stand out in the output. I'll continue to do that for all computer commands and R functions. But to be clear, putting a word in backticks is just a formatting trick. If you want inline R code, you also need the letter `r` followed by a space inside the backticks.
+Notice that, in addition to the inline R command that calculated the mean, we also enclosed `penguins` in backticks to make it stand out in the output. We'll continue to do that for all computer commands and R functions. But to be clear, putting a word in backticks is just a formatting trick. If you want inline R code, you also need the letter `r` followed by a space inside the backticks.
+
+
+## Inline R command errors
+
+Working with inline code is trickier than working with code chunks. When a code chunk fails, the error message appears right there below the chunk. When inline code fails, it manifests in more subtle ways.
+
+Observe the simple inline code below:
+
+`r 2 + 3`
+
+This code works just fine. (Test this yourself by clicking somewhere between the backticks and hitting Ctrl-Enter or Cmd-Enter.)
+
+Hit the Render button and scroll down in the HTML document to see what appears here.
+
+Now go up and change the inline code by adding a percent sign (%) after the 3 (so it will look like 2 + 3%).
+
+Click somewhere between the backticks and hit Ctrl-Enter or Cmd-Enter. You should get an error.
+
+Next, go to the Run menu and select "Restart R and Run All Chunks." You get no errors. This makes sense because all the code chunks are working fine. The broken code is inline, not inside a code chunk.
+
+Now try to hit the Render button. The "Background Jobs" tab will stay open with a bunch of error text. Scroll up a little in that error text until you see
+
+`Failed to parse the inline R code`
+
+That's the only hint we have as to where the problem might live. We happen to know where to find the offending code, but imagine this code were buried in the middle of some long document.
+
+The easiest solution is to use Ctrl-F or Cmd-F. This will open the "Find" tool. Start typing r 2 + 3% and it will take you to the problematic spot.
+
+Fix the error by deleting the percent sign. Now hit the Render button again to make sure the problem really got fixed and that the output now appears correctly in the HTML document.
 
 
 ## Copying and pasting
@@ -313,12 +342,12 @@ In order to be successful in these chapters, you must do the following:
 2. **Copy and paste thoughtfully!**
   - Not every piece of code from the early part of the chapter will necessarily apply to the later exercises. And the code that does apply will need to be modified (sometimes quite heavily) to be able to run new analyses. Your job is to understand how the code works so that you can make changes to it without breaking things. If you don't understand a piece of code, don't copy and paste it until you've read and re-read the earlier exposition that explains how the code works.
     
-One final note about copying and pasting. Sometimes, people will try to copy and paste code from the HTML output file. This is a bad idea. The HTML document uses special characters to make the output look pretty, but these characters don't actually work as plain text in an Quarto. The same applies to things copied and pasted from a Word document or another website. If you need to copy and paste code, be sure to find the plain text Quarto file (the one with the .Rmd extension here in RStudio) and copy and paste from that.
+One final note about copying and pasting. Sometimes, people will try to copy and paste code from the HTML output file. This is a bad idea. The HTML document uses special characters to make the output look pretty, but these characters don't actually work as plain text in an Quarto. The same applies to things copied and pasted from a Word document or another website. If you need to copy and paste code, be sure to find the plain text Quarto file (the one with the .qmd extension here in RStudio) and copy and paste from that.
 
 
 ## Conclusion
 
-That's it! There wasn't too much you were asked to do for this assignment that will actually show up in the HTML output. (Make sure you did do the three things that were asked of you however: one was adding your name and the date to the YAML header, one was typing something in the blue answer box, and the last was to make a section header appear properly.) As you gain confidence and as we move into more serious stats material, you will be asked to do a lot more.
+That's it! There wasn't too much you were asked to do for this assignment that will actually show up in the HTML output. (Make sure you did do the three things that were asked of you, however: one was adding your name and the date to the YAML header, one was typing something in the blue answer box, and the last was to make a section header appear properly.) As you gain confidence and as we move into more serious stats material, you will be asked to do a lot more.
 
 
 ### Preparing and submitting your assignment
@@ -327,23 +356,25 @@ That's it! There wasn't too much you were asked to do for this assignment that w
 If you look in your project folder, you should see three files:
 
 ```
-intro_stats.Rproj
-02-using_r_markdown.Rmd
-02-using_r_markdown.nb.html
+[a file with a .Rproj extension, either project.Rproj or intro_stats.Rproj]
+02-using_quarto.html
+02-using_quarto.qmd
 ```
 
 The first file (with extension `.Rproj`) you were instructed never to touch.
 
-The next file (with extension `.Rmd`) is your Quarto file. It's the file you're looking at right now. It is really nothing more than a plain text file, although when you open it in RStudio, some magic allows you to see the output from the code chunks you run.
+The next file has extension `.html`. That is the pretty output file generated when you hit the "Render" button. This is the "final product" of your work.
 
-Finally, you have a file with extension `.nb.html`. That is the pretty output file generated when you hit the "Preview" button. (If you happen to see other files in your project folder, you should ignore those and not mess with them.) This is the "final product" of your work.
+Finally, you have a file with extension  `.qmd`. This is your Quarto file. It's the file you're looking at right now. It is really nothing more than a plain text file, although when you open it in RStudio, some magic allows you to see the output from the code chunks you run.
+
+(If you happen to see other files or folders in your project folder, you should ignore those and not mess with them.) 
 
 There are several steps that you should follow at the end of each of every chapter.
 
 1. From the "Run" menu, select "Restart R and Run All Chunks".
 2. Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.
 3. Spell check your document by clicking the icon with "ABC" and a check mark.
-4. Hit the "Preview" button one last time to generate the final draft of the `.nb.html` file.
+4. Hit the "Render" button one last time to generate the final draft of the HTML file. (If there are errors here, you may need to go back and fix broken inline code or other markdown issues.)
 5. Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
 
 If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
