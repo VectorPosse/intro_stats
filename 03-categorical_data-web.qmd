@@ -331,7 +331,6 @@ tabyl(penguins, sex, species) |>
 
 The default for `adorn_percentages` is to create row proportions. But these are not helpful to us. We are not grouping by sex and then trying to figure out the distribution of species within each sex. It's the opposite of our research question.
 
-
 If we actually want percentages instead of proportions, we need one more line of code. This command---`adorn_pct_formatting`---is the same as we used before with frequency tables.
 
 ```{r}
@@ -389,7 +388,6 @@ Please write up your answer here.
 Create a contingency table with percentages. List `species` first, followed by `island`. (Hey, that's a hint in case you need to go back and change your answer to part (a).) Include column totals as well. (They should all be 100%.)
 
 ::: {.answer}
-
 
 ```{r}
 # Add code here to create a contingency table with percentages.
@@ -547,7 +545,6 @@ Please write up your answer here.
 :::
 
 
-
 ## Plotting summary data
 
 Everything we did above was summarizing *raw data*; that is, the data consisted of all the observations for each individual penguin. Often, though, when you find data out in the wild, that data will be summarized into a table already and you may not have access to the raw data.
@@ -652,7 +649,7 @@ We'll continue with our example `penguin_species_table`, reprinted here for refe
 penguin_species_table
 ```
 
-From this table, we know what the raw data for this variable should look like: there should be 152 rows that say "Adelie," 68 rows that say "Chinstrap," and 124 rows that say "Gentoo." It would be very annoying, though, to make that whole tibble by hand. Fortunately, there are R tools that will create it for us.
+From this table, we know what the raw data for this variable should look like: there should be 152 rows that say "Adelie," 68 rows that say "Chinstrap," and 124 rows that say "Gentoo." It would be very annoying, though, to make that whole tibble by hand.
 
 The hero of the day is the function `uncount` from the `tidyr` package (loaded automatically when you loaded the `tidyverse` package):
 
@@ -705,7 +702,6 @@ penguin_species_sex_table |>
                names_to = "species",
                values_to = "count")
 ```
-
 
 Now our data is in a form that `uncount` can handle. And indeed, we can assemble all these steps together into a pipeline. First, we should build the tibble, then `pivot` the tibble, and finally `uncount` to get back to the raw data. We want store the result as a new tibble.
 
@@ -838,7 +834,7 @@ Modify the following side-by-side bar chart by adding a title and labels for bot
 # labels for both the fill variable and the x-axis variable.
 # Change the y-axis label to "Count" with an uppercase "C".
 # Use the Viridis color palette with black borders around the bars.
-ggplot(penguins, aes(fill = sex, x = species)) +
+ggplot(penguins, aes(fill = species, x = island)) +
   geom_bar(position = "dodge")
 ```
 
@@ -855,7 +851,7 @@ For graphing two categorical variables, the best choice is usually a side-by-sid
 
 Sometimes we come across categorical data that is recorded using numbers. Many R commands will not work properly if they expect factors and receive numbers, so we use the `mutate` command to create a new variable along with `as_factor` to convert the numbers to categories.
 
-Sometimes we come across summary data instead of raw data. We can then manually create tibbles with that summary data and use `geom_col` instead of `geom_bar` to graph it.
+Sometimes we come across summary data instead of raw data. We can then manually create tibbles with that summary data and use `geom_col` instead of `geom_bar` to graph it. We can even reproduce the raw data by using the `uncount` command on tables.
 
 Finally, there are various modifications we can make to `ggplot` code to make our graphs more professional, clear, and friendly for those experiencing colorblindness.
 

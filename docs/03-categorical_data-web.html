@@ -936,7 +936,7 @@ $ year_fct          &lt;fct&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 </div>
 </div>
 </div>
-<p>From this table, we know what the raw data for this variable should look like: there should be 152 rows that say “Adelie,” 68 rows that say “Chinstrap,” and 124 rows that say “Gentoo.” It would be very annoying, though, to make that whole tibble by hand. Fortunately, there are R tools that will create it for us.</p>
+<p>From this table, we know what the raw data for this variable should look like: there should be 152 rows that say “Adelie,” 68 rows that say “Chinstrap,” and 124 rows that say “Gentoo.” It would be very annoying, though, to make that whole tibble by hand.</p>
 <p>The hero of the day is the function <code>uncount</code> from the <code>tidyr</code> package (loaded automatically when you loaded the <code>tidyverse</code> package):</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>penguin_species_raw <span class="ot">&lt;-</span> penguin_species_table <span class="sc">|&gt;</span></span>
@@ -1187,7 +1187,7 @@ $ year_fct          &lt;fct&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="co"># labels for both the fill variable and the x-axis variable.</span></span>
 <span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Change the y-axis label to "Count" with an uppercase "C".</span></span>
 <span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the Viridis color palette with black borders around the bars.</span></span>
-<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">fill =</span> sex, <span class="at">x =</span> species)) <span class="sc">+</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">fill =</span> species, <span class="at">x =</span> island)) <span class="sc">+</span></span>
 <span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
@@ -1207,7 +1207,7 @@ $ year_fct          &lt;fct&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <p>We use contingency tables to summarize two categorical variables. Unless groups are of equal size, raw counts can be incredibly misleading here. You should include proportions/percentages to be able to compare the distributions across groups. If the proportions/percentages are roughly the same, the variables are more likely to be independent, whereas if the proportions/percentages are different, there may be an association between the variables.</p>
 <p>For graphing two categorical variables, the best choice is usually a side-by-side bar chart. A stacked bar chart will also work, especially if using relative frequencies on the y-axis, but it can be hard to compare across groups when the response variable has three or more categories.</p>
 <p>Sometimes we come across categorical data that is recorded using numbers. Many R commands will not work properly if they expect factors and receive numbers, so we use the <code>mutate</code> command to create a new variable along with <code>as_factor</code> to convert the numbers to categories.</p>
-<p>Sometimes we come across summary data instead of raw data. We can then manually create tibbles with that summary data and use <code>geom_col</code> instead of <code>geom_bar</code> to graph it.</p>
+<p>Sometimes we come across summary data instead of raw data. We can then manually create tibbles with that summary data and use <code>geom_col</code> instead of <code>geom_bar</code> to graph it. We can even reproduce the raw data by using the <code>uncount</code> command on tables.</p>
 <p>Finally, there are various modifications we can make to <code>ggplot</code> code to make our graphs more professional, clear, and friendly for those experiencing colorblindness.</p>
 <section id="preparing-and-submitting-your-assignment" class="level3" data-number="3.12.1">
 <h3 data-number="3.12.1" class="anchored" data-anchor-id="preparing-and-submitting-your-assignment"><span class="header-section-number">3.12.1</span> Preparing and submitting your assignment</h3>
