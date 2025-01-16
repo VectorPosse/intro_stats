@@ -1,4 +1,14 @@
-# Numerical data
+---
+title: "4. Numerical data"
+author: "Put your name here"
+date: "Put the date here"
+format:
+  html:
+    toc: true
+    df-print: paged
+    embed-resources: true
+    css: https://vectorposse.github.io/intro_stats/custom.css
+---
 
 ::: {.callout-note}
 
@@ -194,7 +204,7 @@ Let's print out the entire `body_mass_g` variable, all 342 valid values (not inc
 sort(penguins$body_mass_g)
 ```
 
-##### Exercise 1 {-}
+##### Exercise 1
 
 If there are 342 penguins in this data set with body mass data, between which two values in the list above would the median lie? In other words, between what two positions in the list will be median be found? Show your work using the $(n + 1)/2$ trick.
 
@@ -238,7 +248,7 @@ Q1 <- unname(Q1)
 Q1
 ```
 
-##### Exercise 2(a) {-}
+##### Exercise 2(a)
 
 Now you compute Q3. (Hint: what number will go in the `quantile` function instead of 0.25?)
 
@@ -250,7 +260,7 @@ Now you compute Q3. (Hint: what number will go in the `quantile` function instea
 
 :::
 
-##### Exercise 2(b) {-}
+##### Exercise 2(b)
 
 Reassign `Q3` using the `unname` command as we did above to strip the unnecessary label.
 
@@ -262,7 +272,7 @@ Reassign `Q3` using the `unname` command as we did above to strip the unnecessar
 
 :::
 
-##### Exercise 2(c) {-}
+##### Exercise 2(c)
 
 Subtract Q3 minus Q1 in R. (Literally, the code is just Q3 - Q1.)
 
@@ -289,7 +299,7 @@ Some statistics are more sensitive than others to features of the data. For exam
 
 On the other hand, the median and IQR are "robust", meaning that they do not change much (or at all) in the presence of outliers and they tend to be good summaries even for skewed data.
 
-##### Exercise 3 {-}
+##### Exercise 3
 
 Explain why the median and IQR are robust. In other words, why does an outlier have little or no influence on the median and IQR?
 
@@ -335,7 +345,7 @@ What about this instead?
 quantile(penguins$body_mass_g, na.rm = TRUE)
 ```
 
-##### Exercise 4 {-}
+##### Exercise 4
 
 What is the small difference between the way `quantile` was used in a previous exercise versus the way it is used here? How did that change the output?
 
@@ -351,7 +361,7 @@ Also, don't forget about the trick for using R commands inline. If you need to m
 
 There are `r NROW(penguins)` penguins in this data set and their median body mass is `r median(penguins$body_mass_g, na.rm = TRUE)` grams.
 
-##### Exercise 5 {-}
+##### Exercise 5
 
 Type a full, contextually meaningful sentence using inline R code (as above, but changing the commands) reporting the minimum and maximum body mass (in grams) in our data set.
 
@@ -411,7 +421,7 @@ Even with the smoother look, it appears that there are multiple modes, maybe thr
 
 (Note that we are still seeing a warning, but this warning is about missing data. We can't do anything about that, so we can safely ignore this warning.)
 
-##### Exercise 6(a) {-}
+##### Exercise 6(a)
 
 Here is a histogram of the penguin bill lengths (measured in millimeters):
 
@@ -428,7 +438,7 @@ Please write up your answer here.
 
 :::
 
-##### Exercise 6(b) {-}
+##### Exercise 6(b)
 
 The last question was a trick question!
 
@@ -443,7 +453,7 @@ Change the binwidth (no need to change the boundary) to something smaller to see
 
 :::
 
-##### Exercise 7(a) {-}
+##### Exercise 7(a)
 
 Make a histogram of the variable `flipper_length_mm`. Start with a histogram where you don't modify the binwidth or boundary.
 
@@ -455,7 +465,7 @@ Make a histogram of the variable `flipper_length_mm`. Start with a histogram whe
 
 :::
 
-##### Exercise 7(b) {-}
+##### Exercise 7(b)
 
 By examining the scale on the x-axis above, repeat the command, but this time change the binwidth until you are satisfied that the bins are neither too wide nor too narrow. (You can set the boundary too, but your choice of boundary is not super important.)
 
@@ -468,7 +478,7 @@ By examining the scale on the x-axis above, repeat the command, but this time ch
 
 :::
 
-##### Exercise 7(c) {-}
+##### Exercise 7(c)
 
 Write a short paragraph describing the shape of the distribution of penguin flipper lengths, focusing on the three key shape features (modes, symmetry, and outliers).
 
@@ -508,7 +518,7 @@ We are looking for evidence of a relationship between the two variables. This wi
 4. Outliers
   * Are there outliers? These will be points that are isolated and relatively far from the bulk of the data. There are a few points above that are borderline, but none is a particularly strong outlier, especially given how spread out the rest of the data is.
 
-##### Exercise 8 {-}
+##### Exercise 8
 
 Here is a scatterplot of flipper lengths against body mass:
 
@@ -566,7 +576,7 @@ ggplot(penguins, aes(x = body_mass_g)) +
   facet_grid(cols = vars(species))
 ```
 
-##### Exercise 9 {-}
+##### Exercise 9
 
 Explain why that last graph (which might be called a side-by-side histogram) is less effective than the earlier stacked histogram. (Hint: which variable can you line up with your eyes when the histograms are stacked vertically rather than horizontally?)
 
@@ -589,7 +599,7 @@ ggplot(penguins, aes(x = body_mass_g)) +
 
 Due to some technical issues in `ggplot2`, these are not strictly proportions. (If you were to add up the heights of all the bars, they would not add up to 100%.) Nevertheless, the graph is still useful because it does scale the groups to put them on equal footing. In other words, it treats each group as if they all had the same sample size.
 
-##### Exercise 10 {-}
+##### Exercise 10
 
 Choose a numerical variable that's not body mass and a categorical variable that's not species from the `penguins` data set. Make both a side-by-side boxplot and a stacked histogram. Discuss the resulting graphs. Comment on the association (or independence) of the two variables. If there is an association, be sure to focus on the four key features (linearity, direction, strength, and outliers).
 
@@ -640,7 +650,7 @@ ggplot(penguins, aes(x = body_mass_g)) + geom_histogram(binwidth = 250, boundary
 
 But it's much harder to read. If you find that your code is "wrapping" to the next line, find some spots like commas or plus signs to break the code. Be sure to break the line after the comma or plus sign.
 
-##### Exercise 11 {-}
+##### Exercise 11
 
 Modify the following scatterplot by adding a title and labels for both the y-axis and x-axis.
 
@@ -655,7 +665,7 @@ ggplot(penguins, aes(y = bill_length_mm, x = bill_depth_mm)) +
 
 :::
 
-##### Exercise 12 {-}
+##### Exercise 12
 
 The previous scatterplot looked a little funny due to some odd groupings that we suspect (as usual) might be due to multiple species being measured. 
 Let's use color to investigate! Once we decide to involve color, we'll need to add a Viridis color palette to make it colorblind-friendly. This time, though, the command is `scale_color_viridis_d` instead of `scale_fill_viridis_d`. In `ggplot`, the "color" aesthetic is used for points in a scatterplot, as opposed to "fill" for bars in a bar chart. We'll also use a more simple black-and-white background theme. We've already added the necessary code below for you.
@@ -678,7 +688,26 @@ Please write up your answer here.
 
 :::
 
-*****
+Another way to include a grouping variable is to use shape instead of color.
+
+```{r}
+ggplot(penguins, aes(y = bill_length_mm, x = bill_depth_mm,
+                     shape = species)) +
+  geom_point()
+```
+
+The defaults here leave a lot to be desired. It's hard to see clusters in the data when all the shapes (circle, triangle, and square) look like similar little blobs.
+
+With some advanced customization, we can get a slightly more visually distinct choice of shapes, but it may not be worth the extra work unless you are forced to print in black-and-white (say, as required by a print publication).
+
+```{r}
+ggplot(penguins, aes(y = bill_length_mm, x = bill_depth_mm,
+                     shape = species)) +
+  geom_point() +
+  scale_shape_manual(values = c(2, 3, 20))
+```
+
+This website has a nice description of all the available shapes and how to use them: [https://blog.albertkuo.me/post/point-shape-options-in-ggplot/](https://blog.albertkuo.me/post/point-shape-options-in-ggplot/)
 
 Every part of the graph can be customized, from the color scheme to the tick marks on the axes, to the major and minor grid lines that appear on the background. We won't go into all that, but you can look at the [ggplot2 documentation](http://ggplot2.tidyverse.org/) online and search Google for examples if you want to dig in and figure out how to do some of that stuff. However, the default options are often (but not always) the best, so be careful that your messing around doesn't inadvertently make the graph less clear or less appealing.
 

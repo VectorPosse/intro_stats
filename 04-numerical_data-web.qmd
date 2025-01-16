@@ -678,7 +678,26 @@ Please write up your answer here.
 
 :::
 
-*****
+Another way to include a grouping variable is to use shape instead of color.
+
+```{r}
+ggplot(penguins, aes(y = bill_length_mm, x = bill_depth_mm,
+                     shape = species)) +
+  geom_point()
+```
+
+The defaults here leave a lot to be desired. It's hard to see clusters in the data when all the shapes (circle, triangle, and square) look like similar little blobs.
+
+With some advanced customization, we can get a slightly more visually distinct choice of shapes, but it may not be worth the extra work unless you are forced to print in black-and-white (say, as required by a print publication).
+
+```{r}
+ggplot(penguins, aes(y = bill_length_mm, x = bill_depth_mm,
+                     shape = species)) +
+  geom_point() +
+  scale_shape_manual(values = c(2, 3, 20))
+```
+
+This website has a nice description of all the available shapes and how to use them: [https://blog.albertkuo.me/post/point-shape-options-in-ggplot/](https://blog.albertkuo.me/post/point-shape-options-in-ggplot/)
 
 Every part of the graph can be customized, from the color scheme to the tick marks on the axes, to the major and minor grid lines that appear on the background. We won't go into all that, but you can look at the [ggplot2 documentation](http://ggplot2.tidyverse.org/) online and search Google for examples if you want to dig in and figure out how to do some of that stuff. However, the default options are often (but not always) the best, so be careful that your messing around doesn't inadvertently make the graph less clear or less appealing.
 
