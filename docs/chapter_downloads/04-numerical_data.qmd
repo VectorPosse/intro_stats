@@ -14,7 +14,8 @@ format:
 
 ### Functions introduced in this chapter
 
-`mean`, `sd`, `var`, `median`, `sort`, `IQR`, `quantile`, `summary`, `min`, `max`, `geom_histogram`, `geom_point`, `geom_boxplot`, `facet_grid`
+`mean`, `sd`, `var`, `median`, `sort`, `IQR`, `quantile`, `unname`, `summary`, `min`, `max`, `geom_histogram`, `geom_point`, `geom_boxplot`, `facet_grid`
+
 
 :::
 
@@ -594,7 +595,7 @@ The other thing that kind of sucks is the fact that the y-axis is showing counts
 ggplot(penguins, aes(x = body_mass_g)) +
   geom_histogram(aes(y = after_stat(density)),
                  binwidth = 250, boundary = 3500) +
-  facet_grid(species ~ .)
+  facet_grid(rows = vars(species))
 ```
 
 Due to some technical issues in `ggplot2`, these are not strictly proportions. (If you were to add up the heights of all the bars, they would not add up to 100%.) Nevertheless, the graph is still useful because it does scale the groups to put them on equal footing. In other words, it treats each group as if they all had the same sample size.
