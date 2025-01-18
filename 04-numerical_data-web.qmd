@@ -106,7 +106,7 @@ $$
 s = \sqrt{\frac{\sum (y - \bar{y})^2}{n - 1}}.
 $$
 
-This is a measure of spread because the $(y - \bar{y})$ term measures the how far away each data point is from the mean.
+This is a measure of spread because the $(y - \bar{y})$ term measures how far away each data point is from the mean.
 
 In R, this is calculated with the `sd` command. Again, we'll need to add `na.rm = TRUE`.
 
@@ -114,7 +114,7 @@ In R, this is calculated with the `sd` command. Again, we'll need to add `na.rm 
 sd(penguins$body_mass_g, na.rm = TRUE)
 ```
 
-"The standard deviation of this group of penguins is about 801 grams."
+"The standard deviation of this group of penguins is about 800 grams."
 
 Or using inline code:
 
@@ -148,7 +148,7 @@ median(penguins$body_mass_g, na.rm = TRUE)
 
 The median body mass of these penguins is `r median(penguins$body_mass_g, na.rm = TRUE)`  grams.
 
-The median value depends on whether there the number of data points is an even or odd number. If it's odd, there is a middle value in the list. Convince yourself this is true; for example, look at the numbers 1 through 7.
+The median value depends on whether the number of data points is an even or odd number. If it's odd, there is a middle value in the list. Convince yourself this is true; for example, look at the numbers 1 through 7.
 
 ```{r}
 1:7
@@ -355,7 +355,7 @@ There are `r NROW(penguins)` penguins in this data set and their median body mas
 
 Type a full, contextually meaningful sentence using inline R code (as above, but changing the commands) reporting the minimum and maximum body mass (in grams) in our data set.
 
-Remember that inline code requires a backtick immediately followed by the letter r and then a space. Then you can type your R code. The code must be followed by another backtick.
+Remember that inline code requires a backtick immediately followed by the letter r and then a space. Then you can type your R code. The code must be followed by another backtick. You will need two pieces of inline code in your answer to report both the minimum and maximum in context.
 
 ::: {.answer}
 
@@ -375,22 +375,22 @@ ggplot(penguins, aes(x = body_mass_g)) +
   geom_histogram()
 ```
 
-### The shape of data
-
 The way histograms work is to create "bins", which are ranges of numbers along the x-axis. R goes through the data and counts how many observations fall into each bin. In that way, a histogram is somewhat like a bar chart. However, a bar chart uses bars to represent distinct, discrete categories, whereas a histogram uses bars that are all next to each other to represent values along a continuous numerical range. Histograms are meant to give you--at a quick glance--a sense of the "shape" of the data.
+
+### The shape of data
 
 What do we mean by "shape"? Generally, we look for three things:
 
 1. Modes
   * Modes are peaks in the data. These are places where data tends to cluster, representing common values of the numerical variable. In the `penguin` data, there appears to be a big mode between about 3500 and 4000 grams. When data has one clear mode, we call the data *unimodal*. But data can also be *bimodal*, or more generally, *multimodal*. This often happens when the data contains multiple groups that are different from each other. In this case, we know there are three species of penguin in the data, so if those species are drastically different in their body mass, we might be looking at multimodal data. We'll explore this question more later in the chapter. For now, it's hard to say what's going on because the above histogram has a lot of spiky bars popping up all over. It's not completely obvious how many modes there might be.
 2. Symmetry
-  * If there is one mode, we can also ask if the data is spread evenly to the left and right of that mode. If so, we call the data *symmetric*. No data is perfectly symmetric, but we are looking for overall balance between the areas to the left and right of the mode. When data is not symmetric, we call is *skewed*. Assuming that there is one big mode around 3500 or 4000, the body mass data above is skewed. There is clearly more data to the right of the mode than to the left. The right side of the histogram stretches out further than the left relative to the mode. Therefore, the body mass data is *right-skewed*. There is a longer "tail" to the right. If it were the opposite, it would be *left-skewed*. It is common for beginning students to confuse these two terms. Be aware that we are not concerned about where the mode is. We want to know which side has more data spread into a longer tail. That is the direction of the skewness.
+  * If there is one mode, we can also ask if the data is spread evenly to the left and right of that mode. If so, we call the data *symmetric*. No data is perfectly symmetric, but we are looking for overall balance between the areas to the left and right of the mode. When data is not symmetric, we call it *skewed*. Assuming that there is one big mode around 3500 or 4000, the body mass data above is skewed. There is clearly more data to the right of the mode than to the left. The right side of the histogram stretches out further than the left relative to the mode. Therefore, the body mass data is *right-skewed*. There is a longer "tail" to the right. If it were the opposite, it would be *left-skewed*. It is common for beginning students to confuse these two terms. Be aware that we are not concerned about where the mode is. We want to know which side has more data spread into a longer tail. That is the direction of the skewness.
 3. Outliers.
   * Outliers are data points that are far from the bulk of the data. The body mass data above appears to have no outliers. We are looking for a large gap between the main "mass" of data and any lingering data points far away from that mass. There is no such large gap in the histogram above.
   
 **Whenever you are asked about the "shape" of a numerical variable, be sure to comment on (1) modes, (2) symmetry, and (3) outliers.**
 
-Generally, the default binning for `ggplot` histograms is not great. This is by design. The creator of the `gglot2` package, Hadley Wickham, said the following:
+Generally, the default binning for `ggplot` histograms is not great. This is by design. The creator of the `ggplot2` package, Hadley Wickham, said the following:
 
 > "In ggplot2, a very simple heuristic is used for the default number of bins: it uses 30, regardless of the data. This is perverse, and ignores all of the research on selecting good bin sizes automatically, but sends a clear message to the user that he or she needs to think about, and experiment with, the bin width. This message is reinforced with a warning that reminds the user to manually adjust the bin width."
 
@@ -445,7 +445,7 @@ Change the binwidth (no need to change the boundary) to something smaller to see
 
 ##### Exercise 7(a) {-}
 
-Make a histogram of the variable `flipper_length_mm`. Start with a histogram where you don't modify the binwidth or boundary.
+Make a histogram of the variable `flipper_length_mm`. Start with a histogram where you don't modify the binwidth or boundary. (In other words, use `geom_histogram()` with nothing inside the parentheses.)
 
 ::: {.answer}
 
@@ -591,7 +591,7 @@ Due to some technical issues in `ggplot2`, these are not strictly proportions. (
 
 ##### Exercise 10 {-}
 
-Choose a numerical variable that's not body mass and a categorical variable that's not species from the `penguins` data set. Make both a side-by-side boxplot and a stacked histogram. Discuss the resulting graphs. Comment on the association (or independence) of the two variables. If there is an association, be sure to focus on the four key features (linearity, direction, strength, and outliers).
+Choose a numerical variable that's not body mass and a categorical variable that's not species from the `penguins` data set. Make both a side-by-side boxplot and a stacked histogram. Discuss the resulting graphs. Comment on the association (or independence) of the two variables.
 
 ::: {.answer}
 
@@ -642,7 +642,7 @@ But it's much harder to read. If you find that your code is "wrapping" to the ne
 
 ##### Exercise 11 {-}
 
-Modify the following scatterplot by adding a title and labels for both the y-axis and x-axis.
+Modify the following scatterplot by adding a title and labels for both the y-axis and x-axis. (Don't forget to include units of measurement on both axes!)
 
 ::: {.answer}
 
@@ -657,7 +657,7 @@ ggplot(penguins, aes(y = bill_length_mm, x = bill_depth_mm)) +
 
 ##### Exercise 12 {-}
 
-The previous scatterplot looked a little funny due to some odd groupings that we suspect (as usual) might be due to multiple species being measured. 
+The previous scatterplot looks a little funny due to some odd groupings that we suspect (as usual) might be due to multiple species being measured. 
 Let's use color to investigate! Once we decide to involve color, we'll need to add a Viridis color palette to make it colorblind-friendly. This time, though, the command is `scale_color_viridis_d` instead of `scale_fill_viridis_d`. In `ggplot`, the "color" aesthetic is used for points in a scatterplot, as opposed to "fill" for bars in a bar chart. We'll also use a more simple black-and-white background theme. We've already added the necessary code below for you.
 
 Your task is to make the color appear. Add a new aesthetic (so, inside the parentheses following `aes`) to the following code to assign `color = species`.
