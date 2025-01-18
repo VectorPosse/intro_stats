@@ -52,9 +52,13 @@ We use the `read_csv` command to import a CSV file. In this case, we're grabbing
 hf <- read_csv("https://vectorposse.github.io/intro_stats/data/hf.csv")
 ```
 
+Here is a preview of the data set. If you're looking at this on the website, you'll note that only the first 10,000 rows print here.
+
 ```{r}
 hf
 ```
+
+The `glimpse` command is the most reliable place to see the correct number of rows.
 
 ```{r}
 glimpse(hf)
@@ -82,6 +86,7 @@ The `dplyr` package (pronounced "dee-ply-er") contains tools for manipulating th
 * `arrange`
 * `mutate` (and `transmute`)
 * `summarise` (with `group_by`)
+* `count`
 
 We'll consider these one by one. We won't have time to cover every aspect of these functions. More information appears in the help files, as well as this very helpful "cheat sheet": [https://rstudio.github.io/cheatsheets/html/data-transformation.html](https://rstudio.github.io/cheatsheets/html/data-transformation.html)
 
@@ -449,7 +454,8 @@ hf_summ <- summarise(hf_summ_grouped, mean(Distance))
 hf_summ
 ```
 
-### Piping
+
+## Piping
 
 This is a good spot to introduce a time-saving and helpful device called "piping", denoted by the symbol `|>`. We've seen this weird combination of symbols in past chapters, but we haven't really explained what they do.
 
@@ -525,7 +531,10 @@ Now it says the following:
 
 (As we've seen in a previous chapter, the arrow operator for assignment works both directions!)
 
-Let's try some counting. This one is common enough that `dplyr` doesn't even make us use `group_by` and `summarise`. We can just use the command `count`. What if we wanted to know how many flights correspond to each carrier?
+
+## `count`
+
+Let's try some counting. Counting is a form of summarizing data by groups. But this is a common enough task that `dplyr` doesn't make us use `group_by` and `summarise`. It provides a `count` command instead. What if we wanted to know how many flights correspond to each carrier?
 
 ```{r}
 hf_summ2 <- hf |>

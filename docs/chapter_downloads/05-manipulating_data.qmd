@@ -62,9 +62,13 @@ We use the `read_csv` command to import a CSV file. In this case, we're grabbing
 hf <- read_csv("https://vectorposse.github.io/intro_stats/data/hf.csv")
 ```
 
+Here is a preview of the data set. If you're looking at this on the website, you'll note that only the first 10,000 rows print here.
+
 ```{r}
 hf
 ```
+
+The `glimpse` command is the most reliable place to see the correct number of rows.
 
 ```{r}
 glimpse(hf)
@@ -72,7 +76,7 @@ glimpse(hf)
 
 The one disadvantage of a file imported from the internet or your computer is that it does not come with a help file. (Only packages in R have help files.) Hopefully you have access to some kind of information about the data you're importing. In this case, we get lucky because the full Houston flights data set happens to be available in a package called `hflights`.
 
-##### Exercise 1
+##### Exercise 1 {-}
 
 Click [this link](https://www.rdocumentation.org/packages/hflights/versions/0.1/topics/hflights) to view a copy of the documentation for the full Houston flights data. Read the webpage so you know what all the variables mean. Report below how many flights are in the original `hflights` data. What fraction of the original data has been sampled in the CSV file we imported above?
 
@@ -92,6 +96,7 @@ The `dplyr` package (pronounced "dee-ply-er") contains tools for manipulating th
 * `arrange`
 * `mutate` (and `transmute`)
 * `summarise` (with `group_by`)
+* `count`
 
 We'll consider these one by one. We won't have time to cover every aspect of these functions. More information appears in the help files, as well as this very helpful "cheat sheet": [https://rstudio.github.io/cheatsheets/html/data-transformation.html](https://rstudio.github.io/cheatsheets/html/data-transformation.html)
 
@@ -155,7 +160,7 @@ hf_select3 <- dplyr::select(hf, starts_with("Taxi"))
 head(hf_select3, n = 100)
 ```
 
-##### Exercise 2
+##### Exercise 2 {-}
 
 What is contained in the new tibbles `hf_select2` and `hf_select3`? In other words, what does the colon (:) appear to do and what does `starts_with` appear to do in the `select` function?
 
@@ -171,7 +176,7 @@ The cheat sheet shows a lot more of these "helper functions" if you're intereste
 
 The other command that's related to `select` is `rename`. The only difference is that `select` will throw away any columns you don't select (which is what you want and expect, typically), whereas `rename` will keep all the columns, but rename those you designate.
 
-##### Exercise 3
+##### Exercise 3 {-}
 
 Putting a minus sign in front of a variable name in the `select` command will remove the variable. Create a tibble called `hf_select4` that removes `Year`, `DayofMonth`, `DayOfWeek`, `FlightNum`, and `Diverted`. (Be careful with the unusual---and inconsistent!---capitalization in those variable names.) In the second part of the code chunk below, type `head(hf_select4, n = 100)` so that the first 100 rows of the tibble print to the screen (just like in all the above examples).
 
@@ -198,7 +203,7 @@ hf_filter
 
 In the printout of the tibble above, if you can't see the `UniqueCarrier` column, click the black arrow on the right to scroll through the columns until you can see it. You can click "Next" at the bottom to scroll through the rows.
 
-##### Exercise 4
+##### Exercise 4 {-}
 
 How many rows did we get in the `hf_filter` tibble? What do you notice about the `UniqueCarrier` of all those rows?
 
@@ -236,7 +241,7 @@ hf_filter2 <- filter(hf, DepTime < 600)
 hf_filter2
 ```
 
-##### Exercise 5
+##### Exercise 5 {-}
 
 Look at the help file for `hflights` again (linked in Exercise 1). Why do we have to use the number 600 in the command above? (Read the description of the `DepTime` variable.)
 
@@ -257,7 +262,7 @@ hf_filter3
 
 Again, check the cheat sheet for more complicated condition-checking if needed.
 
-##### Exercise 6(a)
+##### Exercise 6(a) {-}
 
 The symbol `!=` means "not equal to" in R. Use the `filter` command to create a tibble called `hf_filter4` that finds all flights *except* those flying into Salt Lake City ("SLC"). As before, print the output to the screen.
 
@@ -270,7 +275,7 @@ The symbol `!=` means "not equal to" in R. Use the `filter` command to create a 
 
 :::
 
-##### Exercise 6(b)
+##### Exercise 6(b) {-}
 
 Based on the output of the previous part, how many flights were there flying into SLC? (In other words, how many rows were removed from the original `hf` tibble to produce `hf_filter4`?)
 
@@ -301,7 +306,7 @@ head(arrange(hf, ActualElapsedTime), n = 100)
 
 Scroll over to the `ActualElapsedTime` variable in the output above (using the black right arrow) to see that these are now sorted in ascending order.
 
-##### Exercise 7
+##### Exercise 7 {-}
 
 How long is the shortest actual elapsed time? Why is this flight so short? (Hint: look at the destination.) Which airline flies that route? You may have to use your best friend Google to look up airport and airline codes.
 
@@ -319,7 +324,7 @@ If you want descending order, do this:
 head(arrange(hf, desc(ActualElapsedTime)), n = 100)
 ```
 
-##### Exercise 8
+##### Exercise 8 {-}
 
 How long is the longest actual elapsed time? Why is this flight so long? Which airline flies that route? Again, you may have to use your best friend Google to look up airport and airline codes.
 
@@ -329,7 +334,7 @@ Please write up your answer here.
 
 :::
 
-##### Exercise 9(a)
+##### Exercise 9(a) {-}
 
 You can sort by multiple columns. The first column listed will be the first in the sort order, and then within each level of that first variable, the next column will be sorted, etc. Print a tibble that sorts first by destination (`Dest`) and then by arrival time (`ArrTime`), both in the default ascending order.
 
@@ -341,7 +346,7 @@ You can sort by multiple columns. The first column listed will be the first in t
 
 :::
 
-##### Exercise 9(b)
+##### Exercise 9(b) {-}
 
 Based on the output of the previous part, what is the first airport code alphabetically and to what city does it correspond? (Use Google if you need to link the airport code to a city name.) At what time did the earliest flight to that city arrive? 
 
@@ -409,7 +414,7 @@ Notice that all the times are missing. There are a bunch of rows like this. Sinc
 mean(hf_mutate2$late)
 ```
 
-##### Exercise 10
+##### Exercise 10 {-}
 
 Why does taking the mean of a bunch of zeros and ones give us the proportion of ones? (Think about the formula for the mean. What happens when we take the sum of all the zeros and ones, and what happens when we divide by the total?)
 
@@ -419,7 +424,7 @@ Please write up your answer here.
 
 :::
 
-##### Exercise 11
+##### Exercise 11 {-}
 
 Create a new tibble called `hf_mutate4` that uses the `mutate` command to create a new variable called `dist_k` which measures the flight distance in kilometers instead of miles. (Hint: to get from miles to kilometers, multiply the distance by 1.60934.) Print the first 100 rows of the output to the screen.
 
@@ -459,7 +464,8 @@ hf_summ <- summarise(hf_summ_grouped, mean(Distance))
 hf_summ
 ```
 
-### Piping
+
+## Piping
 
 This is a good spot to introduce a time-saving and helpful device called "piping", denoted by the symbol `|>`. We've seen this weird combination of symbols in past chapters, but we haven't really explained what they do.
 
@@ -535,7 +541,10 @@ Now it says the following:
 
 (As we've seen in a previous chapter, the arrow operator for assignment works both directions!)
 
-Let's try some counting. This one is common enough that `dplyr` doesn't even make us use `group_by` and `summarise`. We can just use the command `count`. What if we wanted to know how many flights correspond to each carrier?
+
+## `count`
+
+Let's try some counting. Counting is a form of summarizing data by groups. But this is a common enough task that `dplyr` doesn't make us use `group_by` and `summarise`. It provides a `count` command instead. What if we wanted to know how many flights correspond to each carrier?
 
 ```{r}
 hf_summ2 <- hf |>
@@ -564,7 +573,7 @@ hf_summ2
 
 This is a little different because it requires us to use a `name` argument and put the new name in quotes.
 
-##### Exercise 12(a)
+##### Exercise 12(a) {-}
 
 Create a tibble called `hf_summ3` that lists the total count of flights for each day of the week. Be sure to use the pipe as above. Print the output to the screen. (You don't need to give the count column a new name.)
 
@@ -577,7 +586,7 @@ Create a tibble called `hf_summ3` that lists the total count of flights for each
 
 :::
 
-##### Exercise 12(b)
+##### Exercise 12(b) {-}
 
 According to the output in the previous part, what day of the week had the fewest flights? (Assume 1 = Monday.)
 
@@ -626,7 +635,7 @@ hf_grand_finale
 
 Check that you get the same result. With *massive* data sets, it's possible that the selection and sequence of these verbs matter, but you don't see an appreciable difference here, even with `r NROW(hf)` rows. (There are ways of benchmarking performance in R, but that is a more advanced topic.)
 
-##### Exercise 13
+##### Exercise 13 {-}
 
 Summarize in your own words what information is contained in the `hf_grand_finale` tibble. In other words, what are the numbers in the `max_delay` column telling us? Be specific!
 
@@ -638,7 +647,7 @@ Please write up your answer here.
 
 The remaining exercises are probably the most challenging you've seen so far in the course. Take each slowly. Read the instructions carefully. Go back through the chapter and identify which "verb" needs to be used for each part of the task. Examine the sample code in those sections carefully to make sure you get the syntax right. Create a sequence of "pipes" to do each task, one-by-one. Copy and paste pieces of code from earlier and make minor changes to adapt the code to the given task.
 
-##### Exercise 14
+##### Exercise 14 {-}
 
 Create a tibble named `hf_ex14` that counts the flights to LAX grouped by day of the week. (Hint: you need to `filter` to get flights to LAX. Then you'll need to `count` using `DayOfWeek` as a grouping variable. Because you're using `count`, you don't need `group_by` or `summarise`.) Print the output to the screen.
 
@@ -652,7 +661,7 @@ Create a tibble named `hf_ex14` that counts the flights to LAX grouped by day of
 
 :::
 
-##### Exercise 15
+##### Exercise 15 {-}
 
 Create a tibble named `hf_ex15` that finds the median distance flight for each airline. Sort the resulting tibble from highest distance to lowest. (Hint: You'll need to `group_by` carrier and `summarise` using the `median` function. Finally, you'll need to `arrange` the result according to the median distance variable that you just created.) Print the output to the screen.
 
