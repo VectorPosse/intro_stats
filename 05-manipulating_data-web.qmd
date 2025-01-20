@@ -68,7 +68,7 @@ The one disadvantage of a file imported from the internet or your computer is th
 
 ##### Exercise 1 {-}
 
-Click [this link](https://www.rdocumentation.org/packages/hflights/versions/0.1/topics/hflights) to view a copy of the documentation for the full Houston flights data. Read the webpage so you know what all the variables mean. Report below how many flights are in the original `hflights` data. What fraction of the original data has been sampled in the CSV file we imported above?
+Click or copy [this link](https://www.rdocumentation.org/packages/hflights/versions/0.1/topics/hflights) to view a copy of the documentation for the full Houston flights data. Read the webpage so you know what all the variables mean. Report below how many flights are in the original `hflights` data. What fraction of the original data has been sampled in the CSV file we imported above?
 
 ::: {.answer}
 
@@ -114,7 +114,7 @@ Also, **it is important to assign the result to a variable**. If we had just typ
 
 `dplyr::select(hf, UniqueCarrier, Origin, Dest)`
 
-the result would print to the screen, but it wouldn't be stored anywhere for future us.
+the result would print to the screen, but it wouldn't be stored anywhere for future use.
 
 Also, it is important to assign the result to a **new** variable. If we had typed
 
@@ -178,6 +178,14 @@ Putting a minus sign in front of a variable name in the `select` command will re
 ```
 
 :::
+
+*****
+
+To free up some memory, we're going to remove some of the tibbles we've created. This won't affect how they will print out above. You will never have to do this on your own.
+
+```{r}
+rm(hf_select, hf_select2, hf_select3)
+```
 
 
 ## `filter`
@@ -254,20 +262,22 @@ Again, check the cheat sheet for more complicated condition-checking if needed.
 
 ##### Exercise 6(a) {-}
 
-The symbol `!=` means "not equal to" in R. Use the `filter` command to create a tibble called `hf_filter4` that finds all flights *except* those flying into Salt Lake City ("SLC"). As before, print the output to the screen.
+The symbol `!=` means "not equal to" in R. Use the `filter` command to create a tibble called `hf_filter4` that finds all flights *except* those flying into Salt Lake City ("SLC"). As before, print the first 100 rows to the screen.
 
 ::: {.answer}
 
 ```{r}
 # Add code here to define hf_filter4.
-# Add code here to print hf_filter4.
+# Add code here to print the first 100 rows of hf_filter4.
 ```
 
 :::
 
 ##### Exercise 6(b) {-}
 
-Based on the output of the previous part, how many flights were there flying into SLC? (In other words, how many rows were removed from the original `hf` tibble to produce `hf_filter4`?)
+How many flights were there flying into SLC? In other words, how many rows were removed from the original `hf` tibble to produce `hf_filter4`?
+
+Be careful! You only printed 100 rows to the screen, but that doesn't represent all the filtered data. How can you figure out how many rows are actually left in `hf_filter4`?
 
 ::: {.answer}
 
@@ -282,13 +292,7 @@ The `slice` command is related, but fairly useless in practice. It will allow yo
 
 ## `arrange`
 
-This just re-orders the rows, sorting on the values of one or more specified columns. As we mentioned before, in most data analyses you work with summaries of the data that do not depend on the order of the rows, so this is not quite as interesting as some of the other verbs. In fact, since the re-ordering is usually for the visual benefit of the reader, there is often no need to store the output in a new variable. We'll just print the output to the screen.
-
-```{r}
-arrange(hf, ActualElapsedTime)
-```
-
-Again, because it will start getting costly to print all these rows, we should just print some of the rows.
+This just re-orders the rows, sorting on the values of one or more specified columns. As we mentioned before, in most data analyses you work with summaries of the data that do not depend on the order of the rows, so this is not quite as interesting as some of the other verbs. In fact, since the re-ordering is usually for the visual benefit of the reader, there is often no need to store the output in a new variable. We'll just print the output to the screen (well, the first 100 rows anyway).
 
 ```{r}
 head(arrange(hf, ActualElapsedTime), n = 100)
@@ -326,7 +330,7 @@ Please write up your answer here.
 
 ##### Exercise 9(a) {-}
 
-You can sort by multiple columns. The first column listed will be the first in the sort order, and then within each level of that first variable, the next column will be sorted, etc. Print a tibble that sorts first by destination (`Dest`) and then by arrival time (`ArrTime`), both in the default ascending order.
+You can sort by multiple columns. The first column listed will be the first in the sort order, and then within each level of that first variable, the next column will be sorted, etc. Print a tibble that sorts first by destination (`Dest`) and then by arrival time (`ArrTime`), both in the default ascending order. Print only the first 100 rows as above.
 
 ::: {.answer}
 
@@ -431,6 +435,14 @@ Create a new tibble called `hf_mutate4` that uses the `mutate` command to create
 
 A related verb is `transmute`. The only difference between `mutate` and `transmute` is that `mutate` creates the new column(s) and keeps all the old ones too, whereas `transmute` will throw away all the columns except the newly created ones. This is not something that you generally want to do, but there are exceptions. For example, if we were preparing a report and we needed only to talk about flights being late or not, it would do no harm (and would save some memory) to throw away everything except the `late` variable.
 
+*****
+
+To free up some memory, we're going to remove some of the tibbles we've created. This won't affect how they will print out above. You will never have to do this on your own.
+
+```{r}
+rm(hf_mutate, hf_mutate2, hf_mutate3)
+```
+
 
 ## `summarise` (with `group_by`)
 
@@ -452,6 +464,24 @@ Where `summarise` shines is in combination with `group_by`. For example, let's s
 hf_summ_grouped <- group_by(hf, UniqueCarrier)
 hf_summ <- summarise(hf_summ_grouped, mean(Distance))
 hf_summ
+```
+
+Also note that we can give summary columns a new name if we wish. In `hf_summ`, we didn't give the new column an explicit name, so it showed up in our tibble as a column called `mean(Distance)`. If we want to change it, we can do this:
+
+```{r}
+hf_summ_grouped <- group_by(hf, UniqueCarrier)
+hf_summ <- summarise(hf_summ_grouped, mean_dist = mean(Distance))
+hf_summ
+```
+
+Look at the earlier version of `hf_summ` and compare it to the one above. Make sure you see that the name of the second column changed.
+
+*****
+
+To free up some memory, we're going to remove some of the tibbles we've created. This won't affect how they will print out above. You will never have to do this on your own.
+
+```{r}
+rm(hf_summ_grouped)
 ```
 
 
@@ -484,7 +514,7 @@ All this is really saying is that the pipe takes the thing on its left, and plug
 Let's revisit the combination `group_by`/`summarise` example above. There are two ways to do this without pipes, and both are a little ugly. One way is above, where you have to keep reassigning the output to new variables (in the case above, to `hf_summ_grouped` and then `hf_summ`). The other way is to nest the functions:
 
 ```{r}
-summarise(group_by(hf, UniqueCarrier), mean(Distance))
+summarise(group_by(hf, UniqueCarrier), mean_dist = mean(Distance))
 ```
 
 This requires a lot of brain power to parse. In part, this is because the function is inside-out: first you group `hf` by `UniqueCarrier`, and then the result of that is summarized. Here's how the pipe fixes it:
@@ -492,7 +522,7 @@ This requires a lot of brain power to parse. In part, this is because the functi
 ```{r}
 hf |>
   group_by(UniqueCarrier) |>
-  summarise(mean(Distance))
+  summarise(mean_dist = mean(Distance))
 ```
 
 Look at the `group_by` line. The `group_by` function would normally take two arguments: the tibble, and then the grouping variable. But it appears to have only one argument. Now look at the previous line. The pipe says to insert whatever is on its left (`hf`) into the first slot of the function on its right (`group_by`). So the net effect is still to evaluate the function `group_by(hf, UniqueCarrier)`.
@@ -510,7 +540,7 @@ Now we can assign the result of all that to the new variable `hf_summ`:
 ```{r}
 hf_summ <- hf |>
   group_by(UniqueCarrier) |>
-  summarise(mean(Distance))
+  summarise(mean_dist = mean(Distance))
 hf_summ
 ```
 
@@ -519,7 +549,7 @@ Some people even take this one step further. The result of all the above is assi
 ```{r}
 hf |>
   group_by(UniqueCarrier) |>
-  summarise(mean(Distance)) -> hf_summ
+  summarise(mean_dist = mean(Distance)) -> hf_summ
 ```
 
 Now it says the following:
@@ -541,17 +571,6 @@ hf_summ2 <- hf |>
   count(UniqueCarrier)
 hf_summ2
 ```
-
-Also note that we can give summary columns a new name if we wish. In `hf_summ`, we didn't give the new column an explicit name, so it showed up in our tibble as a column called `mean(Distance)`. If we want to change it, we can do this:
-
-```{r}
-hf_summ <- hf |>
-  group_by(UniqueCarrier) |>
-  summarise(mean_dist = mean(Distance))
-hf_summ
-```
-
-Look at the earlier version of `hf_summ` and compare it to the one above. Make sure you see that the name of the second column changed.
 
 The new count column of `hf_summ2` is just called `n`. That's okay, but if we insist on giving it a more user-friendly name, we can do so as follows:
 
