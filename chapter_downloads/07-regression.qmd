@@ -69,7 +69,7 @@ In some of Galton's less controversial work (and this part is completely above b
 
 A regression line is also known as a *best-fit line* or *least-squares line* for reasons that we will get to later in the chapter.
 
-The mathematics involved in figuring out what this line should be is more complicated than we cover in this book. Fortunately, R will do all the complicated calculations for us and we'll focus on understanding what they mean.
+The mathematics involved in figuring out what this line should be are more complicated than we cover in this book. Fortunately, R will do all the complicated calculations for us and we'll focus on understanding what they mean.
 
 Recall the `chredlin` data set from the last chapter investigating the practice of redlining in Chicago in the 1970s. Let's review the scatterplot of `involact`, the number of FAIR policies per 100 housing units, against `race`, the racial composition of each ZIP code as a percentage of minority residents. (Recall that each row of the data represents an entire ZIP code.)
 
@@ -78,7 +78,7 @@ ggplot(chredlin, aes(y = involact, x = race)) +
   geom_point()
 ```
 
-##### Exercise 1 {-}
+##### Exercise 1
 
 Does the Chicago redlining data come from an observational study or an experiment? How do you know?
 
@@ -115,7 +115,7 @@ The first thing we acknowledge when working with a model is that the model does 
 
 The most important thing to remember about models is that they aren't real. They are idealizations and simplifications. The degree to which we can trust models, then, comes down to certain assumptions we make about the data-generating process. These assumptions cannot be completely verified---after all, we will never know the exact data-generating process. But there are certain *conditions* we can check to know if the assumptions we make are reasonable.
 
-##### Exercise 2 {-}
+##### Exercise 2
 
 Do an internet search for the phrase "statistical model" and/or "statistical modeling". Read at least two or three sources. List below one important aspect of statistical modeling you find in your search that wasn't mentioned in the paragraphs above. (Some of the sources you find may be a little technical. You should, for now, skip over the technical explanations. Try to find several sources that address the issue in non-technical ways. The additional information you mention below should be something non-technical that you understand.)
 
@@ -128,7 +128,7 @@ Please write up your answer here.
 
 ## Checking conditions
 
-We need to be careful here. Although we graphed the blue regression line above, we have not checked any conditions. Therefore, it is inappropriate to fit a regression line at this point. Once the line is seen, it cannot easily be "unseen", and it's crucial that you don't trick your eyes into believing there is a linear relationship before checking the conditions that justify that belief. The regression line we saw above makes no sense unless we know that regression is appropriate.
+We need to be careful here. Although we graphed the blue regression line above, we have not checked any conditions. Therefore, it is inappropriate to fit a regression line at this point. Once the line is seen, it cannot easily be "unseen," and it's crucial that you don't trick your eyes into believing there is a linear relationship before checking the conditions that justify that belief. The regression line we saw above makes no sense unless we know that regression is appropriate.
 
 The conditions for running a regression analysis include all the conditions you checked for a correlation analysis in the last chapter:
 
@@ -137,7 +137,7 @@ The conditions for running a regression analysis include all the conditions you 
 3. There are no serious outliers.
 
 
-##### Exercise 3 {-}
+##### Exercise 3
 
 Check these three conditions for the regression between `involact` and `race` (using the scatterplot above for conditions (2) and (3).)
 
@@ -218,7 +218,7 @@ In some cases (rarely), that interpretation might make sense. In most cases, tho
 
 For the Chicago data, we likely don't have a case of extrapolation. While it is not literally true that any ZIP code has 0% racial minorities, we can see in the scatterplot that there are values very close to zero.
 
-##### Exercise 4 {-}
+##### Exercise 4
 
 Use the `arrange` command from `dplyr` to sort the `chredlin` data frame by race (using the default ascending order). What is the value of `race` for the three ZIP codes with the smallest percentage of minority residents?
 
@@ -236,7 +236,7 @@ Please write up your answer here.
 
 Again, even though there are no ZIP codes with 0% racial minorities, there are a bunch that are close to zero, so the literal interpretation of the intercept is also likely a sensible one in this case.
 
-##### Exercise 5 {-}
+##### Exercise 5
 
 Let's think through something else the intercept might be telling us in this case. The presumption is that FAIR policies are obtained mostly by folks who can't get insurance policies in other ways. Some of that is driven by racial discrimination, but maybe not all of it. What does the intercept have to say about the number of FAIR policies that are obtained *not* due to denial of coverage from racial discrimination?
 
@@ -261,7 +261,7 @@ One way to make these kinds of statements more interpretable is to change the sc
 
 In this case, the decimal 0.1388 is maybe still not completely clear, but at least an increase of 10 percentage points is a meaningful difference between neighborhoods.
 
-##### Exercise 6 {-}
+##### Exercise 6
 
 Since the last number is a *per capita* type measure, we can also rescale it. If the model predicts an increase in 0.1388 new FAIR policies per 100 households (corresponding to 10 percentage points increase in racial minorities), how many FAIR policies would that be in 1000 households?
 
@@ -284,7 +284,7 @@ involact_race_lm
 
 That summary is fine, but what if we needed to reference the slope and intercept using inline code? Or what if we wanted to grab those numbers and use them in further calculations?
 
-The problem is that the results of `lm` just print the output in an unstructured way. If we want structured input, we can use the `tidy` command from the `broom` package. This will take the results of `lm` and organize the output into a tibble.
+The problem is that the results of `lm` just print the output in an unstructured way. If we want structured output, we can use the `tidy` command from the `broom` package. This will take the results of `lm` and organize the output into a tibble.
 
 ```{r}
 tidy(involact_race_lm)
@@ -329,7 +329,7 @@ What if we want to apply re-scaling to make this number more interpretable? The 
 
 Now the number will be 0.1388235, ten times as large.
 
-##### Exercise 7 {-}
+##### Exercise 7
 
 Copy and paste the interpretation of the intercept from earlier, but replace the number 0.12922 with an inline code chunk that grabs that number from the `estimate` column of the `involact_race_tidy` tibble. (Remember that the intercept is the *first* element of that vector, not the second element like the slope.)
 
@@ -359,9 +359,9 @@ ggplot(chredlin, aes(y = involact, x = race)) +
 
 The graph above shows the regression line and two of the residuals as red line segments. (There is a residual for all 47 ZIP codes; only two are shown in this graph.) The one on the left corresponds to ZIP code with 35% racial minority. The regression line predicts that, if the model were true, such a ZIP code would have a value of `involact` of about 0.6. But the actual data for that ZIP code has an `involact` value of 1. The residual is the difference, about 0.4. In other words, the true data point is 0.4 units higher than the model prediction. This represents a *positive* residual; the actual data is 0.4 units *above* the line. Data points that lie below the regression line have *negative* residuals.
 
-##### Exercise 8 {-}
+##### Exercise 8
 
-Look at the residual on the right. This corresponds to a ZIP code with about 66% racial minorities. First, estimate the value of `involact` that the model predicts for this ZIP code. (This is the y-value of the point on the regression line.) Next, report the actual `involact` value for this ZIP code. Finally, subtract these two numbers to get an approximate value for the residual. Should this residual be a positive number or a negative number?
+Look at the residual on the right. This corresponds to a ZIP code with about 66% racial minorities. First, report the actual `involact` value for this ZIP code. (This is the location of the data point.) Next, estimate the value of `involact` that the model predicts for this ZIP code. (This is the y-value of the estimated point on the regression line.) Finally, subtract these two numbers to get an approximate value for the residual. Should this residual be a positive number or a negative number?
 
 You can just estimate with your eyeballs for now. You don't need to be super precise.
 
@@ -379,7 +379,7 @@ $$
 e = y - \hat{y}
 $$
 
-##### Exercise 9 {-}
+##### Exercise 9
 
 There are two symbols on the right-hand side of the equation above, $y$ and $\hat{y}$. Which one is the actual data value and which one is the predicted value (the one on the line)?
 
@@ -391,7 +391,7 @@ Please write up your answer here.
 
 *****
 
-The residuals are used to determine the regression line. The correct regression line will be the one that results in the smallest residuals overall. How do we measure the overall set of residuals? We  might think to calculate the "average" residual, but this doesn't work. Because the regression line should go through the middle of the data, the positive residuals will cancel out the negative residuals and the mean residual will just be zero. That's not very useful.
+The residuals are used to determine the regression line. The correct regression line will be the one that results in the smallest residuals overall. How do we measure the overall set of residuals? We might think to calculate the "average" residual, but this doesn't work. Because the regression line should go through the middle of the data, the positive residuals will cancel out the negative residuals and the mean residual will just be zero. That's not very useful.
 
 Instead, what we do is *square* the residuals. That makes all of them positive. We then add together all the squared residuals and that sum is the thing we try to minimize. Well, we don't do that manually because it's hard, so we let the computer do that for us. Because the regression line minimizes the sum of the squared residuals, the regression line is often called the *least-squares* line.
 
@@ -446,7 +446,7 @@ We are looking for systematic patterns in the residuals. A good residual plot sh
 
 For the most part, the residual plot above looks pretty good. The one exception is the clustering near the left edge of the graph.
 
-##### Exercise 10 {-}
+##### Exercise 10
 
 Refer back and forth between the original scatterplot created earlier (with the regression line) and the residual plot above. Can you explain why there is a line of data points with negative residuals along the left edge of the residual plot?
 
@@ -472,7 +472,7 @@ ggplot(fire_age_aug, aes(y = .resid, x = age)) +
   geom_hline(yintercept = 0, color = "blue")
 ```
 
-##### Exercise 11 {-}
+##### Exercise 11
 
 Using the vocabulary established above, explain why the residual plot above is bad.
 
@@ -486,7 +486,7 @@ Please write up your answer here.
 
 Of course, we should never even get as far as running a regression analysis and making a residual plot if we perform exploratory data analysis as we're supposed to.
 
-##### Exercise 12(a) {-}
+##### Exercise 12(a)
 
 If you were truly interested in investigating an association between the fire risk and the age of buildings in a ZIP code, the first thing you would do is create a scatterplot. Go ahead and do that below. Use `fire` as the response variable and `age` as the predictor.
 
@@ -498,7 +498,7 @@ If you were truly interested in investigating an association between the fire ri
 
 :::
 
-##### Exercise 12(b) {-}
+##### Exercise 12(b)
 
 From the scatterplot above, explain why you wouldn't even get as far as running a regression analysis. (Think of the conditions.) 
 
@@ -531,7 +531,7 @@ involact_race_glance <- glance(involact_race_lm)
 involact_race_glance
 ```
 
-A more advanced statistics course might discuss the other model summaries present in the `glance` output. The $R^{2}$ value is stored in the `r.squared` (inexplicably, now written with a lowercase r). Its value is 0.51. We will word it this way:
+A more advanced statistics course might discuss the other model summaries present in the `glance` output. The $R^{2}$ value is stored in the `r.squared` column (inexplicably, now written with a lowercase r). Its value is 0.51. We will word it this way:
 
 > 51% of the variability in FAIR policies can be accounted for by variability in racial composition.
 
@@ -539,7 +539,7 @@ Another way to think about this is to imagine all the factors that might go into
 
 $R^2$ is a measure of the fit of the model. High values of $R^2$ mean that the line predicts the data values closely, whereas lower values of $R^2$ mean that there is still a lot of variability left in the residuals (again, due to other factors that are not measured in the model).
 
-##### Exercise 13 {-}
+##### Exercise 13
 
 Calculate the correlation coefficient r between `involact` and `race` using the `cor` command. (You might have to look back at the last chapter to remember the syntax.) Store that value as r.
 
@@ -573,7 +573,7 @@ ggplot(chredlin, aes(y = involact, x = race, color = side)) +
   theme_bw()
 ```
 
-##### Exercise 14 {-}
+##### Exercise 14
 
 Do neighborhoods with higher percent racial minorities tend to be on the north or south side of Chicago?
 
@@ -595,7 +595,7 @@ ggplot(chredlin, aes(y = involact, x = race, color = side)) +
   theme_bw()
 ```
 
-##### Exercise 15 {-}
+##### Exercise 15
 
 Although the slopes appear to be different, this is quite misleading. Focus on just the darker dots (for the north side). Which regression condition appears to be violated if we only consider the north side regression? How does that violation appear to affect the slope of the regression line? (Hint: look in the upper right corner.)
 
@@ -610,7 +610,7 @@ Please write up your answer here.
 
 Let's revisit the `penguins` data. Imagine that it was much easier to measure body mass than it was to measure flipper length. (I'm not a penguin expert, so I don't know if that's true, but it seems plausible. Weighing a penguin can be done without human contact, for example.) Can we accurately predict flipper length from body mass? (This means that `flipper_length_mm` should be the response variable on the y-axis and `body_mass_g` should be the predictor variable on the x-axis.)
 
-##### Exercise 16(a) {-}
+##### Exercise 16(a)
 
 Create a scatterplot of the data. Do *not* include a regression line yet. (In other words, there should be no `geom_smooth` in this plot.)
 
@@ -622,7 +622,7 @@ Create a scatterplot of the data. Do *not* include a regression line yet. (In ot
 
 :::
 
-##### Exercise 16(b) {-}
+##### Exercise 16(b)
 
 Use the scatterplot above to check the first three conditions of regression.
 
@@ -634,7 +634,7 @@ Use the scatterplot above to check the first three conditions of regression.
 
 :::
 
-##### Exercise 16(c) {-}
+##### Exercise 16(c)
 
 As we're reasonably satisfied that the first three conditions are met and regression is worth pursuing, run the `lm` command to perform the regression analysis. Assign the output to the name `fl_bm_lm`. Be sure to type the variable name `fl_bm_lm` on its own line so that the output is printed in this file.
 
@@ -660,7 +660,7 @@ Then use `tidy`, `augment`, and `glance` respectively on the output. Assign the 
 
 :::
 
-##### Exercise 16(d) {-}
+##### Exercise 16(d)
 
 Use the `augment` output from above to create a residual plot with a blue horizontal reference line.
 
@@ -672,7 +672,7 @@ Use the `augment` output from above to create a residual plot with a blue horizo
 
 :::
 
-##### Exercise 16(e) {-}
+##### Exercise 16(e)
 
 Use the residual plot to check the fourth regression condition.
 
@@ -682,7 +682,7 @@ Use the residual plot to check the fourth regression condition.
 
 :::
 
-##### Exercise 16(f) {-}
+##### Exercise 16(f)
 
 With all the conditions met, plot the regression line on top of the scatterplot of the data. (Use `geom_smooth` with `method = lm` and `se = FALSE` as in the examples earlier.)
 
@@ -694,7 +694,7 @@ With all the conditions met, plot the regression line on top of the scatterplot 
 
 :::
 
-##### Exercise 16(g) {-}
+##### Exercise 16(g)
 
 Using the values of the intercept and slope from the `tidy` output, write the regression equation mathematically (enclosing your answer in double dollar signs as above), using contextually meaningful variable names.
 
@@ -706,9 +706,9 @@ $$
 
 :::
 
-##### Exercise 16(h) {-}
+##### Exercise 16(h)
 
-Interpret the slope in a full, contextually meaningful sentence.
+Interpret the slope in a full, contextually meaningful sentence. Don't forget to use units of measurement in your answer.
 
 ::: {.answer}
 
@@ -716,7 +716,17 @@ Please write up your answer here.
 
 :::
 
-##### Exercise 16(i) {-}
+##### Exercise 16(i)
+
+A one gram increase in body mass is not very significant or interesting. Rescale your answer to the previous part in terms of a one kilogram (1000 gram) increase in body mass. In other words, how much of an increase in flipper length (in mm) does the model predict for a one kilogram increase in body mass?
+
+::: {.answer}
+
+Please write up your answer here.
+
+:::
+
+##### Exercise 16(j)
 
 Give a literal interpretation of the intercept. Then comment on the appropriateness of that interpretation. (In other words, does the intercept make sense, or is it a case of extrapolation?)
 
@@ -726,9 +736,9 @@ Please write up your answer here.
 
 :::
 
-##### Exercise 16(j) {-}
+##### Exercise 16(k)
 
-Use the equation of the regression line to predict the flipper length of a penguin with body mass 4200 grams. Show your work. Then put that prediction into a full, contextually meaningful sentence.
+Use the equation of the regression line to predict the flipper length of a penguin with body mass 4200 grams. Show your work. Then put that prediction into a full, contextually meaningful sentence (with units).
 
 ::: {.answer}
 
@@ -736,8 +746,7 @@ Please write up your answer here.
 
 :::
 
-
-##### Exercise 16(k) {-}
+##### Exercise 16(l)
 
 Using the value of $R^2$ from the `glance` output for the model of flipper length by body mass, write a full, contextually meaningful sentence interpreting that value.
 
@@ -747,7 +756,7 @@ Please write up your answer here.
 
 :::
 
-##### Exercise 16(l) {-}
+##### Exercise 16(m)
 
 Add `color = species` to the `aes` portion of the `ggplot` command to look at the regression lines for the three different species separately. (Don't forget to use the Viridis color palette and the black-and-white theme.) Comment on the slopes of those three regression lines.
 

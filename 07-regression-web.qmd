@@ -59,7 +59,7 @@ In some of Galton's less controversial work (and this part is completely above b
 
 A regression line is also known as a *best-fit line* or *least-squares line* for reasons that we will get to later in the chapter.
 
-The mathematics involved in figuring out what this line should be is more complicated than we cover in this book. Fortunately, R will do all the complicated calculations for us and we'll focus on understanding what they mean.
+The mathematics involved in figuring out what this line should be are more complicated than we cover in this book. Fortunately, R will do all the complicated calculations for us and we'll focus on understanding what they mean.
 
 Recall the `chredlin` data set from the last chapter investigating the practice of redlining in Chicago in the 1970s. Let's review the scatterplot of `involact`, the number of FAIR policies per 100 housing units, against `race`, the racial composition of each ZIP code as a percentage of minority residents. (Recall that each row of the data represents an entire ZIP code.)
 
@@ -118,7 +118,7 @@ Please write up your answer here.
 
 ## Checking conditions
 
-We need to be careful here. Although we graphed the blue regression line above, we have not checked any conditions. Therefore, it is inappropriate to fit a regression line at this point. Once the line is seen, it cannot easily be "unseen", and it's crucial that you don't trick your eyes into believing there is a linear relationship before checking the conditions that justify that belief. The regression line we saw above makes no sense unless we know that regression is appropriate.
+We need to be careful here. Although we graphed the blue regression line above, we have not checked any conditions. Therefore, it is inappropriate to fit a regression line at this point. Once the line is seen, it cannot easily be "unseen," and it's crucial that you don't trick your eyes into believing there is a linear relationship before checking the conditions that justify that belief. The regression line we saw above makes no sense unless we know that regression is appropriate.
 
 The conditions for running a regression analysis include all the conditions you checked for a correlation analysis in the last chapter:
 
@@ -274,7 +274,7 @@ involact_race_lm
 
 That summary is fine, but what if we needed to reference the slope and intercept using inline code? Or what if we wanted to grab those numbers and use them in further calculations?
 
-The problem is that the results of `lm` just print the output in an unstructured way. If we want structured input, we can use the `tidy` command from the `broom` package. This will take the results of `lm` and organize the output into a tibble.
+The problem is that the results of `lm` just print the output in an unstructured way. If we want structured output, we can use the `tidy` command from the `broom` package. This will take the results of `lm` and organize the output into a tibble.
 
 ```{r}
 tidy(involact_race_lm)
@@ -351,7 +351,7 @@ The graph above shows the regression line and two of the residuals as red line s
 
 ##### Exercise 8 {-}
 
-Look at the residual on the right. This corresponds to a ZIP code with about 66% racial minorities. First, estimate the value of `involact` that the model predicts for this ZIP code. (This is the y-value of the point on the regression line.) Next, report the actual `involact` value for this ZIP code. Finally, subtract these two numbers to get an approximate value for the residual. Should this residual be a positive number or a negative number?
+Look at the residual on the right. This corresponds to a ZIP code with about 66% racial minorities. First, report the actual `involact` value for this ZIP code. (This is the location of the data point.) Next, estimate the value of `involact` that the model predicts for this ZIP code. (This is the y-value of the estimated point on the regression line.) Finally, subtract these two numbers to get an approximate value for the residual. Should this residual be a positive number or a negative number?
 
 You can just estimate with your eyeballs for now. You don't need to be super precise.
 
@@ -381,7 +381,7 @@ Please write up your answer here.
 
 *****
 
-The residuals are used to determine the regression line. The correct regression line will be the one that results in the smallest residuals overall. How do we measure the overall set of residuals? We  might think to calculate the "average" residual, but this doesn't work. Because the regression line should go through the middle of the data, the positive residuals will cancel out the negative residuals and the mean residual will just be zero. That's not very useful.
+The residuals are used to determine the regression line. The correct regression line will be the one that results in the smallest residuals overall. How do we measure the overall set of residuals? We might think to calculate the "average" residual, but this doesn't work. Because the regression line should go through the middle of the data, the positive residuals will cancel out the negative residuals and the mean residual will just be zero. That's not very useful.
 
 Instead, what we do is *square* the residuals. That makes all of them positive. We then add together all the squared residuals and that sum is the thing we try to minimize. Well, we don't do that manually because it's hard, so we let the computer do that for us. Because the regression line minimizes the sum of the squared residuals, the regression line is often called the *least-squares* line.
 
@@ -521,7 +521,7 @@ involact_race_glance <- glance(involact_race_lm)
 involact_race_glance
 ```
 
-A more advanced statistics course might discuss the other model summaries present in the `glance` output. The $R^{2}$ value is stored in the `r.squared` (inexplicably, now written with a lowercase r). Its value is 0.51. We will word it this way:
+A more advanced statistics course might discuss the other model summaries present in the `glance` output. The $R^{2}$ value is stored in the `r.squared` column (inexplicably, now written with a lowercase r). Its value is 0.51. We will word it this way:
 
 > 51% of the variability in FAIR policies can be accounted for by variability in racial composition.
 
@@ -698,7 +698,7 @@ $$
 
 ##### Exercise 16(h) {-}
 
-Interpret the slope in a full, contextually meaningful sentence.
+Interpret the slope in a full, contextually meaningful sentence. Don't forget to use units of measurement in your answer.
 
 ::: {.answer}
 
@@ -708,7 +708,7 @@ Please write up your answer here.
 
 ##### Exercise 16(i) {-}
 
-Give a literal interpretation of the intercept. Then comment on the appropriateness of that interpretation. (In other words, does the intercept make sense, or is it a case of extrapolation?)
+A one gram increase in body mass is not very significant or interesting. Rescale your answer to the previous part in terms of a one kilogram (1000 gram) increase in body mass. In other words, how much of an increase in flipper length (in mm) does the model predict for a one kilogram increase in body mass?
 
 ::: {.answer}
 
@@ -718,7 +718,7 @@ Please write up your answer here.
 
 ##### Exercise 16(j) {-}
 
-Use the equation of the regression line to predict the flipper length of a penguin with body mass 4200 grams. Show your work. Then put that prediction into a full, contextually meaningful sentence.
+Give a literal interpretation of the intercept. Then comment on the appropriateness of that interpretation. (In other words, does the intercept make sense, or is it a case of extrapolation?)
 
 ::: {.answer}
 
@@ -726,8 +726,17 @@ Please write up your answer here.
 
 :::
 
-
 ##### Exercise 16(k) {-}
+
+Use the equation of the regression line to predict the flipper length of a penguin with body mass 4200 grams. Show your work. Then put that prediction into a full, contextually meaningful sentence (with units).
+
+::: {.answer}
+
+Please write up your answer here.
+
+:::
+
+##### Exercise 16(l) {-}
 
 Using the value of $R^2$ from the `glance` output for the model of flipper length by body mass, write a full, contextually meaningful sentence interpreting that value.
 
@@ -737,7 +746,7 @@ Please write up your answer here.
 
 :::
 
-##### Exercise 16(l) {-}
+##### Exercise 16(m) {-}
 
 Add `color = species` to the `aes` portion of the `ggplot` command to look at the regression lines for the three different species separately. (Don't forget to use the Viridis color palette and the black-and-white theme.) Comment on the slopes of those three regression lines.
 

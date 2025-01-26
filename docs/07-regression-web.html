@@ -365,7 +365,7 @@ Functions introduced in this chapter
 <p>The idea of fitting lines and curves to data has been around for centuries, likely originating with scientists like Newton, Legendre, and Gauss who were looking for simple models to explain astronomical data. The origin of the name “regression” comes from a 19th century researcher named Francis Galton, a mentor and close associate of the eugenicist Karl Pearson, whom we discussed in the last chapter (in connection with the correlation coefficient). In fact, Galton was the person who invented the term “eugenics,” and his research legacy is just as problematic as Pearson’s.</p>
 <p>In some of Galton’s less controversial work (and this part is completely above board, empirically validated, and, importantly, not racist), he noted that an unusually tall individual will have children who are still likely to be tall, but usually not as tall as the tall parent. The child’s height is likely closer to the mean height for their sex, race, etc. It “regresses” to the mean. For most phenomena, extreme observations are more likely to be followed by less extreme observations that are closer to the mean. This is very sensible and logical, and eventually leads to the idea of fitting lines to data to make realistic predictions about future observations.</p>
 <p>A regression line is also known as a <em>best-fit line</em> or <em>least-squares line</em> for reasons that we will get to later in the chapter.</p>
-<p>The mathematics involved in figuring out what this line should be is more complicated than we cover in this book. Fortunately, R will do all the complicated calculations for us and we’ll focus on understanding what they mean.</p>
+<p>The mathematics involved in figuring out what this line should be are more complicated than we cover in this book. Fortunately, R will do all the complicated calculations for us and we’ll focus on understanding what they mean.</p>
 <p>Recall the <code>chredlin</code> data set from the last chapter investigating the practice of redlining in Chicago in the 1970s. Let’s review the scatterplot of <code>involact</code>, the number of FAIR policies per 100 housing units, against <code>race</code>, the racial composition of each ZIP code as a percentage of minority residents. (Recall that each row of the data represents an entire ZIP code.)</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chredlin, <span class="fu">aes</span>(<span class="at">y =</span> involact, <span class="at">x =</span> race)) <span class="sc">+</span></span>
@@ -422,7 +422,7 @@ Functions introduced in this chapter
 </section>
 <section id="checking-conditions" class="level2" data-number="7.4">
 <h2 data-number="7.4" class="anchored" data-anchor-id="checking-conditions"><span class="header-section-number">7.4</span> Checking conditions</h2>
-<p>We need to be careful here. Although we graphed the blue regression line above, we have not checked any conditions. Therefore, it is inappropriate to fit a regression line at this point. Once the line is seen, it cannot easily be “unseen”, and it’s crucial that you don’t trick your eyes into believing there is a linear relationship before checking the conditions that justify that belief. The regression line we saw above makes no sense unless we know that regression is appropriate.</p>
+<p>We need to be careful here. Although we graphed the blue regression line above, we have not checked any conditions. Therefore, it is inappropriate to fit a regression line at this point. Once the line is seen, it cannot easily be “unseen,” and it’s crucial that you don’t trick your eyes into believing there is a linear relationship before checking the conditions that justify that belief. The regression line we saw above makes no sense unless we know that regression is appropriate.</p>
 <p>The conditions for running a regression analysis include all the conditions you checked for a correlation analysis in the last chapter:</p>
 <ol type="1">
 <li>The two variables must be numerical.</li>
@@ -565,7 +565,7 @@ Coefficients:
 </div>
 <p>(We did not have to run <code>lm</code> again. We had this output stored in the variable <code>involact_race_lm</code>.)</p>
 <p>That summary is fine, but what if we needed to reference the slope and intercept using inline code? Or what if we wanted to grab those numbers and use them in further calculations?</p>
-<p>The problem is that the results of <code>lm</code> just print the output in an unstructured way. If we want structured input, we can use the <code>tidy</code> command from the <code>broom</code> package. This will take the results of <code>lm</code> and organize the output into a tibble.</p>
+<p>The problem is that the results of <code>lm</code> just print the output in an unstructured way. If we want structured output, we can use the <code>tidy</code> command from the <code>broom</code> package. This will take the results of <code>lm</code> and organize the output into a tibble.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(involact_race_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -660,7 +660,7 @@ Coefficients:
 <p>The graph above shows the regression line and two of the residuals as red line segments. (There is a residual for all 47 ZIP codes; only two are shown in this graph.) The one on the left corresponds to ZIP code with 35% racial minority. The regression line predicts that, if the model were true, such a ZIP code would have a value of <code>involact</code> of about 0.6. But the actual data for that ZIP code has an <code>involact</code> value of 1. The residual is the difference, about 0.4. In other words, the true data point is 0.4 units higher than the model prediction. This represents a <em>positive</em> residual; the actual data is 0.4 units <em>above</em> the line. Data points that lie below the regression line have <em>negative</em> residuals.</p>
 <section id="exercise-8" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-8">Exercise 8</h5>
-<p>Look at the residual on the right. This corresponds to a ZIP code with about 66% racial minorities. First, estimate the value of <code>involact</code> that the model predicts for this ZIP code. (This is the y-value of the point on the regression line.) Next, report the actual <code>involact</code> value for this ZIP code. Finally, subtract these two numbers to get an approximate value for the residual. Should this residual be a positive number or a negative number?</p>
+<p>Look at the residual on the right. This corresponds to a ZIP code with about 66% racial minorities. First, report the actual <code>involact</code> value for this ZIP code. (This is the location of the data point.) Next, estimate the value of <code>involact</code> that the model predicts for this ZIP code. (This is the y-value of the estimated point on the regression line.) Finally, subtract these two numbers to get an approximate value for the residual. Should this residual be a positive number or a negative number?</p>
 <p>You can just estimate with your eyeballs for now. You don’t need to be super precise.</p>
 <div class="answer">
 <p>Please write up your answer here.</p>
@@ -802,7 +802,7 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 </div>
 </div>
 </div>
-<p>A more advanced statistics course might discuss the other model summaries present in the <code>glance</code> output. The <span class="math inline">\(R^{2}\)</span> value is stored in the <code>r.squared</code> (inexplicably, now written with a lowercase r). Its value is 0.51. We will word it this way:</p>
+<p>A more advanced statistics course might discuss the other model summaries present in the <code>glance</code> output. The <span class="math inline">\(R^{2}\)</span> value is stored in the <code>r.squared</code> column (inexplicably, now written with a lowercase r). Its value is 0.51. We will word it this way:</p>
 <blockquote class="blockquote">
 <p>51% of the variability in FAIR policies can be accounted for by variability in racial composition.</p>
 </blockquote>
@@ -954,34 +954,41 @@ write-math-here
 </section>
 <section id="exercise-16h" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-16h">Exercise 16(h)</h5>
-<p>Interpret the slope in a full, contextually meaningful sentence.</p>
+<p>Interpret the slope in a full, contextually meaningful sentence. Don’t forget to use units of measurement in your answer.</p>
 <div class="answer">
 <p>Please write up your answer here.</p>
 </div>
 </section>
 <section id="exercise-16i" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-16i">Exercise 16(i)</h5>
-<p>Give a literal interpretation of the intercept. Then comment on the appropriateness of that interpretation. (In other words, does the intercept make sense, or is it a case of extrapolation?)</p>
+<p>A one gram increase in body mass is not very significant or interesting. Rescale your answer to the previous part in terms of a one kilogram (1000 gram) increase in body mass. In other words, how much of an increase in flipper length (in mm) does the model predict for a one kilogram increase in body mass?</p>
 <div class="answer">
 <p>Please write up your answer here.</p>
 </div>
 </section>
 <section id="exercise-16j" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-16j">Exercise 16(j)</h5>
-<p>Use the equation of the regression line to predict the flipper length of a penguin with body mass 4200 grams. Show your work. Then put that prediction into a full, contextually meaningful sentence.</p>
+<p>Give a literal interpretation of the intercept. Then comment on the appropriateness of that interpretation. (In other words, does the intercept make sense, or is it a case of extrapolation?)</p>
 <div class="answer">
 <p>Please write up your answer here.</p>
 </div>
 </section>
 <section id="exercise-16k" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-16k">Exercise 16(k)</h5>
-<p>Using the value of <span class="math inline">\(R^2\)</span> from the <code>glance</code> output for the model of flipper length by body mass, write a full, contextually meaningful sentence interpreting that value.</p>
+<p>Use the equation of the regression line to predict the flipper length of a penguin with body mass 4200 grams. Show your work. Then put that prediction into a full, contextually meaningful sentence (with units).</p>
 <div class="answer">
 <p>Please write up your answer here.</p>
 </div>
 </section>
 <section id="exercise-16l" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-16l">Exercise 16(l)</h5>
+<p>Using the value of <span class="math inline">\(R^2\)</span> from the <code>glance</code> output for the model of flipper length by body mass, write a full, contextually meaningful sentence interpreting that value.</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="exercise-16m" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-16m">Exercise 16(m)</h5>
 <p>Add <code>color = species</code> to the <code>aes</code> portion of the <code>ggplot</code> command to look at the regression lines for the three different species separately. (Don’t forget to use the Viridis color palette and the black-and-white theme.) Comment on the slopes of those three regression lines.</p>
 <div class="answer">
 <div class="cell">
