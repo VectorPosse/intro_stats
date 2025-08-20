@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.6.42">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Introduction to Statistics: an integrated textbook and workbook using R - 7&nbsp; Regression</title>
+<title>7&nbsp; Regression – Introduction to Statistics: an integrated textbook and workbook using R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -71,17 +71,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-c1f47e0d63438896ca427a756e834e96.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -90,17 +96,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
 }</script>
-
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="custom.css">
 </head>
@@ -111,13 +144,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-regression-web.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Regression</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-regression-web.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Regression</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -126,12 +159,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Introduction to Statistics: an integrated textbook and workbook using R</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/VectorPosse/intro_stats" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/VectorPosse/intro_stats" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
 </div>
     </div>
       </div>
@@ -282,9 +315,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -306,45 +339,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#functions-introduced-in-this-chapter" id="toc-functions-introduced-in-this-chapter" class="nav-link active" data-scroll-target="#functions-introduced-in-this-chapter">Functions introduced in this chapter</a></li>
-  <li><a href="#regression-intro" id="toc-regression-intro" class="nav-link" data-scroll-target="#regression-intro"><span class="header-section-number">7.1</span> Introduction</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">7.1</span> Introduction</a>
   <ul class="collapse">
   <li><a href="#install-new-packages" id="toc-install-new-packages" class="nav-link" data-scroll-target="#install-new-packages"><span class="header-section-number">7.1.1</span> Install new packages</a></li>
-  <li><a href="#regression-download" id="toc-regression-download" class="nav-link" data-scroll-target="#regression-download"><span class="header-section-number">7.1.2</span> Download the R notebook file</a></li>
-  <li><a href="#regression-restart" id="toc-regression-restart" class="nav-link" data-scroll-target="#regression-restart"><span class="header-section-number">7.1.3</span> Restart R and run all chunks</a></li>
-  <li><a href="#regression-load" id="toc-regression-load" class="nav-link" data-scroll-target="#regression-load"><span class="header-section-number">7.1.4</span> Load packages</a></li>
+  <li><a href="#download-the-quarto-file" id="toc-download-the-quarto-file" class="nav-link" data-scroll-target="#download-the-quarto-file"><span class="header-section-number">7.1.2</span> Download the Quarto file</a></li>
+  <li><a href="#restart-r-and-run-all-chunks" id="toc-restart-r-and-run-all-chunks" class="nav-link" data-scroll-target="#restart-r-and-run-all-chunks"><span class="header-section-number">7.1.3</span> Restart R and run all chunks</a></li>
+  <li><a href="#load-packages" id="toc-load-packages" class="nav-link" data-scroll-target="#load-packages"><span class="header-section-number">7.1.4</span> Load packages</a></li>
   </ul></li>
-  <li><a href="#regression-regression" id="toc-regression-regression" class="nav-link" data-scroll-target="#regression-regression"><span class="header-section-number">7.2</span> Regression</a></li>
-  <li><a href="#regression-models" id="toc-regression-models" class="nav-link" data-scroll-target="#regression-models"><span class="header-section-number">7.3</span> Models</a></li>
-  <li><a href="#regression-conditions" id="toc-regression-conditions" class="nav-link" data-scroll-target="#regression-conditions"><span class="header-section-number">7.4</span> Checking conditions</a></li>
-  <li><a href="#regression-calculating" id="toc-regression-calculating" class="nav-link" data-scroll-target="#regression-calculating"><span class="header-section-number">7.5</span> Calculating the regression line</a></li>
-  <li><a href="#regression-interpreting" id="toc-regression-interpreting" class="nav-link" data-scroll-target="#regression-interpreting"><span class="header-section-number">7.6</span> Interpreting the coefficients</a></li>
-  <li><a href="#regression-rescaling" id="toc-regression-rescaling" class="nav-link" data-scroll-target="#regression-rescaling"><span class="header-section-number">7.7</span> Rescaling to make interpretations more meaningful</a></li>
-  <li><a href="#regression-tidy" id="toc-regression-tidy" class="nav-link" data-scroll-target="#regression-tidy"><span class="header-section-number">7.8</span> The <code>tidy</code> command</a></li>
-  <li><a href="#regression-residuals" id="toc-regression-residuals" class="nav-link" data-scroll-target="#regression-residuals"><span class="header-section-number">7.9</span> Residuals</a></li>
-  <li><a href="#regression-r2" id="toc-regression-r2" class="nav-link" data-scroll-target="#regression-r2"><span class="header-section-number">7.10</span> <span class="math inline">\(R^2\)</span></a></li>
-  <li><a href="#regression-multiple" id="toc-regression-multiple" class="nav-link" data-scroll-target="#regression-multiple"><span class="header-section-number">7.11</span> Multiple predictors</a></li>
-  <li><a href="#regression-your-turn" id="toc-regression-your-turn" class="nav-link" data-scroll-target="#regression-your-turn"><span class="header-section-number">7.12</span> Your turn</a></li>
-  <li><a href="#regression-conclusion" id="toc-regression-conclusion" class="nav-link" data-scroll-target="#regression-conclusion"><span class="header-section-number">7.13</span> Conclusion</a>
+  <li><a href="#regression" id="toc-regression" class="nav-link" data-scroll-target="#regression"><span class="header-section-number">7.2</span> Regression</a></li>
+  <li><a href="#models" id="toc-models" class="nav-link" data-scroll-target="#models"><span class="header-section-number">7.3</span> Models</a></li>
+  <li><a href="#checking-conditions" id="toc-checking-conditions" class="nav-link" data-scroll-target="#checking-conditions"><span class="header-section-number">7.4</span> Checking conditions</a></li>
+  <li><a href="#calculating-the-regression-line" id="toc-calculating-the-regression-line" class="nav-link" data-scroll-target="#calculating-the-regression-line"><span class="header-section-number">7.5</span> Calculating the regression line</a></li>
+  <li><a href="#interpreting-the-coefficients" id="toc-interpreting-the-coefficients" class="nav-link" data-scroll-target="#interpreting-the-coefficients"><span class="header-section-number">7.6</span> Interpreting the coefficients</a></li>
+  <li><a href="#rescaling-to-make-interpretations-more-meaningful" id="toc-rescaling-to-make-interpretations-more-meaningful" class="nav-link" data-scroll-target="#rescaling-to-make-interpretations-more-meaningful"><span class="header-section-number">7.7</span> Rescaling to make interpretations more meaningful</a></li>
+  <li><a href="#the-tidy-command" id="toc-the-tidy-command" class="nav-link" data-scroll-target="#the-tidy-command"><span class="header-section-number">7.8</span> The <code>tidy</code> command</a></li>
+  <li><a href="#residuals" id="toc-residuals" class="nav-link" data-scroll-target="#residuals"><span class="header-section-number">7.9</span> Residuals</a></li>
+  <li><a href="#r2" id="toc-r2" class="nav-link" data-scroll-target="#r2"><span class="header-section-number">7.10</span> <span class="math inline">\(R^2\)</span></a></li>
+  <li><a href="#multiple-predictors" id="toc-multiple-predictors" class="nav-link" data-scroll-target="#multiple-predictors"><span class="header-section-number">7.11</span> Multiple predictors</a></li>
+  <li><a href="#your-turn" id="toc-your-turn" class="nav-link" data-scroll-target="#your-turn"><span class="header-section-number">7.12</span> Your turn</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">7.13</span> Conclusion</a>
   <ul class="collapse">
-  <li><a href="#regression-prep" id="toc-regression-prep" class="nav-link" data-scroll-target="#regression-prep"><span class="header-section-number">7.13.1</span> Preparing and submitting your assignment</a></li>
+  <li><a href="#preparing-and-submitting-your-assignment" id="toc-preparing-and-submitting-your-assignment" class="nav-link" data-scroll-target="#preparing-and-submitting-your-assignment"><span class="header-section-number">7.13.1</span> Preparing and submitting your assignment</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/VectorPosse/intro_stats/edit/main/07-regression-web.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/VectorPosse/intro_stats/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/VectorPosse/intro_stats/edit/main/07-regression-web.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/VectorPosse/intro_stats/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="regression" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Regression</span></span></h1>
+<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Regression</span></h1>
 </div>
 
 
@@ -357,77 +389,83 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
 
-<!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>
-<p style="color:#ffffff">
-2.0
-</p>
-<!-- Please don't mess with the previous few lines! -->
-<section id="functions-introduced-in-this-chapter" class="level3 unnumbered summary">
-<h3 class="unnumbered anchored" data-anchor-id="functions-introduced-in-this-chapter">Functions introduced in this chapter</h3>
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Functions introduced in this chapter
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p><code>geom_smooth</code>, <code>lm</code>, <code>tidy</code>, <code>augment</code>, <code>glance</code></p>
-</section>
-<section id="regression-intro" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="regression-intro"><span class="header-section-number">7.1</span> Introduction</h2>
+</div>
+</div>
+<section id="introduction" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">7.1</span> Introduction</h2>
 <p>In this chapter we will learn how to run a regression analysis. Regression provides a model for the linear relationship between two numerical variables.</p>
 <section id="install-new-packages" class="level3" data-number="7.1.1">
 <h3 data-number="7.1.1" class="anchored" data-anchor-id="install-new-packages"><span class="header-section-number">7.1.1</span> Install new packages</h3>
-<p>If you are using RStudio Workbench, you do not need to install any packages. (Any packages you need should already be installed by the server administrators.)</p>
-<p>If you are using R and RStudio on your own machine instead of accessing RStudio Workbench through a browser, you’ll need to type the following command at the Console:</p>
+<p>Type the following at the Console:</p>
 <pre><code>install.packages("broom")</code></pre>
 </section>
-<section id="regression-download" class="level3" data-number="7.1.2">
-<h3 data-number="7.1.2" class="anchored" data-anchor-id="regression-download"><span class="header-section-number">7.1.2</span> Download the R notebook file</h3>
-<p>Check the upper-right corner in RStudio to make sure you’re in your <code>intro_stats</code> project. Then click on the following link to download this chapter as an R notebook file (<code>.Rmd</code>).</p>
-<p><a href="https://vectorposse.github.io/intro_stats/chapter_downloads/07-regression.Rmd" download="">https://vectorposse.github.io/intro_stats/chapter_downloads/07-regression.Rmd</a></p>
+<section id="download-the-quarto-file" class="level3" data-number="7.1.2">
+<h3 data-number="7.1.2" class="anchored" data-anchor-id="download-the-quarto-file"><span class="header-section-number">7.1.2</span> Download the Quarto file</h3>
+<p>Look at either the top (Posit Cloud) or the upper right corner of the RStudio screen to make sure you are in your <code>intro_stats</code> project.</p>
+<p>Then click on the following link to download this chapter as a Quarto file (<code>.qmd</code>).</p>
+<p><a href="https://vectorposse.github.io/intro_stats/chapter_downloads/07-regression.qmd" download="">https://vectorposse.github.io/intro_stats/chapter_downloads/07-regression.qmd</a></p>
 <p>Once the file is downloaded, move it to your project folder in RStudio and open it there.</p>
 </section>
-<section id="regression-restart" class="level3" data-number="7.1.3">
-<h3 data-number="7.1.3" class="anchored" data-anchor-id="regression-restart"><span class="header-section-number">7.1.3</span> Restart R and run all chunks</h3>
+<section id="restart-r-and-run-all-chunks" class="level3" data-number="7.1.3">
+<h3 data-number="7.1.3" class="anchored" data-anchor-id="restart-r-and-run-all-chunks"><span class="header-section-number">7.1.3</span> Restart R and run all chunks</h3>
 <p>In RStudio, select “Restart R and Run All Chunks” from the “Run” menu.</p>
 </section>
-<section id="regression-load" class="level3" data-number="7.1.4">
-<h3 data-number="7.1.4" class="anchored" data-anchor-id="regression-load"><span class="header-section-number">7.1.4</span> Load packages</h3>
+<section id="load-packages" class="level3" data-number="7.1.4">
+<h3 data-number="7.1.4" class="anchored" data-anchor-id="load-packages"><span class="header-section-number">7.1.4</span> Load packages</h3>
 <p>We load the <code>tidyverse</code> package. The <code>faraway</code> package will give access to the Chicago redlining data introduced in the previous chapter and the <code>palmerpenguins</code> package gives us the <code>penguins</code> data. Finally, the <code>broom</code> package will provide tools for cleaning up the output of the regression analysis we perform.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.1.2     ✔ readr     2.1.4
-✔ forcats   1.0.0     ✔ stringr   1.5.0
-✔ ggplot2   3.4.2     ✔ tibble    3.2.1
-✔ lubridate 1.9.2     ✔ tidyr     1.3.0
-✔ purrr     1.0.1     
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(faraway)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'faraway' was built under R version 4.3.1</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'palmerpenguins' was built under R version 4.3.1</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(faraway)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
-<section id="regression-regression" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="regression-regression"><span class="header-section-number">7.2</span> Regression</h2>
+<section id="regression" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="regression"><span class="header-section-number">7.2</span> Regression</h2>
 <p>When we have a linear relationship between two numerical variables, we learned in the last chapter that we can compute the correlation coefficient. One serious limitation of the correlation coefficient is that it is only a single number, and therefore, it doesn’t provide a whole lot of information about the nature of the linear relationship itself. It only gives clues as to the strength and direction of the association.</p>
-<p>It will be helpful to model this linear relationship with an actual straight line. Such a line is called a <em>regression line</em>. It is also known as a <em>best-fit line</em> or <em>least-squares line</em> for reasons that we will get to later in the chapter.</p>
-<p>The mathematics involved in figuring out what this line should be is more complicated than we cover in this book. Fortunately, R will do all the complicated calculations for us and we’ll focus on understanding what they mean.</p>
+<p>It will be helpful to model this linear relationship with an actual straight line. Such a line is called a <em>regression line</em>.</p>
+<p>The idea of fitting lines and curves to data has been around for centuries, likely originating with scientists like Newton, Legendre, and Gauss who were looking for simple models to explain astronomical data. The origin of the name “regression” comes from a 19th century researcher named Francis Galton, a mentor and close associate of the eugenicist Karl Pearson, whom we discussed in the last chapter (in connection with the correlation coefficient). In fact, Galton was the person who invented the term “eugenics,” and his research legacy is just as problematic as Pearson’s.</p>
+<p>In some of Galton’s less controversial work (and this part is completely above board, empirically validated, and, importantly, not racist), he noted that an unusually tall individual will have children who are still likely to be tall, but usually not as tall as the tall parent. The child’s height is likely closer to the mean height for their sex, race, etc. It “regresses” to the mean. For most phenomena, extreme observations are more likely to be followed by less extreme observations that are closer to the mean. This is very sensible and logical, and eventually leads to the idea of fitting lines to data to make realistic predictions about future observations.</p>
+<p>A regression line is also known as a <em>best-fit line</em> or <em>least-squares line</em> for reasons that we will get to later in the chapter.</p>
+<p>The mathematics involved in figuring out what this line should be are more complicated than we cover in this book. Fortunately, R will do all the complicated calculations for us and we’ll focus on understanding what they mean.</p>
 <p>Recall the <code>chredlin</code> data set from the last chapter investigating the practice of redlining in Chicago in the 1970s. Let’s review the scatterplot of <code>involact</code>, the number of FAIR policies per 100 housing units, against <code>race</code>, the racial composition of each ZIP code as a percentage of minority residents. (Recall that each row of the data represents an entire ZIP code.)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chredlin, <span class="fu">aes</span>(<span class="at">y =</span> involact, <span class="at">x =</span> race)) <span class="sc">+</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chredlin, <span class="fu">aes</span>(<span class="at">y =</span> involact, <span class="at">x =</span> race)) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="07-regression-web_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="07-regression-web_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <section id="exercise-1" class="level5 unnumbered">
@@ -439,26 +477,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 <p>If certain conditions are met, we can graph a regression line; just add a <code>geom_smooth</code> layer to the scatterplot:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chredlin, <span class="fu">aes</span>(<span class="at">y =</span> involact, <span class="at">x =</span> race)) <span class="sc">+</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chredlin, <span class="fu">aes</span>(<span class="at">y =</span> involact, <span class="at">x =</span> race)) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="07-regression-web_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="07-regression-web_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
-<p>The <code>method = lm</code> argument is telling <code>ggplot</code> to use a “linear model”. The <code>se = FALSE</code> argument tells <code>ggplot</code> to draw just the line and nothing else. (What else might it try to draw? You are encouraged to go back to the code above and take out <code>se = FALSE</code> to see for yourself. However, we are not yet in a position to be able to explain the gray band that appears. We will return to this mystery in a future chapter.)</p>
+</div>
+<p>The <code>method = lm</code> argument is telling <code>ggplot</code> to use a “linear model”. The <code>se = FALSE</code> argument tells <code>ggplot</code> to draw just the line and nothing else. (What else might it try to draw? You are encouraged to go back to the code above and take out <code>se = FALSE</code> to see for yourself. However, we are not yet in a position to be able to explain the gray band that appears.)</p>
 <p>Of all possible lines, the blue line comes the closest to each point in the scatterplot. If we wiggled the line a little bit, it might get closer to a few points, but the net effect would be to make it further from other points. This is the mathematically optimal line of best fit.</p>
 </section>
 </section>
-<section id="regression-models" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="regression-models"><span class="header-section-number">7.3</span> Models</h2>
+<section id="models" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="models"><span class="header-section-number">7.3</span> Models</h2>
 <p>We used the word “model” when referring to the regression line above. What does that word mean in this context?</p>
 <p>A model is something that represents something else, often on a smaller scale or in simplified form. A model is often an idealized form of something that may be quite messy or complex in reality. In statistics, a model is a representation of the way data is generated. For example, we may believe that as minority representation increases in a neighborhood, that neighborhood is more likely to be subject to racially discriminatory practices. We may even posit that the relationship is linear; i.e., for every percentage point increase in racial minorities, we expect some kind of proportional increase in racial discrimination, as measured in this case by FAIR policies. We say that this is our hypothesis about the <em>data-generating process</em>: we suspect that the data we see results from a sociological process that uses the minority representation of a neighborhood to generate data about FAIR policies.</p>
 <p>The assumption of a linear relationship between these two quantities is just that—an assumption. It is not necessarily “true”, whatever “true” might mean in this kind of question. It is a convenient device that makes a simplifying assumption in order to allow us to do something meaningful in a statistical analysis. If such a model—despite its simplifying caricature—helps us make meaningful predictions to study something important like racial discrimination, then the model is useful.</p>
-<p>The first thing we acknowledge when working with a model is that the model does not generate the data in a rigid, deterministic way. If you look at the scatterplot above, even assuming the blue line represents a “correct” data-generating process, the data points don’t fall on the blue line. The blue line gives us only a sense of where the data might be, but there is additional space between the line and the points. These spaces are often referred to as <em>errors</em>. In statistics, the word “error” does not mean the same thing as “mistake”. Error is just the difference between an idealized model prediction and the real location of data. In the context of linear regression, we will use the term <em>residual</em> instead. After the model is done making a prediction, the residuals are “left over” to account for the different between the model and the actual data.</p>
+<p>The first thing we acknowledge when working with a model is that the model does not generate the data in a rigid, deterministic way. If you look at the scatterplot above, even assuming the blue line represents a “correct” data-generating process, the data points don’t fall on the blue line. The blue line gives us only a sense of where the data might be, but there is additional space between the line and the points. These spaces are often referred to as <em>errors</em>. In statistics, the word “error” does not mean the same thing as “mistake.” Error is just the difference between an idealized model prediction and the real location of data. In the context of linear regression, we will use the term <em>residual</em> instead. After the model is done making a prediction, the residuals are “left over” to account for the different between the model and the actual data.</p>
 <p>The most important thing to remember about models is that they aren’t real. They are idealizations and simplifications. The degree to which we can trust models, then, comes down to certain assumptions we make about the data-generating process. These assumptions cannot be completely verified—after all, we will never know the exact data-generating process. But there are certain <em>conditions</em> we can check to know if the assumptions we make are reasonable.</p>
 <section id="exercise-2" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-2">Exercise 2</h5>
@@ -466,13 +508,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="answer">
 <p>Please write up your answer here.</p>
 </div>
-<hr>
 </section>
 </section>
-<section id="regression-conditions" class="level2" data-number="7.4">
-<h2 data-number="7.4" class="anchored" data-anchor-id="regression-conditions"><span class="header-section-number">7.4</span> Checking conditions</h2>
-<p>We need to be careful here. Although we graphed the blue regression line above, we have not checked any conditions. Therefore, it is inappropriate to fit a regression line at this point. Once the line is seen, it cannot easily be “unseen”, and it’s crucial that you don’t trick your eyes into believing there is a linear relationship before checking the conditions that justify that belief.</p>
-<p>The regression line we saw above makes no sense unless we know that regression is appropriate. The conditions for running a regression analysis include all the conditions you checked for a correlation analysis in the last chapter:</p>
+<section id="checking-conditions" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="checking-conditions"><span class="header-section-number">7.4</span> Checking conditions</h2>
+<p>We need to be careful here. Although we graphed the blue regression line above, we have not checked any conditions. Therefore, it is inappropriate to fit a regression line at this point. Once the line is seen, it cannot easily be “unseen,” and it’s crucial that you don’t trick your eyes into believing there is a linear relationship before checking the conditions that justify that belief. The regression line we saw above makes no sense unless we know that regression is appropriate.</p>
+<p>The conditions for running a regression analysis include all the conditions you checked for a correlation analysis in the last chapter:</p>
 <ol type="1">
 <li>The two variables must be numerical.</li>
 <li>There is a somewhat linear relationship between the variables, as shown in a scatterplot.</li>
@@ -492,8 +533,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>However, there is an additional condition to check to ensure that our regression model is appropriate. It concerns the residuals, but as we haven’t computed anything yet, we have nothing to analyze. We’ll return to this condition later.</p>
 </section>
 </section>
-<section id="regression-calculating" class="level2" data-number="7.5">
-<h2 data-number="7.5" class="anchored" data-anchor-id="regression-calculating"><span class="header-section-number">7.5</span> Calculating the regression line</h2>
+<section id="calculating-the-regression-line" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="calculating-the-regression-line"><span class="header-section-number">7.5</span> Calculating the regression line</h2>
 <p>What is the equation of the regression line? In your algebra class you learned that a line takes the form <span class="math inline">\(y = mx + b\)</span> where <span class="math inline">\(m\)</span> is the slope and <span class="math inline">\(b\)</span> is the y-intercept. Statisticians write the equation in a slightly different form:</p>
 <p><span class="math display">\[
 \hat{y} = b_{0} + b_{1} x
@@ -507,7 +548,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>After a comma, we then specify the data set in which those variables live using <code>data =</code>. Here’s the whole command:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(involact <span class="sc">~</span> race, <span class="at">data =</span> chredlin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(involact <span class="sc">~</span> race, <span class="at">data =</span> chredlin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -521,8 +562,8 @@ Coefficients:
 <p><strong>The response variable always goes before the tilde and the predictor variable always goes after.</strong></p>
 <p>Let’s store that result for future use. The convention we’ll use in this book is to name things using the variables involved. For example,</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>involact_race_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(involact <span class="sc">~</span> race, <span class="at">data =</span> chredlin)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>involact_race_lm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>involact_race_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(involact <span class="sc">~</span> race, <span class="at">data =</span> chredlin)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>involact_race_lm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -535,8 +576,8 @@ Coefficients:
 </div>
 <p>The variable <code>involact_race_lm</code> now contains all the information we need about the linear regression model.</p>
 </section>
-<section id="regression-interpreting" class="level2" data-number="7.6">
-<h2 data-number="7.6" class="anchored" data-anchor-id="regression-interpreting"><span class="header-section-number">7.6</span> Interpreting the coefficients</h2>
+<section id="interpreting-the-coefficients" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="interpreting-the-coefficients"><span class="header-section-number">7.6</span> Interpreting the coefficients</h2>
 <p>Look at the output of the <code>lm</code> command above.</p>
 <p>The intercept is 0.12922 and the slope is 0.01388. The number 0.12922 is labeled with <code>(Intercept)</code>, so that’s pretty obvious. But how do we know the number 0.01388 corresponds to the slope? Process of elimination, I suppose. But there’s another good reason too. The equation of the regression line can be written</p>
 <p><span class="math display">\[
@@ -562,7 +603,7 @@ Coefficients:
 <p>Use the <code>arrange</code> command from <code>dplyr</code> to sort the <code>chredlin</code> data frame by race (using the default ascending order). What is the value of <code>race</code> for the three ZIP codes with the smallest percentage of minority residents?</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to sort by race</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to sort by race</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Please write up your answer here.</p>
 </div>
@@ -577,8 +618,8 @@ Coefficients:
 </div>
 </section>
 </section>
-<section id="regression-rescaling" class="level2" data-number="7.7">
-<h2 data-number="7.7" class="anchored" data-anchor-id="regression-rescaling"><span class="header-section-number">7.7</span> Rescaling to make interpretations more meaningful</h2>
+<section id="rescaling-to-make-interpretations-more-meaningful" class="level2" data-number="7.7">
+<h2 data-number="7.7" class="anchored" data-anchor-id="rescaling-to-make-interpretations-more-meaningful"><span class="header-section-number">7.7</span> Rescaling to make interpretations more meaningful</h2>
 <p>Let’s revisit the interpretation of the slope:</p>
 <blockquote class="blockquote">
 <p>The model predicts that an increase of one percentage point in the composition of racial minorities corresponds to an increase of 0.01388 new FAIR policies per 100 housing units.</p>
@@ -597,11 +638,11 @@ Coefficients:
 </div>
 </section>
 </section>
-<section id="regression-tidy" class="level2" data-number="7.8">
-<h2 data-number="7.8" class="anchored" data-anchor-id="regression-tidy"><span class="header-section-number">7.8</span> The <code>tidy</code> command</h2>
+<section id="the-tidy-command" class="level2" data-number="7.8">
+<h2 data-number="7.8" class="anchored" data-anchor-id="the-tidy-command"><span class="header-section-number">7.8</span> The <code>tidy</code> command</h2>
 <p>Recall the output of the <code>lm</code> command:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>involact_race_lm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>involact_race_lm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -614,27 +655,25 @@ Coefficients:
 </div>
 <p>(We did not have to run <code>lm</code> again. We had this output stored in the variable <code>involact_race_lm</code>.)</p>
 <p>That summary is fine, but what if we needed to reference the slope and intercept using inline code? Or what if we wanted to grab those numbers and use them in further calculations?</p>
-<p>The problem is that the results of <code>lm</code> just print the output in an unstructured way. If we want structured input, we can use the <code>tidy</code> command from the <code>broom</code> package. This will take the results of <code>lm</code> and organize the output into a tibble.</p>
+<p>The problem is that the results of <code>lm</code> just print the output in an unstructured way. If we want structured output, we can use the <code>tidy</code> command from the <code>broom</code> package. This will take the results of <code>lm</code> and organize the output into a tibble.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(involact_race_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(involact_race_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"0.12921803","3":"0.09661059","4":"1.337514","5":"0.18777606076934"},{"1":"race","2":"0.01388235","3":"0.00203073","4":"6.836139","5":"0.00000001783815"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"0.12921803","3":"0.09661059","4":"1.337514","5":"1.877761e-01"},{"1":"race","2":"0.01388235","3":"0.00203073","4":"6.836139","5":"1.783815e-08"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 <p>Let’s store that tibble so we can refer to it in the future.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>involact_race_tidy <span class="ot">&lt;-</span> <span class="fu">tidy</span>(involact_race_lm)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>involact_race_tidy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>involact_race_tidy <span class="ot">&lt;-</span> <span class="fu">tidy</span>(involact_race_lm)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>involact_race_tidy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"0.12921803","3":"0.09661059","4":"1.337514","5":"0.18777606076934"},{"1":"race","2":"0.01388235","3":"0.00203073","4":"6.836139","5":"0.00000001783815"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"0.12921803","3":"0.09661059","4":"1.337514","5":"1.877761e-01"},{"1":"race","2":"0.01388235","3":"0.00203073","4":"6.836139","5":"1.783815e-08"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -642,7 +681,7 @@ Coefficients:
 <p>The intercept is stored in the <code>estimate</code> column, in the first row. The slope is stored in the same column, but in the second row. (There is a lot more information here to the right of the <code>estimate</code> column, but we will not know what these numbers mean until later in the course.)</p>
 <p>We can grab the <code>estimate</code> column with the dollar sign as we’ve seen before:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>involact_race_tidy<span class="sc">$</span>estimate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>involact_race_tidy<span class="sc">$</span>estimate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.12921803 0.01388235</code></pre>
 </div>
@@ -650,13 +689,13 @@ Coefficients:
 <p>This is a “vector” of two values, the intercept and the slope, respectively.</p>
 <p>What if we want only one value at a time? We can grab individual elements of a vector using square brackets as follows:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>involact_race_tidy<span class="sc">$</span>estimate[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>involact_race_tidy<span class="sc">$</span>estimate[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.129218</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>involact_race_tidy<span class="sc">$</span>estimate[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>involact_race_tidy<span class="sc">$</span>estimate[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.01388235</code></pre>
 </div>
@@ -665,7 +704,7 @@ Coefficients:
 <blockquote class="blockquote">
 <p>The model predicts that an increase of 1 percentage points in the composition of racial minorities corresponds to an increase of 0.0138824 new FAIR policies per 100 housing units.</p>
 </blockquote>
-<p>Click somewhere inside the backticks on the line above and hit Ctrl-Enter or Cmd-Enter (PC or Mac respectively). You should see the number 0.01388235 pop up. If you Preview the HTML version of the document, you will also see the number there (not the code).</p>
+<p>Click somewhere inside the backticks on the line above and hit Ctrl-Enter or Cmd-Enter (PC or Mac respectively). You should see the number 0.01388235 pop up. If you render the HTML version of the document, you will also see the number there (not the code).</p>
 <p>What if we want to apply re-scaling to make this number more interpretable? The stuff inside the inline code chunk is just R code, so we can do any kind of calculation with it we want.</p>
 <blockquote class="blockquote">
 <p>The model predicts that an increase of 10 percentage points in the composition of racial minorities corresponds to an increase of 0.1388235 new FAIR policies per 100 housing units.</p>
@@ -679,19 +718,20 @@ Coefficients:
 </div>
 </section>
 </section>
-<section id="regression-residuals" class="level2" data-number="7.9">
-<h2 data-number="7.9" class="anchored" data-anchor-id="regression-residuals"><span class="header-section-number">7.9</span> Residuals</h2>
+<section id="residuals" class="level2" data-number="7.9">
+<h2 data-number="7.9" class="anchored" data-anchor-id="residuals"><span class="header-section-number">7.9</span> Residuals</h2>
 <p>Earlier, we promised to revisit the topic of residuals. Residuals are measured as the vertical distances from each data point to the regression line. We can see that visually below. (Don’t worry about the complexity of the <code>ggplot</code> code used to create this picture. You will not need to create a plot like this on your own, so just focus on the graph that is created below.)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chredlin, <span class="fu">aes</span>(<span class="at">y =</span> involact, <span class="at">x =</span> race)) <span class="sc">+</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="at">x =</span> <span class="fl">35.1</span>, <span class="at">xend  =</span> <span class="fl">35.1</span>,</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">y =</span> <span class="fl">0.6164886</span>, <span class="at">yend =</span> <span class="fl">0.6164886</span> <span class="sc">+</span> <span class="fl">0.38351139</span>,</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="at">x =</span> <span class="fl">66.1</span>, <span class="at">xend =</span> <span class="fl">66.1</span>,</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">y =</span> <span class="fl">1.0468415</span>, <span class="at">yend =</span> <span class="fl">1.0468415</span> <span class="sc">-</span> <span class="fl">0.64684154</span>,</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># You do not need to know how this code works</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chredlin, <span class="fu">aes</span>(<span class="at">y =</span> involact, <span class="at">x =</span> race)) <span class="sc">+</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">x =</span> <span class="fl">35.1</span>, <span class="at">xend  =</span> <span class="fl">35.1</span>,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">y =</span> <span class="fl">0.6164886</span>, <span class="at">yend =</span> <span class="fl">0.6164886</span> <span class="sc">+</span> <span class="fl">0.38351139</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">x =</span> <span class="fl">66.1</span>, <span class="at">xend =</span> <span class="fl">66.1</span>,</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">y =</span> <span class="fl">1.0468415</span>, <span class="at">yend =</span> <span class="fl">1.0468415</span> <span class="sc">-</span> <span class="fl">0.64684154</span>,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
 ℹ Please use `linewidth` instead.</code></pre>
@@ -700,13 +740,17 @@ Coefficients:
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="07-regression-web_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="07-regression-web_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>The graph above shows the regression line and two of the residuals as red line segments. (There is a residual for all 47 ZIP codes; only two are shown in this graph.) The one on the left corresponds to ZIP code with 35% racial minority. The regression line predicts that, if the model were true, such a ZIP code would have a value of <code>involact</code> of about 0.6. But the actual data for that ZIP code has an <code>involact</code> value of 1. The residual is the difference, about 0.4. In other words, the true data point is 0.4 units higher than the model prediction. This represents a <em>positive</em> residual; the actual data is 0.4 units <em>above</em> the line. Data points that lie below the regression line have <em>negative</em> residuals.</p>
 <section id="exercise-8" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-8">Exercise 8</h5>
-<p>Look at the residual on the right. This corresponds to a ZIP code with about 66% racial minorities. First, estimate the value of <code>involact</code> that the model predicts for this ZIP code. (This is the y-value of the point on the regression line.) Next, report the actual <code>involact</code> value for this ZIP code. Finally, subtract these two numbers to get an approximate value for the residual. Should this residual be a positive number or a negative number?</p>
+<p>Look at the residual on the right. This corresponds to a ZIP code with about 66% racial minorities. First, report the actual <code>involact</code> value for this ZIP code. (This is the location of the data point.) Next, estimate the value of <code>involact</code> that the model predicts for this ZIP code. (This is the y-value of the estimated point on the regression line.) Finally, subtract these two numbers to get an approximate value for the residual. Should this residual be a positive number or a negative number?</p>
 <p>You can just estimate with your eyeballs for now. You don’t need to be super precise.</p>
 <div class="answer">
 <p>Please write up your answer here.</p>
@@ -724,16 +768,15 @@ e = y - \hat{y}
 <p>Please write up your answer here.</p>
 </div>
 <hr>
-<p>The residuals are used to determine the regression line. The correct regression line will be the one that results in the smallest residuals overall. How do we measure the overall set of residuals? We can’t just calculate the average residual. Because the regression line should go through the middle of the data, the positive residuals will cancel out the negative residuals and the mean residual will just be zero. That’s not very useful.</p>
-<p>Instead, what we do is <em>square</em> the residuals. That makes all of them positive. Then we add together all the squared residuals and that sum is the thing we try to minimize. Well, we don’t do that manually because it’s hard, so we let the computer do that for us. Because the regression line minimizes the sum of the squared residuals, the regression line is often called the <em>least-squares</em> line.</p>
+<p>The residuals are used to determine the regression line. The correct regression line will be the one that results in the smallest residuals overall. How do we measure the overall set of residuals? We might think to calculate the “average” residual, but this doesn’t work. Because the regression line should go through the middle of the data, the positive residuals will cancel out the negative residuals and the mean residual will just be zero. That’s not very useful.</p>
+<p>Instead, what we do is <em>square</em> the residuals. That makes all of them positive. We then add together all the squared residuals and that sum is the thing we try to minimize. Well, we don’t do that manually because it’s hard, so we let the computer do that for us. Because the regression line minimizes the sum of the squared residuals, the regression line is often called the <em>least-squares</em> line.</p>
 <p>Recall earlier when we mentioned that there was one additional condition to check in order for linear regression to make sense. This condition is that <strong>there should not be any kind of pattern in the residuals</strong>.</p>
 <p>We know that some of the points are going to lie above the line (positive residuals) and some of the points will lie below the line (negative residuals). What we need is for the spread of the residuals to be pretty balanced across the length of the regression line and for the residuals not to form any kind of curved pattern.</p>
 <p>To check this condition, we’ll need to calculate the residuals first. To do so, we introduce a new function from the <code>broom</code> package. Whereas <code>tidy</code> serves up information about the intercept and the slope of the regression line, <code>augment</code> gives us extra information for each data point.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>involact_race_aug <span class="ot">&lt;-</span> <span class="fu">augment</span>(involact_race_lm)</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>involact_race_aug</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>involact_race_aug <span class="ot">&lt;-</span> <span class="fu">augment</span>(involact_race_lm)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>involact_race_aug</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":[".rownames"],"name":[1],"type":["chr"],"align":["left"]},{"label":["involact"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["race"],"name":[3],"type":["dbl"],"align":["right"]},{"label":[".fitted"],"name":[4],"type":["dbl"],"align":["right"]},{"label":[".resid"],"name":[5],"type":["dbl"],"align":["right"]},{"label":[".hat"],"name":[6],"type":["dbl"],"align":["right"]},{"label":[".sigma"],"name":[7],"type":["dbl"],"align":["right"]},{"label":[".cooksd"],"name":[8],"type":["dbl"],"align":["right"]},{"label":[".std.resid"],"name":[9],"type":["dbl"],"align":["right"]}],"data":[{"1":"60626","2":"0.0","3":"10.0","4":"0.2680416","5":"-0.26804156","6":"0.03405567","7":"0.4520376","8":"0.0065086692","9":"-0.60763450"},{"1":"60640","2":"0.1","3":"22.2","4":"0.4374063","5":"-0.33740626","6":"0.02462275","7":"0.4509720","8":"0.0073130785","9":"-0.76117263"},{"1":"60613","2":"1.2","3":"19.6","4":"0.4013121","5":"0.79868786","6":"0.02612209","7":"0.4371976","8":"0.0436069516","9":"1.80318864"},{"1":"60657","2":"0.5","3":"17.3","4":"0.3693827","5":"0.13061727","6":"0.02767914","7":"0.4534641","8":"0.0012397588","9":"0.29512917"},{"1":"60614","2":"0.7","3":"24.5","4":"0.4693357","5":"0.23066433","6":"0.02352711","7":"0.4525374","8":"0.0032584559","9":"0.52007584"},{"1":"60610","2":"0.3","3":"54.0","4":"0.8788651","5":"-0.57886508","6":"0.02867818","7":"0.4451831","8":"0.0252803288","9":"-1.30861567"},{"1":"60611","2":"0.0","3":"4.9","4":"0.1972416","5":"-0.19724156","6":"0.03980509","7":"0.4528881","8":"0.0041688796","9":"-0.44847172"},{"1":"60625","2":"0.0","3":"7.1","4":"0.2277827","5":"-0.22778273","6":"0.03719434","7":"0.4525524","8":"0.0051670651","9":"-0.51721109"},{"1":"60618","2":"0.4","3":"5.3","4":"0.2027945","5":"0.19720550","6":"0.03931567","7":"0.4528889","8":"0.0041119233","9":"0.44827551"},{"1":"60647","2":"1.1","3":"21.5","4":"0.4276886","5":"0.67231139","6":"0.02499919","7":"0.4421451","8":"0.0295025539","9":"1.51699559"},{"1":"60622","2":"1.9","3":"43.1","4":"0.7275474","5":"1.17245257","6":"0.02262464","7":"0.4172089","8":"0.0808075725","9":"2.64229271"},{"1":"60631","2":"0.0","3":"1.1","4":"0.1444886","5":"-0.14448862","6":"0.04478130","7":"0.4533561","8":"0.0025430857","9":"-0.32938102"},{"1":"60646","2":"0.0","3":"1.0","4":"0.1431004","5":"-0.14310038","6":"0.04492023","7":"0.4533665","8":"0.0025029201","9":"-0.32624008"},{"1":"60656","2":"0.0","3":"1.7","4":"0.1528180","5":"-0.15281803","6":"0.04395628","7":"0.4532916","8":"0.0027875153","9":"-0.34821867"},{"1":"60630","2":"0.0","3":"1.6","4":"0.1514298","5":"-0.15142979","6":"0.04409276","7":"0.4533026","8":"0.0027463829","9":"-0.34508001"},{"1":"60634","2":"0.0","3":"1.5","4":"0.1500416","5":"-0.15004156","6":"0.04422965","7":"0.4533135","8":"0.0027054043","9":"-0.34194096"},{"1":"60641","2":"0.0","3":"1.8","4":"0.1542063","5":"-0.15420627","6":"0.04382021","7":"0.4532805","8":"0.0028287985","9":"-0.35135697"},{"1":"60635","2":"0.0","3":"1.0","4":"0.1431004","5":"-0.14310038","6":"0.04492023","7":"0.4533665","8":"0.0025029201","9":"-0.32624008"},{"1":"60639","2":"0.2","3":"2.5","4":"0.1639239","5":"0.03607609","6":"0.04287918","7":"0.4538695","8":"0.0001512009","9":"0.08215848"},{"1":"60651","2":"0.8","3":"13.4","4":"0.3152416","5":"0.48475844","6":"0.03081433","7":"0.4477923","8":"0.0191334054","9":"1.09707983"},{"1":"60644","2":"0.8","3":"59.8","4":"0.9593827","5":"-0.15938272","6":"0.03388215","7":"0.4532448","8":"0.0022887370","9":"-0.36127884"},{"1":"60624","2":"1.8","3":"94.4","4":"1.4397121","5":"0.36028787","6":"0.09354154","7":"0.4503041","8":"0.0366784255","9":"0.84312512"},{"1":"60612","2":"1.8","3":"86.2","4":"1.3258768","5":"0.47412317","6":"0.07497107","7":"0.4477783","8":"0.0488841540","9":"1.09832244"},{"1":"60607","2":"0.9","3":"50.2","4":"0.8261121","5":"0.07388786","6":"0.02601547","7":"0.4537632","8":"0.0003716006","9":"0.16680667"},{"1":"60623","2":"1.9","3":"74.2","4":"1.1592886","5":"0.74071140","6":"0.05275691","7":"0.4391635","8":"0.0800676782","9":"1.69564387"},{"1":"60608","2":"1.5","3":"55.5","4":"0.8996886","5":"0.60031139","6":"0.02989200","7":"0.4445062","8":"0.0284099605","9":"1.35794719"},{"1":"60616","2":"0.6","3":"62.3","4":"0.9940886","5":"-0.39408860","6":"0.03655001","7":"0.4498498","8":"0.0151781749","9":"-0.89453148"},{"1":"60632","2":"0.3","3":"4.4","4":"0.1903004","5":"0.10969962","6":"0.04042608","7":"0.4535895","8":"0.0013113470","9":"0.24950671"},{"1":"60609","2":"1.3","3":"46.2","4":"0.7705827","5":"0.52941727","6":"0.02385130","7":"0.4466573","8":"0.0174132162","9":"1.19386840"},{"1":"60653","2":"0.9","3":"99.7","4":"1.5132886","5":"-0.61328860","6":"0.10700910","7":"0.4432334","8":"0.1252734721","9":"-1.44596477"},{"1":"60615","2":"0.4","3":"73.5","4":"1.1495710","5":"-0.74957096","6":"0.05164307","7":"0.4388207","8":"0.0800749424","9":"-1.71491729"},{"1":"60638","2":"0.0","3":"10.7","4":"0.2777592","5":"-0.27775920","6":"0.03334965","7":"0.4519010","8":"0.0068342682","9":"-0.62943384"},{"1":"60629","2":"0.0","3":"1.5","4":"0.1500416","5":"-0.15004156","6":"0.04422965","7":"0.4533135","8":"0.0027054043","9":"-0.34194096"},{"1":"60636","2":"1.4","3":"48.8","4":"0.8066768","5":"0.59332316","6":"0.02518349","7":"0.4447707","8":"0.0231555723","9":"1.33889402"},{"1":"60621","2":"2.2","3":"98.9","4":"1.5021827","5":"0.69781729","6":"0.10490257","7":"0.4400732","8":"0.1582455924","9":"1.64332290"},{"1":"60637","2":"0.8","3":"90.6","4":"1.3869592","5":"-0.58695919","6":"0.08459344","7":"0.4443814","8":"0.0863231206","9":"-1.36683859"},{"1":"60652","2":"0.0","3":"1.4","4":"0.1486533","5":"-0.14865332","6":"0.04436694","7":"0.4533243","8":"0.0026645822","9":"-0.33880154"},{"1":"60620","2":"0.9","3":"71.2","4":"1.1176415","5":"-0.21764154","6":"0.04812457","7":"0.4526560","8":"0.0062444310","9":"-0.49701338"},{"1":"60619","2":"0.9","3":"94.1","4":"1.4355474","5":"-0.53554742","6":"0.09281362","7":"0.4459183","8":"0.0802818194","9":"-1.25275461"},{"1":"60649","2":"0.4","3":"66.1","4":"1.0468415","5":"-0.64684154","6":"0.04109523","7":"0.4428450","8":"0.0464129236","9":"-1.47172445"},{"1":"60617","2":"0.9","3":"36.4","4":"0.6345357","5":"0.26546433","6":"0.02131758","7":"0.4520973","8":"0.0038928646","9":"0.59786292"},{"1":"60655","2":"0.0","3":"1.0","4":"0.1431004","5":"-0.14310038","6":"0.04492023","7":"0.4533665","8":"0.0025029201","9":"-0.32624008"},{"1":"60643","2":"0.5","3":"42.5","4":"0.7192180","5":"-0.21921802","6":"0.02243266","7":"0.4526712","8":"0.0027999007","9":"-0.49399124"},{"1":"60628","2":"1.0","3":"35.1","4":"0.6164886","5":"0.38351139","6":"0.02127687","7":"0.4501256","8":"0.0081086240","9":"0.86370350"},{"1":"60627","2":"0.2","3":"47.4","4":"0.7872415","5":"-0.58724155","6":"0.02443177","7":"0.4449658","8":"0.0219723154","9":"-1.32465959"},{"1":"60633","2":"0.3","3":"34.0","4":"0.6012180","5":"-0.30121802","6":"0.02129646","7":"0.4515766","8":"0.0050069092","9":"-0.67837793"},{"1":"60645","2":"0.0","3":"3.1","4":"0.1722533","5":"-0.17225332","6":"0.04208855","7":"0.4531274","8":"0.0033779335","9":"-0.39212205"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -759,11 +802,15 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <p>Yup, it works!</p>
 <p>To check for patterns in the residuals, we’ll create a <em>residual plot</em>. A residual plot graphs the residuals above each value along the x-axis. (In the command below, we also add a blue horizontal reference line so that it is clear which points have positive or negative residuals.)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(involact_race_aug, <span class="fu">aes</span>(<span class="at">y =</span> .resid, <span class="at">x =</span> race)) <span class="sc">+</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(involact_race_aug, <span class="fu">aes</span>(<span class="at">y =</span> .resid, <span class="at">x =</span> race)) <span class="sc">+</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="07-regression-web_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="07-regression-web_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Pay close attention to the <code>ggplot</code> code. Notice that the tibble in the first slot is <em>not</em> <code>chredlin</code> as it was before. The residuals we need to plot are not stored in the raw <code>chredlin</code> data. We had to calculate the residuals using the <code>augment</code> command, and those residuals are then stored in a different place that we named <code>involact_race_aug</code>. In the latter tibble, the residuals themselves are stored in a variable called <code>.resid</code>. (Don’t forget the dot in <code>.resid</code>.)</p>
@@ -781,13 +828,17 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <p>Other than the weird cluster of points at the left, the rest of the residual plot looks pretty good. Ignoring those ZIP codes with 0 FAIR policies, the rest of the residuals stretch, on average, about the same height above and below the line across the whole width of the plot. There is only one slightly large residual at about the 40% mark, but it’s not extreme, and it doesn’t look like a severe outlier in the original scatterplot.</p>
 <p>What does a bad residual plot look like? The code below will run an ill-advised regression analysis on <code>fire</code>, the number of fires (per 100 housing units), against <code>age</code>, the percent of housing units built before 1939. The residual plot appears below.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>fire_age_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(fire <span class="sc">~</span> age, <span class="at">data =</span> chredlin)</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>fire_age_aug <span class="ot">&lt;-</span> <span class="fu">augment</span>(fire_age_lm)</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fire_age_aug, <span class="fu">aes</span>(<span class="at">y =</span> .resid, <span class="at">x =</span> age)) <span class="sc">+</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>fire_age_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(fire <span class="sc">~</span> age, <span class="at">data =</span> chredlin)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>fire_age_aug <span class="ot">&lt;-</span> <span class="fu">augment</span>(fire_age_lm)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fire_age_aug, <span class="fu">aes</span>(<span class="at">y =</span> .resid, <span class="at">x =</span> age)) <span class="sc">+</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="07-regression-web_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="07-regression-web_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -805,7 +856,7 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <p>If you were truly interested in investigating an association between the fire risk and the age of buildings in a ZIP code, the first thing you would do is create a scatterplot. Go ahead and do that below. Use <code>fire</code> as the response variable and <code>age</code> as the predictor.</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a scatterplot of fire against age</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a scatterplot of fire against age</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -825,24 +876,23 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 </ol>
 </section>
 </section>
-<section id="regression-r2" class="level2" data-number="7.10">
-<h2 data-number="7.10" class="anchored" data-anchor-id="regression-r2"><span class="header-section-number">7.10</span> <span class="math inline">\(R^2\)</span></h2>
-<p>We’ve seen that the correlation coefficient r is of limited utility. In addition to being only a single statistic to summarize a linear association, the number doesn’t have any kind of intrinsic meaning. It can only be judged by how close it is to 0 or 1 (or -1) in conjunction with a scatterplot to give you a sense of the strength of the correlation. <strong>In particular, some people try to interpret r as some kind of percentage, but it’s not.</strong></p>
-<p>On the other hand, when we square the correlation coefficient, we <em>do</em> get an interpretable number. For some reason, instead of writing <span class="math inline">\(r^2\)</span>, statisticians write <span class="math inline">\(R^2\)</span>, with a capital R. (I can’t find the historical reason why this is so.) In any event, <span class="math inline">\(R^2\)</span> can be interpreted as a percentage! It represents the percent of variation in the y variable that can be explained by variation in the x variable.</p>
-<p>Here we introduce the last of the <code>broom</code> functions: <code>glance</code>. Whereas <code>tidy</code> reports the intercept and slope, and <code>augment</code> reports values associated to each data point separately, the <code>glance</code> function gathers up summaries for the entire model. (Do not confuse <code>glance</code> with <code>glimpse</code>. The latter is a nicer version of <code>str</code> that just summarizes the variables in a tibble.)</p>
+<section id="r2" class="level2" data-number="7.10">
+<h2 data-number="7.10" class="anchored" data-anchor-id="r2"><span class="header-section-number">7.10</span> <span class="math inline">\(R^2\)</span></h2>
+<p>We saw in the last chapter that the correlation coefficient r is of limited utility. In addition to being only a single statistic to summarize a linear association, the number doesn’t have any kind of intrinsic meaning. It can only be judged by how close it is to 0 or 1 (or -1) in conjunction with a scatterplot to give you a sense of the strength of the correlation. <strong>In particular, some people try to interpret r as some kind of percentage, but it’s not.</strong></p>
+<p>On the other hand, when we square the correlation coefficient, we <em>do</em> get an interpretable number. For some reason, instead of writing <span class="math inline">\(r^2\)</span>, statisticians write <span class="math inline">\(R^2\)</span>, with a capital R. (I can’t find the historical reason why this is so.) In any event, <span class="math inline">\(R^2\)</span> <em>can</em> be interpreted as a percentage! It represents the percent of variation in the y variable that can be explained by variation in the x variable. More on what that means in a bit.</p>
+<p>But first, let’s introduce the last of the <code>broom</code> functions: <code>glance</code>. Whereas <code>tidy</code> reports the intercept and slope, and <code>augment</code> reports values associated to each data point separately, the <code>glance</code> function gathers up summaries for the entire model. (Do not confuse <code>glance</code> with <code>glimpse</code>. The latter is a nicer version of <code>str</code> that just summarizes the variables in a tibble.)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>involact_race_glance <span class="ot">&lt;-</span> <span class="fu">glance</span>(involact_race_lm)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>involact_race_glance</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>involact_race_glance <span class="ot">&lt;-</span> <span class="fu">glance</span>(involact_race_lm)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>involact_race_glance</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["r.squared"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["adj.r.squared"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sigma"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["logLik"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[11],"type":["int"],"align":["right"]},{"label":["nobs"],"name":[12],"type":["int"],"align":["right"]}],"data":[{"1":"0.5094448","2":"0.4985436","3":"0.4488318","4":"46.7328","5":"0.00000001783815","6":"1","7":"-28.01618","8":"62.03237","9":"67.58281","10":"9.065251","11":"45","12":"47"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["r.squared"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["adj.r.squared"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sigma"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["logLik"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[11],"type":["int"],"align":["right"]},{"label":["nobs"],"name":[12],"type":["int"],"align":["right"]}],"data":[{"1":"0.5094448","2":"0.4985436","3":"0.4488318","4":"46.7328","5":"1.783815e-08","6":"1","7":"-28.01618","8":"62.03237","9":"67.58281","10":"9.065251","11":"45","12":"47"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
-<p>A more advanced statistics course might discuss the other model summaries present in the <code>glance</code> output. The <span class="math inline">\(R^{2}\)</span> value is stored in the <code>r.squared</code> (inexplicably, now written with a lowercase r). Its value is 0.51. We will word it this way:</p>
+<p>A more advanced statistics course might discuss the other model summaries present in the <code>glance</code> output. The <span class="math inline">\(R^{2}\)</span> value is stored in the <code>r.squared</code> column (inexplicably, now written with a lowercase r). Its value is 0.51. We will word it this way:</p>
 <blockquote class="blockquote">
 <p>51% of the variability in FAIR policies can be accounted for by variability in racial composition.</p>
 </blockquote>
@@ -854,24 +904,30 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <p>In a separate code chunk, square that value using the command <code>r^2</code>. Verify that the square of the correlation coefficient is the same as the <span class="math inline">\(R^2\)</span> value reported in the <code>glance</code> output above.</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to calculate the correlation coefficient</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to calculate the correlation coefficient</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to square the correlation coefficient</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to square the correlation coefficient</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
 </section>
-<section id="regression-multiple" class="level2" data-number="7.11">
-<h2 data-number="7.11" class="anchored" data-anchor-id="regression-multiple"><span class="header-section-number">7.11</span> Multiple predictors</h2>
+<section id="multiple-predictors" class="level2" data-number="7.11">
+<h2 data-number="7.11" class="anchored" data-anchor-id="multiple-predictors"><span class="header-section-number">7.11</span> Multiple predictors</h2>
 <p>The discussion of <span class="math inline">\(R^2\)</span> above highlights the fact that a single predictor will rarely account for all or even most of the variability in a response variable. Is there a way to take other predictors into account?</p>
 <p>The answer is yes, and the statistical technique involved is called multiple regression. Multiple regression is a deep subject, worthy of entire courses. Suffice it to say here that more advanced stats courses go into the ways in which multiple predictors can be included in a regression.</p>
-<p>One easy thing we can do is incorporate a categorical variable into a graph and see if that categorical variable might play a role in the regression analysis. For example, there is a variance called <code>side</code> in <code>chredlin</code> that indicates whether the ZIP code is on the north side (n) or south side(s) of Chicago. As described in an earlier chapter, we can use color to distinguish between the ZIP codes.</p>
+<p>One easy thing we can do is incorporate a categorical variable into a graph and see if that categorical variable might play a role in the regression analysis. For example, there is a variable called <code>side</code> in <code>chredlin</code> that indicates whether the ZIP code is on the north side (n) or south side(s) of Chicago. As described in an earlier chapter, we can use color to distinguish between the ZIP codes.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chredlin, <span class="fu">aes</span>(<span class="at">y =</span> involact, <span class="at">x =</span> race, <span class="at">color =</span> side)) <span class="sc">+</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chredlin, <span class="fu">aes</span>(<span class="at">y =</span> involact, <span class="at">x =</span> race, <span class="at">color =</span> side)) <span class="sc">+</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>() <span class="sc">+</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="07-regression-web_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="07-regression-web_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <section id="exercise-14" class="level5 unnumbered">
@@ -883,34 +939,40 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <hr>
 <p>Does this affect the regression? We haven’t checked the conditions carefully for this new question, so we will exercise caution in coming to any definitive conclusions. But visually, there does appear to be a difference in the models generated for ZIP codes on the north versus south sides:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chredlin, <span class="fu">aes</span>(<span class="at">y =</span> involact, <span class="at">x =</span> race, <span class="at">color =</span> side)) <span class="sc">+</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chredlin, <span class="fu">aes</span>(<span class="at">y =</span> involact, <span class="at">x =</span> race, <span class="at">color =</span> side)) <span class="sc">+</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>() <span class="sc">+</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="07-regression-web_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="07-regression-web_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
 <section id="exercise-15" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-15">Exercise 15</h5>
-<p>Although the slopes appear to be different, this is quite misleading. Focus on just the red dots. Which regression condition appears to be violated if we only consider the north side regression? How does that violation appear to affect the slope of the regression line?</p>
+<p>Although the slopes appear to be different, this is quite misleading. Focus on just the darker dots (for the north side). Which regression condition appears to be violated if we only consider the north side regression? How does that violation appear to affect the slope of the regression line? (Hint: look in the upper right corner.)</p>
 <div class="answer">
 <p>Please write up your answer here.</p>
 </div>
 </section>
 </section>
-<section id="regression-your-turn" class="level2" data-number="7.12">
-<h2 data-number="7.12" class="anchored" data-anchor-id="regression-your-turn"><span class="header-section-number">7.12</span> Your turn</h2>
+<section id="your-turn" class="level2" data-number="7.12">
+<h2 data-number="7.12" class="anchored" data-anchor-id="your-turn"><span class="header-section-number">7.12</span> Your turn</h2>
 <p>Let’s revisit the <code>penguins</code> data. Imagine that it was much easier to measure body mass than it was to measure flipper length. (I’m not a penguin expert, so I don’t know if that’s true, but it seems plausible. Weighing a penguin can be done without human contact, for example.) Can we accurately predict flipper length from body mass? (This means that <code>flipper_length_mm</code> should be the response variable on the y-axis and <code>body_mass_g</code> should be the predictor variable on the x-axis.)</p>
 <section id="exercise-16a" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-16a">Exercise 16(a)</h5>
 <p>Create a scatterplot of the data. Do <em>not</em> include a regression line yet. (In other words, there should be no <code>geom_smooth</code> in this plot.)</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a scatterplot of the data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a scatterplot of the data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -931,16 +993,16 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <p>Then use <code>tidy</code>, <code>augment</code>, and <code>glance</code> respectively on the output. Assign the output to the names <code>fl_bm_tidy</code>, <code>fl_bm_aug</code>, and <code>fl_bm_glance</code>. Again, in each code chunk, type the output variable name on its own line to ensure that it prints in this file.</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to generate and print regression output with lm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to generate and print regression output with lm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to "tidy" and print the output from lm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to "tidy" and print the output from lm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to "augment" and print the output from lm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to "augment" and print the output from lm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to "glance" at and print the output from lm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to "glance" at and print the output from lm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -949,7 +1011,7 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <p>Use the <code>augment</code> output from above to create a residual plot with a blue horizontal reference line.</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a residual plot</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a residual plot</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -957,7 +1019,9 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <h5 class="unnumbered anchored" data-anchor-id="exercise-16e">Exercise 16(e)</h5>
 <p>Use the residual plot to check the fourth regression condition.</p>
 <div class="answer">
-<p>Please write up your answer here.</p>
+<ol start="4" type="1">
+<li></li>
+</ol>
 </div>
 </section>
 <section id="exercise-16f" class="level5 unnumbered">
@@ -965,7 +1029,7 @@ e = y - \hat{y} = 0.0 - 0.268 = -0.268
 <p>With all the conditions met, plot the regression line on top of the scatterplot of the data. (Use <code>geom_smooth</code> with <code>method = lm</code> and <code>se = FALSE</code> as in the examples earlier.)</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to plot the regression line on the scatterplot</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to plot the regression line on the scatterplot</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -980,53 +1044,60 @@ write-math-here
 </section>
 <section id="exercise-16h" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-16h">Exercise 16(h)</h5>
-<p>Interpret the slope in a full, contextually meaningful sentence.</p>
+<p>Interpret the slope in a full, contextually meaningful sentence. Don’t forget to use units of measurement in your answer.</p>
 <div class="answer">
 <p>Please write up your answer here.</p>
 </div>
 </section>
 <section id="exercise-16i" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-16i">Exercise 16(i)</h5>
-<p>Give a literal interpretation of the intercept. Then comment on the appropriateness of that interpretation. (In other words, does the intercept make sense, or is it a case of extrapolation?)</p>
+<p>A one gram increase in body mass is not very significant or interesting. Rescale your answer to the previous part in terms of a one kilogram (1000 gram) increase in body mass. In other words, how much of an increase in flipper length (in mm) does the model predict for a one kilogram increase in body mass?</p>
 <div class="answer">
 <p>Please write up your answer here.</p>
 </div>
 </section>
 <section id="exercise-16j" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-16j">Exercise 16(j)</h5>
-<p>Use the equation of the regression line to predict the flipper length of a penguin with body mass 4200 grams. Show your work. Then put that prediction into a full, contextually meaningful sentence.</p>
+<p>Give a literal interpretation of the intercept. Then comment on the appropriateness of that interpretation. (In other words, does the intercept make sense, or is it a case of extrapolation?)</p>
 <div class="answer">
 <p>Please write up your answer here.</p>
 </div>
 </section>
 <section id="exercise-16k" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-16k">Exercise 16(k)</h5>
-<p>Using the value of <span class="math inline">\(R^2\)</span> from the <code>glance</code> output for the model of flipper length by body mass, write a full, contextually meaningful sentence interpreting that value.</p>
+<p>Use the equation of the regression line to predict the flipper length of a penguin with body mass 4200 grams. Show your work. Then put that prediction into a full, contextually meaningful sentence (with units).</p>
 <div class="answer">
 <p>Please write up your answer here.</p>
 </div>
 </section>
 <section id="exercise-16l" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-16l">Exercise 16(l)</h5>
-<p>Add <code>color = species</code> to the <code>aes</code> portion of the <code>ggplot</code> command to look at the regression lines for the three different species separately. Comment on the slopes of those three regression lines.</p>
+<p>Using the value of <span class="math inline">\(R^2\)</span> from the <code>glance</code> output for the model of flipper length by body mass, write a full, contextually meaningful sentence interpreting that value.</p>
+<div class="answer">
+<p>Please write up your answer here.</p>
+</div>
+</section>
+<section id="exercise-16m" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-16m">Exercise 16(m)</h5>
+<p>Add <code>color = species</code> to the <code>aes</code> portion of the <code>ggplot</code> command to look at the regression lines for the three different species separately. (Don’t forget to use the Viridis color palette and the black-and-white theme.) Comment on the slopes of those three regression lines.</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to plot regressions by species</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to plot regressions by species</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Please write up your answer here.</p>
 </div>
 </section>
 </section>
-<section id="regression-conclusion" class="level2" data-number="7.13">
-<h2 data-number="7.13" class="anchored" data-anchor-id="regression-conclusion"><span class="header-section-number">7.13</span> Conclusion</h2>
-<p>Going beyond mere correlation, a regression analysis allows us to specify a linear model in the form of an equation. Assuming the conditions are met, this allows us to say more about the association. For example, the slope predicts how the response changes when comparing two values of the predictor. In fact, we can use the regression line to make a prediction for any reasonable value of the predictor (being careful not to extrapolate). Because regression is only a model, these predictions will not be exactly correct. Real data comes with residuals, meaning deviations from the idealized predictions of the model. But if those residuals are relatively small then the <span class="math inline">\(R^2\)</span> value will be large and the model does a good job making reasonably accurate predictions.</p>
-<section id="regression-prep" class="level3" data-number="7.13.1">
-<h3 data-number="7.13.1" class="anchored" data-anchor-id="regression-prep"><span class="header-section-number">7.13.1</span> Preparing and submitting your assignment</h3>
+<section id="conclusion" class="level2" data-number="7.13">
+<h2 data-number="7.13" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">7.13</span> Conclusion</h2>
+<p>Going beyond mere correlation, a regression analysis allows us to specify a linear model in the form of an equation. Assuming the conditions are met, this allows us to say more about the association. For example, the slope predicts how the response changes when comparing two values of the predictor. In fact, we can use the regression line to make a prediction for any reasonable value of the predictor (being careful not to extrapolate far outside the range of available data values). Because regression is only a model, these predictions will not be exactly correct. Real data comes with residuals, meaning deviations from the idealized predictions of the model. But if those residuals are relatively small then the <span class="math inline">\(R^2\)</span> value will be large and the model does a good job making reasonably accurate predictions.</p>
+<section id="preparing-and-submitting-your-assignment" class="level3" data-number="7.13.1">
+<h3 data-number="7.13.1" class="anchored" data-anchor-id="preparing-and-submitting-your-assignment"><span class="header-section-number">7.13.1</span> Preparing and submitting your assignment</h3>
 <ol type="1">
 <li>From the “Run” menu, select “Restart R and Run All Chunks”.</li>
-<li>Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.</li>
+<li>Deal with any code errors that crop up. Repeat steps 1–2 until there are no more code errors.</li>
 <li>Spell check your document by clicking the icon with “ABC” and a check mark.</li>
-<li>Hit the “Preview” button one last time to generate the final draft of the <code>.nb.html</code> file.</li>
+<li>Hit the “Render” button one last time to generate the final draft of the HTML file. (If there are errors here, you may need to go back and fix broken inline code or other markdown issues.)</li>
 <li>Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1–5 again.</li>
 </ol>
 <p>If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.</p>
@@ -1071,18 +1142,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1114,11 +1174,48 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1128,8 +1225,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1141,7 +1247,129 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1185,6 +1413,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1210,6 +1439,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1271,12 +1526,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./06-correlation-web.html" class="pagination-link">
+      <a href="./06-correlation-web.html" class="pagination-link" aria-label="Correlation">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Correlation</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./08-intro_to_randomization_1-web.html" class="pagination-link">
+      <a href="./08-intro_to_randomization_1-web.html" class="pagination-link" aria-label="Introduction to randomization, Part 1">
         <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to randomization, Part 1</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -1285,4 +1540,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body></html>
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/VectorPosse/intro_stats/edit/main/07-regression-web.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/VectorPosse/intro_stats/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

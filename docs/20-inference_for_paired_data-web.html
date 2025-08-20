@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.6.42">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Introduction to Statistics: an integrated textbook and workbook using R - 20&nbsp; Inference for paired data</title>
+<title>20&nbsp; Inference for paired data – Introduction to Statistics: an integrated textbook and workbook using R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -71,17 +71,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-c1f47e0d63438896ca427a756e834e96.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -90,17 +96,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
 }</script>
-
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="custom.css">
 </head>
@@ -111,13 +144,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./20-inference_for_paired_data-web.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Inference for paired data</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./20-inference_for_paired_data-web.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Inference for paired data</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -126,12 +159,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Introduction to Statistics: an integrated textbook and workbook using R</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/VectorPosse/intro_stats" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/VectorPosse/intro_stats" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
 </div>
     </div>
       </div>
@@ -282,9 +315,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -306,18 +339,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#functions-introduced-in-this-chapter" id="toc-functions-introduced-in-this-chapter" class="nav-link active" data-scroll-target="#functions-introduced-in-this-chapter">Functions introduced in this chapter</a></li>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="header-section-number">20.1</span> Introduction</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">20.1</span> Introduction</a>
   <ul class="collapse">
   <li><a href="#install-new-packages" id="toc-install-new-packages" class="nav-link" data-scroll-target="#install-new-packages"><span class="header-section-number">20.1.1</span> Install new packages</a></li>
-  <li><a href="#download-the-r-notebook-file" id="toc-download-the-r-notebook-file" class="nav-link" data-scroll-target="#download-the-r-notebook-file"><span class="header-section-number">20.1.2</span> Download the R notebook file</a></li>
+  <li><a href="#download-the-quarto-file" id="toc-download-the-quarto-file" class="nav-link" data-scroll-target="#download-the-quarto-file"><span class="header-section-number">20.1.2</span> Download the Quarto file</a></li>
   <li><a href="#restart-r-and-run-all-chunks" id="toc-restart-r-and-run-all-chunks" class="nav-link" data-scroll-target="#restart-r-and-run-all-chunks"><span class="header-section-number">20.1.3</span> Restart R and run all chunks</a></li>
   </ul></li>
   <li><a href="#load-packages" id="toc-load-packages" class="nav-link" data-scroll-target="#load-packages"><span class="header-section-number">20.2</span> Load packages</a></li>
@@ -370,7 +402,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#preparing-and-submitting-your-assignment" id="toc-preparing-and-submitting-your-assignment" class="nav-link" data-scroll-target="#preparing-and-submitting-your-assignment"><span class="header-section-number">20.13.1</span> Preparing and submitting your assignment</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/VectorPosse/intro_stats/edit/main/20-inference_for_paired_data-web.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/VectorPosse/intro_stats/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/VectorPosse/intro_stats/edit/main/20-inference_for_paired_data-web.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/VectorPosse/intro_stats/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -390,18 +422,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
 
-<!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>
-<p style="color:#ffffff">
-2.0
-</p>
-<!-- Please don't mess with the previous few lines! -->
-<section id="functions-introduced-in-this-chapter" class="level3 unnumbered summary">
-<h3 class="unnumbered anchored" data-anchor-id="functions-introduced-in-this-chapter">Functions introduced in this chapter</h3>
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Functions introduced in this chapter
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p>No new R functions are introduced here.</p>
-</section>
+</div>
+</div>
 <section id="introduction" class="level2" data-number="20.1">
 <h2 data-number="20.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">20.1</span> Introduction</h2>
 <p>In this chapter we will learn how to run inference for two paired numerical variables.</p>
@@ -409,10 +446,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="20.1.1" class="anchored" data-anchor-id="install-new-packages"><span class="header-section-number">20.1.1</span> Install new packages</h3>
 <p>There are no new packages used in this chapter.</p>
 </section>
-<section id="download-the-r-notebook-file" class="level3" data-number="20.1.2">
-<h3 data-number="20.1.2" class="anchored" data-anchor-id="download-the-r-notebook-file"><span class="header-section-number">20.1.2</span> Download the R notebook file</h3>
-<p>Check the upper-right corner in RStudio to make sure you’re in your <code>intro_stats</code> project. Then click on the following link to download this chapter as an R notebook file (<code>.Rmd</code>).</p>
-<p><a href="https://vectorposse.github.io/intro_stats/chapter_downloads/20-inference_for_paired_data.Rmd" download="">https://vectorposse.github.io/intro_stats/chapter_downloads/20-inference_for_paired_data.Rmd</a></p>
+<section id="download-the-quarto-file" class="level3" data-number="20.1.2">
+<h3 data-number="20.1.2" class="anchored" data-anchor-id="download-the-quarto-file"><span class="header-section-number">20.1.2</span> Download the Quarto file</h3>
+<p>Look at either the top (Posit Cloud) or the upper right corner of the RStudio screen to make sure you are in your <code>intro_stats</code> project.</p>
+<p>Then click on the following link to download this chapter as a Quarto file (<code>.qmd</code>).</p>
+<p><a href="https://vectorposse.github.io/intro_stats/chapter_downloads/20-inference_for_paired_data.qmd" download="">https://vectorposse.github.io/intro_stats/chapter_downloads/20-inference_for_paired_data.qmd</a></p>
 <p>Once the file is downloaded, move it to your project folder in RStudio and open it there.</p>
 </section>
 <section id="restart-r-and-run-all-chunks" class="level3" data-number="20.1.3">
@@ -427,11 +465,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.1.2     ✔ readr     2.1.4
-✔ forcats   1.0.0     ✔ stringr   1.5.0
-✔ ggplot2   3.4.2     ✔ tibble    3.2.1
-✔ lubridate 1.9.2     ✔ tidyr     1.3.0
-✔ purrr     1.0.1     
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
@@ -470,7 +508,6 @@ Loading required package: usdata</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>textbooks</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["dept_abbr"],"name":[1],"type":["fct"],"align":["left"]},{"label":["course"],"name":[2],"type":["fct"],"align":["left"]},{"label":["isbn"],"name":[3],"type":["fct"],"align":["left"]},{"label":["ucla_new"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["amaz_new"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["more"],"name":[6],"type":["fct"],"align":["left"]},{"label":["diff"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"Am Ind","2":"C170","3":"978-0803272620","4":"27.67","5":"27.95","6":"Y","7":"-0.28"},{"1":"Anthro","2":"9","3":"978-0030119194","4":"40.59","5":"31.14","6":"Y","7":"9.45"},{"1":"Anthro","2":"135T","3":"978-0300080643","4":"31.68","5":"32.00","6":"Y","7":"-0.32"},{"1":"Anthro","2":"191HB","3":"978-0226206813","4":"16.00","5":"11.52","6":"Y","7":"4.48"},{"1":"Art His","2":"M102K","3":"978-0892365999","4":"18.95","5":"14.21","6":"Y","7":"4.74"},{"1":"Art His","2":"118E","3":"978-0394723693","4":"14.95","5":"10.17","6":"Y","7":"4.78"},{"1":"Asia Am","2":"187B","3":"978-0822338437","4":"24.70","5":"20.06","6":"Y","7":"4.64"},{"1":"Asia Am","2":"191E","3":"978-0816646135","4":"19.50","5":"16.66","6":"N","7":"2.84"},{"1":"Ch Engr","2":"C125","3":"978-0195123401","4":"123.84","5":"106.25","6":"N","7":"17.59"},{"1":"Chicano","2":"M145B","3":"978-0896086265","4":"17.00","5":"13.26","6":"Y","7":"3.74"},{"1":"Chin","2":"174","3":"978-0791420621","4":"31.63","5":"29.95","6":"Y","7":"1.68"},{"1":"Com Sci","2":"180","3":"978-0321295354","4":"116.00","5":"88.09","6":"N","7":"27.91"},{"1":"Comm Lit","2":"290","3":"978-0393329254","4":"27.67","5":"18.45","6":"Y","7":"9.22"},{"1":"Comm St","2":"10","3":"978-0195181234","4":"24.70","5":"16.47","6":"Y","7":"8.23"},{"1":"Comptng","2":"20A","3":"978-0470509487","4":"126.67","5":"97.38","6":"N","7":"29.29"},{"1":"E&S Sci","2":"7","3":"978-0521711128","4":"53.90","5":"47.51","6":"N","7":"6.39"},{"1":"E&S Sci","2":"101","3":"978-0393927634","4":"89.73","5":"74.93","6":"N","7":"14.80"},{"1":"Econ","2":"101","3":"978-0324421620","4":"171.00","5":"132.77","6":"N","7":"38.23"},{"1":"El Engr","2":"2","3":"978-0131497269","4":"152.00","5":"121.50","6":"N","7":"30.50"},{"1":"El Engr","2":"176","3":"978-0471287704","4":"124.80","5":"108.00","6":"N","7":"16.80"},{"1":"Engl","2":"M104C","3":"978-0582276024","4":"16.00","5":"11.67","6":"Y","7":"4.33"},{"1":"Engl","2":"151","3":"978-0199561339","4":"25.95","5":"18.94","6":"Y","7":"7.01"},{"1":"Engl","2":"180","3":"978-0374515362","4":"18.00","5":"12.24","6":"Y","7":"5.76"},{"1":"Engl","2":"M260A","3":"978-0804747295","4":"21.73","5":"21.95","6":"Y","7":"-0.22"},{"1":"Engr","2":"183EW","3":"978-0132306416","4":"40.59","5":"31.14","6":"N","7":"9.45"},{"1":"ESL","2":"38A","3":"978-1577665304","4":"28.95","5":"28.95","6":"Y","7":"0.00"},{"1":"Frnch","2":"120","3":"978-2020525718","4":"19.95","5":"16.15","6":"Y","7":"3.80"},{"1":"Geog","2":"232","3":"978-1405102667","4":"49.45","5":"37.75","6":"Y","7":"11.70"},{"1":"German","2":"57","3":"978-0205668946","4":"41.09","5":"31.78","6":"N","7":"9.31"},{"1":"Greek","2":"130","3":"978-1598561692","4":"50.95","5":"32.97","6":"Y","7":"17.98"},{"1":"Hist","2":"97F","3":"978-1560000259","4":"44.50","5":"30.87","6":"Y","7":"13.63"},{"1":"Hist","2":"201B","3":"978-0198149248","4":"82.45","5":"85.00","6":"Y","7":"-2.55"},{"1":"Hist","2":"201L","3":"978-0742567498","4":"34.60","5":"34.95","6":"Y","7":"-0.35"},{"1":"Hlt Ser","2":"M422","3":"978-0761918479","4":"88.42","5":"97.95","6":"Y","7":"-9.53"},{"1":"Hlt Ser","2":"437","3":"978-0763745554","4":"84.00","5":"81.18","6":"N","7":"2.82"},{"1":"Hnrs","2":"37","3":"978-0140447187","4":"11.25","5":"9.50","6":"Y","7":"1.75"},{"1":"Hnrs","2":"M106","3":"978-1400033416","4":"15.00","5":"10.20","6":"Y","7":"4.80"},{"1":"Lifesci","2":"2","3":"978-0716776710","4":"180.03","5":"134.69","6":"Y","7":"45.34"},{"1":"Mat Sci","2":"104","3":"978-0470419977","4":"174.00","5":"143.75","6":"N","7":"30.25"},{"1":"Math","2":"151A","3":"978-0534407612","4":"188.58","5":"176.00","6":"N","7":"12.58"},{"1":"Mgmt","2":"1A","3":"978-0077251031","4":"146.75","5":"150.63","6":"Y","7":"-3.88"},{"1":"Mgmt","2":"124","3":"978-0078136634","4":"183.75","5":"145.40","6":"N","7":"38.35"},{"1":"Mgmt","2":"127B","3":"978-0324828641","4":"214.50","5":"173.56","6":"N","7":"40.94"},{"1":"Mgmt","2":"228","3":"978-0073379661","4":"197.00","5":"131.00","6":"Y","7":"66.00"},{"1":"Mgmt","2":"231D","3":"978-0131407374","4":"194.00","5":"157.68","6":"Y","7":"36.32"},{"1":"Mgmt","2":"263A","3":"978-0073404769","4":"176.25","5":"137.17","6":"Y","7":"39.08"},{"1":"Mus His","2":"191G","3":"978-0195162578","4":"24.70","5":"24.95","6":"Y","7":"-0.25"},{"1":"Physics","2":"6A","3":"978-0534491437","4":"188.00","5":"159.28","6":"Y","7":"28.72"},{"1":"Pol Sci","2":"10","3":"978-0393090406","4":"29.70","5":"23.07","6":"Y","7":"6.63"},{"1":"Pol Sci","2":"120B","3":"978-1588264169","4":"26.24","5":"21.04","6":"Y","7":"5.20"},{"1":"Pol Sci","2":"M132B","3":"978-0205753383","4":"55.13","5":"42.68","6":"Y","7":"12.45"},{"1":"Pol Sci","2":"171C","3":"978-0393976267","4":"43.56","5":"39.37","6":"Y","7":"4.19"},{"1":"Pol Sci","2":"200C","3":"978-0471663799","4":"129.60","5":"85.20","6":"Y","7":"44.40"},{"1":"Psych","2":"10","3":"978-1429227049","4":"123.84","5":"93.13","6":"N","7":"30.71"},{"1":"Psych","2":"134A","3":"978-0073378541","4":"85.12","5":"67.40","6":"Y","7":"17.72"},{"1":"Psych","2":"263","3":"978-0495099697","4":"152.48","5":"132.79","6":"N","7":"19.69"},{"1":"Russian","2":"90B","3":"978-0674304437","4":"29.70","5":"24.31","6":"Y","7":"5.39"},{"1":"Soc Gen","2":"102W","3":"978-0520265882","4":"24.70","5":"24.95","6":"N","7":"-0.25"},{"1":"Soc Wlf","2":"M104D","3":"978-1412969666","4":"89.71","5":"85.45","6":"N","7":"4.26"},{"1":"Sociol","2":"180A","3":"978-0812968378","4":"10.50","5":"10.08","6":"N","7":"0.42"},{"1":"Span","2":"105","3":"978-0618527748","4":"92.88","5":"65.73","6":"N","7":"27.15"},{"1":"Span","2":"115","3":"978-0471013914","4":"100.88","5":"84.26","6":"N","7":"16.62"},{"1":"Stat","2":"98T","3":"978-0393310726","4":"11.95","5":"8.60","6":"Y","7":"3.35"},{"1":"Stat","2":"C180","3":"978-1584883883","4":"72.47","5":"58.42","6":"N","7":"14.05"},{"1":"Stat","2":"200C","3":"978-0412043710","4":"92.10","5":"80.37","6":"N","7":"11.73"},{"1":"Stat","2":"C216","3":"978-1441931566","4":"78.35","5":"64.09","6":"N","7":"14.26"},{"1":"Urbn Pl","2":"M275","3":"978-1592134328","4":"42.00","5":"37.04","6":"Y","7":"4.96"},{"1":"Wld Art","2":"C139","3":"978-0520224759","4":"18.75","5":"20.21","6":"Y","7":"-1.46"},{"1":"Wld Art","2":"C180","3":"978-1412923484","4":"48.46","5":"39.34","6":"N","7":"9.12"},{"1":"Wld Art","2":"C409A","3":"978-0195390827","4":"39.55","5":"26.37","6":"N","7":"13.18"},{"1":"Wld Art","2":"495","3":"978-0820474151","4":"29.65","5":"24.19","6":"Y","7":"5.46"},{"1":"Wom Std","2":"M144","3":"978-1570755637","4":"23.76","5":"18.72","6":"Y","7":"5.04"},{"1":"Wom Std","2":"285","3":"978-0822341147","4":"27.70","5":"18.22","6":"Y","7":"9.48"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -496,18 +533,41 @@ $ diff      &lt;dbl&gt; -0.28, 9.45, -0.32, 4.48, 4.74, 4.78, 4.64, 2.84, 17.59,
 </section>
 <section id="prepare-the-data-for-analysis." class="level3" data-number="20.6.2">
 <h3 data-number="20.6.2" class="anchored" data-anchor-id="prepare-the-data-for-analysis."><span class="header-section-number">20.6.2</span> Prepare the data for analysis.</h3>
+<p>First, a quick check for missing data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>textbooks <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(ucla_new, amaz_new) <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">NROW</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 73</code></pre>
+</div>
+</div>
 <p>Generally, we will need to create a new variable <code>d</code> that represents the difference between the two paired variables of interest. This uses the <code>mutate</code> command that adds an extra column to our data frame. The order of subtraction usually does not matter, but we will want to keep track of that order so that we can interpret our test statistic correctly. In the case of a one-sided test (which this is), it is especially important to keep track of the order of subtraction. Since we suspect the bookstore will charge more than Amazon, let’s subtract in that order. Our hunch is that it will be a positive number, on average.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>textbooks_d <span class="ot">&lt;-</span> textbooks <span class="sc">%&gt;%</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">d =</span> ucla_new <span class="sc">-</span> amaz_new)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>textbooks_d</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>textbooks <span class="ot">&lt;-</span> textbooks <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">d =</span> ucla_new <span class="sc">-</span> amaz_new)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>textbooks</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["dept_abbr"],"name":[1],"type":["fct"],"align":["left"]},{"label":["course"],"name":[2],"type":["fct"],"align":["left"]},{"label":["isbn"],"name":[3],"type":["fct"],"align":["left"]},{"label":["ucla_new"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["amaz_new"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["more"],"name":[6],"type":["fct"],"align":["left"]},{"label":["diff"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["d"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"Am Ind","2":"C170","3":"978-0803272620","4":"27.67","5":"27.95","6":"Y","7":"-0.28","8":"-0.28"},{"1":"Anthro","2":"9","3":"978-0030119194","4":"40.59","5":"31.14","6":"Y","7":"9.45","8":"9.45"},{"1":"Anthro","2":"135T","3":"978-0300080643","4":"31.68","5":"32.00","6":"Y","7":"-0.32","8":"-0.32"},{"1":"Anthro","2":"191HB","3":"978-0226206813","4":"16.00","5":"11.52","6":"Y","7":"4.48","8":"4.48"},{"1":"Art His","2":"M102K","3":"978-0892365999","4":"18.95","5":"14.21","6":"Y","7":"4.74","8":"4.74"},{"1":"Art His","2":"118E","3":"978-0394723693","4":"14.95","5":"10.17","6":"Y","7":"4.78","8":"4.78"},{"1":"Asia Am","2":"187B","3":"978-0822338437","4":"24.70","5":"20.06","6":"Y","7":"4.64","8":"4.64"},{"1":"Asia Am","2":"191E","3":"978-0816646135","4":"19.50","5":"16.66","6":"N","7":"2.84","8":"2.84"},{"1":"Ch Engr","2":"C125","3":"978-0195123401","4":"123.84","5":"106.25","6":"N","7":"17.59","8":"17.59"},{"1":"Chicano","2":"M145B","3":"978-0896086265","4":"17.00","5":"13.26","6":"Y","7":"3.74","8":"3.74"},{"1":"Chin","2":"174","3":"978-0791420621","4":"31.63","5":"29.95","6":"Y","7":"1.68","8":"1.68"},{"1":"Com Sci","2":"180","3":"978-0321295354","4":"116.00","5":"88.09","6":"N","7":"27.91","8":"27.91"},{"1":"Comm Lit","2":"290","3":"978-0393329254","4":"27.67","5":"18.45","6":"Y","7":"9.22","8":"9.22"},{"1":"Comm St","2":"10","3":"978-0195181234","4":"24.70","5":"16.47","6":"Y","7":"8.23","8":"8.23"},{"1":"Comptng","2":"20A","3":"978-0470509487","4":"126.67","5":"97.38","6":"N","7":"29.29","8":"29.29"},{"1":"E&S Sci","2":"7","3":"978-0521711128","4":"53.90","5":"47.51","6":"N","7":"6.39","8":"6.39"},{"1":"E&S Sci","2":"101","3":"978-0393927634","4":"89.73","5":"74.93","6":"N","7":"14.80","8":"14.80"},{"1":"Econ","2":"101","3":"978-0324421620","4":"171.00","5":"132.77","6":"N","7":"38.23","8":"38.23"},{"1":"El Engr","2":"2","3":"978-0131497269","4":"152.00","5":"121.50","6":"N","7":"30.50","8":"30.50"},{"1":"El Engr","2":"176","3":"978-0471287704","4":"124.80","5":"108.00","6":"N","7":"16.80","8":"16.80"},{"1":"Engl","2":"M104C","3":"978-0582276024","4":"16.00","5":"11.67","6":"Y","7":"4.33","8":"4.33"},{"1":"Engl","2":"151","3":"978-0199561339","4":"25.95","5":"18.94","6":"Y","7":"7.01","8":"7.01"},{"1":"Engl","2":"180","3":"978-0374515362","4":"18.00","5":"12.24","6":"Y","7":"5.76","8":"5.76"},{"1":"Engl","2":"M260A","3":"978-0804747295","4":"21.73","5":"21.95","6":"Y","7":"-0.22","8":"-0.22"},{"1":"Engr","2":"183EW","3":"978-0132306416","4":"40.59","5":"31.14","6":"N","7":"9.45","8":"9.45"},{"1":"ESL","2":"38A","3":"978-1577665304","4":"28.95","5":"28.95","6":"Y","7":"0.00","8":"0.00"},{"1":"Frnch","2":"120","3":"978-2020525718","4":"19.95","5":"16.15","6":"Y","7":"3.80","8":"3.80"},{"1":"Geog","2":"232","3":"978-1405102667","4":"49.45","5":"37.75","6":"Y","7":"11.70","8":"11.70"},{"1":"German","2":"57","3":"978-0205668946","4":"41.09","5":"31.78","6":"N","7":"9.31","8":"9.31"},{"1":"Greek","2":"130","3":"978-1598561692","4":"50.95","5":"32.97","6":"Y","7":"17.98","8":"17.98"},{"1":"Hist","2":"97F","3":"978-1560000259","4":"44.50","5":"30.87","6":"Y","7":"13.63","8":"13.63"},{"1":"Hist","2":"201B","3":"978-0198149248","4":"82.45","5":"85.00","6":"Y","7":"-2.55","8":"-2.55"},{"1":"Hist","2":"201L","3":"978-0742567498","4":"34.60","5":"34.95","6":"Y","7":"-0.35","8":"-0.35"},{"1":"Hlt Ser","2":"M422","3":"978-0761918479","4":"88.42","5":"97.95","6":"Y","7":"-9.53","8":"-9.53"},{"1":"Hlt Ser","2":"437","3":"978-0763745554","4":"84.00","5":"81.18","6":"N","7":"2.82","8":"2.82"},{"1":"Hnrs","2":"37","3":"978-0140447187","4":"11.25","5":"9.50","6":"Y","7":"1.75","8":"1.75"},{"1":"Hnrs","2":"M106","3":"978-1400033416","4":"15.00","5":"10.20","6":"Y","7":"4.80","8":"4.80"},{"1":"Lifesci","2":"2","3":"978-0716776710","4":"180.03","5":"134.69","6":"Y","7":"45.34","8":"45.34"},{"1":"Mat Sci","2":"104","3":"978-0470419977","4":"174.00","5":"143.75","6":"N","7":"30.25","8":"30.25"},{"1":"Math","2":"151A","3":"978-0534407612","4":"188.58","5":"176.00","6":"N","7":"12.58","8":"12.58"},{"1":"Mgmt","2":"1A","3":"978-0077251031","4":"146.75","5":"150.63","6":"Y","7":"-3.88","8":"-3.88"},{"1":"Mgmt","2":"124","3":"978-0078136634","4":"183.75","5":"145.40","6":"N","7":"38.35","8":"38.35"},{"1":"Mgmt","2":"127B","3":"978-0324828641","4":"214.50","5":"173.56","6":"N","7":"40.94","8":"40.94"},{"1":"Mgmt","2":"228","3":"978-0073379661","4":"197.00","5":"131.00","6":"Y","7":"66.00","8":"66.00"},{"1":"Mgmt","2":"231D","3":"978-0131407374","4":"194.00","5":"157.68","6":"Y","7":"36.32","8":"36.32"},{"1":"Mgmt","2":"263A","3":"978-0073404769","4":"176.25","5":"137.17","6":"Y","7":"39.08","8":"39.08"},{"1":"Mus His","2":"191G","3":"978-0195162578","4":"24.70","5":"24.95","6":"Y","7":"-0.25","8":"-0.25"},{"1":"Physics","2":"6A","3":"978-0534491437","4":"188.00","5":"159.28","6":"Y","7":"28.72","8":"28.72"},{"1":"Pol Sci","2":"10","3":"978-0393090406","4":"29.70","5":"23.07","6":"Y","7":"6.63","8":"6.63"},{"1":"Pol Sci","2":"120B","3":"978-1588264169","4":"26.24","5":"21.04","6":"Y","7":"5.20","8":"5.20"},{"1":"Pol Sci","2":"M132B","3":"978-0205753383","4":"55.13","5":"42.68","6":"Y","7":"12.45","8":"12.45"},{"1":"Pol Sci","2":"171C","3":"978-0393976267","4":"43.56","5":"39.37","6":"Y","7":"4.19","8":"4.19"},{"1":"Pol Sci","2":"200C","3":"978-0471663799","4":"129.60","5":"85.20","6":"Y","7":"44.40","8":"44.40"},{"1":"Psych","2":"10","3":"978-1429227049","4":"123.84","5":"93.13","6":"N","7":"30.71","8":"30.71"},{"1":"Psych","2":"134A","3":"978-0073378541","4":"85.12","5":"67.40","6":"Y","7":"17.72","8":"17.72"},{"1":"Psych","2":"263","3":"978-0495099697","4":"152.48","5":"132.79","6":"N","7":"19.69","8":"19.69"},{"1":"Russian","2":"90B","3":"978-0674304437","4":"29.70","5":"24.31","6":"Y","7":"5.39","8":"5.39"},{"1":"Soc Gen","2":"102W","3":"978-0520265882","4":"24.70","5":"24.95","6":"N","7":"-0.25","8":"-0.25"},{"1":"Soc Wlf","2":"M104D","3":"978-1412969666","4":"89.71","5":"85.45","6":"N","7":"4.26","8":"4.26"},{"1":"Sociol","2":"180A","3":"978-0812968378","4":"10.50","5":"10.08","6":"N","7":"0.42","8":"0.42"},{"1":"Span","2":"105","3":"978-0618527748","4":"92.88","5":"65.73","6":"N","7":"27.15","8":"27.15"},{"1":"Span","2":"115","3":"978-0471013914","4":"100.88","5":"84.26","6":"N","7":"16.62","8":"16.62"},{"1":"Stat","2":"98T","3":"978-0393310726","4":"11.95","5":"8.60","6":"Y","7":"3.35","8":"3.35"},{"1":"Stat","2":"C180","3":"978-1584883883","4":"72.47","5":"58.42","6":"N","7":"14.05","8":"14.05"},{"1":"Stat","2":"200C","3":"978-0412043710","4":"92.10","5":"80.37","6":"N","7":"11.73","8":"11.73"},{"1":"Stat","2":"C216","3":"978-1441931566","4":"78.35","5":"64.09","6":"N","7":"14.26","8":"14.26"},{"1":"Urbn Pl","2":"M275","3":"978-1592134328","4":"42.00","5":"37.04","6":"Y","7":"4.96","8":"4.96"},{"1":"Wld Art","2":"C139","3":"978-0520224759","4":"18.75","5":"20.21","6":"Y","7":"-1.46","8":"-1.46"},{"1":"Wld Art","2":"C180","3":"978-1412923484","4":"48.46","5":"39.34","6":"N","7":"9.12","8":"9.12"},{"1":"Wld Art","2":"C409A","3":"978-0195390827","4":"39.55","5":"26.37","6":"N","7":"13.18","8":"13.18"},{"1":"Wld Art","2":"495","3":"978-0820474151","4":"29.65","5":"24.19","6":"Y","7":"5.46","8":"5.46"},{"1":"Wom Std","2":"M144","3":"978-1570755637","4":"23.76","5":"18.72","6":"Y","7":"5.04","8":"5.04"},{"1":"Wom Std","2":"285","3":"978-0822341147","4":"27.70","5":"18.22","6":"Y","7":"9.48","8":"9.48"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(textbooks)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 73
+Columns: 8
+$ dept_abbr &lt;fct&gt; Am Ind, Anthro, Anthro, Anthro, Art His, Art His, Asia Am, A…
+$ course    &lt;fct&gt;  C170, 9, 135T, 191HB, M102K, 118E, 187B, 191E, C125, M145B,…
+$ isbn      &lt;fct&gt; 978-0803272620, 978-0030119194, 978-0300080643, 978-02262068…
+$ ucla_new  &lt;dbl&gt; 27.67, 40.59, 31.68, 16.00, 18.95, 14.95, 24.70, 19.50, 123.…
+$ amaz_new  &lt;dbl&gt; 27.95, 31.14, 32.00, 11.52, 14.21, 10.17, 20.06, 16.66, 106.…
+$ more      &lt;fct&gt; Y, Y, Y, Y, Y, Y, Y, N, N, Y, Y, N, Y, Y, N, N, N, N, N, N, …
+$ diff      &lt;dbl&gt; -0.28, 9.45, -0.32, 4.48, 4.74, 4.78, 4.64, 2.84, 17.59, 3.7…
+$ d         &lt;dbl&gt; -0.28, 9.45, -0.32, 4.48, 4.74, 4.78, 4.64, 2.84, 17.59, 3.7…</code></pre>
 </div>
 </div>
 <p>If you look closely at the tibble above, you will see that there is a column already in our data called <code>diff</code>. It is the same as the column <code>d</code> we just created. So in this case, we didn’t really need to create a new difference variable. However, since most data sets do not come pre-prepared with such a difference variable, it is good to know how to make one if needed.</p>
@@ -516,25 +576,33 @@ $ diff      &lt;dbl&gt; -0.28, 9.45, -0.32, 4.48, 4.74, 4.78, 4.64, 2.84, 17.59,
 <h3 data-number="20.6.3" class="anchored" data-anchor-id="make-tables-or-plots-to-explore-the-data-visually."><span class="header-section-number">20.6.3</span> Make tables or plots to explore the data visually.</h3>
 <p>Here are summary statistics, a histogram, and a QQ plot for <code>d</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(textbooks_d<span class="sc">$</span>d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(textbooks<span class="sc">$</span>d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
   -9.53    3.80    8.23   12.76   17.59   66.00 </code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(textbooks_d, <span class="fu">aes</span>(<span class="at">x =</span> d)) <span class="sc">+</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">10</span>, <span class="at">boundary =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(textbooks, <span class="fu">aes</span>(<span class="at">x =</span> d)) <span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">10</span>, <span class="at">boundary =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="20-inference_for_paired_data-web_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="20-inference_for_paired_data-web_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(textbooks_d, <span class="fu">aes</span>(<span class="at">sample =</span> d)) <span class="sc">+</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_qq_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(textbooks, <span class="fu">aes</span>(<span class="at">sample =</span> d)) <span class="sc">+</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="20-inference_for_paired_data-web_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="20-inference_for_paired_data-web_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>The data is somewhat skewed to the right with one observation that might be a bit of an outlier. If the sample size were much smaller, we might be concerned about this point However, it’s not much higher than other points in that right tail, and it doesn’t appear that its inclusion or exclusion will change the overall conclusion much. If you are concerned that the point might alter the conclusion, run the hypothesis test twice, once with and once without the outlier present to see if the main conclusion changes.</p>
@@ -602,12 +670,11 @@ $ diff      &lt;dbl&gt; -0.28, 9.45, -0.32, 4.48, 4.74, 4.78, 4.64, 2.84, 17.59,
 <section id="compute-the-test-statistic." class="level3" data-number="20.9.1">
 <h3 data-number="20.9.1" class="anchored" data-anchor-id="compute-the-test-statistic."><span class="header-section-number">20.9.1</span> Compute the test statistic.</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>d_mean <span class="ot">&lt;-</span> textbooks_d <span class="sc">%&gt;%</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">specify</span>(<span class="at">response =</span> d) <span class="sc">%&gt;%</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"mean"</span>)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>d_mean</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>d_mean <span class="ot">&lt;-</span> textbooks <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">specify</span>(<span class="at">response =</span> d) <span class="sc">|&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"mean"</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>d_mean</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["stat"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"12.76164"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -616,13 +683,12 @@ $ diff      &lt;dbl&gt; -0.28, 9.45, -0.32, 4.48, 4.74, 4.78, 4.64, 2.84, 17.59,
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>d_t <span class="ot">&lt;-</span> textbooks_d <span class="sc">%&gt;%</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">specify</span>(<span class="at">response =</span> d) <span class="sc">%&gt;%</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hypothesize</span>(<span class="at">null =</span> <span class="st">"point"</span>, <span class="at">mu =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"t"</span>)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>d_t</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>d_t <span class="ot">&lt;-</span> textbooks <span class="sc">|&gt;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">specify</span>(<span class="at">response =</span> d) <span class="sc">|&gt;</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hypothesize</span>(<span class="at">null =</span> <span class="st">"point"</span>, <span class="at">mu =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"t"</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>d_t</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["stat"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"7.648771"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -639,34 +705,37 @@ $ diff      &lt;dbl&gt; -0.28, 9.45, -0.32, 4.48, 4.74, 4.78, 4.64, 2.84, 17.59,
 <section id="plot-the-null-distribution." class="level3" data-number="20.9.3">
 <h3 data-number="20.9.3" class="anchored" data-anchor-id="plot-the-null-distribution."><span class="header-section-number">20.9.3</span> Plot the null distribution.</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>price_test <span class="ot">&lt;-</span> textbooks_d <span class="sc">%&gt;%</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">specify</span>(<span class="at">response =</span> d) <span class="sc">%&gt;%</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assume</span>(<span class="st">"t"</span>)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>price_test</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>price_test <span class="ot">&lt;-</span> textbooks <span class="sc">|&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">specify</span>(<span class="at">response =</span> d) <span class="sc">|&gt;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assume</span>(<span class="st">"t"</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>price_test</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A T distribution with 72 degrees of freedom.</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>price_test <span class="sc">%&gt;%</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visualize</span>() <span class="sc">+</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shade_p_value</span>(<span class="at">obs_stat =</span> d_t, <span class="at">direction =</span> <span class="st">"greater"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>price_test <span class="sc">|&gt;</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visualize</span>() <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shade_p_value</span>(<span class="at">obs_stat =</span> d_t, <span class="at">direction =</span> <span class="st">"greater"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="20-inference_for_paired_data-web_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="20-inference_for_paired_data-web_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
 <section id="calculate-the-p-value." class="level3" data-number="20.9.4">
 <h3 data-number="20.9.4" class="anchored" data-anchor-id="calculate-the-p-value."><span class="header-section-number">20.9.4</span> Calculate the P-value.</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>price_test_p <span class="ot">&lt;-</span> price_test <span class="sc">%&gt;%</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_p_value</span>(<span class="at">obs_stat =</span> d_t, <span class="at">direction =</span> <span class="st">"greater"</span>)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>price_test_p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>price_test_p <span class="ot">&lt;-</span> price_test <span class="sc">|&gt;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_p_value</span>(<span class="at">obs_stat =</span> d_t, <span class="at">direction =</span> <span class="st">"greater"</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>price_test_p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["p_value"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.00000000003463791"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["p_value"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"3.463791e-11"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -674,7 +743,7 @@ $ diff      &lt;dbl&gt; -0.28, 9.45, -0.32, 4.48, 4.74, 4.78, 4.64, 2.84, 17.59,
 </section>
 <section id="interpret-the-p-value-as-a-probability-given-the-null." class="level3" data-number="20.9.5">
 <h3 data-number="20.9.5" class="anchored" data-anchor-id="interpret-the-p-value-as-a-probability-given-the-null."><span class="header-section-number">20.9.5</span> Interpret the P-value as a probability given the null.</h3>
-<p><span class="math inline">\(P &lt; 0.001\)</span>. If there were no difference in textbook prices between the UCLA bookstore and Amazon, there is only a 0% chance of seeing data at least as extreme as what we saw. (Note that the number is so small that it rounds to zero in the inline code above. That zero is technically incorrect. The P-value is never exactly zero. That’s why why also are clear to state <span class="math inline">\(P &lt; 0.001\)</span>.)</p>
+<p><span class="math inline">\(P &lt; 0.001\)</span>. If there were no difference in textbook prices between the UCLA bookstore and Amazon, there would be less than a 0.1% chance of seeing data at least as extreme as what we saw. (Remember that a P-value can never be zero. That’s why we state <span class="math inline">\(P &lt; 0.001\)</span>.)</p>
 </section>
 </section>
 <section id="conclusion" class="level2" data-number="20.10">
@@ -690,7 +759,7 @@ $ diff      &lt;dbl&gt; -0.28, 9.45, -0.32, 4.48, 4.74, 4.78, 4.64, 2.84, 17.59,
 </section>
 <section id="express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion." class="level3" data-number="20.10.3">
 <h3 data-number="20.10.3" class="anchored" data-anchor-id="express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion."><span class="header-section-number">20.10.3</span> Express reservations or uncertainty about the generalizability of the conclusion.</h3>
-<p>We can be confident about the validity of this data, and therefore the conclusion drawn. We should be careful to limit our conclusion to the UCLA bookstore (and not extrapolate the findings, say, to other campus bookstores.) Depending on when this data was collected, we may not be able to say anything about current prices at the UCLA bookstore either.</p>
+<p>We can be confident about the validity of this data, and therefore the conclusion drawn. We should be careful to limit our conclusion to the UCLA bookstore (and not extrapolate the findings, say, to other campus bookstores). Depending on when this data was collected, we may not be able to say anything about current prices at the UCLA bookstore either.</p>
 </section>
 <section id="identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses." class="level3" data-number="20.10.4">
 <h3 data-number="20.10.4" class="anchored" data-anchor-id="identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses."><span class="header-section-number">20.10.4</span> Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.</h3>
@@ -706,11 +775,10 @@ $ diff      &lt;dbl&gt; -0.28, 9.45, -0.32, 4.48, 4.74, 4.78, 4.64, 2.84, 17.59,
 <section id="calculate-and-graph-the-confidence-interval." class="level3" data-number="20.11.2">
 <h3 data-number="20.11.2" class="anchored" data-anchor-id="calculate-and-graph-the-confidence-interval."><span class="header-section-number">20.11.2</span> Calculate and graph the confidence interval.</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>price_ci <span class="ot">&lt;-</span> price_test <span class="sc">%&gt;%</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_confidence_interval</span>(<span class="at">point_estimate =</span> d_mean, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>price_ci</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>price_ci <span class="ot">&lt;-</span> price_test <span class="sc">|&gt;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_confidence_interval</span>(<span class="at">point_estimate =</span> d_mean, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>price_ci</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["lower_ci"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["upper_ci"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"9.435636","2":"16.08765"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -719,18 +787,23 @@ $ diff      &lt;dbl&gt; -0.28, 9.45, -0.32, 4.48, 4.74, 4.78, 4.64, 2.84, 17.59,
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>price_test <span class="sc">%&gt;%</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visualize</span>() <span class="sc">+</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shade_confidence_interval</span>(<span class="at">endpoints =</span> price_ci)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>price_test <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visualize</span>() <span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shade_confidence_interval</span>(<span class="at">endpoints =</span> price_ci)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="20-inference_for_paired_data-web_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="20-inference_for_paired_data-web_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
 <section id="state-but-do-not-overstate-a-contextually-meaningful-interpretation." class="level3" data-number="20.11.3">
 <h3 data-number="20.11.3" class="anchored" data-anchor-id="state-but-do-not-overstate-a-contextually-meaningful-interpretation."><span class="header-section-number">20.11.3</span> State (but do not overstate) a contextually meaningful interpretation.</h3>
-<p>We are 95% confident that the true difference in textbook prices between the UCLA bookstore and Amazon is captured in the interval (9.4356361, 16.0876516). This was obtained by subtracting the Amazon price minus the UCLA bookstore. (In other words, since all differences in the confidence interval are positive, all plausible differences indicate that the UCLA prices are higher than the Amazon prices.)</p>
+<p>We are 95% confident that the true difference in textbook prices between the UCLA bookstore and Amazon is captured in the interval (9.44, 16.09). This was obtained by subtracting the Amazon price minus the UCLA bookstore. In other words, since all differences in the confidence interval are positive, all plausible differences indicate that the UCLA prices are higher than the Amazon prices.</p>
 <p>Commentary: Don’t forget that any time we find a number that represents a difference, we have to be clear in the conclusion about the direction of subtraction. Otherwise, we have no idea how to interpret positive and negative values.</p>
+<p>Also note the use of the <code>round</code> function here since we are working with dollar values. Keep in mind, however, that R sometimes doesn’t respect your wishes and will not always display a number with two decimal points.</p>
 </section>
 <section id="if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test." class="level3" data-number="20.11.4">
 <h3 data-number="20.11.4" class="anchored" data-anchor-id="if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test."><span class="header-section-number">20.11.4</span> If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.</h3>
@@ -753,20 +826,20 @@ $ diff      &lt;dbl&gt; -0.28, 9.45, -0.32, 4.48, 4.74, 4.78, 4.64, 2.84, 17.59,
 <section id="use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-1" class="level6 unnumbered">
 <h6 class="unnumbered anchored" data-anchor-id="use-data-documentation-help-files-code-books-google-etc.-to-determine-as-much-as-possible-about-the-data-provenance-and-structure.-1">Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.</h6>
 <div class="answer">
-<p>Please write up your answer here</p>
+<p>Please write up your answer here.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to print the data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to print the data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to glimpse the variables</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to glimpse the variables</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
-<section id="prepare-the-data-for-analysis.-not-always-necessary." class="level6 unnumbered">
-<h6 class="unnumbered anchored" data-anchor-id="prepare-the-data-for-analysis.-not-always-necessary.">Prepare the data for analysis. [Not always necessary.]</h6>
+<section id="prepare-the-data-for-analysis.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="prepare-the-data-for-analysis.-1">Prepare the data for analysis.</h6>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to prepare the data for analysis.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to prepare the data for analysis.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -774,7 +847,7 @@ $ diff      &lt;dbl&gt; -0.28, 9.45, -0.32, 4.48, 4.74, 4.78, 4.64, 2.84, 17.59,
 <h6 class="unnumbered anchored" data-anchor-id="make-tables-or-plots-to-explore-the-data-visually.-1">Make tables or plots to explore the data visually.</h6>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to make tables or plots.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to make tables or plots.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -823,7 +896,7 @@ $ diff      &lt;dbl&gt; -0.28, 9.45, -0.32, 4.48, 4.74, 4.78, 4.64, 2.84, 17.59,
 <h6 class="unnumbered anchored" data-anchor-id="compute-the-test-statistic.-1">Compute the test statistic.</h6>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to compute the test statistic.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to compute the test statistic.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -837,12 +910,10 @@ $ diff      &lt;dbl&gt; -0.28, 9.45, -0.32, 4.48, 4.74, 4.78, 4.64, 2.84, 17.59,
 <h6 class="unnumbered anchored" data-anchor-id="plot-the-null-distribution.-1">Plot the null distribution.</h6>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># IF CONDUCTING A SIMULATION...</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to simulate the null distribution.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to generate the null distribution.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to plot the null distribution.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to plot the null distribution.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -850,7 +921,7 @@ $ diff      &lt;dbl&gt; -0.28, 9.45, -0.32, 4.48, 4.74, 4.78, 4.64, 2.84, 17.59,
 <h6 class="unnumbered anchored" data-anchor-id="calculate-the-p-value.-1">Calculate the P-value.</h6>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to calculate the P-value.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to calculate the P-value.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -900,10 +971,10 @@ $ diff      &lt;dbl&gt; -0.28, 9.45, -0.32, 4.48, 4.74, 4.78, 4.64, 2.84, 17.59,
 <h6 class="unnumbered anchored" data-anchor-id="calculate-and-graph-the-confidence-interval.-1">Calculate and graph the confidence interval.</h6>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to calculate the confidence interval.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to calculate the confidence interval.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to graph the confidence interval.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to graph the confidence interval.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -919,8 +990,8 @@ $ diff      &lt;dbl&gt; -0.28, 9.45, -0.32, 4.48, 4.74, 4.78, 4.64, 2.84, 17.59,
 <p>Please write up your answer here.</p>
 </div>
 </section>
-<section id="when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-not-always-applicable." class="level6 unnumbered">
-<h6 class="unnumbered anchored" data-anchor-id="when-comparing-two-groups-comment-on-the-effect-size-and-the-practical-significance-of-the-result.-not-always-applicable.">When comparing two groups, comment on the effect size and the practical significance of the result. [Not always applicable.]</h6>
+<section id="comment-on-the-effect-size-and-the-practical-significance-of-the-result." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="comment-on-the-effect-size-and-the-practical-significance-of-the-result.">Comment on the effect size and the practical significance of the result.</h6>
 <div class="answer">
 <p>Please write up your answer here.</p>
 </div>
@@ -934,9 +1005,9 @@ $ diff      &lt;dbl&gt; -0.28, 9.45, -0.32, 4.48, 4.74, 4.78, 4.64, 2.84, 17.59,
 <h3 data-number="20.13.1" class="anchored" data-anchor-id="preparing-and-submitting-your-assignment"><span class="header-section-number">20.13.1</span> Preparing and submitting your assignment</h3>
 <ol type="1">
 <li>From the “Run” menu, select “Restart R and Run All Chunks”.</li>
-<li>Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.</li>
+<li>Deal with any code errors that crop up. Repeat steps 1–2 until there are no more code errors.</li>
 <li>Spell check your document by clicking the icon with “ABC” and a check mark.</li>
-<li>Hit the “Preview” button one last time to generate the final draft of the <code>.nb.html</code> file.</li>
+<li>Hit the “Render” button one last time to generate the final draft of the HTML file. (If there are errors here, you may need to go back and fix broken inline code or other markdown issues.)</li>
 <li>Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1–5 again.</li>
 </ol>
 <p>If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.</p>
@@ -981,18 +1052,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1024,11 +1084,48 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1038,8 +1135,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1051,7 +1157,129 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1095,6 +1323,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1120,6 +1349,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1181,12 +1436,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./19-inference_for_one_mean-web.html" class="pagination-link">
+      <a href="./19-inference_for_one_mean-web.html" class="pagination-link" aria-label="Inference for one mean">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Inference for one mean</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./21-inference_for_two_independent_means-web.html" class="pagination-link">
+      <a href="./21-inference_for_two_independent_means-web.html" class="pagination-link" aria-label="Inference for two independent means">
         <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Inference for two independent means</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -1195,4 +1450,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body></html>
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/VectorPosse/intro_stats/edit/main/20-inference_for_paired_data-web.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/VectorPosse/intro_stats/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

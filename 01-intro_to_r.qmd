@@ -7,8 +7,8 @@ execute:
 
 ::: {.callout-note}
 
-### Functions introduced in this chapter {-}
-`<-`, `c`, `sum`, `mean`, `library`, `?`, `??`, `View`, `head`, `tail`, `str`, `NROW`,  `NCOL`, `summary`, `$`
+### Functions introduced in this chapter
+`<-`, `c`, `sum`, `mean`, `install.packages`, `library`, `?`, `??`, `View`, `head`, `tail`, `str`, `NROW`,  `NCOL`, `summary`, `$`
 
 :::
 
@@ -28,11 +28,16 @@ The greatest thing about R is that it is free and open source. This means that y
 
 R has also become a standard tool for statistical analysis, from academia to industry to government. Although some commercial packages are still widely used, many practitioners are switching to R due to its cost (free!) and relative ease of use. After this course, you will be able to list some R experience on your r&eacute;sum&eacute; and your future employer will value this. It might even help get you a job!
 
+
 ## RStudio
 
 RStudio is an "Integrated Development Environment," or IDE for short. An IDE is a tool for working with a programming language that is fancier than just a simple text editor. Most IDEs give you shortcuts, menus, debugging facilities, syntax highlighting, and other things to make your life as easy as possible.
 
-Open RStudio so we can explore some of the areas you'll be using in the future.
+Open RStudio so we can explore some of the areas you'll be using in the future. (How to do this will depend on whether you've installed RStudio on your personal computer or logged into a cloud server. If you are in a class, your teacher will explain how to do this. For local installations, you should just be able to open RStudio. For cloud applications, you may need to start a "New Session" or a "New Project".)
+
+It should look something like this:
+
+![Screenshot of RStudio at startup](./img/RStudio.png "Screenshot of RStudio at startup")
 
 On the left side of your screen, you should see a big pane called the "Console". There will be some startup text there, and below that, you should see a "command prompt": the symbol ">" followed by a blinking cursor. (If the cursor is not blinking, that means that the focus is in another pane. Click anywhere in the Console and the cursor should start blinking again.)
 
@@ -43,6 +48,17 @@ We'll return to the Console in a moment.
 Next, look at the upper-right corner of the screen. There are at least three tabs in this pane starting with "Environment", "History", and "Connections". The "Environment" (also called the "Global Environment") keeps track of things you define while working with R. There's nothing to see there yet because we haven't defined anything! The "History" tab will likewise be empty; again, we haven't done anything yet. We won't use the "Connections" tab in this course. (Depending on the version of RStudio you are using and its configuration, you may see additional tabs, but we won't need them for this course.)
 
 Now look at the lower-right corner of the screen. There are likely six tabs here: "Files", "Plots", "Packages", "Help", "Viewer", and "Presentation". The "Files" tab will eventually contain the files you upload or create. "Plots" will show you the result of commands that produce graphs and charts. "Packages" will be explained later. "Help" is precisely what it sounds like; this will be a very useful place for you to get to know. We will never use the "Viewer" or "Presentation" tabs, so don't worry about them.
+
+
+## IMPORTANT!!
+
+There is a setting you need to change for RStudio to work properly for you as you move through assignments in the future. Find the Tools menu (at the top of the screen, between "Profile" and "Help") and go to the bottom where it says "Global Options..."
+
+**In the Workspace section, where it says "Save workspace to .RData on exit", you must change the drop-down menu from "Ask" to "Never".** The menu is highlighted in the image below:
+
+![Change Ask to Never in this menu.](./img/Global_options.png "Change Ask to Never in this menu.")
+
+**Be sure to scroll down and click the OK button when you're done.**
 
 
 ## Try something!
@@ -107,7 +123,7 @@ Now try
 mean(x)
 ```
 
-What if we wanted to save the mean of those five numbers for use later? We can assign the result to another variable! Type the following and observe the effect in the Environment.
+What if we wanted to save the mean of those five numbers for use later? We can assign the result to another variable! Type the following and click on the Environment tab to observe the effect.
 
 ```{r}
 m <- mean(x)
@@ -126,18 +142,24 @@ just saves the mean to a differently named variable. In general, variable names 
 
 Packages are collections of commands, functions, and sometimes data that people all over the world write and maintain. These packages extend the capabilities of R and add useful tools. For example, we would like to use the `palmerpenguins` package because it includes an interesting data set on penguins.
 
-If you have installed R and RStudio on your own machine instead of accessing RStudio through a browser, you'll need to type `install.packages("palmerpenguins")` at the Console. (This is assuming you've never used the `palmerpenguins` package before. Once a package is installed the first time, it never has to be installed again.) If you are using RStudio through a browser, the packages you need should be pre-installed for you. In fact, you may not be able to install packages yourself because you may not have admin privileges. If you need a package that is not installed, contact the person who administers your server.
+Type the following at the command prompt in the Console:^[If you get an authorization error, that means you are accessing RStudio through a managed local server and you'll need your admin to install the package for you.]
 
-After we've installed the package (a one-time process), we will need to load the package in every R session in which we want to use it. For example, the `palmerpenguins` package contains a data set called `penguins`. Let's see what happens when we try to access this data set without loading the package that contains it. Try typing this:
+```{r}
+install.packages("palmerpenguins")
+```
+
+We are doing this because you've never used the `palmerpenguins` package before. Once a package is installed, though, it never has to be installed again.
+
+After we've installed the package (the one-time process we completed above), we will need to load the package in every R session in which we want to use it. For example, the `palmerpenguins` package contains a data set called `penguins`. Let's see what happens when we try to access this data set without loading the package that contains it. Typing this will produce an error:
 
 ```{r}
 #| error: true
 penguins
 ```
 
-You should have received an error. That makes sense because R doesn't know anything about a data set called `penguins`.
+That error makes sense because R doesn't know anything about a data set called `penguins`.
 
-Now---assuming you have the `palmerpenguins` package installed---type this at the command prompt:
+But since the `palmerpenguins` package has been installed, you can now type this at the command prompt:
 
 ```{r}
 library(palmerpenguins)
@@ -188,10 +210,12 @@ and scroll down a bit in the Help pane. Two question marks tell R not to be too 
 
 The third way to get help---and often the most useful way---is to use your best friend, the internet. You don't want to just type "R" into a search engine. (That's the downside of using a single letter of the alphabet for the name of a programming language.) However, if you type "R __________" where you fill in the blank with the topic of interest, search engines usually do a pretty good job sending you to relevant pages. Within the first few hits, in fact, you'll often see an online copy of the same help file you see in R. Frequently, the next few hits lead to [StackOverflow](https://stackoverflow.com) where very knowledgeable people post very helpful responses to common questions.
 
-Use a search engine to find out how to take the square root of a number in R. Test out your newly-discovered function on a few numbers to make sure it works.
+Use a search engine to find out how to take the square root of a number in R. Test out your newly-discovered function on a few numbers in the Console to make sure it works.
 
 
 ## Understanding the data
+
+![Ad&eacute;lie Penguin, By Andrew Shiva&nbsp;/&nbsp;Wikipedia, <a href="https://creativecommons.org/licenses/by-sa/4.0" title="Creative Commons Attribution-Share Alike 4.0">CC BY-SA 4.0</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=46714803">Link</a>](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Hope_Bay-2016-Trinity_Peninsula%E2%80%93Ad%C3%A9lie_penguin_%28Pygoscelis_adeliae%29_04.jpg/800px-Hope_Bay-2016-Trinity_Peninsula%E2%80%93Ad%C3%A9lie_penguin_%28Pygoscelis_adeliae%29_04.jpg "Ad&eacute;lie Penguin, By Andrew Shiva / Wikipedia, CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=46714803")
 
 Let's go back to the penguins data contained in the `penguins` data set from the `palmerpenguins` package.
 
@@ -236,13 +260,6 @@ tail(penguins)
 When we're working with HTML documents like this one, it's usually not necessary to use `View`, `head`, or `tail` because the HTML format will print the data frame a lot more neatly than it did in the Console. You do not need to type the following code; just look below it for the table that appears.
 
 ```{r}
-#| eval: true
-#| echo: false
-library(palmerpenguins)
-```
-
-```{r}
-#| eval: true
 penguins
 ```
 
@@ -254,7 +271,7 @@ We want to understand the "structure" of our data. For this, we use the `str` co
 str(penguins)
 ```
 
-This tells us several important things. First it says that we are looking at a tibble with 344 observations of 8 variables. We can isolate those pieces of information separately as well, if needed:
+This tells us several important things. First it says that we are looking at a data frame with 344 observations of 8 variables. We can isolate those pieces of information separately as well, if needed:
 
 ```{r}
 NROW(penguins)
@@ -318,19 +335,18 @@ While executing the commands above, you may have noticed entries listed as `NA`.
 
 Using files in R requires you to be organized. R uses what's called a "working directory" to find the files it needs. Therefore, you can't just put files any old place and expect R to be able to find them.
 
-One way of ensuring that files are all located where R can find them is to organize your work into projects. Look in the far upper-right corner of the RStudio screen. You should see some text that says `Project: (None)`. This means we are not currently in a project. We're going to create a new project in preparation for the next chapter on using R Markdown.
+One way of ensuring that files are all located where R can find them is to organize your work into projects.
 
-Open the drop-down menu here and select `New Project`. When the dialog box opens, select `New Directory`, then `New Project`.
+* If you are using Posit Cloud, you have already created a project. It will say "Untitled project" at the top of the screen.
+  * Click on the words "Untitled project" and type "intro_stats". You may skip the next set of bullet points.
+* If you are using a local installation of RStudio, look in the far upper-right corner of the RStudio screen. You should see some text that says `Project: (None)`. This means we are not currently in a project and we need to to create one.
+  * Open the drop-down menu here and select `New Project`. When the dialog box opens, select `New Directory`, then `New Project`. You'll need to give your project a name. In this case, type `intro_stats` for the "Directory name". Leave everything else alone and click `Create Project`. You will see the screen refresh and R will restart. If everything worked the way it should, creating a new project will create a new folder, put you in that folder, and automatically make it your working directory.
 
-You'll need to give your project a name. In this case, let's type `intro_stats` for the "Directory name". In general, this should be a descriptive name---one that could still remind you in several years what the project was about. The only thing to remember is that project names and file names should not have any spaces in them. In fact, you should avoid other kinds of special characters as well, like commas, number signs, etc. Stick to letters and numerals and you should be just fine. If you want a multi-word project name or file name, I recommend using underscores. R will allow you to name projects with spaces and modern operating systems are set up to handle file names with spaces, but there are certain things that either don't work at all or require awkward workarounds when file names have spaces. Leave everything else alone and click `Create Project`.
+In general, project names should be descriptive---they should still remind you in several years what the project was about. The only thing to remember is that project names and file names should not have any spaces in them. In fact, you should avoid other kinds of special characters as well, like commas, number signs, etc. Stick to letters and numerals and you should be just fine. If you want a multi-word project name or file name, I recommend using underscores. R will allow you to name projects with spaces and modern operating systems are set up to handle file names with spaces, but there are certain things that either don't work at all or require awkward workarounds when file names have spaces. 
 
-You will see the screen refresh and R will restart.
+You will see a file in the Files pane with file extension `.Rproj`, but **you should never touch that file**. It's just for RStudio to keep track of your project details.
 
-You will see a new file called `intro_stats.Rproj` in the Files pane, but **you should never touch that file**. It's just for RStudio to keep track of your project details.
-
-If everything works the way it should, creating a new project will create a new folder, put you in that folder, and automatically make it your working directory.
-
-Any additional files you need for your project should be placed in this directory. In all future chapters, the first thing you will do is download the chapter file from the book website and place it here in your project folder. If you have installed R and RStudio on your own machine, you'll need to navigate your system to find the downloaded file and move or copy it to your project working directory. (It's likely in a folder called "Downloads". But if it's not and you need to find it elsewhere, this is done most easily using File Explorer in Windows and the Finder in MacOS.) If you are using RStudio through a web browser, you'll need to upload it to your project folder using the "Upload" button in the Files tab.
+Any additional files you need for your project should be placed in this directory. In all future chapters, the first thing you will do is download the chapter file from the book website and place it here in your project folder. If you are using RStudio through a web browser, you'll need to upload files to your project folder using the "Upload" button in the Files tab. If you have installed R and RStudio on your own machine, you'll need to navigate your system to find the downloaded file and move or copy it to your project working directory. (It's likely in a folder called "Downloads". But if it's not and you need to find it elsewhere, this is done most easily using File Explorer in Windows and the Finder in MacOS.) 
 
 
 ## Conclusion

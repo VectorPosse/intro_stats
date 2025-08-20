@@ -1,46 +1,41 @@
-# Introduction to randomization, Part 2 {#randomization2}
+# Introduction to randomization, Part 2
 
-<!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(50,46,48))`</p>
-<!-- Please don't mess with the previous few lines! -->
+::: {.callout-note}
 
-::: {.summary}
+### Functions introduced in this chapter
 
-### Functions introduced in this chapter {-}
-
-`sample`, `specify`, `hypothesize`, `generate`, `calculate`, `visualize`, `shade_p_value`, `get_p_value`
+`sample`, `specify`, `hypothesize`, `generate`, `calculate`, `visualize`, `observe`, `shade_p_value`, `get_p_value`
 
 :::
 
 
-## Introduction {#randomization2-intro}
+## Introduction
 
 In this chapter, we'll learn more about randomization and simulation. Instead of flipping coins, though, we'll randomly shuffle data around in order to explore the effects of randomizing a predictor variable.
 
-### Install new packages {#randomization2-install}
+### Install new packages
 
-If you are using RStudio Workbench, you do not need to install any packages. (Any packages you need should already be installed by the server administrators.)
-
-If you are using R and RStudio on your own machine instead of accessing RStudio Workbench through a browser, you'll need to type the following commands at the Console:
+Type the following at the Console:
 
 ```
-install.packages("openintro")
 install.packages("infer")
 ```
 
-### Download the R notebook file {#randomization2-download}
+### Download the Quarto file
 
-Check the upper-right corner in RStudio to make sure you're in your `intro_stats` project. Then click on the following link to download this chapter as an R notebook file (`.Rmd`).
+Look at either the top (Posit Cloud) or the upper right corner of the RStudio screen to make sure you are in your `intro_stats` project.
 
-<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/09-intro_to_randomization_2.Rmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/09-intro_to_randomization_2.Rmd</a>
+Then click on the following link to download this chapter as a Quarto file (`.qmd`).
+
+<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/09-intro_to_randomization_2.qmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/09-intro_to_randomization_2.qmd</a>
 
 Once the file is downloaded, move it to your project folder in RStudio and open it there.
 
-### Restart R and run all chunks {#randomization2-restart}
+### Restart R and run all chunks
 
 In RStudio, select "Restart R and Run All Chunks" from the "Run" menu.
 
-## Load packages {#randomization2-load}
+### Load packages
 
 We'll load `tidyverse` as usual along with the `janitor` package to make tables (with `tabyl`). The `openintro` package has a data set called `sex_discrimination` that we will explore. Finally, the `infer` package will provide tools that we will use in nearly every chapter for the remainder of the book.
 
@@ -52,7 +47,7 @@ library(infer)
 ```
 
 
-## Our research question {#randomization2-question}
+## Our research question
 
 An interesting study was conducted in the 1970s that investigated gender discrimination in hiring.^[Rosen B and Jerdee T. 1974. Influence of sex role stereotypes on personnel decisions. *Journal of Applied Psychology* 59(1):9-14.] The researchers brought in 48 male bank supervisors and asked them to evaluate personnel files. Based on their review, they were to determine if the person was qualified for promotion to branch manager. The trick is that all the files were identical, but half listed the candidate as male and half listed the candidate as female. The files were randomly assigned to the 48 supervisors.
 
@@ -80,7 +75,7 @@ Please write up your answer here.
 
 ##### Exercise 2(b) {-}
 
-Identify the population of interest in the study. In other words, who is the sample supposed to represent? That is, what group of people that this study is trying to learn about?
+Identify the population of interest in the study. In other words, who is the sample supposed to represent? That is, what group of people is this study trying to learn about?
 
 ::: {.answer}
 
@@ -99,7 +94,7 @@ Please write up your answer here.
 :::
 
 
-## Exploratory data analysis {#randomization2-eda}
+## Exploratory data analysis
 
 Here is the data:
 
@@ -123,17 +118,19 @@ Please write up your answer here.
 
 *****
 
+Below is a contingency table with `decision` as the row variable and `sex` as the column variable. Recall that we always list the response variable first. That way, the column sums will show us how many observations are in each of the predictor groups.
 
-Here is a contingency table with `decision` as the row variable and `sex` as the column variable. (Recall that we always list the response variable first. That way, the column sums will show us how many are in each of the predictor groups.)
+Also, note the use of the "pipe" `|>` here. Normally, the `tabyl` function requires as its first argument the name of the data frame, followed by the names of any variables that you want in the table. Here, though, the data frame (`sex_discrimination`) gets fed into the `tabyl` function through the pipe. Because of that, the `tabyl` function only requires the names of the two variables.
 
 ```{r}
-tabyl(sex_discrimination, decision, sex) %>%
-    adorn_totals()
+sex_discrimination |>
+  tabyl(decision, sex) |>
+  adorn_totals()
 ```
 
 ##### Exercise 4 {-}
 
-Create another contingency table of `decision` and `sex`, this time with percentages (*not* proportions) instead of counts. You'll probably have to go back to the "Categorical data" to review the syntax. (Hint: you should have three separate `adorn` functions on the lines following the `tabyl` command.)
+Create another contingency table of `decision` and `sex`, but this time with percentages (*not* proportions) instead of counts. You'll probably have to go back to the "Categorical data" to review the syntax. (Hint: you should have three separate `adorn` functions on the lines following the `tabyl` command.)
 
 ::: {.answer}
 
@@ -145,14 +142,14 @@ Create another contingency table of `decision` and `sex`, this time with percent
 
 *****
 
-
 Although we can read off the percentages in the contingency table, we need to do computations using the proportions. (Remember that we use percentages to communicate with other human beings, but we do math with proportions.) Fortunately, the output of `tabyl` is a tibble! So we can manipulate and grab the elements we need.
 
 Let's create and store the `tabyl` output with proportions. We don't need the marginal distribution, so we can dispense with `adorn_totals`.
 
 ```{r}
-decision_sex_tabyl <- tabyl(sex_discrimination, decision, sex) %>%
-    adorn_percentages("col")
+decision_sex_tabyl <- sex_discrimination |>
+  tabyl(decision, sex) |>
+  adorn_percentages("col")
 decision_sex_tabyl
 ```
 
@@ -168,18 +165,18 @@ Please write up your answer here.
 
 *****
 
-The real statistic of interest to us is the difference between these proportions. We can use the `mutate` command from `dplyr` variable compute the difference for us.
+The real statistic of interest to us is the difference between these proportions. We can use the `mutate` command from `dplyr` to compute the difference for us.
 
 ```{r}
-decision_sex_tabyl %>%
-    mutate(diff = male - female)
+decision_sex_tabyl |>
+  mutate(diff = male - female)
 ```
 
 As a matter of fact, once we know the difference in promotion rates, we don't really need the individual proportions anymore. The `transmute` verb is a version of `mutate` that gives us exactly what we want. It will create a new column just like `mutate`, but then it keeps only that new column. We'll call the resulting output `decision_sex_diff`.
 
 ```{r}
-decision_sex_diff <- decision_sex_tabyl %>%
-    transmute(diff = male - female)
+decision_sex_diff <- decision_sex_tabyl |>
+  transmute(diff = male - female)
 decision_sex_diff
 ```
 
@@ -188,18 +185,18 @@ Notice the order of subtraction: we're doing the men's rates minus the women's r
 This computes both the difference in promotion rates (in the first row) and the difference in not-promoted rates (in the second row). Let's just keep the first row, since we care more about promotion rates. (That's our success category.) We can use `slice` to grab the first row:
 
 ```{r}
-decision_sex_diff %>%
-    slice(1)
+decision_sex_diff |>
+  slice(1)
 ```
 
 This means that there is a 29% difference between the male files that were promoted and the female files that were promoted. The difference was computed as males minus females, so the fact that the number is positive means that male files were *more* likely to recommended for promotion.
 
 
-## Permuting {#randomization2-permuting}
+## Permuting
 
-One way to see if there is evidence of an association between promotion decisions and sex is to assume, temporarily, that there is no association. If there were truly no association, then the difference between the promotion rates between the male files and female files should be 0%. Of course, the number of people promoted in the data was 35, an odd number, so the number of male files promoted and female files promoted cannot be the same. Therefore, the difference in proportions can't be exactly 0 in this data. Nevertheless, we would expect---under the assumption of no association---the number of male files promoted to be *close* to the number of female files promoted, giving a difference around 0%.
+One way to see if there is evidence of an association between promotion decisions and sex is to assume, temporarily, that there is no association. If there were truly no association, then the difference between the promotion rates between the male files and female files should be 0%. Of course, the number of people promoted in the data was 35, an odd number, so the number of male files promoted and female files promoted cannot be the same. Therefore, the difference in proportions can't be exactly zero in this data. Nevertheless, we would expect---under the assumption of no association---the number of male files promoted to be *close* to the number of female files promoted, giving a difference around 0%.
 
-Now, we saw a difference of about 29% between the two groups in the data. Then again, non-zero differences---sometimes even large ones--- can just come about by pure chance alone. We may have accidentally sampled more bank managers who just happened to prefer the male candidates. This could happen for sexist reasons; it's possible our sample of bank managers are, by chance, more sexist than bank managers in the general population during the 1970s. Or it might be for more benign reasons; perhaps the male applications got randomly steered to bank managers who were more likely to be impressed with any application, and therefore, they were more likely to promote anyone regardless of the gender listed. We have to consider the possibility that our observed difference seems large even though there may have been no association between promotion and sex in the general population.
+Now, we saw a difference of about 29% between the two groups in the data. Then again, non-zero differences---sometimes even large ones---can just come about by pure chance alone. We may have accidentally sampled more bank managers who just happened to prefer the male candidates. This could happen for sexist reasons; it's possible our sample of bank managers are, by chance, more sexist than bank managers in the general population during the 1970s. Or it might be for more benign reasons; perhaps the male applications got randomly steered to bank managers who were more likely to be impressed with any application, and therefore, they were more likely to promote anyone regardless of the gender listed. We have to consider the possibility that our observed difference was large by accident, even though there may have been no association between promotion and sex in the general population.
 
 So how do we test the range of values that could arise from just chance alone? In other words, how do we explore sampling variability?
 
@@ -227,7 +224,7 @@ sample(sex_discrimination$sex)
 ```
 
 
-## Randomization {#randomization2-randomization}
+## Randomization
 
 The idea here is to keep the promotion status the same for each file, but randomly permute the sex labels. There will still be the same number of male and female files, but now they will be randomly matched with promoted files and not promoted files. Since this new grouping into "males" and "females" is completely random and arbitrary, we expect the likelihood of promotion to be equal for both groups.
 
@@ -237,18 +234,18 @@ Let's perform a few random simulations. We'll walk through the steps one line at
 
 ```{r}
 set.seed(3141593)
-sex_discrimination %>%
-    mutate(sex = sample(sex))
+sex_discrimination |>
+  mutate(sex = sample(sex))
 ```
 
 Then we follow the steps from earlier, generating a contingency table with proportions. This is accomplished by simply adding two lines of code to the previous code:
 
 ```{r}
 set.seed(3141593)
-sex_discrimination %>%
-    mutate(sex = sample(sex)) %>%
-    tabyl(decision, sex) %>%
-    adorn_percentages("col")
+sex_discrimination |>
+  mutate(sex = sample(sex)) |>
+  tabyl(decision, sex) |>
+  adorn_percentages("col")
 ```
 
 Note that the proportions in this table are different from the ones in the real data.
@@ -257,11 +254,11 @@ Then we calculate the difference between the male and female columns by adding a
 
 ```{r}
 set.seed(3141593)
-sex_discrimination %>%
-    mutate(sex = sample(sex)) %>%
-    tabyl(decision, sex) %>%
-    adorn_percentages("col") %>%
-    transmute(diff = male - female)
+sex_discrimination |>
+  mutate(sex = sample(sex)) |>
+  tabyl(decision, sex) |>
+  adorn_percentages("col") |>
+  transmute(diff = male - female)
 ```
 
 In this case, the first row happens to be negative, but that's okay. This particular random shuffling had more females promoted than males. (Remember, though, that the permuted sex labels are now meaningless.)
@@ -270,55 +267,56 @@ Finally, we grab the entry in the first row with `slice`:
 
 ```{r}
 set.seed(3141593)
-sex_discrimination %>%
-    mutate(sex = sample(sex)) %>%
-    tabyl(decision, sex) %>%
-    adorn_percentages("col") %>%
-    transmute(diff = male - female) %>%
-    slice(1)
+sex_discrimination |>
+  mutate(sex = sample(sex)) |>
+  tabyl(decision, sex) |>
+  adorn_percentages("col") |>
+  transmute(diff = male - female) |>
+  slice(1)
 ```
 
 We'll repeat this code a few more times, but without the seed, to get new random observations.
 
 ```{r}
-sex_discrimination %>%
-    mutate(sex = sample(sex)) %>%
-    tabyl(decision, sex) %>%
-    adorn_percentages("col") %>%
-    transmute(diff = male - female) %>%
-    slice(1)
+sex_discrimination |>
+  mutate(sex = sample(sex)) |>
+  tabyl(decision, sex) |>
+  adorn_percentages("col") |>
+  transmute(diff = male - female) |>
+  slice(1)
 ```
 
 ```{r}
-sex_discrimination %>%
-    mutate(sex = sample(sex)) %>%
-    tabyl(decision, sex) %>%
-    adorn_percentages("col") %>%
-    transmute(diff = male - female) %>%
-    slice(1)
+sex_discrimination |>
+  mutate(sex = sample(sex)) |>
+  tabyl(decision, sex) |>
+  adorn_percentages("col") |>
+  transmute(diff = male - female) |>
+  slice(1)
 ```
 
 ```{r}
-sex_discrimination %>%
-    mutate(sex = sample(sex)) %>%
-    tabyl(decision, sex) %>%
-    adorn_percentages("col") %>%
-    transmute(diff = male - female) %>%
-    slice(1)
+sex_discrimination |>
+  mutate(sex = sample(sex)) |>
+  tabyl(decision, sex) |>
+  adorn_percentages("col") |>
+  transmute(diff = male - female) |>
+  slice(1)
 ```
+
 ```{r}
-sex_discrimination %>%
-    mutate(sex = sample(sex)) %>%
-    tabyl(decision, sex) %>%
-    adorn_percentages("col") %>%
-    transmute(diff = male - female) %>%
-    slice(1)
+sex_discrimination |>
+  mutate(sex = sample(sex)) |>
+  tabyl(decision, sex) |>
+  adorn_percentages("col") |>
+  transmute(diff = male - female) |>
+  slice(1)
 ```
 
 Think carefully about what these random numbers mean. Each time we randomize, we get a simulated difference in the proportion of promotions between male files and female files. The `sample` part ensures that there is no actual relationship between promotion and sex among these randomized values. We expect each simulated difference to be close to zero, but we also expect deviations from zero due to randomness and chance.
 
 
-## The `infer` package {#randomization2-infer}
+## The `infer` package
 
 The above code examples show the nuts and bolts of permuting data around to break any association that might exist between two variables. However, to do a proper randomization, we need to repeat this process many, many times (just like how we flipped thousands of "coins" in the last chapter).
 
@@ -328,36 +326,36 @@ Here is the code template, starting with setting the seed:
 
 ```{r}
 set.seed(3141593)
-sims <- sex_discrimination %>%
-    specify(decision ~ sex, success = "promoted") %>%
-    hypothesize(null = "independence") %>%
-    generate(reps = 1000, type = "permute") %>%
-    calculate(stat = "diff in props", order = c("male", "female"))
-sims
+sims_1 <- sex_discrimination |>
+  specify(decision ~ sex, success = "promoted") |>
+  hypothesize(null = "independence") |>
+  generate(reps = 1000, type = "permute") |>
+  calculate(stat = "diff in props", order = c("male", "female"))
+sims_1
 ```
 
 We will learn more about all these lines of code in future chapters. By the end of the course, running this type of analysis will be second nature. For now, you can copy and paste the code chunk above and make minor changes as you need. Here are the three things you will need to look out for for doing this with different data sets in the future:
 
 1. The second line (after setting the seed) will be your new data set.
 2. In the `specify` line, you will have a different response variable, predictor variable, and success condition that will depend on the context of your new data.
-3. In the `calculate` line, you will have two different levels that you want to compare. Be careful to list them in the order in which you want to subtract them.
+3. In the `calculate` line, you will have two different levels of your predictor variable that you want to compare. Be careful to list them in the order in which you want to subtract them.
 
 
-## Plot results {#randomization2-plot}
+## Plot results
 
 A histogram will show us the range of possible values under the assumption of independence of the two variables. We can get one from our `infer` output using `visualize`. (This is a lot easier than building a histogram with `ggplot`!)
 
 ```{r}
-sims %>%
-    visualize()
+sims_1 |>
+  visualize()
 ```
 
 The bins aren't great in the picture above. There is no way currently to set the binwidth or boundary as we've done before, but we can experiment with the total number of bins. 9 seems to be a good number.
 
 
 ```{r}
-sims %>%
-    visualize(bins = 9)
+sims_1 |>
+  visualize(bins = 9)
 ```
 
 ##### Exercise 6 {-}
@@ -372,52 +370,51 @@ Please write up your answer here.
 
 *****
 
-
-Let's compare these simulated values to the observed difference in the real data. We've computed the latter already, but let's use `infer` tools to find it. We'll give the answer a name, `obs_diff`.
+Let's compare these simulated values to the observed difference in the real data. We've computed the latter already, but let's use `infer` tools to find it. We'll give the answer a name, `obs_diff_1`.
 
 ```{r}
-obs_diff <- sex_discrimination %>%
-    observe(decision ~ sex, success = "promoted",
-            stat = "diff in props", order = c("male", "female"))
-obs_diff
+obs_diff_1 <- sex_discrimination |>
+  observe(decision ~ sex, success = "promoted",
+          stat = "diff in props", order = c("male", "female"))
+obs_diff_1
 ```
 
 Now we can graph the observed difference in the data alongside the simulated values under the assumption of independent variables. The name of the function `shade_p_value` is a little cryptic for now, but it will become clear within a few chapters.
 
 ```{r}
-sims %>%
-    visualize(bins = 9) +
-    shade_p_value(obs_stat = obs_diff, direction = "greater")
+sims_1 |>
+  visualize(bins = 9) +
+  shade_p_value(obs_stat = obs_diff_1, direction = "greater")
 ```
 
 
-## By chance? {#randomization2-chance}
+## By chance?
 
-How likely is it that the observed difference (or a difference even more extreme) could have resulted from chance alone? Because `sims` contains simulated results after permuting, the values in the `stat` column assume that promotion is independent of sex. In order to assess how plausible our observed difference is under that assumption, we want to find out how many of the simulated values are at least as big, if not bigger, than the observed difference, 0.292.
+How likely is it that the observed difference (or a difference even more extreme) could have resulted from chance alone? Because `sims_1` contains simulated results after permuting, the values in the `stat` column assume that promotion is independent of sex. In order to assess how plausible our observed difference is under that assumption, we want to find out how many of the simulated values are at least as big, if not bigger, than the observed difference, 0.292.
 
 Look at the randomized differences sorted in decreasing order:
 
 ```{r}
-sims %>%
-    arrange(desc(stat))
+sims_1 |>
+  arrange(desc(stat))
 ```
 
 Of the 1000 simulations, the most extreme difference of 37.5% occurred four times, just by chance. That seems like a pretty extreme value when expecting a value of 0%, but the laws of probability tell us that extreme values will be observed from time to time, even if rarely. Also recall that the observed difference in the actual data was 29.2%. This specific value came up quite a bit in our simulated data. In fact, the 31st entry of the sorted data above is the last occurrence of the value 0.292. After that, the next higher larger value is 0.208.
 
-So let's return to the original question. How many simulated values are as large---if not larger---than the observed difference? Apparently, 31 out of 1000, which is 0.031. In other words 3% of the simulated data is as extreme or more extreme than the actual difference in promotion rates between male files and female files in the real data. That's not very large. In other words, a difference like 29.2% could occur just by chance---like flipping 10 out of 10 heads or something like that. But it doesn't happen very often.
+So let's return to the original question. How many simulated values are as large---if not larger---than the observed difference? Apparently, 31 out of 1000, which is 0.031. In other words, 3% of the simulated data is as extreme or more extreme than the actual difference in promotion rates between male files and female files in the real data. That's not very large. In other words, a difference like 29.2% could occur just by chance---like flipping 5 out of 5 heads or something like that. But it doesn't happen very often.
 
 We can automate this calculation using the function `get_p_value` (similar to `shade_p_value` above) even though we don't yet know what "p value" means.
 
 ```{r}
-sims %>%
-    get_p_value(obs_stat = obs_diff, direction = "greater")
+sims_1 |>
+  get_p_value(obs_stat = obs_diff_1, direction = "greater")
 ```
 
 **COPY/PASTE WARNING**: If the observed difference were negative, then extreme values of interest would be *less* than, say, -0.292, not greater than 0.292. You must note if the observed difference is positive or negative and then use "greater" or "less" as appropriate!
 
 Again, 0.031 is a small number. This shows us that if there were truly no association between promotion and sex, then our data is a rare event. (An observed difference this extreme or more extreme would only occur about 3% of the time by chance.)
 
-Because the probability above is so small, it seems unlikely that our variables are independent. Therefore, it seems more likely that there is an association between promotion and sex. We have evidence of a statistically significant difference between the chance of getting recommended for promotion if the file indicates male versus female.
+Because the probability above is so small, it seems unlikely that our variables are independent. Therefore, it seems more likely that there is an association between promotion and sex. We have evidence of a statistically discernible difference between the chance of getting recommended for promotion if the file indicates male versus female.
 
 Because this is an experiment, it's possible that a causal claim could be made. If everything in the application files was identical except the indication of gender, then it stands to reason that gender *explains* why more male files were promoted over female files. But all that depends on the experiment being a well-designed experiment.
 
@@ -433,7 +430,7 @@ Please write up your answer here.
 :::
 
 
-## Your turn {#randomization2-your-turn}
+## Your turn
 
 In this section, you'll explore another famous data set related to the topic of gender discrimination. (Also from the 1970s!)
 
@@ -442,9 +439,9 @@ The following code will download admissions data from the six largest graduate d
 ```{r}
 ucb_admit <- read_csv("https://vectorposse.github.io/intro_stats/data/ucb_admit.csv",
                       col_types = list(
-                          Admit = col_factor(),
-                          Gender = col_factor(),
-                          Dept = col_factor()))
+                        Admit = col_factor(),
+                        Gender = col_factor(),
+                        Dept = col_factor()))
 ```
 
 ```{r}
@@ -488,20 +485,20 @@ Exploratory data analysis: make two contingency tables with `Admit` as the respo
 
 ##### Exercise 8(c) {-}
 
-Use `observe` from the `infer` package to calculate the observed difference in proportions between males who were admitted and females who were admitted. Do the subtraction in that order: males minus females. Store your output as `obs_diff2` so that it doesn't overwrite the variable `obs_diff` we created earlier.
+Use `observe` from the `infer` package to calculate the observed difference in proportions between males who were admitted and females who were admitted. Do the subtraction in that order: males minus females. Store your output as `obs_diff_2` so that it doesn't conflict with the variable `obs_diff_1` we created earlier.
 
 ::: {.answer}
 
 ```{r}
 # Add code here to calculate the observed difference.
-# Store this as obs_diff2.
+# Store this as obs_diff_2.
 ```
 
 :::
 
 ##### Exercise 8(d) {-}
 
-Simulate 1000 outcomes under the assumption that admission is independent of gender. Use the `specify`, `hypothesize`, `generate`, and `calculate` sequence from the `infer` package as above. Call the simulated data frame `sims2` so that it doesn't conflict with the earlier `sims`. Don't touch the `set.seed` command. That will ensure that all students get the same randomization.
+Simulate 1000 outcomes under the assumption that admission is independent of gender. Use the `specify`, `hypothesize`, `generate`, and `calculate` sequence from the `infer` package as above. Call the simulated data frame `sims_2` so that it doesn't conflict with the earlier `sims_1`. Don't touch the `set.seed` command. That will ensure that all students get the same randomization.
 
 ::: {.answer}
 
@@ -509,7 +506,7 @@ Simulate 1000 outcomes under the assumption that admission is independent of gen
 set.seed(10101)
 # Add code here to simulate 1000 outcomes
 # under the independence assumption
-# and store the simulations in a data frame called sims2.
+# and store the simulations in a data frame called sims_2.
 ```
 
 :::
@@ -518,7 +515,7 @@ set.seed(10101)
 
 Plot the simulated values in a histogram using the `visualize` verb from `infer`. When you first run the code, remove the `bins = 9` we had earlier and let `visualize` choose the number of bins. If you are satisfied with the graph, you don't need to specify a number of bins. If you are not satisfied, you can experiment with the number of bins until you find a number that seems reasonable.
 
-Be sure to include a vertical line at the value of the observed difference using the `shade_p_value` command. Don't forget that the location of that line is `obs_diff2` now.
+Be sure to include a vertical line at the value of the observed difference using the `shade_p_value` command. Don't forget that the location of that line is `obs_diff_2` now.
 
 ::: {.answer}
 
@@ -539,7 +536,7 @@ Please write up your answer here.
 :::
 
 
-## Simpson's paradox {#randomization2-simpson}
+## Simpson's paradox
 
 The example above from UC Berkeley seems like an open and shut case. Male applicants were clearly admitted at a greater rate than female applicants. While we never expect the application rates to be *exactly* equal---even under the assumption that admission and gender are independent---the randomization exercise showed us that the observed data was *way* outside the range of possible differences that could have occurred just by chance.
 
@@ -564,17 +561,19 @@ Since we have access to a third variable, `Dept`, let's analyze it as well. The 
 Here are the tables with counts:
 
 ```{r}
-tabyl(ucb_admit, Admit, Gender, Dept) %>%
-    adorn_totals()
+ucb_admit |>
+  tabyl(Admit, Gender, Dept) |>
+  adorn_totals()
 ```
 
 And here are the tables with percentages:
 
 ```{r}
-tabyl(ucb_admit, Admit, Gender, Dept) %>%
-    adorn_totals() %>%
-    adorn_percentages("col") %>%
-    adorn_pct_formatting()
+ucb_admit |>
+  tabyl(Admit, Gender, Dept) |>
+  adorn_totals() |>
+  adorn_percentages("col") |>
+  adorn_pct_formatting()
 ```
 
 ##### Exercise 10 {-}
@@ -589,14 +588,15 @@ Please write up your answer here.
 
 *****
 
+This is completely counterintuitive. How can males be admitted at a higher rate overall, and yet in most departments, females were admitted at a higher rate?
 
-This is completely counterintuitive. How can males be admitted at a higher rate overall, and yet in most departments, females were admitted at a higher rate.
+This phenomenon is often called *Simpson's Paradox*. Like almost everything in statistics, this is named after a person (Edward H. Simpson) who got the popular credit for writing about the phenomenon, but who wasn't the person who actually discovered the phenomenon. (There does not appear to be a primeval reference for the first person to have studied it. Similar observations had appeared in various sources more than 50 years before Simpson wrote his paper.)
 
-This phenomenon is often called *Simpson's Paradox*. Like almost everything in statistics, this is named after a person (Edward H. Simpson) who got the popular credit for writing about the phenomenon, but not being the person who actually discovered the phenomenon. (There does not appear to be a primeval reference for the first person to have studied it. Similar observations had appeared in various sources more than 50 years before Simpson wrote his paper.)
+We saw several versions of this paradox in Chapter 6 when we considered the inclusion of a lurking variable as color in a scatterplot. Both the `bdims` (body measurements) and the `penguins` data sets showed examples of the strength and even the direction of correlations changing when considering a lurking variable.
 
 ##### Exercise 11 {-}
 
-Look at the contingency tables with counts. Focus on the four departments you identified above. What is true of the total number of male and female applicants for those four department (and not for the other two departments)?
+Look at the contingency tables with counts. Focus on the four departments you identified in the exercise above (where female admission rates were higher than male admission rates). What is true of the total number of male and female applicants for those four department (and not for the other two departments)?
 
 ::: {.answer}
 
@@ -611,8 +611,8 @@ Now create a contingency table with percentages that uses `Admit` for the row va
 ::: {.answer}
 
 ```{r}
-# Add code here to create a contingency table with percentages
-# for Dept and Admit
+# Add code here to create a contingency table
+# with percentages for Dept and Admit
 ```
 
 :::
@@ -629,7 +629,7 @@ Please write up your answer here.
 
 ##### Exercise 12(c) {-}
 
-Earlier, you identified four departments where male applicants outnumbered female applicants. (These were the same departments that had higher admission rates for females.) But for which two departments was the difference between the number of male and female applicants the largest?
+Earlier, you identified four departments that had higher admission rates for females. These were the same departments in which male applicants outnumbered female applicants. But for which two departments was the difference between the number of male and female applicants the largest?
 
 ::: {.answer}
 
@@ -637,27 +637,29 @@ Please write up your answer here.
 
 :::
 
-
 *****
 
-Your work in the previous exercises begins to paint a picture that explains what's going on with this "paradox". Males applied in much greater numbers to a few departments with high acceptance rates. As a result, more male students overall got in to graduate school. Females applied in greater numbers to departments that were more selective. Overall, then, fewer females got in to graduate school. But on a department-by-department basis, female applicants were usually more likely to get accepted.
+Your work in the previous exercises begins to paint a picture that explains what's going on with this "paradox." Males applied in much greater numbers to a few departments with high acceptance rates. As a result, more male students overall got in to graduate school. Females applied in greater numbers to departments that were more selective. Overall, then, fewer females got in to graduate school. But on a department-by-department basis, female applicants were usually more likely to get accepted.
 
 None of this suggests that sexism fails to exist. It doesn't even prove that sexism wasn't a factor in some departmental admission procedures. What it does suggest is that when we don't take into account possible lurking variables, we run the risk of oversimplifying issues that are potentially complex.
 
 In our analysis of the UC Berkeley data, we've exhausted all the variables available to us in the data set. There remains the potential for *unmeasured confounders*, or variables that could still act as lurking variables, but we have no idea about them because they aren't in our data. This is an unavoidable peril of working with observational data. If we aren't careful to "control" for a reasonable set of possible lurking variables, we must be very careful when trying to make broad conclusions.
 
 
-## Conclusion {#randomization2-conclusion}
+## Conclusion
 
 Here we used randomization to explore the idea of two variables being independent or associated. When we assume they are independent, we can explore the sampling variability of the differences that could occur by pure chance alone. We expect the difference to be zero, but we know that randomness will cause the simulated differences to have a range of values. Is the difference in the observed data far away from zero? In that case, we can say we have evidence that the variables are not independent; in other words, it is more likely that our variables are associated.
 
-### Preparing and submitting your assignment {#randomization2-prep}
+As we've pointed out before, even when we have evidence of an association between variables, we always need to be careful about stating conclusions. Sometimes our conclusions are misleading, for example, when we fail to consider the effect of lurking/confounding variables in the analysis.
+
+### Preparing and submitting your assignment
 
 1. From the "Run" menu, select "Restart R and Run All Chunks".
-2. Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.
+2. Deal with any code errors that crop up. Repeat steps 1--2 until there are no more code errors.
 3. Spell check your document by clicking the icon with "ABC" and a check mark.
-4. Hit the "Preview" button one last time to generate the final draft of the `.nb.html` file.
+4. Hit the "Render" button one last time to generate the final draft of the HTML file. (If there are errors here, you may need to go back and fix broken inline code or other markdown issues.)
 5. Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
 
 If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
+
 

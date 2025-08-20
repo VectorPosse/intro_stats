@@ -1,13 +1,8 @@
 # Chi-square goodness-of-fit test
 
-<!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(50,46,48))`</p>
-<!-- Please don't mess with the previous few lines! -->
+::: {.callout-note}
 
-
-::: {.summary}
-
-### Functions introduced in this chapter: {-}
+### Functions introduced in this chapter:
 
 `chisq.test`
 
@@ -23,11 +18,13 @@ In this assignment we will learn how to run the chi-square goodness-of-fit test.
 
 There are no new packages used in this chapter.
 
-### Download the R notebook file
+### Download the Quarto file
 
-Check the upper-right corner in RStudio to make sure you're in your `intro_stats` project. Then click on the following link to download this chapter as an R notebook file (`.Rmd`).
+Look at either the top (Posit Cloud) or the upper right corner of the RStudio screen to make sure you are in your `intro_stats` project.
 
-<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/17-chi_square_goodness_of_fit.Rmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/17-chi_square_goodness_of_fit.Rmd</a>
+Then click on the following link to download this chapter as a Quarto file (`.qmd`).
+
+<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/17-chi_square_goodness_of_fit.qmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/17-chi_square_goodness_of_fit.qmd</a>
 
 Once the file is downloaded, move it to your project folder in RStudio and open it there.
 
@@ -60,16 +57,16 @@ Here is the structure of the data:
 glimpse(mtcars)
 ```
 
-Note that the variable of interest `cyl` is not coded as a factor variable. Let's convert `cyl` to a factor variable first and add it to a new data frame called `mtcars2`. (Since the levels are already called 4, 6, and 8, we do not need to specify `levels` or `labels`.) Be sure to remember to use `mtcars2` from here on out, and not the original `mtcars`.
+Note that the variable of interest `cyl` is not coded as a factor variable. Let's convert `cyl` to a factor variable first. (Since the levels are already called 4, 6, and 8, we do not need to specify `levels` or `labels`.)
 
 ```{r}
-mtcars2 <- mtcars %>%
+mtcars <- mtcars |>
   mutate(cyl_fct = factor(cyl))
-mtcars2
+mtcars
 ```
 
 ```{r}
-glimpse(mtcars2)
+glimpse(mtcars)
 ```
 
 
@@ -80,12 +77,12 @@ When we have three or more categories in a categorical variable, it is natural t
 First of all, what is the actual distribution of cylinders in our data? Here's a frequency table.
  
 ```{r}
-tabyl(mtcars2, cyl_fct) %>%
-    adorn_totals() %>%
-    adorn_pct_formatting()
+tabyl(mtcars, cyl_fct) |>
+  adorn_totals() |>
+  adorn_pct_formatting()
 ```
 
-The counts of our frequency table are the "observed" values, usually denoted by the letter $O$ (uppercase "O", which is a little unfortunate, because it also looks like a zero).
+The counts of our frequency table (11, 7, and 14) are the "observed" values, usually denoted by the letter $O$ (uppercase "O", which is a little unfortunate, because it also looks like a zero).
 
 What are the expected counts? Well, since there are 32 cars, we need to multiply 32 by the percentages listed in the research question. For 4-cylinder and 6-cylinder cars, if the distribution of engines in 1974 were the same as today, there would be $32 * 0.38$ or about 12.2 cars we would expect to see in our sample that have 4-cylinder engines, and the same for 6-cylinder cars. For 8-cylinder cars, we expect $32 * 0.24$ or about 7.7 cars in our sample to have 8-cylinder engines. These "expected" counts are usually denoted by the letter $E$.
 
@@ -101,11 +98,13 @@ $$
 \frac{(O - E)^{2}}{E}.
 $$
 
-This puts each cell on equal footing. Now that we have a reasonable measure of the deviation between observed and expected counts for each cell, we define $\chi^{2}$ ("chi-squared", pronounced "kye-squared"---rhymes with "die-scared", or if that's too dark, how about "pie-shared"^[Rhyming is fun!]) as the sum of all these fractions, one for each cell:
+This puts each cell on equal footing. Now that we have a reasonable measure of the deviation between observed and expected counts for each cell, we can define the number $\chi^{2}$ as the sum of all these fractions, one for each cell.
 
 $$
 \chi^{2} = \sum \frac{(O - E)^{2}}{E}.
 $$
+
+Note: "Chi-squared" is pronounced "kye-squared." The "ch" is a hard "k" sound, like "Chris" or "cholera" and not like "chai." The vowel is a long "i", so "Chi-squared" rhymes with "die-scared", or if that's too dark, how about "pie-shared."^[Rhyming is fun!]
 
 A $\chi^{2}$ value of zero would indicate perfect agreement between observed and expected values. As the $\chi^{2}$ value gets larger and larger, this indicates more and more deviation between observed and expected values.
 
@@ -118,12 +117,12 @@ $$
 Or we could just do it in R with the `infer` package. To do so, we have to state explicitly the proportions that correspond to the null hypothesis. In this case, since the order of entries in the frequency table is 4-cylinder, 6-cylinder, then 8-cylinder, we need to give `infer` a vector of entries `c("4" = 0.38, "6" = 0.38, "8" = 0.24)` that represents the 38%, 38%, and 24% expected for 4, 6, and 8 cylinders respectively.
 
 ```{r}
-obs_chisq <- mtcars2 %>%
-  specify(response = cyl_fct) %>%
+obs_chisq <- mtcars |>
+  specify(response = cyl_fct) |>
   hypothesize(null = "point",
               p = c("4" = 0.38,
                     "6" = 0.38,
-                    "8" = 0.24)) %>%
+                    "8" = 0.24)) |>
   calculate(stat = "chisq")
 obs_chisq
 ```
@@ -140,54 +139,54 @@ Under the assumption of the null, there should be a 38%, 38%, and 24% chance of 
 ```{r}
 set.seed(99999)
 sample1 <- sample(c(4, 6, 8), size = 32, replace = TRUE,
-       prob = c(0.38, 0.38, 0.24))
+                  prob = c(0.38, 0.38, 0.24))
 sample1
 ```
 
 ```{r}
-sample1 %>%
+sample1 |>
   table()
 ```
 
 ```{r}
 sample2 <- sample(c(4, 6, 8), size = 32, replace = TRUE,
-       prob = c(0.38, 0.38, 0.24))
+                  prob = c(0.38, 0.38, 0.24))
 sample2
 ```
 
 ```{r}
-sample2 %>%
+sample2 |>
   table()
 ```
 
 ```{r}
 sample3 <- sample(c(4, 6, 8), size = 32, replace = TRUE,
-       prob = c(0.38, 0.38, 0.24))
+                  prob = c(0.38, 0.38, 0.24))
 sample3
 ```
 
 ```{r}
-sample3 %>%
+sample3 |>
   table()
 ```
 
-We can calculate the chi-squared value for each of these samples to get a sense of the possibilities. The `chisq.test` command from base R is a little unusual because it requires a frequency table (generated from the `table` command) as input. We will never use the `chisq.test` command directly because we will always use `infer` to do this work. But just to see some examples:
+We can calculate the chi-squared value for each of these samples to get a sense of the possibilities. The `chisq.test` command from base R is a little unusual because it requires a frequency table (generated from the `table` command) as input. For purposes of hypothesis testing, we won't need to use the `chisq.test` command directly because we will always use `infer` to do this work. But just to see some examples:
 
 ```{r}
-sample1 %>%
-  table() %>%
+sample1 |>
+  table() |>
   chisq.test()
 ```
 
 ```{r}
-sample2 %>%
-  table() %>%
+sample2 |>
+  table() |>
   chisq.test()
 ```
 
 ```{r}
-sample3 %>%
-  table() %>%
+sample3 |>
+  table() |>
   chisq.test()
 ```
 
@@ -203,18 +202,17 @@ Please write up your answer here.
 
 *****
 
-
 The `infer` pipeline below (the `generate` command specifically) takes the values "4", "6", or "8" and grabs them at random according to the probabilities specified until it has 32 values. In other words, it will randomly select "4" about 38% of the time, "6" about 38% of the time, and "8" about 24% of the time, until it gets a list of 32 total cars. Then it will calculate the chi-squared value for that simulated set of 32 cars. But because randomness is involved, the simulated samples are subject to sampling variability and the chi-square values obtained will differ from each other. This is exactly what we did above with the `sample` command and the `chisq` command, but the benefit now is that we get 1000 random samples very quickly.
 
 ```{r}
 set.seed(99999)
-cyl_test_sim <- mtcars2 %>%
-  specify(response = cyl_fct) %>%
+cyl_test_sim <- mtcars |>
+  specify(response = cyl_fct) |>
   hypothesize(null = "point",
               p = c("4" = 0.38,
                     "6" = 0.38,
-                    "8" = 0.24)) %>%
-  generate(reps = 1000, type = "draw") %>%
+                    "8" = 0.24)) |>
+  generate(reps = 1000, type = "draw") |>
   calculate(stat = "chisq")
 cyl_test_sim
 ```
@@ -222,7 +220,7 @@ cyl_test_sim
 The "stat" column above contains 1000 random values of $\chi^{2}$. Let's graph these values and include the chi-squared value for our actual data in the same graph.
 
 ```{r}
-cyl_test_sim %>%
+cyl_test_sim |>
   visualize() +
   shade_p_value(obs_chisq, direction = "greater")
 ```
@@ -236,7 +234,7 @@ A few things are apparent:
 3. You can see that our sample (the red line) is pretty far to the right. It is an unusual value given the assumption of the null hypothesis. In fact, we can count the proportion of sampled values that are to the right of the red line:
 
 ```{r}
-cyl_test_sim %>%
+cyl_test_sim |>
   get_p_value(obs_chisq, direction = "greater")
 ```
 
@@ -257,17 +255,17 @@ Look at the graph below that shows the theoretical chi-square models for varying
 # Don't worry about the syntax here.
 # You won't need to know how to do this on your own.
 ggplot(data.frame(x = c(0, 20)), aes(x)) +
-    stat_function(fun = dchisq, args = list(df = 2),
-                  aes(color = "2")) +
-    stat_function(fun = dchisq, args = list(df = 5),
-                  aes(color = "5" )) +
-    stat_function(fun = dchisq, args = list(df = 10),
-                  aes(color = "10")) +
-    scale_color_manual(name = "df",
-                       values = c("2" = "red",
-                                  "5" = "blue",
-                                  "10" = "green"),
-                       breaks =  c("2", "5", "10"))
+  stat_function(fun = dchisq, args = list(df = 2),
+                aes(color = "2")) +
+  stat_function(fun = dchisq, args = list(df = 5),
+                aes(color = "5" )) +
+  stat_function(fun = dchisq, args = list(df = 10),
+                aes(color = "10")) +
+  scale_color_manual(name = "df",
+                     values = c("2" = "red",
+                                "5" = "blue",
+                                "10" = "green"),
+                     breaks =  c("2", "5", "10"))
 ```
 
 The red curve (corresponding to $df = 2$) looks a lot like our simulation above. But as the degrees of freedom increase, the mode shifts further to the right.
@@ -282,8 +280,8 @@ We can use the chi-square model as the sampling distribution as long as the samp
 The following `infer` pipeline will run a hypothesis test using the theoretical chi-squared distribution with 2 degrees of freedom.
 
 ```{r}
-cyl_test <- mtcars2 %>%
-  specify(response = cyl_fct) %>%
+cyl_test <- mtcars |>
+  specify(response = cyl_fct) |>
   assume(distribution = "chisq")
 cyl_test
 ```
@@ -291,14 +289,14 @@ cyl_test
 Here is the theoretical distribution:
 
 ```{r}
-cyl_test %>%
+cyl_test |>
   visualize()
 ```
 
-And here it is will our test statistic (the chi-squared value for our observed data) marked:
+And here it is with our test statistic (the chi-squared value for our observed data) marked:
 
 ```{r}
-cyl_test %>%
+cyl_test |>
   visualize() +
   shade_p_value(obs_chisq, direction = "greater")
 ```
@@ -306,7 +304,7 @@ cyl_test %>%
 Finally, here is the P-value associated with the shaded area to the right of the test statistic:
 
 ```{r}
-cyl_test %>%
+cyl_test |>
   get_p_value(obs_chisq, direction = "greater")
 ```
 
@@ -331,24 +329,32 @@ glimpse(mtcars)
 
 ### Prepare the data for analysis.
 
+Check for missing data:
+
 ```{r}
-# Although we've already done this above, 
-# we include it here again for completeness.
-mtcars2 <- mtcars %>%
-  mutate(cyl_fct = factor(cyl))
-mtcars2
+mtcars |>
+  drop_na(cyl) |>
+  NROW()
 ```
 
 ```{r}
-glimpse(mtcars2)
+# Although we've already done this above, 
+# we include it here again for completeness.
+mtcars <- mtcars |>
+  mutate(cyl_fct = factor(cyl))
+mtcars
+```
+
+```{r}
+glimpse(mtcars)
 ```
 
 ### Make tables or plots to explore the data visually.
 
 ```{r}
-tabyl(mtcars2, cyl_fct) %>%
-    adorn_totals() %>%
-    adorn_pct_formatting()
+tabyl(mtcars, cyl_fct) |>
+  adorn_totals() |>
+  adorn_pct_formatting()
 ```
 
 
@@ -356,7 +362,7 @@ tabyl(mtcars2, cyl_fct) %>%
 
 ### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
-The sample is a set of `r NROW(mtcars2)` cars from a 1974 Motor Trends magazine. The population is all cars from 1974.
+The sample is a set of `r NROW(mtcars)` cars from a 1974 Motor Trends magazine. The population is all cars from 1974.
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
@@ -384,15 +390,14 @@ Commentary: Unlike the normal model, there are infinitely many different $\chi^{
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 * Random
-    - We do not know how Motor Trends magazine sampled these 32 cars, so we're not sure if this list is random or representative of all cars from 1974. We should be cautious in our conclusions.
+  * We do not know how Motor Trends magazine sampled these 32 cars, so we're not sure if this list is random or representative of all cars from 1974. We should be cautious in our conclusions.
 
 * 10%
-    - As long as there are at least 320 different car models, we are okay. This sounds like a lot, so this condition might not quite be met. Again, we need to be careful. (Also note that the population is not all automobiles manufactured in 1974. It is all *types* of automobile manufactured in 1974. There's a big difference.)
+  * As long as there are at least 320 different car models, we are okay. This sounds like a lot, so this condition might not quite be met. Again, we need to be careful. (Also note that the population is not all automobiles manufactured in 1974. It is all *types* of automobile manufactured in 1974. There's a big difference.)
 
 * Expected cell counts
-    - This condition says that under the null, we should see at least 5 cars in each category. The expected counts are $32(0.38) = 12.2$, $32(0.38) = 12.2$, and $32(0.24) = 7.7$. So this condition is met.
+  * This condition says that under the null, we should see at least 5 cars in each category. The expected counts are $32(0.38) = 12.2$, $32(0.38) = 12.2$, and $32(0.24) = 7.7$. So this condition is met.
     
-
 Commentary: The expected counts condition is necessary for using the theoretical chi-squared distribution. If we were using simulation instead, we would not need this condition.
 
 
@@ -401,51 +406,50 @@ Commentary: The expected counts condition is necessary for using the theoretical
 ### Compute the test statistic.
 
 ```{r}
-obs_chisq <- mtcars2 %>%
-  specify(response = cyl_fct) %>%
+obs_chisq <- mtcars |>
+  specify(response = cyl_fct) |>
   hypothesize(null = "point",
               p = c("4" = 0.38,
                     "6" = 0.38,
-                    "8" = 0.24)) %>%
+                    "8" = 0.24)) |>
   calculate(stat = "chisq")
 obs_chisq
 ```
 
 ### Report the test statistic in context (when possible).
 
-The value of $\chi^{2}$ is `r obs_chisq %>% pull(1)`.
+The value of $\chi^{2}$ is `r obs_chisq |> pull(1)`.
 
 Commentary: The $\chi^{2}$ test statistic is, of course, the same value we computed manually by hand earlier. Also, the formula for $\chi^{2}$ is a complicated function of observed and expected values, making it difficult to say anything about this number in the context of cars and engine cylinders. So even though the requirement is to "report the test statistic in context," there's not much one can say here other than just to report the test statistic.
 
 ### Plot the null distribution.
 
 ```{r}
-cyl_test <- mtcars2 %>%
-  specify(response = cyl_fct) %>%
+cyl_test <- mtcars |>
+  specify(response = cyl_fct) |>
   assume(distribution = "chisq")
 cyl_test
 ```
 
 ```{r}
-cyl_test %>%
+cyl_test |>
   visualize() +
   shade_p_value(obs_chisq, direction = "greater")
 ```
 
-Commentary: We will use the theoretical distribution 
-
+Commentary: We will use the theoretical distribution instead of the simulated distribution here. As long as the conditions are met, the use of the theoretical chi-squared sampling distribution is warranted.
 
 ### Calculate the P-value.
 
 ```{r}
-cyl_test_p <- cyl_test %>%
+cyl_test_p <- cyl_test |>
   get_p_value(obs_chisq, direction = "greater")
 cyl_test_p
 ```
 
 ### Interpret the P-value as a probability given the null.
 
-The P-value is `r cyl_test_p`. If the true distribution of cars in 1974 were 38% 4-cylinder, 38% 6-cylinder, and 24% 8-cylinder, there would be a `r 100 * cyl_test_p`% chance of seeing data at least as extreme as what we saw.
+The P-value is `r cyl_test_p |> pull(1)`. If the true distribution of cars in 1974 were 38% 4-cylinder, 38% 6-cylinder, and 24% 8-cylinder, there would be a `r 100 * (cyl_test_p |> pull(1))`% chance of seeing data at least as extreme as what we saw.
 
 
 ## Conclusion
@@ -501,7 +505,7 @@ Please write up your answer here
 
 :::
 
-###### Prepare the data for analysis. [Not always necessary.] {-}
+###### Prepare the data for analysis. {-}
 
 ::: {.answer}
 
@@ -597,6 +601,10 @@ Please write up your answer here.
 ::: {.answer}
 
 ```{r}
+# Add code here to generate the null distribution.
+```
+
+```{r}
 # Add code here to plot the null distribution.
 ```
 
@@ -655,16 +663,16 @@ Please write up your answer here.
 
 :::
 
-## Bonus section: residuals
+
+## Residuals
 
 The chi-square test can tell us if there is some difference from the expected distribution of counts across the categories, but it doesn't tell us which category has a higher or lower count than expected. For that, we'll need to turn to another tool: *residuals*. 
-
 For technical reasons, the `infer` package doesn't provide residuals, so we'll have to turn to slightly different tools. Here's how this works; we'll return to the example of distribution of cars across the different categories of number of cylinders.
 
-The function we'll use is called `chisq.test`. It requires us to give it input in the form of a table of counts, together with the proportions we wish to compare to:
+The function we'll use is `chisq.test` as we saw before. It requires us to give it input in the form of a table of counts, together with the proportions we wish to compare to:
 
 ```{r}
-table(mtcars2$cyl_fct) %>%
+table(mtcars$cyl_fct) |>
   chisq.test(p = c(.38, .38, .24)) -> cyl_chisq.test
 cyl_chisq.test
 ```
@@ -680,10 +688,12 @@ cyl_chisq.test$residuals
 What do these numbers mean in the real world? Not much. (Essentially, they are the values that were squared to become the individual cell contributions to the overall chi-squared score of the table.) 
 
 What we'll do with them is look for the most positive and most negative values. 
-- We see that the 8-cylinder column has the most positive value: this means that the number of 8-cylinder cars in 1974 was substantially *higher* than we expected.
-- We see that the 6-cylinder column has the most negative value: this means that the number of 6-cylinder cars in 1974 was substantially *lower* than we expected.
 
-### Your turn
+* We see that the 8-cylinder column has the most positive value: this means that the number of 8-cylinder cars in 1974 was substantially *higher* than we expected.
+* We see that the 6-cylinder column has the most negative value: this means that the number of 6-cylinder cars in 1974 was substantially *lower* than we expected.
+
+
+## Your turn
 
 Determine which of the high school program types is the most substantially overrepresented and the most substantially underrepresented, according to our hypothesized distribution.
 
@@ -691,9 +701,10 @@ Determine which of the high school program types is the most substantially overr
 
 ```{r}
 # Add code here to produce the chisq.test result.
+```
 
+```{r}
 # Add code here to examine the residuals.
-
 ```
 
 Please write your answer here.
@@ -708,11 +719,9 @@ When a categorical variable has three or more categories, we can run a chi-squar
 ### Preparing and submitting your assignment
 
 1. From the "Run" menu, select "Restart R and Run All Chunks".
-2. Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.
+2. Deal with any code errors that crop up. Repeat steps 1--2 until there are no more code errors.
 3. Spell check your document by clicking the icon with "ABC" and a check mark.
-4. Hit the "Preview" button one last time to generate the final draft of the `.nb.html` file.
+4. Hit the "Render" button one last time to generate the final draft of the HTML file. (If there are errors here, you may need to go back and fix broken inline code or other markdown issues.)
 5. Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
 
 If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
-
-

@@ -1,41 +1,37 @@
-# Categorical data {#categorical}
+# Categorical data
 
-<!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(50,46,48))`</p>
-<!-- Please don't mess with the previous few lines! -->
+::: {.callout-note}
 
-::: {.summary}
+### Functions introduced in this chapter
 
-### Functions introduced in this chapter {-}
-
-`glimpse`, `table`, `tabyl`, `adorn_pct_formatting`, `ggplot`, `geom_bar`, `adorn_percentages`, `mutate`, `as_factor`, `labs`, `tibble`, `geom_col`
+`glimpse`, `table`, `tabyl`, `adorn_totals`, `adorn_pct_formatting`, `ggplot`, `geom_bar`, `adorn_percentages`, `mutate`, `as_factor`,  `tibble`, `geom_col`, `uncount`, `pivot_longer`, `->`, `labs`, `scale_fill_viridis_d`, `scale_fill_grey`, `theme_bw`
 
 :::
 
 
-## Introduction {#categorical-intro}
+## Introduction
 
 In this chapter, we'll learn about categorical data and how to summarize it using tables and graphs.
 
-### Install new packages {#cateogorical-install}
+### Install new packages
 
-If you are using RStudio Workbench, you do not need to install any packages. (Any packages you need should already be installed by the server administrators.)
-
-If you are using R and RStudio on your own machine instead of accessing RStudio Workbench through a browser, you'll need to type the following command at the Console:
+Type the following at the Console:
 
 ```
 install.packages("janitor")
 ```
 
-### Download the R notebook file {#categorical-download}
+### Download the Quarto file
 
-Check the upper-right corner in RStudio to make sure you're in your `intro_stats` project. Then click on the following link to download this chapter as an R notebook file (`.Rmd`).
+Look at either the top (Posit Cloud) or the upper right corner of the RStudio screen to make sure you are in your `intro_stats` project.
 
-<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/03-categorical_data.Rmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/03-categorical_data.Rmd</a>
+Then click on the following link to download this chapter as a Quarto file (`.qmd`).
+
+<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/03-categorical_data.qmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/03-categorical_data.qmd</a>
 
 Once the file is downloaded, move it to your project folder in RStudio and open it there.
 
-### Restart R and run all chunks {#categorical-restart}
+### Restart R and run all chunks
 
 In RStudio, in the toolbar above this document, find the "Run" drop-down menu and select "Restart R and Run All Chunks."
 
@@ -46,7 +42,7 @@ This does two important things:
 
 At the end of the assignment, you will "Restart R and Run All Chunks" once again to make sure that everything works smoothly and there are no lingering errors.
 
-### Load packages {#categorical-load}
+### Load packages
 
 We load the `tidyverse` package since it also loads the `ggplot2` package that we'll use throughout the course to make graphs. It also loads several other packages, for example, one called `dplyr` to give us a command called `mutate`, and another called `forcats` to give us `as_factor`. (These will all be explained later.) The `janitor` package gives us the `tabyl` command for creating nice tables.  Finally, We load the `palmerpenguins` package to work with the penguin data.
 
@@ -57,7 +53,7 @@ library(palmerpenguins)
 ```
 
 
-## Categorical data {#categorical-data}
+## Categorical data
 
 Data comes in different types depending on what is being measured. When people think of "data", they often imagine *numerical data*, consisting of numbers. But there are other kinds of data as well.
 
@@ -75,6 +71,8 @@ Another way to think of it is this: can the numerical values of ZIP codes be tre
 
 Think of another type of data that would be recorded using numbers but should be thought of as categorical data.
 
+(Recall from the last chapter that you will record your answers to exercises within an answer block like the one below, demarcated with three colons at both ends. Be VERY careful not mess with these three-colon "tags" or with the code `{.answer}`. If this code gets messed up, it's likely that your document will not render. Instead, you will delete the words "Please write up your answer here" and replace them with your answer.)
+
 ::: {.answer}
 
 Please write up your answer here.
@@ -82,7 +80,7 @@ Please write up your answer here.
 :::
 
 
-## Factor variables {#categorical-factor}
+## Factor variables
 
 R uses the term "factor variable" to refer to a categorical variable. Look at the structure of the `penguins` data below.
 
@@ -113,7 +111,7 @@ Please write up your answer here.
 Your data set may already come with its variables coded correctly as factor variables, but often they are not. As described above, numbers are often used to represent categories, so R may think that those variables represent numerical data. Later, we'll see an example of this and learn how to handle categorical variables that are not coded as factor variables in R.
 
 
-## Summarizing one categorical variable {#categorical-summarizing-one}
+## Summarizing one categorical variable
 
 If you need to summarize a single categorical variable, a *frequency table* usually suffices. This is simply a table that counts up all the instances of each category. The word "frequency" is synonymous here with the word "count".
 
@@ -140,7 +138,7 @@ Now you get both counts and proportions. Note that in the output above, it's a l
 It's usually nice to have the column totals. We can achieve that by using an `adorn` function to get them as follows:
 
 ```{r}
-tabyl(penguins, species) %>%
+tabyl(penguins, species) |>
   adorn_totals()
 ```
 
@@ -149,19 +147,19 @@ We'll always include the totals at the bottom.
 If you really want percentages, we can use a different `adorn` function:
 
 ```{r}
-tabyl(penguins, species) %>%
-    adorn_pct_formatting()
+tabyl(penguins, species) |>
+  adorn_pct_formatting()
 ```
 
 Again, we'll also include `adorn_totals` so that we get the column totals.
 
 ```{r}
-tabyl(penguins, species) %>%
-    adorn_totals() %>%
-    adorn_pct_formatting()
+tabyl(penguins, species) |>
+  adorn_totals() |>
+  adorn_pct_formatting()
 ```
 
-The syntax above looks a little confusing with the unusual `%>%` symbols everywhere. You will learn more about that weird set of symbols in a later chapter. For now, you can just copy and paste this code and make any necessary changes to the tibble and/or variables names as needed.
+The syntax above looks a little confusing with the unusual `|>` symbols everywhere. You will learn more about that weird set of symbols in a later chapter. For now, you can just copy and paste this code and make any necessary changes to the tibble and/or variables names as needed.
 
 ##### Exercise 3(a) {-}
 
@@ -208,7 +206,7 @@ Please write up your answer here.
 :::
 
 
-## Graphing one categorical variable {#categorical-graphing-one}
+## Graphing one categorical variable
 
 When asked, "What type of graph should I use when graphing a single categorical variable?" the simple answer is "None."  If you do need to summarize a categorical variable, a frequency table usually suffices.
 
@@ -217,7 +215,7 @@ If you really, really want a graph, the standard type is a bar chart. But before
 We don't have to load the `ggplot2` package explicitly because it got loaded alongside a number of other packages when we called `library(tidyverse)` early on in the chapter.
 
 
-### ggplot {#categorical-ggplot}
+### ggplot
 
 The `ggplot` command is an all-purpose graphing utility. It uses a graphing philosophy derived from a book called *The Grammar of Graphics* by Leland Wilkinson. The basic idea is that each variable you want to plot should correspond to some element or "aesthetic" component of the graph. The obvious places for data to go are along the y-axis or x-axis, but other aesthetics are important too; graphs often use color, shape, or size to illustrate different aspects of data. Once these aesthetics have been defined, we will add "layers" to the graph. These are objects like dots, boxes, lines, or bars that dictate the type of graph we want to see.
 
@@ -227,20 +225,20 @@ It will be easier to explain the `ggplot` syntax in the context of specific grap
 
 ```{r}
 ggplot(penguins, aes(x = species)) +
-    geom_bar()
+  geom_bar()
 ```
 
 We'll walk through this syntax step by step.
 
-- The first argument of the `ggplot` command is the name of the tibble, in this case, `penguins`.
-- Next we define the aesthetics using `aes` and parentheses. Inside the parentheses, we assign any variables we want to plot to aesthetics of the graph. For this analysis, we are only interested in the variable `species` and for a bar chart, the categorical variable typically goes on the x-axis. That's why it says `x = species` inside the `aes` argument.
-- Finally, `ggplot` needs to know what kind of graph we want. Graph types are called "geoms" in the `ggplot` world, and `geom_bar()` tells `ggplot` to add a "bar chart layer". Adding a layer is accomplished by literally typing a plus sign.
+* The first argument of the `ggplot` command is the name of the tibble, in this case, `penguins`.
+* Next we define the aesthetics using `aes` and parentheses. Inside the parentheses, we assign any variables we want to plot to aesthetics of the graph. For this analysis, we are only interested in the variable `species` and for a bar chart, the categorical variable typically goes on the x-axis. That's why it says `x = species` inside the `aes` argument.
+* Finally, `ggplot` needs to know what kind of graph we want. Graph types are called "geoms" in the `ggplot` world, and `geom_bar()` tells `ggplot` to add a "bar chart layer". Adding a layer is accomplished by literally typing a plus sign.
 
 This can be modified somewhat to give proportions (relative frequencies) on the y-axis instead of counts. Unfortunately, the `ggplot` syntax is not very transparent here. My recommendation is to copy and paste the code below if you need to make a relative frequency bar chart in the future, making the necessary changes to the tibble and variable names, of course.
 
 ```{r}
-ggplot(penguins, aes(x = species, y = ..prop.., group = 1)) +
-    geom_bar()
+ggplot(penguins, aes(x = species, y = after_stat(prop), group = 1)) +
+  geom_bar()
 ```
 
 These bar charts are the graphical analogues of a frequency table and a relative frequency table, respectively.
@@ -259,29 +257,33 @@ Please write up your answer here.
 
 What about pie charts? Just. Don't.
 
-Seriously. Pie charts suck.^[https://medium.com/the-mission/to-pie-charts-3b1f57bcb34a]
+Seriously. Pie charts suck: [https://medium.com/the-mission/to-pie-charts-3b1f57bcb34a](https://medium.com/the-mission/to-pie-charts-3b1f57bcb34a)
+
+Okay, in fairness, here is the opinion of one data visualization researcher who gives a (somewhat qualified) defense of pie charts (in certain narrow situations): [https://eagereyes.org/pie-charts](https://eagereyes.org/pie-charts)
+
+We will not be creating any pie charts in this course.
 
 
-## Summarizing two categorical variables {#categorical-summarizing-two}
+## Summarizing two categorical variables
 
 A table summarizing two categorical variables is called a *contingency table* (or pivot table, or cross-tabulation, or probably several other terms as well).
 
 For example, we might pose the following question: is the distribution of sex among penguins in our data more or less balanced across the three species?
 
-When we work with two variables, typically we think of one variable as *response* and the other as *predictor*. The response variable is usually the variable of main interest. A predictor variable is another attribute that might predict or explain more about the response variable.
+When we work with two variables, typically we think of one variable as *response* and the other as *predictor*. The response variable is usually the variable of main interest. A predictor variable is another attribute that might predict or explain more about the response variable. Often, the predictor variable is used to divide our data into groups for comparison.
 
 For example, our question is concerned with the sex distribution of penguins. We could create a relative frequency table of sex alone to see if male and female penguins are balanced in the data. In fact, you did that very thing above and saw that, indeed, there were roughly equal numbers of male and female penguins. But is that still true when we divide up the data into the three groups representing the separate species?
 
-Two variables are called *associated* when there is a relationship between them. For example, if sex and species were associated, then the distribution of sex would change depending on the species. Maybe one species of penguin had more females and another had fewer females. Our prediction of the sex distribution would change based on the value of the predictor variable `species`.
+Two variables are called *associated* when there is a relationship between them. For example, if sex and species were associated, then the distribution of sex would change depending on the species. Maybe one species of penguin had more females and another had fewer females available to the researchers who compiled this data. Our prediction of the sex distribution would change based on the value of the predictor (grouping) variable `species`.
 
 On the other hand, two variables that are not associated are called *independent*. Independent variables are not related. If the sex distribution were the same across all species, then knowledge of the species would not change our predictions about the sex of a penguin. It wouldn't matter because there was no relationship between sex and species.
 
 Most research questions that involve two or more variables are fundamentally questions of whether a response variable is associated with one or more predictor variables, or whether they are independent.
 
-Let's check the contingency table. The `tabyl` command will place the first variable listed across the rows and the second one listed down the columns. Since we always include column totals, we want the predictor variable to be the column variable so we can see how the predictor groups are distributed in the data. **Always list the response variable first**.
+Let's look at a contingency table. The `tabyl` command will place the first variable listed across the rows and the second one listed down the columns. Since we always include column totals, we want the predictor variable to be the column variable so we can see how the predictor groups are distributed in the data. **Always list the response variable first**.
 
 ```{r}
-tabyl(penguins, sex, species) %>%
+tabyl(penguins, sex, species) |>
   adorn_totals()
 ```
 
@@ -289,7 +291,7 @@ Each column is a group, and our question is whether the distribution of sexes in
 
 The last row of totals is called the *marginal distribution* (because it sits in the "margin" of the contingency table). It is equivalent to a frequency table for `species`.
 
-##### Exercise 5
+##### Exercise 5 {-}
 
 Counts can be misleading. For example, there are 73 female Adelie penguins, but only 34 female Chinstrap penguins. Does that mean that Adelie penguins are more likely to be female than Chinstrap penguins? Why or why not?
 
@@ -304,23 +306,43 @@ Please write up your answer here.
 A more fair way to compare across columns is to create relative frequencies. We can do this with a slightly different `adorn` command. The following code says that we want to compute column proportions (yes, I know the command is called `adorn_percentages`, but these are proportions):
 
 ```{r}
-tabyl(penguins, sex, species) %>%
-    adorn_totals() %>%
-    adorn_percentages("col")
+tabyl(penguins, sex, species) |>
+  adorn_totals() |>
+  adorn_percentages("col")
 ```
 
-If we actually want percentages, we need one more line of code. This command---`adorn_pct_formatting`---is the same as we used before with frequency tables.
+It's important to put "col" inside the `adorn_percentages` command. Look what happens if we forget:
 
 ```{r}
-tabyl(penguins, sex, species) %>%
-    adorn_totals() %>%
-    adorn_percentages("col") %>%
-    adorn_pct_formatting()
+# We should not do this!
+tabyl(penguins, sex, species) |>
+  adorn_totals() |>
+  adorn_percentages()
+```
+
+What are these proportions? The next code chunk will reveal the secret:
+
+```{r}
+# We should not do this!
+tabyl(penguins, sex, species) |>
+  adorn_totals() |>
+  adorn_percentages("row")
+```
+
+The default for `adorn_percentages` is to create row proportions. But these are not helpful to us. We are not grouping by sex and then trying to figure out the distribution of species within each sex. It's the opposite of our research question.
+
+If we actually want percentages instead of proportions, we need one more line of code. This command---`adorn_pct_formatting`---is the same as we used before with frequency tables.
+
+```{r}
+tabyl(penguins, sex, species) |>
+  adorn_totals() |>
+  adorn_percentages("col") |>
+  adorn_pct_formatting()
 ```
 
 Now we can see that each column adds up to 100%. In other words, each species is now on equal footing, and only the distribution of sexes within each group matters.
 
-##### Exercise 6(a)
+##### Exercise 6(a) {-}
 
 What percentage of Adelie penguins are male? What percentage of Chinstrap penguins are male? What percentage of Gentoo penguins are male?
 
@@ -330,9 +352,9 @@ Please write up your answer here.
 
 :::
 
-##### Exercise 6(b)
+##### Exercise 6(b) {-}
 
-Does sex appear to be associated with species for the penguins in this data set? Or are these variables independent?
+Does sex appear to be associated with species for the penguins in this data set? Or are these variables independent? Why?
 
 ::: {.answer}
 
@@ -344,14 +366,16 @@ Please write up your answer here.
 
 The islands of Antarctica on which the penguins were observed and measured are recorded in the variable called `island`. Is the distribution of the three species of penguin the same (or similar) on the three islands?
 
-##### Exercise 7(a)
+##### Exercise 7(a) {-}
 
 Choosing which variables play the roles of response and predictor can be tricky. For the question above, with `species` and `island`, which is response and which is predictor?
 
 One way to think about this is to ask the following two questions and see which one is closer to the question asked:
 
-- Given information about the species, are you interested in which island the penguin lives on? If so, `species` is a predictor and `island` is response. (You are using `species` to predict `island`.)
-- Given information about the island, are you interested in the species of the penguin? If so, `island` is a predictor and `species` is response. (You are using `island` to predict `species`.)
+* Given information about the species, are you interested in which island the penguin lives on? If so, `species` is a predictor and `island` is response. (You are using `species` to predict `island`.)
+* Given information about the island, are you interested in the species of the penguin? If so, `island` is a predictor and `species` is response. (You are using `island` to predict `species`.)
+
+Another way to think of this is to determine the grouping variable. Which variable is being used to divide the penguins into groups first? That will be the predictor variable.
 
 ::: {.answer}
 
@@ -359,12 +383,11 @@ Please write up your answer here.
 
 :::
 
-##### Exercise 7(b)
+##### Exercise 7(b) {-}
 
-Create a contingency table with percentages. List `species` first, followed by `island`. (Hey, that's hint in case you need to go back and change your answer to part (a).)
+Create a contingency table with percentages. List `species` first, followed by `island`. (Hey, that's a hint in case you need to go back and change your answer to part (a).) Include column totals as well. (They should all be 100%.)
 
 ::: {.answer}
-
 
 ```{r}
 # Add code here to create a contingency table with percentages.
@@ -372,7 +395,7 @@ Create a contingency table with percentages. List `species` first, followed by `
 
 :::
 
-##### Exercise 7(c)
+##### Exercise 7(c) {-}
 
 Finally, comment on the association or independence of the two variables.
 
@@ -383,26 +406,26 @@ Please write up your answer here.
 :::
 
 
-## Graphing two categorical variables {#categorical-graphing-two}
+## Graphing two categorical variables
 
 A somewhat effective way to display two categorical variables is with a side-by-side bar chart. Here is the `ggplot` code for the relationship between `sex` and `species`.
 
 ```{r}
 ggplot(penguins, aes(fill = sex, x = species)) +
-    geom_bar(position = "dodge")
+  geom_bar(position = "dodge")
 ```
 
 This is somewhat different from the first `ggplot` example you saw above, so let's take a moment to go through it.
 
-- The first argument is the data frame `penguins`; no mystery there.
-- The second aesthetic `x = species` also makes a lot of sense. As `species` is our predictor variable---we're using species to group the penguins, and then within each species, we're interested in the sex distribution---`species` goes on the x-axis.
-- However, `sex` does not go on the y-axis! (This is a very common mistake for novices.) The y-axis of a bar chart is always a count or a proportion/percentage, so no variable should ever go on the y-axis of a bar chart. In that case, how does `sex` enter the picture? Through the use of color! The aesthetic `fill = sex` says to use the `sex` variable to shade or "fill" the bars with different colors. You'll also notice that `ggplot` makes a legend automatically with the colors so you can see which color corresponds to which value (in this case, "female", "male", or "NA" for the missing data).
+* The first argument is the data frame `penguins`; no mystery there.
+* The second aesthetic `x = species` also makes a lot of sense. As `species` is our predictor variable---we're using species to group the penguins, and then within each species, we're interested in the sex distribution---`species` goes on the x-axis.
+* However, `sex` does not go on the y-axis! (This is a very common mistake for novices.) The y-axis of a bar chart is always a count or a proportion/percentage, so no variable should ever go on the y-axis of a bar chart. In that case, how does `sex` enter the picture? Through the use of color! The aesthetic `fill = sex` says to use the `sex` variable to shade or "fill" the bars with different colors. You'll also notice that `ggplot` makes a legend automatically with the colors so you can see which color corresponds to which value (in this case, "female", "male", or "NA" for the missing data).
 
 Another unusual feature is the argument `position = "dodge"` in the `geom_bar` layer. Let's see what happens if we remove it.
 
 ```{r}
-ggplot(penguins, aes(fill = sex, x = species)) + 
-    geom_bar()
+ggplot(penguins, aes(fill = sex, x = species)) +
+  geom_bar()
 ```
 
 We get a stacked bar chart! This is another popular way of displaying two categorical variables, but we don't tend to prefer it. Notice how difficult it is to compare the number of females across species; since there is no common baseline for the red segments of each bar, it is harder to determine which ones are bigger or smaller. (In this case, it's fairly clear, but there are plenty of data sets for which the counts might be a lot closer.)
@@ -413,10 +436,10 @@ This is the same issue we identified in an exercise above. To fix this problem, 
 
 ```{r}
 ggplot(penguins, aes(fill = sex, x = species)) +
-    geom_bar(position = "fill")
+  geom_bar(position = "fill")
 ```
 
-This graph does correctly show that the sexes are pretty much equally balances across all three species.
+This graph does correctly show that the sexes are pretty much equally balanced across all three species.
 
 ##### Exercise 8(a) {-}
 
@@ -441,7 +464,7 @@ Please write up your answer here.
 :::
 
 
-## Recoding factor variables {#categorical-recoding}
+## Recoding factor variables
 
 As mentioned earlier, there are situations where a categorical variable is not recorded in R as a factor variable. Let's look at the `year` variable:
 
@@ -477,13 +500,13 @@ Please write up your answer here.
 
 While the `tabyl` command seemed to work just fine with the `year` data in integer format, there are other commands that will not work so well. For example, `ggplot` often fails to do the right thing when a categorical variable is coded as a number. Therefore, we need a way to change numerically coded variables to factors.
 
-The code below uses a command called `mutate` that takes an old variable and creates a new variable. (You'll learn more about this command in a later chapter. For now, you can just copy and paste this code if you need it again.) The name of the new variable can be anything we want; we'll just call it `year_fct`. Then the real work is being done by the `as_factor` command that concerts the numeric `year` variable into a factor variable.
+The code below uses a command called `mutate` that takes an old variable and creates a new variable. (You'll learn more about this command in a later chapter. For now, you can just copy and paste this code if you need it again.) The name of the new variable can be anything we want; we'll just call it `year_fct`. Then the real work is being done by the `as_factor` command that converts the numeric `year` variable into a factor variable.
 
 Observe the effect below:
 
 ```{r}
-penguins <- penguins %>%
-    mutate(year_fct = as_factor(year))
+penguins <- penguins |>
+  mutate(year_fct = as_factor(year))
 glimpse(penguins)
 ```
 
@@ -522,42 +545,7 @@ Please write up your answer here.
 :::
 
 
-## Publication-ready graphics {#categorical-pub}
-
-Let's go back to the first relative frequency bar chart from this chapter.
-
-```{r}
-ggplot(penguins, aes(x = species, y = ..prop.., group = 1)) +
-    geom_bar()
-```
-
-The variable name `species` is already informative, but the y-axis is labeled with "prop". Also note that this graph could use a title. We can do all this with `labs` (for labels). Observe:
-
-```{r}
-ggplot(penguins, aes(x = species, y = ..prop.., group = 1)) +
-    geom_bar() +
-    labs(title = "Distribution of species",
-         y = "Proportion",
-         x = "Species")
-```
-
-##### Exercise 11 {-}
-
-Modify the following side-by-side bar chart by adding a title and labels for both the fill variable and the x-axis variable. (Hint: you can use `fill = sex` inside the `labs` command just like you used `title`, `y`, and `x`.)
-
-::: {.answer}
-
-```{r}
-# Modify the following side-by-side bar chart by adding a title and 
-# labels for both the x-axis and the fill variable.
-ggplot(penguins, aes(fill = sex, x = species)) +
-    geom_bar(position = "dodge")
-```
-
-:::
-
-
-## Plotting summary data {#categorical-summary}
+## Plotting summary data
 
 Everything we did above was summarizing *raw data*; that is, the data consisted of all the observations for each individual penguin. Often, though, when you find data out in the wild, that data will be summarized into a table already and you may not have access to the raw data.
 
@@ -578,8 +566,8 @@ To answer the first question, we show you how to create your own tibble. Here is
 
 ```{r}
 penguin_species_table <- tibble(
-    species = c("Adelie", "Chinstrap", "Gentoo"),
-    count = c(152, 68, 124)
+  species = c("Adelie", "Chinstrap", "Gentoo"),
+  count = c(152, 68, 124)
 )
 penguin_species_table
 ```
@@ -590,12 +578,12 @@ Once we have our summary data, we want to make a bar chart. But this won't work:
 
 ```{r}
 ggplot(penguin_species_table, aes(x = species)) +
-    geom_bar()
+  geom_bar()
 ```
 
-##### Exercise 12 {-}
+##### Exercise 11 {-}
 
-Explain what went wrong with the previous command? Why does `ggplot` think that each species has count 1?
+Explain what went wrong with the previous command? Why does `ggplot` think that each species has count 1? (Hint: in tibble you just created, look at the `species` column. What if R thinks this is raw data where each row represents a single penguin?)
 
 ::: {.answer}
 
@@ -609,10 +597,10 @@ Instead, we need to use `geom_col`. This works a lot like `geom_bar` except that
 
 ```{r}
 ggplot(penguin_species_table, aes(x = species, y = count)) +
-    geom_col()
+  geom_col()
 ```
 
-##### Exercise 13(a) {-}
+##### Exercise 12(a) {-}
 
 Use the `tabyl` command to create a frequency table for `island`.
 
@@ -624,7 +612,7 @@ Use the `tabyl` command to create a frequency table for `island`.
 
 :::
 
-##### Exercise 13(b) {-}
+##### Exercise 12(b) {-}
 
 Use the `tibble` command to create a new tibble manually that contains the frequency data for the `island` variable. It should have two columns, one called `island` and the other called `count`. Name it `penguin_island_table`.
 
@@ -636,7 +624,7 @@ Use the `tibble` command to create a new tibble manually that contains the frequ
 
 :::
 
-##### Exercise 13(c) {-}
+##### Exercise 12(c) {-}
 
 Use `ggplot` with `geom_col` to create a bar chart for island.
 
@@ -648,34 +636,31 @@ Use `ggplot` with `geom_col` to create a bar chart for island.
 
 :::
 
-## Bonus section: Recovering raw data from tables
+
+## Recovering raw data from tables
+
+### Recovering raw data from a frequency table
 
 Sometimes we come across summary data instead of raw data. We've learned how to manually create tibbles with that summary data and use `geom_col` instead of `geom_bar` to graph it, but sometimes it is also useful to recover what the raw data *would* have been. Fortunately there are R tools to do exactly that.
 
-We'll continue with our example `penguin_species_table`, which we'll reprint here for reference:
+We'll continue with our example `penguin_species_table`, reprinted here for reference:
 
 ```{r}
 penguin_species_table
 ```
 
-From this table, we know what the raw data for this variable should look like: there should be 152 rows that say "Adelie," 68 rows that say "Chinstrap," and 124 rows that say "Gentoo." It would be very annoying, though, to make that whole tibble by hand. Fortunately, there are R tools that will create it for us.
+From this table, we know what the raw data for this variable should look like: there should be 152 rows that say "Adelie," 68 rows that say "Chinstrap," and 124 rows that say "Gentoo." It would be very annoying, though, to make that whole tibble by hand.
 
-The first thing we will need to do is turn our tibble into a tabyl. (I would like to apologize for how ridiculous that sentence sounds.)
-
-```{r}
-penguin_species_tabyl <- as_tabyl(penguin_species_table)
-penguin_species_tabyl
-```
-
-The hero of the day is the function `uncount` from the `tidyr` package:
+The hero of the day is the function `uncount` from the `tidyr` package (loaded automatically when you loaded the `tidyverse` package):
 
 ```{r}
-penguin_species_raw <- penguin_species_tabyl %>%
+penguin_species_raw <- penguin_species_table |>
   uncount(count)
 penguin_species_raw
 ```
 
 Click through the rows of this table and you'll see that it's exactly what we wanted: "Adelie" is repeated 152 times, "Chinstrap" is repeated 68 times, and "Gentoo" is repeated 124 times. Neat!
+
 
 ### Recovering raw data from a contingency table
 
@@ -686,7 +671,7 @@ This strategy also works, with some modifications, for recovering the raw data p
 | female | 73     | 34        | 58     |
 | male   | 73     | 34        | 61     |
 
-(Note: I've removed the unruly penguins who did not allow their sex to be determined.)
+(Note: we've removed the unruly penguins who did not allow their sex to be determined.)
 
 Again, we can imagine what the raw data would look like: there would be 73 rows where the `species` variable would say "Adelie" and the `sex` variable would say "female," then 34 rows where the `species` variable would say "Chinstrap" and the `sex` variable would say "female," and so on.
 
@@ -702,45 +687,42 @@ penguin_species_sex_table <- tibble(
 penguin_species_sex_table
 ```
 
-Once again, we'll want to turn this tibble into a tabyl:
-
-```{r}
-penguin_species_sex_tabyl <- as_tabyl(penguin_species_sex_table)
-penguin_species_sex_tabyl
-```
-
 In order for the `uncount` function to work correctly, we need to have all the counts in a single column, but since this is a contingency table, our counts are spread out across several columns. To solve this problem, we'll need to "pivot" the columns, turning them into rows. The command is called `pivot_longer`. (There is also a `pivot_wider` command that turns rows into columns, but we won't need that one.)
 
 ```{r}
-penguin_species_sex_tabyl %>%
+penguin_species_sex_table |>
   pivot_longer(cols = c("Adelie", "Chinstrap", "Gentoo"))
 ```
 
-If we want a little more control over the names of the newly created columnds, we can add those as follows:
+If we want a little more control over the names of the newly created columns, we can add those as follows:
 
 ```{r}
-penguin_species_sex_tabyl %>%
+penguin_species_sex_table |>
   pivot_longer(cols = c("Adelie", "Chinstrap", "Gentoo"),
                names_to = "species",
                values_to = "count")
 ```
 
+Now our data is in a form that `uncount` can handle. And indeed, we can assemble all these steps together into a pipeline. First, we should build the tibble, then `pivot` the tibble, and finally `uncount` to get back to the raw data. We want store the result as a new tibble.
 
-Now our data is in the form that `uncount` knows how to deal with. And indeed, we can assemble all these steps together into a pipeline. First, we should build the tibble. Then, we should turn the tibble into a tabyl (sorry), then `pivot` the tabyl, and finally `uncount` to get back to the raw data. Finally, we should store the result as a new tibble. 
 Here are all the steps put together:
 
 ```{r}
+# This is the summary data in contingency table form,
+# stored as a tibble
 penguin_species_sex_table <- tibble(
   sex = c("female", "male"),
   Adelie = c(73, 73),
   Chinstrap = c(34, 34),
   Gentoo = c(58, 61)
-) 
-penguin_species_sex_table %>%
-  as_tabyl() %>%
+)
+
+# This is the pipeline that starts with the contingency table
+# and produces the raw data, one penguin per row
+penguin_species_sex_table |>
   pivot_longer(cols = c("Adelie", "Chinstrap", "Gentoo"),
                names_to = "species",
-               values_to = "count") %>%
+               values_to = "count") |>
   uncount(count) -> penguin_species_sex_raw
 
 penguin_species_sex_raw
@@ -748,24 +730,137 @@ penguin_species_sex_raw
 
 Indeed, this new tibble looks just like how we wanted it to look.
 
+(Notice the clever use of the arrow `->` in the last line of the pipeline. We are used to assigning variables with `<-` and the name of the new variable on the left. But we can also use `-> at the end of the line with the name of the new variable on the right!)
 
-## Conclusion {#categorical-conclusion}
+
+## Publication-ready graphics
+
+Let's go back to the first relative frequency bar chart from this chapter.
+
+```{r}
+ggplot(penguins, aes(x = species, y = after_stat(prop), group = 1)) +
+  geom_bar()
+```
+
+The variable name `species` is already informative, but the y-axis is labeled with "prop". Also note that this graph could use a title. We can do all this with `labs` (for labels). Observe:
+
+```{r}
+ggplot(penguins, aes(x = species, y = after_stat(prop), group = 1)) +
+  geom_bar() +
+  labs(title = "Distribution of species",
+       y = "Proportion",
+       x = "Species")
+```
+
+### Using colorblind-friendly palettes
+
+The default color scheme used in `ggplot2` is not designed to be friendly to folks who experience various forms of colorblindness (including the author of this book, who experiences deuteranomaly, a relatively common form of red-green colorblindness).
+
+As a reminder, this was our side-by-side bar chart, now including labels:
+
+```{r}
+ggplot(penguins, aes(fill = sex, x = species)) +
+  geom_bar(position = "dodge") +
+  labs(title = "Sex of penguins by species",
+       y = "Count",
+       x = "Species",
+       fill = "Sex")
+```
+
+A simple fix is to add one line of code to the `ggplot` call:
+
+```{r}
+ggplot(penguins, aes(fill = sex, x = species)) +
+  geom_bar(position = "dodge") +
+  labs(title = "Sex of penguins by species",
+       y = "Count",
+       x = "Species",
+       fill = "Sex") +
+  scale_fill_viridis_d()
+```
+
+To a person with typical color perception, this may feel a little like it's burning your eyeballs. But to a person with severe colorblindness, this contrast is very helpful for seeing these two categories clearly.
+
+Notice that the NA values above blend in with the background, so they're not visible. This is fixed by putting black borders around the bars:
+
+```{r}
+ggplot(penguins, aes(fill = sex, x = species)) +
+  geom_bar(position = "dodge", color = "black") +
+  labs(title = "Sex of penguins by species",
+       y = "Count",
+       x = "Species",
+       fill = "Sex") +
+  scale_fill_viridis_d()
+```
+
+It's also possible to use grayscale. This is often a requirement for publishing in print journals. If we use gray (spelled "grey" in `ggplot` code) for the bars, it would also be best to turn off the gray background using a "theme" (called `theme_bw`).
+
+```{r}
+ggplot(penguins, aes(fill = sex, x = species)) +
+  geom_bar(position = "dodge", color = "black") +
+  labs(title = "Sex of penguins by species",
+       y = "Count",
+       x = "Species",
+       fill = "Sex") +
+  scale_fill_grey() +
+  theme_bw()
+```
+
+For some reason, the default color for missing values is red, which is somewhat annoying. It doesn't require much more code to change that:
+
+```{r}
+ggplot(penguins, aes(fill = sex, x = species)) +
+  geom_bar(position = "dodge", color = "black") +
+  labs(title = "Sex of penguins by species",
+       y = "Count",
+       x = "Species",
+       fill = "Sex") +
+  scale_fill_grey(na.value = "white") +
+  theme_bw()
+```
+
+Learn more about the various forms of colorblindness here: [https://my.clevelandclinic.org/health/diseases/11604-color-blindness](https://my.clevelandclinic.org/health/diseases/11604-color-blindness)
+
+And here's a surprisingly entertaining (albeit, a bit technical in parts) video of a conference presentation given by the researchers who developed the Viridis color palette: [https://youtu.be/xAoljeRJ3lU?si=ARxA7ZFkj_2qp6kL](https://youtu.be/xAoljeRJ3lU?si=ARxA7ZFkj_2qp6kL)
+
+##### Exercise 13 {-}
+
+Modify the following side-by-side bar chart by adding a title and labels for both the fill variable and the x-axis variable. Change the y-axis label to "Count" with an uppercase "C". Use the Viridis color palette with black borders around the bars.
+
+::: {.answer}
+
+```{r}
+# Modify the following side-by-side bar chart by adding a title and 
+# labels for both the fill variable and the x-axis variable.
+# Change the y-axis label to "Count" with an uppercase "C".
+# Use the Viridis color palette with black borders around the bars.
+ggplot(penguins, aes(fill = species, x = island)) +
+  geom_bar(position = "dodge")
+```
+
+:::
+
+
+## Conclusion
 
 You can summarize a single categorical variable using a frequency table. For only one categorical variable, a graph is usually overkill, but if you really want a graph, the bar chart is the best option. Both raw counts and proportions/percentages can be useful.
 
-We use contingency tables to summarize two categorical variables. Unless groups are of equal size, raw counts can be incredibly misleading here. You should include proportions/percentages to be able to compare the distributions across groups. If the proportions/percentages are roughly the same, the variables are more likely to be independent, whereas if the proportions/percentages are different, there may be an association between the variables. For graphing, the best choice is usually a side-by-side bar chart. A stacked bar chart will also work, especially if using relative frequencies on the y-axis, but it can be hard to compare across groups when the response variable has three or more categories.
+We use contingency tables to summarize two categorical variables. Unless groups are of equal size, raw counts can be incredibly misleading here. You should include proportions/percentages to be able to compare the distributions across groups. If the proportions/percentages are roughly the same, the variables are more likely to be independent, whereas if the proportions/percentages are different, there may be an association between the variables.
+
+For graphing two categorical variables, the best choice is usually a side-by-side bar chart. A stacked bar chart will also work, especially if using relative frequencies on the y-axis, but it can be hard to compare across groups when the response variable has three or more categories.
 
 Sometimes we come across categorical data that is recorded using numbers. Many R commands will not work properly if they expect factors and receive numbers, so we use the `mutate` command to create a new variable along with `as_factor` to convert the numbers to categories.
 
-Sometimes we come across summary data instead of raw data. We can then manually create tibbles with that summary data and use `geom_col` instead of `geom_bar` to graph it.
+Sometimes we come across summary data instead of raw data. We can then manually create tibbles with that summary data and use `geom_col` instead of `geom_bar` to graph it. We can even reproduce the raw data by using the `uncount` command on tables.
 
+Finally, there are various modifications we can make to `ggplot` code to make our graphs more professional, clear, and friendly for those experiencing colorblindness.
 
-### Preparing and submitting your assignment {#categorical-prep}
+### Preparing and submitting your assignment
 
 1. From the "Run" menu, select "Restart R and Run All Chunks".
-2. Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.
+2. Deal with any code errors that crop up. Repeat steps 1--2 until there are no more code errors.
 3. Spell check your document by clicking the icon with "ABC" and a check mark.
-4. Hit the "Preview" button one last time to generate the final draft of the `.nb.html` file.
+4. Hit the "Render" button one last time to generate the final draft of the HTML file. (If there are errors here, you may need to go back and fix broken inline code or other markdown issues.)
 5. Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
 
 If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.

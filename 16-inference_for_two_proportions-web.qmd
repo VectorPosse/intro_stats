@@ -1,13 +1,8 @@
-# Inference for two proportions {#two-prop}
+# Inference for two proportions
 
-<!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(50,46,48))`</p>
-<!-- Please don't mess with the previous few lines! -->
+::: {.callout-note}
 
-
-::: {.summary}
-
-### Functions introduced in this chapter {-}
+### Functions introduced in this chapter
 
 No new R functions are introduced here.
 
@@ -22,11 +17,13 @@ In this chapter, we revisit the idea of inference for two proportions, but this 
 
 There are no new packages used in this chapter.
 
-### Download the R notebook file
+### Download the Quarto file
 
-Check the upper-right corner in RStudio to make sure you're in your `intro_stats` project. Then click on the following link to download this chapter as an R notebook file (`.Rmd`).
+Look at either the top (Posit Cloud) or the upper right corner of the RStudio screen to make sure you are in your `intro_stats` project.
 
-<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/16-inference_for_two_proportions.Rmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/16-inference_for_two_proportions.Rmd</a>
+Then click on the following link to download this chapter as a Quarto file (`.qmd`).
+
+<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/16-inference_for_two_proportions.qmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/16-inference_for_two_proportions.qmd</a>
 
 Once the file is downloaded, move it to your project folder in RStudio and open it there.
 
@@ -111,18 +108,30 @@ glimpse(Melanoma)
 
 ### Prepare the data for analysis.
 
-The two variables of interest are `status` and `sex`. We are considering them as categorical variables, but they are recorded numerically in the data frame. We convert them to proper factor variables and put them in their own data frame using the help file to identify the levels and labels we need.
+Check for missing data:
+
+```{r}
+Melanoma |>
+  drop_na(sex, status) |>
+  NROW()
+```
+
+There are still 205 rows, so no missing data here.
+
+The two variables of interest are `status` and `sex`. We are considering them as categorical variables, but they are recorded numerically in the data frame. We convert them to proper factor variables using the help file to identify the levels and labels we need.
 
 There is a minor hitch with `status`. The help file shows three categories: 1. died from melanoma, 2. alive, 3. dead from other causes. For two-proportion inference, it would be better to have two categories only, a success category and a failure category. Since our research question asks about deaths due to melanoma, the "success" condition is the one numbered 1 in the help file, "died from melanoma". That means we need to combine the other two categories into a single failure category. Perhaps we should call it "other". You can accomplish this by simply repeating the "other" label more than once in the `factor` command:
 
 ```{r}
-Melanoma <- Melanoma %>%
-    mutate(sex_fct = factor(sex,
-                            levels = c(0, 1),
-                            labels = c("female", "male")),
-           status_fct = factor(status,
-                               levels = c(1, 2, 3),
-                               labels = c("died from melanoma", "other", "other")))
+Melanoma <- Melanoma |>
+  mutate(sex_fct = factor(sex,
+                          levels = c(0, 1),
+                          labels = c("female", "male")),
+         status_fct = factor(status,
+                             levels = c(1, 2, 3),
+                             labels = c("died from melanoma",
+                                        "other",
+                                        "other")))
 glimpse(Melanoma)
 ```
 
@@ -142,15 +151,15 @@ Please write up your answer here.
 As these are two categorical variables, we should look at contingency tables (both counts and percentages). The variable `status` is the response and `sex` is the predictor.
 
 ```{r}
-tabyl(Melanoma, status_fct, sex_fct) %>%
-    adorn_totals()
+tabyl(Melanoma, status_fct, sex_fct) |>
+  adorn_totals()
 ```
 
 ```{r}
-tabyl(Melanoma, status_fct, sex_fct) %>%
-    adorn_totals() %>%
-    adorn_percentages("col") %>%
-    adorn_pct_formatting()
+tabyl(Melanoma, status_fct, sex_fct) |>
+  adorn_totals() |>
+  adorn_percentages("col") |>
+  adorn_pct_formatting()
 ```
 
 Commentary: You can see why column percentages are necessary in a contingency table. There are 28 females and 29 males who died from melanoma, almost a tie. However, there are more females (126) than there are males (79) who have melanoma in this data set. So the *proportion* of males who died from melanoma is quite a bit larger.
@@ -194,13 +203,13 @@ We will use a normal model.
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 * Random
-    - As observed in a previous chapter when we used this data set before, We have no information about how these samples were obtained. We hope the 126 female patients and 79 male patients are representative of other Danish patients with malignant melanoma.
+  * As observed in a previous chapter when we used this data set before, We have no information about how these samples were obtained. We hope the 126 female patients and 79 male patients are representative of other Danish patients with malignant melanoma.
 
 * 10%
-    - We don't know exactly how many people in Denmark suffer from malignant melanoma, but we could imagine over time it's more than 1260 females and 790 males.
+  * We don't know exactly how many people in Denmark suffer from malignant melanoma, but we could imagine over time it's more than 1260 females and 790 males.
 
 * Success/Failure
-    - Checking the contingency table above (the one with counts), we see the numbers 28 and 98 (the successes and failures among females), and 29 and 50 (the successes and failures among males). These are all larger than 10.
+  * Checking the contingency table above (the one with counts), we see the numbers 28 and 98 (the successes and failures among females), and 29 and 50 (the successes and failures among males). These are all larger than 10.
 
 Commentary: Ideally, for the success/failure condition we would like to check $n_{1} p_{1}$, $n_{1} (1 - p_{1})$, $n_{2} p_{2}$, and $n_{2} (1 - p_{2})$; however, the null makes no claim about the values of $p_{1}$ and $p_{2}$. We do the next best thing and estimate these by substituting the sample proportions $\hat{p}_{1}$ and $\hat{p}_{2}$. But $n_{1} \hat{p}_{1}$ and $n_{2} \hat{p}_{2}$ are just the raw counts of successes in each group. Likewise, $n_{1} (1 - \hat{p}_{1})$ and $n_{2} (1 - \hat{p}_{2})$ are just the raw counts of failures in each group. That's why we can just read them off the contingency table.
 
@@ -212,9 +221,9 @@ For a more sophisticated approach, one could also use "pooled proportions". See 
 ### Compute the test statistic.
 
 ```{r}
-obs_diff <- Melanoma %>%
-    observe(status_fct ~ sex_fct, success = "died from melanoma",
-            stat = "diff in props", order = c("female", "male"))
+obs_diff <- Melanoma |>
+  observe(status_fct ~ sex_fct, success = "died from melanoma",
+          stat = "diff in props", order = c("female", "male"))
 obs_diff
 ```
 
@@ -227,9 +236,9 @@ $$
 As a z-score:
 
 ```{r}
-obs_diff_z <- Melanoma %>%
-    observe(status_fct ~ sex_fct, success = "died from melanoma",
-            stat = "z", order = c("female", "male"))
+obs_diff_z <- Melanoma |>
+  observe(status_fct ~ sex_fct, success = "died from melanoma",
+          stat = "z", order = c("female", "male"))
 obs_diff_z
 ```
 
@@ -270,41 +279,45 @@ Other than a little rounding error (since we rounded everything in sight to thre
 
 ### Report the test statistic in context (when possible).
 
-In our sample, there is a `r 100 * (obs_diff %>% pull(1))`% difference between the rate at which women and men in Denmark die from malignant melanoma (meaning that males died at a higher rate).
+In our sample, there is a `r 100 * (obs_diff |> pull(1))`% difference between the rate at which women and men in Denmark die from malignant melanoma (meaning that males died at a higher rate).
 
-The test statistic has a z score of `r obs_diff_z %>% pull(1)`. The difference in proportions between the rate at which women and men in Denmark die from malignant melanoma lies a bit more than 2 standard errors to the left of the null value.
+The test statistic has a z score of `r obs_diff_z |> pull(1)`. The difference in proportions between the rate at which women and men in Denmark die from malignant melanoma lies a bit more than 2 standard errors to the left of the null value.
 
 Commentary: Note the phrase "meaning that males died at a higher rate". If you are looking at a difference, you must indicate the direction of the difference. Without that, we would know that there was a difference, but we would have no idea whether women or men die more from malignant melanoma. Once we know that we are subtracting female minus male, then given the values are negative, we can infer that males die from malignant melanoma more often than females in these samples.
 
 ### Plot the null distribution.
 
 ```{r}
-status_sex_test <- Melanoma %>%
-    specify(status_fct ~ sex_fct, success = "died from melanoma") %>%
-    hypothesize(null = "independence") %>%
-    assume(distribution = "z")
+status_sex_test <- Melanoma |>
+  specify(status_fct ~ sex_fct, success = "died from melanoma") |>
+  hypothesize(null = "independence") |>
+  assume(distribution = "z")
 status_sex_test
 ```
 
 ```{r}
-status_sex_test %>%
-    visualize() +
-    shade_p_value(obs_stat = obs_diff_z, direction = "two-sided")
+status_sex_test |>
+  visualize() +
+  shade_p_value(obs_stat = obs_diff_z, direction = "two-sided")
 ```
 
-Commentary: Remember that this is a two-sided test.The red line above is the location of the test statistic, but both tails are shaded and count toward the P-value.
+Commentary: be sure to use the z score here (not the difference in proportions), stored as `obs_diff_z`!
+
+Remember that this is a two-sided test.The red line above is the location of the test statistic, but both tails are shaded and count toward the P-value.
 
 ### Calculate the P-value.
 
 ```{r}
-status_sex_test_p <- status_sex_test %>%
-    get_p_value(obs_stat = obs_diff_z, direction = "two-sided")
+status_sex_test_p <- status_sex_test |>
+  get_p_value(obs_stat = obs_diff_z, direction = "two-sided")
 status_sex_test_p
 ```
 
+Commentary: again, be sure to use the z score `obs_diff_z`.
+
 ### Interpret the P-value as a probability given the null.
 
-The P-value is `r status_sex_test_p %>% pull(1)`. If there were truly no difference between the rate at which women and men in Denmark die from malignant melanoma, there is only a `r 100 * status_sex_test_p %>% pull(1)`% chance of seeing a difference in our data at least as extreme as what we saw.
+The P-value is `r status_sex_test_p |> pull(1)`. If there were truly no difference between the rate at which women and men in Denmark die from malignant melanoma, there is only a `r 100 * status_sex_test_p |> pull(1)`% chance of seeing a difference in our data at least as extreme as what we saw.
 
 
 ## Conclusion
@@ -332,18 +345,22 @@ If we have made a Type I error, then there would actually be no difference betwe
 
 None of the conditions have changed, so they don't need to be rechecked.
 
+Commentary: in the last chapter, we discussed how the success/failure condition changed between the hypothesis test and the confidence interval. That was because for a single proportion, we used the null value for checking expected successes and failures under the assumption of the null. Then, for a confidence interval, there was no more null value to use, so we fell back on the sample successes and failures.
+
+For two proportions, though, there are not null values for $p_{1}$ and $p_{2}$ posited; we only expressed a null about the difference of these values. So in checking the success/failure condition above, we already had to fall back on the sample successes and failures for both groups. That's the same thing we would do here for the confidence interval, so there is nothing new to do here.
+
 ### Calculate and graph the confidence interval.
 
 ```{r}
-status_sex_ci <- status_sex_test %>%
-    get_confidence_interval(point_estimate = obs_diff, level = 0.95)
+status_sex_ci <- status_sex_test |>
+  get_confidence_interval(point_estimate = obs_diff, level = 0.95)
 status_sex_ci
 ```
 
 ```{r}
-status_sex_test %>%
-    visualize() +
-    shade_confidence_interval(endpoints = status_sex_ci)
+status_sex_test |>
+  visualize() +
+  shade_confidence_interval(endpoints = status_sex_ci)
 ```
 
 ### State (but do not overstate) a contextually meaningful interpretation.
@@ -356,17 +373,17 @@ Commentary: Note the addition of that last sentence. As we mentioned before, if 
 
 The confidence interval does not contain the null value of zero. Since zero is not a plausible value for the true difference between the rate at which women and men die from malignant melanoma, it makes sense that we rejected the null hypothesis.
 
-### When comparing two groups, comment on the effect size and the practical significance of the result.
+### Comment on the effect size and the practical significance of the result.
 
 At the most extreme end of the confidence interval, `r 100 * status_sex_ci$lower_ci`% is a very large difference between females and males. If this outer value is close to the truth, males are at much more risk of melanoma than females (at least in Denmark at the time of the study). The other end of the confidence interval, `r 100 * status_sex_ci$upper_ci`%, is a negligible difference. If that number were close to the truth, it's not clear that the true difference would have practical significance in the real world.
 
-Commentary: The P-value for the hypothesis test indicated that the results are *statistically significant*. But what does that really mean? It means that if the null were true, the probability of getting samples of females and males whose melanoma rates differed by `r 100 * obs_diff %>% pull(1)`%---or something more extreme in either direction---would be quite small. Our conclusion to reject the null follows as a logical consequence.
+Commentary: The P-value for the hypothesis test indicated that the results are *statistically discernible*. But what does that really mean? It means that if the null were true, the probability of getting samples of females and males whose melanoma rates differed by `r 100 * obs_diff |> pull(1)`%---or something more extreme in either direction---would be quite small. Our conclusion to reject the null follows as a logical consequence.
 
 So we can be somewhat confident that there is a difference between females and males. But how much of a difference? A small difference can be statistically significant, and yet be completely irrelevant in the real world. A 1% difference in melanoma rates might not be enough to enact extra preventative measures for men, for example. On the other hand, a 27% difference is huge, and might result in a campaign targeted at men specifically due to the extra risk.
 
-In other words, we cannot just rest on a conclusion of statistical significance. A difference might exist, but so what? We also need to know if that difference is *practically significant*? Are there any practical, real-world consequences due to the magnitude of the difference? There is no cutoff for practical significance. This is determined in the context of the problem, preferably using expert guidance. There are policy considerations, cost-benefit analyses, risk assessments, and a host of other considerations that are made when determining if a result is practically significant. 
+In other words, we cannot just rest on a conclusion of statistical discernibility. A difference might exist, but so what? We also need to know if that difference is *practically significant*? Are there any practical, real-world consequences due to the magnitude of the difference? There is no cutoff for practical significance. This is determined in the context of the problem, preferably using expert guidance. There are policy considerations, cost-benefit analyses, risk assessments, and a host of other considerations that are made when determining if a result is practically significant. 
 
-A big part of this process that is often neglected is the role of uncertainty. Our point estimate was `r 100 * obs_diff %>% pull(1)`%. But that number, by itself, is not that meaningful. That is but one estimate coming from one set of samples. The range of plausible values, according to the confidence interval, is `r 100 * status_sex_ci$lower_ci`% to `r 100 * status_sex_ci$upper_ci`% . This is a huge range, and there are very different consequences to society is the difference is `r 100 * status_sex_ci$lower_ci`% versus `r 100 * status_sex_ci$upper_ci`%.
+A big part of this process that is often neglected is the role of uncertainty. Our point estimate was `r 100 * obs_diff |> pull(1)`%. But that number, by itself, is not that meaningful. That is but one estimate coming from one set of samples. The range of plausible values, according to the confidence interval, is `r 100 * status_sex_ci$lower_ci`% to `r 100 * status_sex_ci$upper_ci`% . This is a huge range, and there are very different consequences to society is the difference is `r 100 * status_sex_ci$lower_ci`% versus `r 100 * status_sex_ci$upper_ci`%.
 
 
 ## Your turn
@@ -377,7 +394,7 @@ The rubric outline is reproduced below. You may refer to the worked example abov
 
 Another word of warning: the copy/paste process is not a substitute for your brain. You will often need to modify more than just the names of the data frames and variables to adapt the worked examples to your own work. Do not blindly copy and paste code without understanding what it does. And you should **never** copy and paste text. All the sentences and paragraphs you write are expressions of your own analysis. They must reflect your own understanding of the inferential process.
 
-**Also, so that your answers here don't mess up the code chunks above, use new variable names everywhere. In particular, you should use `ulcer_sex`  everywhere instead of `status_sex`**
+**Also, so that your answers here don't mess up the code chunks above, use new variable names everywhere. In particular, you should use `ulcer_sex` everywhere instead of `status_sex`**
 
 ##### Exploratory data analysis {-}
 
@@ -397,7 +414,7 @@ Please write up your answer here
 
 :::
 
-###### Prepare the data for analysis. [Not always necessary.] {-}
+###### Prepare the data for analysis. {-}
 
 ::: {.answer}
 
@@ -475,7 +492,12 @@ Please write up your answer here. (Some conditions may require R code as well.)
 ::: {.answer}
 
 ```{r}
-# Add code here to compute the test statistic.
+# Add code here to compute the test statistic as a difference of 
+# proportions.
+```
+
+```{r}
+# Add code here to compute the test statistic as a z score.
 ```
 
 :::
@@ -491,6 +513,10 @@ Please write up your answer here.
 ###### Plot the null distribution. {-}
 
 ::: {.answer}
+
+```{r}
+# Add code here to plot the generate distribution.
+```
 
 ```{r}
 # Add code here to plot the null distribution.
@@ -591,7 +617,7 @@ Please write up your answer here.
 
 :::
 
-###### When comparing two groups, comment on the effect size and the practical significance of the result. [Not always applicable.] {-}
+###### Comment on the effect size and the practical significance of the result. {-}
 
 ::: {.answer}
 
@@ -602,20 +628,20 @@ Please write up your answer here.
 
 ## Conclusion
 
-Just like with one proportion, when certain conditions are met, the difference between two proportions follow a normal model. Rather than simulating a bunch of different sample differences under the assumption of independent variables, we can just replace all that with a relatively simple normal model with mean zero and a standard error based on the sample proportions of successes and failures in the two samples. From that normal model, we obtain P-values and confidence intervals as before.
+Just like with one proportion, when certain conditions are met, the difference between two proportions follows a normal model. Rather than simulating a bunch of different sample differences under the assumption of independent variables, we can just replace all that with a relatively simple normal model with mean zero and a standard error based on the sample proportions of successes and failures in the two samples. From that normal model, we obtain P-values and confidence intervals as before.
 
 ### Preparing and submitting your assignment
 
 1. From the "Run" menu, select "Restart R and Run All Chunks".
-2. Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.
+2. Deal with any code errors that crop up. Repeat steps 1--2 until there are no more code errors.
 3. Spell check your document by clicking the icon with "ABC" and a check mark.
-4. Hit the "Preview" button one last time to generate the final draft of the `.nb.html` file.
+4. Hit the "Render" button one last time to generate the final draft of the HTML file. (If there are errors here, you may need to go back and fix broken inline code or other markdown issues.)
 5. Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
 
 If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
 
 
-## Optional appendix: Pooling {#pooling}
+## Optional appendix: Pooling
 
 Earlier, we mentioned that that we cannot calculate the "true" standard error directly because the null hypothesis does not give us $p_{1}$ and $p_{2}$. (The null only addresses the value of the difference $p_{1} - p_{2}$.) We dealt with this by simply substituting $\hat{p}_{1}$ for $p_{1}$ and $\hat{p}_{2}$ for $p_{2}$.
 
@@ -623,14 +649,21 @@ There is, however, one assumption from the null we can still salvage that will i
 
 This is called a *pooled proportion*. It's straightforward to compute: just take the total number of successes in both groups and divide by the total size of both groups. Here is the formula:
 
-$$\hat{p}_{pooled} = \frac{successes_{1} + successes_{2}}{n_{1} + n_{2}}.$$
+$$
+\hat{p}_{pooled} = \frac{successes_{1} + successes_{2}}{n_{1} + n_{2}}
+$$
 
 Occasionally, we are not given the raw number of successes in each group, but rather, the proportion of successes in each group, $\hat{p}_{1}$ and $\hat{p}_{2}$. The simple fix is to recompute the raw count of successes as $n_{1} \hat{p}_{1}$ and $n_{2} \hat{p}_{2}$. Here is what it looks like in the formula:
 
-$$\hat{p}_{pooled} = \frac{n_{1} \hat{p}_{1} + n_{2} \hat{p}_{2}}{n_{1} + n_{2}}.$$
+$$
+\hat{p}_{pooled} = \frac{n_{1} \hat{p}_{1} + n_{2} \hat{p}_{2}}{n_{1} + n_{2}}
+$$
+
 The normal model can still have a mean of $p_{1} - p_{2}$. (We usually assume this is 0 in the null hypothesis.) But its standard error will use the pooled proportion:
 
-$$N\left( p_{1} - p_{2}, \sqrt{\frac{\hat{p}_{pooled} (1 - \hat{p}_{pooled})}{n_{1}} + \frac{\hat{p}_{pooled} (1 - \hat{p}_{pooled})}{n_{2}}} \right).$$
+$$
+N\left( p_{1} - p_{2}, \sqrt{\frac{\hat{p}_{pooled} (1 - \hat{p}_{pooled})}{n_{1}} + \frac{\hat{p}_{pooled} (1 - \hat{p}_{pooled})}{n_{2}}} \right)
+$$
 
 Not only can we use the pooled proportion in the standard error, but in fact we can use it anywhere we assume the null. For example, the success/failure condition is also subject to the assumption of the null, so we could use the pooled proportion there too.
 

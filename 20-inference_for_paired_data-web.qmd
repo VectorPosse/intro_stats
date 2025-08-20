@@ -1,13 +1,8 @@
 # Inference for paired data
 
-<!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(50,46,48))`</p>
-<!-- Please don't mess with the previous few lines! -->
+::: {.callout-note}
 
-
-::: {.summary}
-
-### Functions introduced in this chapter {-}
+### Functions introduced in this chapter
 
 No new R functions are introduced here.
 
@@ -22,11 +17,13 @@ In this chapter we will learn how to run inference for two paired numerical vari
 
 There are no new packages used in this chapter.
 
-### Download the R notebook file
+### Download the Quarto file
 
-Check the upper-right corner in RStudio to make sure you're in your `intro_stats` project. Then click on the following link to download this chapter as an R notebook file (`.Rmd`).
+Look at either the top (Posit Cloud) or the upper right corner of the RStudio screen to make sure you are in your `intro_stats` project.
 
-<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/20-inference_for_paired_data.Rmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/20-inference_for_paired_data.Rmd</a>
+Then click on the following link to download this chapter as a Quarto file (`.qmd`).
+
+<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/20-inference_for_paired_data.qmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/20-inference_for_paired_data.qmd</a>
 
 Once the file is downloaded, move it to your project folder in RStudio and open it there.
 
@@ -82,16 +79,29 @@ textbooks
 ```{r}
 glimpse(textbooks)
 ```
+
 The two paired variables are `ucla_new` and `amaz_new`.
 
 ### Prepare the data for analysis.
 
+First, a quick check for missing data:
+
+```{r}
+textbooks |>
+  drop_na(ucla_new, amaz_new) |>
+  NROW()
+```
+
 Generally, we will need to create a new variable `d` that represents the difference between the two paired variables of interest. This uses the `mutate` command that adds an extra column to our data frame. The order of subtraction usually does not matter, but we will want to keep track of that order so that we can interpret our test statistic correctly. In the case of a one-sided test (which this is), it is especially important to keep track of the order of subtraction. Since we suspect the bookstore will charge more than Amazon, let's subtract in that order. Our hunch is that it will be a positive number, on average.
 
 ```{r}
-textbooks_d <- textbooks %>%
-    mutate(d = ucla_new - amaz_new)
-textbooks_d
+textbooks <- textbooks |>
+  mutate(d = ucla_new - amaz_new)
+textbooks
+```
+
+```{r}
+glimpse(textbooks)
 ```
 
 If you look closely at the tibble above, you will see that there is a column already in our data called `diff`. It is the same as the column `d` we just created. So in this case, we didn't really need to create a new difference variable. However, since most data sets do not come pre-prepared with such a difference variable, it is good to know how to make one if needed.
@@ -101,18 +111,18 @@ If you look closely at the tibble above, you will see that there is a column alr
 Here are summary statistics, a histogram, and a QQ plot for `d`.
 
 ```{r}
-summary(textbooks_d$d)
+summary(textbooks$d)
 ```
 
 ```{r}
-ggplot(textbooks_d, aes(x = d)) +
-    geom_histogram(binwidth = 10, boundary = 0)
+ggplot(textbooks, aes(x = d)) +
+  geom_histogram(binwidth = 10, boundary = 0)
 ```
 
 ```{r}
-ggplot(textbooks_d, aes(sample = d)) +
-    geom_qq() +
-    geom_qq_line()
+ggplot(textbooks, aes(sample = d)) +
+  geom_qq() +
+  geom_qq_line()
 ```
 
 The data is somewhat skewed to the right with one observation that might be a bit of an outlier. If the sample size were much smaller, we might be concerned about this point However, it's not much higher than other points in that right tail, and it doesn't appear that its inclusion or exclusion will change the overall conclusion much. If you are concerned that the point might alter the conclusion, run the hypothesis test twice, once with and once without the outlier present to see if the main conclusion changes.
@@ -121,7 +131,7 @@ The data is somewhat skewed to the right with one observation that might be a bi
 
 ### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
-The sample consists of `r NROW(textbooks_d)` textbooks. The population is all textbooks that might be sold both at the UCLA bookstore and on Amazon.
+The sample consists of `r NROW(textbooks)` textbooks. The population is all textbooks that might be sold both at the UCLA bookstore and on Amazon.
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
@@ -169,13 +179,13 @@ Please write up your answer here.
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 * Random
-    - We do not know how exactly how David Diez obtained this sample, but the help file claims it is a random sample.
+  * We do not know how exactly how David Diez obtained this sample, but the help file claims it is a random sample.
     
 * 10%
-    - We do not know how many total textbooks were available at the UCLA bookstore at the time the sample was taken, so we do not know if this condition is met. As long as there were at least 730 books, we are okay. We suspect that, based on the size of UCLA and the number of course offerings there, this is a reasonable assumption.
+  * We do not know how many total textbooks were available at the UCLA bookstore at the time the sample was taken, so we do not know if this condition is met. As long as there were at least 730 books, we are okay. We suspect that, based on the size of UCLA and the number of course offerings there, this is a reasonable assumption.
     
 * Nearly normal
-    - Although the sample distribution is skewed (with a possible mild outlier), the sample size is more than 30.
+  * Although the sample distribution is skewed (with a possible mild outlier), the sample size is more than 30.
 
 
 ## Mechanics
@@ -183,38 +193,38 @@ Please write up your answer here.
 ### Compute the test statistic.
 
 ```{r}
-d_mean <- textbooks_d %>%
-  specify(response = d) %>%
+d_mean <- textbooks |>
+  specify(response = d) |>
   calculate(stat = "mean")
 d_mean
 ```
 
 ```{r}
-d_t <- textbooks_d %>%
-  specify(response = d) %>%
-  hypothesize(null = "point", mu = 0) %>%
+d_t <- textbooks |>
+  specify(response = d) |>
+  hypothesize(null = "point", mu = 0) |>
   calculate(stat = "t")
 d_t
 ```
 
 ### Report the test statistic in context (when possible).
 
-The mean difference in textbook prices is `r d_mean %>% pull(1)`.
+The mean difference in textbook prices is `r d_mean |> pull(1)`.
 
-The value of t is `r d_t %>% pull(1)`. The mean difference in textbook prices is more than 7 standard errors above a difference of zero.
+The value of t is `r d_t |> pull(1)`. The mean difference in textbook prices is more than 7 standard errors above a difference of zero.
 
 
 ### Plot the null distribution.
 
 ```{r}
-price_test <- textbooks_d %>%
-  specify(response = d) %>%
+price_test <- textbooks |>
+  specify(response = d) |>
   assume("t")
 price_test
 ```
 
 ```{r}
-price_test %>%
+price_test |>
   visualize() +
   shade_p_value(obs_stat = d_t, direction = "greater")
 ```
@@ -222,14 +232,14 @@ price_test %>%
 ### Calculate the P-value.
 
 ```{r}
-price_test_p <- price_test %>%
+price_test_p <- price_test |>
   get_p_value(obs_stat = d_t, direction = "greater")
 price_test_p
 ```
 
 ### Interpret the P-value as a probability given the null.
 
-$P < 0.001$. If there were no difference in textbook prices between the UCLA bookstore and Amazon, there is only a `r 100 * price_test_p %>% pull(1)`% chance of seeing data at least as extreme as what we saw. (Note that the number is so small that it rounds to zero in the inline code above. That zero is technically incorrect. The P-value is never exactly zero. That's why why also are clear to state $P < 0.001$.)
+$P < 0.001$. If there were no difference in textbook prices between the UCLA bookstore and Amazon, there would be less than a 0.1% chance of seeing data at least as extreme as what we saw. (Remember that a P-value can never be zero. That's why we state $P < 0.001$.)
 
 
 ## Conclusion
@@ -246,7 +256,7 @@ Commentary: Note that because we performed a one-sided test, our conclusion is a
 
 ### Express reservations or uncertainty about the generalizability of the conclusion.
 
-We can be confident about the validity of this data, and therefore the conclusion drawn. We should be careful to limit our conclusion to the UCLA bookstore (and not extrapolate the findings, say, to other campus bookstores.) Depending on when this data was collected, we may not be able to say anything about current prices at the UCLA bookstore either.
+We can be confident about the validity of this data, and therefore the conclusion drawn. We should be careful to limit our conclusion to the UCLA bookstore (and not extrapolate the findings, say, to other campus bookstores). Depending on when this data was collected, we may not be able to say anything about current prices at the UCLA bookstore either.
 
 ### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
@@ -262,23 +272,24 @@ All necessary conditions have already been checked.
 ### Calculate and graph the confidence interval.
 
 ```{r}
-price_ci <- price_test %>%
+price_ci <- price_test |>
   get_confidence_interval(point_estimate = d_mean, level = 0.95)
 price_ci
 ```
 
 ```{r}
-price_test %>%
+price_test |>
   visualize() +
   shade_confidence_interval(endpoints = price_ci)
 ```
 
 ### State (but do not overstate) a contextually meaningful interpretation.
 
-We are 95% confident that the true difference in textbook prices between the UCLA bookstore and Amazon is captured in the interval (`r price_ci$lower_ci`, `r price_ci$upper_ci`). This was obtained by subtracting the Amazon price minus the UCLA bookstore. (In other words, since all differences in the confidence interval are positive, all plausible differences indicate that the UCLA prices are higher than the Amazon prices.)
-
+We are 95% confident that the true difference in textbook prices between the UCLA bookstore and Amazon is captured in the interval (`r round(price_ci$lower_ci, 2)`, `r round(price_ci$upper_ci, 2)`). This was obtained by subtracting the Amazon price minus the UCLA bookstore. In other words, since all differences in the confidence interval are positive, all plausible differences indicate that the UCLA prices are higher than the Amazon prices.
 
 Commentary: Don't forget that any time we find a number that represents a difference, we have to be clear in the conclusion about the direction of subtraction. Otherwise, we have no idea how to interpret positive and negative values.
+
+Also note the use of the `round` function here since we are working with dollar values. Keep in mind, however, that R sometimes doesn't respect your wishes and will not always display a number with two decimal points.
 
 ### If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.
 
@@ -308,7 +319,7 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 
 ::: {.answer}
 
-Please write up your answer here
+Please write up your answer here.
 
 ```{r}
 # Add code here to print the data
@@ -320,7 +331,7 @@ Please write up your answer here
 
 :::
 
-###### Prepare the data for analysis. [Not always necessary.] {-}
+###### Prepare the data for analysis. {-}
 
 ::: {.answer}
 
@@ -416,9 +427,7 @@ Please write up your answer here.
 ::: {.answer}
 
 ```{r}
-# IF CONDUCTING A SIMULATION...
-set.seed(1)
-# Add code here to simulate the null distribution.
+# Add code here to generate the null distribution.
 ```
 
 ```{r}
@@ -520,7 +529,7 @@ Please write up your answer here.
 
 :::
 
-###### When comparing two groups, comment on the effect size and the practical significance of the result. [Not always applicable.] {-}
+###### Comment on the effect size and the practical significance of the result. {-}
 
 ::: {.answer}
 
@@ -536,9 +545,9 @@ Paired data occurs whenever we have two numerical measurements that are related 
 ### Preparing and submitting your assignment
 
 1. From the "Run" menu, select "Restart R and Run All Chunks".
-2. Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.
+2. Deal with any code errors that crop up. Repeat steps 1--2 until there are no more code errors.
 3. Spell check your document by clicking the icon with "ABC" and a check mark.
-4. Hit the "Preview" button one last time to generate the final draft of the `.nb.html` file.
+4. Hit the "Render" button one last time to generate the final draft of the HTML file. (If there are errors here, you may need to go back and fix broken inline code or other markdown issues.)
 5. Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
 
 If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.

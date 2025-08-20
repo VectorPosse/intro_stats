@@ -1,11 +1,6 @@
 # Inference for one mean
 
-<!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(50,46,48))`</p>
-<!-- Please don't mess with the previous few lines! -->
-
-
-::: {.summary}
+::: {.callout-note}
 
 ### Functions introduced in this chapter {-}
 
@@ -22,11 +17,13 @@ In this chapter, we'll learn about the Student t distribution and use it to perf
 
 There are no new packages used in this chapter.
 
-### Download the R notebook file
+### Download the Quarto file
 
-Check the upper-right corner in RStudio to make sure you're in your `intro_stats` project. Then click on the following link to download this chapter as an R notebook file (`.Rmd`).
+Look at either the top (Posit Cloud) or the upper right corner of the RStudio screen to make sure you are in your `intro_stats` project.
 
-<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/19-inference_for_one_mean.Rmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/19-inference_for_one_mean.Rmd</a>
+Then click on the following link to download this chapter as a Quarto file (`.qmd`).
+
+<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/19-inference_for_one_mean.qmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/19-inference_for_one_mean.qmd</a>
 
 Once the file is downloaded, move it to your project folder in RStudio and open it there.
 
@@ -83,9 +80,9 @@ Again, we see that the sample means are close to 114, but there is some variabil
 
 ```{r}
 ggplot(sims, aes(x = mean)) +
-    geom_histogram(binwidth = 1) +
-    scale_x_continuous(limits = c(86, 142),
-                       breaks = c(93, 100, 107, 114, 121, 128, 135))
+  geom_histogram(binwidth = 1) +
+  scale_x_continuous(limits = c(86, 142),
+                     breaks = c(93, 100, 107, 114, 121, 128, 135))
 ```
 
 Most sample means are around 114, but there is a good range of possibilities from around 93 to 135. The population standard deviation $\sigma$ is 14, but the standard deviation in this graph is clearly much smaller than that. (A large majority of the samples are within 14 of the mean!)
@@ -104,11 +101,11 @@ Let's re-scale the y-axis to use percentages instead of counts. Then we should b
 # Don't worry about the syntax here.
 # You won't need to know how to do this on your own.
 ggplot(sims, aes(x = mean)) +
-    geom_histogram(aes(y = ..density..), binwidth = 1) +
-    scale_x_continuous(limits = c(86, 142),
-                       breaks = c(93, 100, 107, 114, 121, 128, 135)) +
-    stat_function(fun = dnorm, args = list(mean = 114, sd = 7),
-                  color = "red", size = 1.5)
+  geom_histogram(aes(y = after_stat(density)), binwidth = 1) +
+  scale_x_continuous(limits = c(86, 142),
+                     breaks = c(93, 100, 107, 114, 121, 128, 135)) +
+  stat_function(fun = dnorm, args = list(mean = 114, sd = 7),
+                color = "red", size = 1.5)
 ```
 
 Looks pretty good!
@@ -124,13 +121,14 @@ The following code will accomplish all of this. (Don't worry about the messy syn
 ```{r}
 # Don't worry about the syntax here.
 # You won't need to know how to do this on your own.
-sims_z <- data.frame(mean = scale(sims$mean, center = 114, scale = 14))
+sims_z <- data.frame(mean = scale(sims$mean,
+                                  center = 114, scale = 14))
 ggplot(sims_z, aes(x = mean)) +
-    geom_histogram(aes(y = ..density..), binwidth = 1/14) +
-    scale_x_continuous(limits = c(-2, 2),
-                       breaks = c(-1.5, -1, -0.5, 0, 0.5, 1, 1.5)) +
-    stat_function(fun = dnorm, args = list(mean = 0, sd = 0.5),
-                  color = "red",  size = 1.5)
+  geom_histogram(aes(y = after_stat(density)), binwidth = 1/14) +
+  scale_x_continuous(limits = c(-2, 2),
+                     breaks = c(-1.5, -1, -0.5, 0, 0.5, 1, 1.5)) +
+  stat_function(fun = dnorm, args = list(mean = 0, sd = 0.5),
+                color = "red",  size = 1.5)
 ```
 
 Remember that this is not the standard normal model $N(0, 1)$. The standard deviation in the graph above is not 1, but 0.5 because that is the standard error when using samples of size 4. ($1/\sqrt{4} = 0.5$.)
@@ -171,10 +169,10 @@ The first step is to write a little function of our own to compute simulated t s
 # Don't worry about the syntax here.
 # You won't need to know how to do this on your own.
 sim_t <- function(n, mu, sigma) {
-    sample_values <- rnorm(n, mean = mu, sd = sigma)
-    y_bar <- mean(sample_values)
-    s <- sd(sample_values)
-    t <- (y_bar - mu)/(s / sqrt(n))
+  sample_values <- rnorm(n, mean = mu, sd = sigma)
+  y_bar <- mean(sample_values)
+  s <- sd(sample_values)
+  t <- (y_bar - mu)/(s / sqrt(n))
 }
 ```
 
@@ -192,16 +190,16 @@ Let's plot our simulated t scores alongside a normal distribution.
 # Don't worry about the syntax here.
 # You won't need to know how to do this on your own.
 ggplot(sims_t, aes(x = sim_t)) +
-    geom_histogram(aes(y = ..density..), binwidth = 0.25) +
-    scale_x_continuous(limits = c(-5, 5),
-                       breaks = c(-4, -3, -2, -1, 0, 1, 2, 3, 4)) +
-    stat_function(fun = dnorm, args = list(mean = 0, sd = 1),
-                  color = "red", size = 1.5)
+  geom_histogram(aes(y = after_stat(density)), binwidth = 0.25) +
+  scale_x_continuous(limits = c(-5, 5),
+                     breaks = c(-4, -3, -2, -1, 0, 1, 2, 3, 4)) +
+  stat_function(fun = dnorm, args = list(mean = 0, sd = 1),
+                color = "red", size = 1.5)
 ```
 
 These t scores are somewhat close to the normal model we had when we knew $\sigma$, but the fit doesn't look quite right. The peak of the simulated values isn't quite high enough, and the tails seem to spill out over the much thinner tails of the normal model.
 
-William Gosset figured this all out in the early 20th century. While working for the Guinness brewery in Dublin, Ireland, he started noticing that his quality control tests (using very small sample sizes) didn't yield statistical results consistent with the normal models that were universally used at the time. At the encouragement of the company, which saw his work as a potential source of cost savings, he took some time off to study and consult with other statisticians. As a result, he found a new function that is similar to a normal distribution but is more spread out. This new function accounts for the extra variability one gets when using the sample standard deviation $s$ as an estimate for the true population standard deviation $\sigma$. Guinness considered the result a "trade secret", so they wouldn't allow Gosset to publish under his own name. But they did permit him to publish his findings under the pseudonym "Student". He used data sets unrelated to brewing and submitted his work to the top statistical journal of the time.
+William Gosset figured this all out in the early 20th century. While working for the Guinness brewery in Dublin, Ireland, he started noticing that his quality control tests (using very small sample sizes) didn't yield statistical results consistent with the normal models that were universally used at the time. At the encouragement of the company, which saw his work as a potential source of cost savings, he took some time off to study and consult with other statisticians. As a result, he found a new function that is similar to a normal distribution but is more spread out. This new function accounts for the extra variability one gets when using the sample standard deviation $s$ as an estimate for the true population standard deviation $\sigma$. Guinness considered the result a "trade secret", so they wouldn't allow Gosset to publish under his own name. But they did permit him to publish his findings under the pseudonym "Student." He used data sets unrelated to brewing and submitted his work to the top statistical journal of the time.
 
 The new function Gosset discovered became known as the *Student t distribution*. He realized that the spread of the t distribution depends on the sample size. This makes sense: the accuracy of $s$ will be greater when we have a larger sample. In fact, for large enough samples, the t distribution is very close to a normal model.
 
@@ -211,19 +209,19 @@ $$
 df = n - 1.
 $$
 
-So is the t model correct for our simulated t scores? Our sample size was 4, so we should use a t model with 3 degrees of freedom. Let's plot it in green on top of our previous graph and see:
+So, is the t model correct for our simulated t scores? Our sample size was 4, so we should use a t model with 3 degrees of freedom. Let's plot it in green on top of our previous graph and see:
 
 ```{r}
 # Don't worry about the syntax here.
 # You won't need to know how to do this on your own.
 ggplot(sims_t, aes(x = sim_t)) +
-    geom_histogram(aes(y = ..density..), binwidth = 0.25) +
-    scale_x_continuous(limits = c(-5, 5),
-                       breaks = c(-4, -3, -2, -1, 0, 1, 2, 3, 4)) +
-    stat_function(fun = dnorm, args = list(mean = 0, sd = 1),
-                  color = "red", size = 1.5) +
-    stat_function(fun = dt, args = list(df = 3),
-                  color = "green", size = 1.5)
+  geom_histogram(aes(y = after_stat(density)), binwidth = 0.25) +
+  scale_x_continuous(limits = c(-5, 5),
+                     breaks = c(-4, -3, -2, -1, 0, 1, 2, 3, 4)) +
+  stat_function(fun = dnorm, args = list(mean = 0, sd = 1),
+                color = "red", size = 1.5) +
+  stat_function(fun = dt, args = list(df = 3),
+                color = "green", size = 1.5)
 ```
 
 The green curve fits the simulated values much better.
@@ -246,7 +244,7 @@ We also need to be on the lookout for outliers. We've seen before that outliers 
 
 Some outliers are mistakes. Perhaps someone entered data incorrectly into the computer. When it's clear that outliers are data entry errors, we are free to either correct them (if we know what error was made) or delete them from our data completely.
 
-Some outliers are not necessarily mistakes, but should be excluded for other reasons. For example, if we are studying the weight of birds and we have sampled a bunch of hummingbirds and one emu, the emu's weight will appear as an outlier. It's not that its weight is "wrong", but it clearly doesn't belong in the analysis.
+Some outliers are not necessarily mistakes, but should be excluded for other reasons. For example, if we are studying the weight of birds and we have sampled a bunch of hummingbirds and one emu, the emu's weight will appear as an outlier. It's not that its weight is "wrong," but it clearly doesn't belong in the analysis.
 
 In general, though, outliers are real data that just happen to be unusual. It's not ethical simply to throw away such data points because they are inconvenient. (We only do so in very narrow and well-justified circumstances like the emu.) The best policy to follow when faced with such outliers is to run inference twice---once with the outlier included, and once with the outlier excluded. If, when running a hypothesis test, the conclusion is the same either way, then the outlier wasn't all that influential, so we leave it in. If, when computing a confidence interval, the endpoints don't change a lot either way, then we leave the outlier in. However, when conclusions or intervals are dramatically different depending on whether the outlier was in or out, then we have no choice but to state that honestly.
 
@@ -282,7 +280,17 @@ summary(teacher$total)
 
 ### Prepare the data for analysis.
 
-Not necessary here, but see the next section to find out what we do when we discover an outlier.
+Check for missing data:
+
+```{r}
+teacher |>
+  drop_na(total) |>
+  NROW()
+```
+
+There is no missing data.
+
+See the next section to find out what we do when we discover an outlier.
 
 ### Make tables or plots to explore the data visually.
 
@@ -290,15 +298,15 @@ Here is a histogram.
 
 ```{r}
 ggplot(teacher, aes(x = total)) +
-    geom_histogram(binwidth = 5000, boundary = 60000)
+  geom_histogram(binwidth = 5000, boundary = 60000)
 ```
 
 And here is a QQ plot.
 
 ```{r}
 ggplot(teacher, aes(sample = total)) +
-    geom_qq() +
-    geom_qq_line()
+  geom_qq() +
+  geom_qq_line()
 ```
 
 This distribution is quite skewed to the left. Of even more concern is the extreme outlier on the left.
@@ -311,7 +319,7 @@ Let's sort the data by `total` (ascending) using the `arrange` command.
 
 ```{r}
 teacher %>%
-    arrange(total)
+  arrange(total)
 ```
 
 Can you figure out why the person with the lowest total salary is different from all the other teachers?
@@ -330,7 +338,7 @@ Based on your answer to the above exercise, hopefully it's clear that this is an
 
 ```{r}
 teacher2 <- teacher %>%
-    filter(total > 30000)
+  filter(total > 30000)
 ```
 
 Check to make sure this had the desired effect:
@@ -345,13 +353,13 @@ Here are the new plots:
 
 ```{r}
 ggplot(teacher2, aes(x = total)) +
-    geom_histogram(binwidth = 5000, boundary = 60000)
+  geom_histogram(binwidth = 5000, boundary = 60000)
 ```
 
 ```{r}
 ggplot(teacher2, aes(sample = total)) +
-    geom_qq() +
-    geom_qq_line()
+  geom_qq() +
+  geom_qq_line()
 ```
 
 The left skew is still present, but we have removed the outlier.
@@ -387,13 +395,13 @@ Commentary: The original `teacher` data had 71 observations. The `teacher2` data
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 * Random
-    - We know this isn't a random sample. We're not sure if this school is representative of other schools in the region, so we'll proceed with caution.
+  * We know this isn't a random sample. We're not sure if this school is representative of other schools in the region, so we'll proceed with caution.
 
 * 10%
-    - This is also suspect, as it's not clear that there are 700 teachers in the region. One way to look at it is this: if there are 10 or more schools in the region, and all the school are about the size of the St. Louis Public School under consideration, then we should be okay.
+  * This is also suspect, as it's not clear that there are 700 teachers in the region. One way to look at it is this: if there are 10 or more schools in the region, and all the school are about the size of the St. Louis Public School under consideration, then we should be okay.
 
 * Nearly Normal
-    - For this, we note that the sample size is much larger than 30, so we should be okay, even with the skewness in the data.
+  * For this, we note that the sample size is much larger than 30, so we should be okay, even with the skewness in the data.
 
 
 ## Mechanics
@@ -414,7 +422,6 @@ total_t <- teacher2 %>%
   calculate(stat = "t")
 total_t
 ```
-
 
 ### Report the test statistic in context (when possible).
 
@@ -450,7 +457,7 @@ total_test_p
 
 ### Interpret the P-value as a probability given the null.
 
-$P < 0.001$. If teachers in the St. Louis region truly earned $63,024 on average, there would be only a `r 100 * total_test_p %>% pull(1)`% chance of seeing data at least as extreme as what we saw.
+$P < 0.001$. If teachers in the St. Louis region truly earned $63,024 on average, there would be less than a 0.1% chance of seeing data at least as extreme as what we saw.
 
 Commentary: When the P-value is this small, remember that it is traditional to report simply $P < 0.001$.
 
@@ -504,9 +511,9 @@ Commentary: As these are dollar amounts, it makes sense to round them to two dec
 
 Since $63,024 is not contained in the confidence interval, it is not a plausible value for the mean teacher salary in the St Louis region of Michigan.
 
-### When comparing two groups, comment on the effect size and the practical significance of the result.
+### Comment on the effect size and the practical significance of the result.
 
-We are not comparing two groups.
+Even at the low end of `r round(total_ci$lower_ci, 2)`, this is pretty big difference above our null value of $63,024. It's more than $5000 per year over the average salary in the rest of Michigan. And the high end of our confidence interval is more than $10,000 above the average salary for teachers elsewhere in the state. Not only do we have a strongly statistically discernible result (the P-value was very small, leading to strong evidence rejecting the null hypothesis), the effect size is large in real world terms as well. 
 
 
 ## Your turn
@@ -537,7 +544,7 @@ Please write up your answer here
 
 :::
 
-###### Prepare the data for analysis. [Not always necessary.] {-}
+###### Prepare the data for analysis. {-}
 
 ::: {.answer}
 
@@ -633,9 +640,7 @@ Please write up your answer here.
 ::: {.answer}
 
 ```{r}
-# IF CONDUCTING A SIMULATION...
-set.seed(1)
-# Add code here to simulate the null distribution.
+# Add code here to generate the null distribution.
 ```
 
 ```{r}
@@ -737,7 +742,7 @@ Please write up your answer here.
 
 :::
 
-###### When comparing two groups, comment on the effect size and the practical significance of the result. [Not always applicable.] {-}
+###### Comment on the effect size and the practical significance of the result. {-}
 
 ::: {.answer}
 
@@ -752,7 +757,7 @@ After running inference above, answer the following questions:
 
 ##### Exercise 2 {-}
 
-Even though the result was *statistically* significant, do you think the result is *practically* significant? By this, I mean, are scores for American students so vastly different than 50? Do we have a lot of reason to brag about American scores based on your analysis?
+Even though the result was *statistically discernible* , do you think the result is *practically significant*? By this, I mean, are scores for American students so vastly different than 50? Do we have a lot of reason to brag about American scores based on your analysis?
 
 ::: {.answer}
 
@@ -762,7 +767,7 @@ Please write up your answer here.
 
 ##### Exercise 3 {-}
 
-What makes it possible for a small effect like this to be statistically significant even if it's not practically very different from 50? In other words, what has to be true of data to detect small but statistically significant effects?
+What makes it possible for a small effect like this to be statistically significant even if it's not practically very different from 50? In other words, what has to be true of data to detect small but statistically discernible effects?
 
 ::: {.answer}
 
@@ -778,10 +783,11 @@ When working with numerical data, we have to estimate a mean and a standard devi
 ### Preparing and submitting your assignment
 
 1. From the "Run" menu, select "Restart R and Run All Chunks".
-2. Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.
+2. Deal with any code errors that crop up. Repeat steps 1--2 until there are no more code errors.
 3. Spell check your document by clicking the icon with "ABC" and a check mark.
-4. Hit the "Preview" button one last time to generate the final draft of the `.nb.html` file.
+4. Hit the "Render" button one last time to generate the final draft of the HTML file. (If there are errors here, you may need to go back and fix broken inline code or other markdown issues.)
 5. Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
 
 If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
+
 

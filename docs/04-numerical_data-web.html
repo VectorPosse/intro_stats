@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.6.42">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Introduction to Statistics: an integrated textbook and workbook using R - 4&nbsp; Numerical data</title>
+<title>4&nbsp; Numerical data – Introduction to Statistics: an integrated textbook and workbook using R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -71,17 +71,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-c1f47e0d63438896ca427a756e834e96.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -90,17 +96,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
 }</script>
-
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="custom.css">
 </head>
@@ -111,13 +144,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-numerical_data-web.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Numerical data</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-numerical_data-web.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Numerical data</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -126,12 +159,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Introduction to Statistics: an integrated textbook and workbook using R</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/VectorPosse/intro_stats" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/VectorPosse/intro_stats" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
 </div>
     </div>
       </div>
@@ -282,9 +315,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -306,50 +339,49 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#functions-introduced-in-this-chapter" id="toc-functions-introduced-in-this-chapter" class="nav-link active" data-scroll-target="#functions-introduced-in-this-chapter">Functions introduced in this chapter</a></li>
-  <li><a href="#numerical-intro" id="toc-numerical-intro" class="nav-link" data-scroll-target="#numerical-intro"><span class="header-section-number">4.1</span> Introduction</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">4.1</span> Introduction</a>
   <ul class="collapse">
-  <li><a href="#numerical-install" id="toc-numerical-install" class="nav-link" data-scroll-target="#numerical-install"><span class="header-section-number">4.1.1</span> Install new packages</a></li>
-  <li><a href="#numerical-download" id="toc-numerical-download" class="nav-link" data-scroll-target="#numerical-download"><span class="header-section-number">4.1.2</span> Download the R notebook file</a></li>
-  <li><a href="#numerical-restart" id="toc-numerical-restart" class="nav-link" data-scroll-target="#numerical-restart"><span class="header-section-number">4.1.3</span> Restart R and run all chunks</a></li>
-  <li><a href="#numerical-load" id="toc-numerical-load" class="nav-link" data-scroll-target="#numerical-load"><span class="header-section-number">4.1.4</span> Load packages</a></li>
+  <li><a href="#install-new-packages" id="toc-install-new-packages" class="nav-link" data-scroll-target="#install-new-packages"><span class="header-section-number">4.1.1</span> Install new packages</a></li>
+  <li><a href="#download-the-quarto-file" id="toc-download-the-quarto-file" class="nav-link" data-scroll-target="#download-the-quarto-file"><span class="header-section-number">4.1.2</span> Download the Quarto file</a></li>
+  <li><a href="#restart-r-and-run-all-chunks" id="toc-restart-r-and-run-all-chunks" class="nav-link" data-scroll-target="#restart-r-and-run-all-chunks"><span class="header-section-number">4.1.3</span> Restart R and run all chunks</a></li>
+  <li><a href="#load-packages" id="toc-load-packages" class="nav-link" data-scroll-target="#load-packages"><span class="header-section-number">4.1.4</span> Load packages</a></li>
   </ul></li>
-  <li><a href="#numerical-notation" id="toc-numerical-notation" class="nav-link" data-scroll-target="#numerical-notation"><span class="header-section-number">4.2</span> A note about mathematical notation</a></li>
-  <li><a href="#numerical-statistics" id="toc-numerical-statistics" class="nav-link" data-scroll-target="#numerical-statistics"><span class="header-section-number">4.3</span> Statistics</a>
+  <li><a href="#a-note-about-mathematical-notation" id="toc-a-note-about-mathematical-notation" class="nav-link" data-scroll-target="#a-note-about-mathematical-notation"><span class="header-section-number">4.2</span> A note about mathematical notation</a></li>
+  <li><a href="#statistics" id="toc-statistics" class="nav-link" data-scroll-target="#statistics"><span class="header-section-number">4.3</span> Statistics</a>
   <ul class="collapse">
-  <li><a href="#numerical-mean-sd" id="toc-numerical-mean-sd" class="nav-link" data-scroll-target="#numerical-mean-sd"><span class="header-section-number">4.3.1</span> Mean and standard deviation</a></li>
-  <li><a href="#numerical-median-iqr" id="toc-numerical-median-iqr" class="nav-link" data-scroll-target="#numerical-median-iqr"><span class="header-section-number">4.3.2</span> Median and IQR</a></li>
-  <li><a href="#numerical-robust" id="toc-numerical-robust" class="nav-link" data-scroll-target="#numerical-robust"><span class="header-section-number">4.3.3</span> Robust statistics</a></li>
-  <li><a href="#numerical-five" id="toc-numerical-five" class="nav-link" data-scroll-target="#numerical-five"><span class="header-section-number">4.3.4</span> Five-number summary</a></li>
+  <li><a href="#mean-and-standard-deviation" id="toc-mean-and-standard-deviation" class="nav-link" data-scroll-target="#mean-and-standard-deviation"><span class="header-section-number">4.3.1</span> Mean and standard deviation</a></li>
+  <li><a href="#median-and-iqr" id="toc-median-and-iqr" class="nav-link" data-scroll-target="#median-and-iqr"><span class="header-section-number">4.3.2</span> Median and IQR</a></li>
+  <li><a href="#robust-statistics" id="toc-robust-statistics" class="nav-link" data-scroll-target="#robust-statistics"><span class="header-section-number">4.3.3</span> Robust statistics</a></li>
+  <li><a href="#five-number-summary" id="toc-five-number-summary" class="nav-link" data-scroll-target="#five-number-summary"><span class="header-section-number">4.3.4</span> Five-number summary</a></li>
   </ul></li>
-  <li><a href="#numerical-graphing-one" id="toc-numerical-graphing-one" class="nav-link" data-scroll-target="#numerical-graphing-one"><span class="header-section-number">4.4</span> Graphing one numerical variable</a>
+  <li><a href="#graphing-one-numerical-variable" id="toc-graphing-one-numerical-variable" class="nav-link" data-scroll-target="#graphing-one-numerical-variable"><span class="header-section-number">4.4</span> Graphing one numerical variable</a>
   <ul class="collapse">
-  <li><a href="#numerical-shape" id="toc-numerical-shape" class="nav-link" data-scroll-target="#numerical-shape"><span class="header-section-number">4.4.1</span> The shape of data</a></li>
-  <li><a href="#numerical-less-useful" id="toc-numerical-less-useful" class="nav-link" data-scroll-target="#numerical-less-useful"><span class="header-section-number">4.4.2</span> Less useful plot types</a></li>
+  <li><a href="#the-shape-of-data" id="toc-the-shape-of-data" class="nav-link" data-scroll-target="#the-shape-of-data"><span class="header-section-number">4.4.1</span> The shape of data</a></li>
+  <li><a href="#less-useful-plot-types" id="toc-less-useful-plot-types" class="nav-link" data-scroll-target="#less-useful-plot-types"><span class="header-section-number">4.4.2</span> Less useful plot types</a></li>
   </ul></li>
-  <li><a href="#numerical-graphing-two" id="toc-numerical-graphing-two" class="nav-link" data-scroll-target="#numerical-graphing-two"><span class="header-section-number">4.5</span> Graphing two numerical variables</a></li>
-  <li><a href="#numerical-graphing-grouped" id="toc-numerical-graphing-grouped" class="nav-link" data-scroll-target="#numerical-graphing-grouped"><span class="header-section-number">4.6</span> Graphing grouped numerical data</a></li>
-  <li><a href="#numerical-pub" id="toc-numerical-pub" class="nav-link" data-scroll-target="#numerical-pub"><span class="header-section-number">4.7</span> Publication-ready graphics</a></li>
-  <li><a href="#numerical-conclusion" id="toc-numerical-conclusion" class="nav-link" data-scroll-target="#numerical-conclusion"><span class="header-section-number">4.8</span> Conclusion</a>
+  <li><a href="#graphing-two-numerical-variables" id="toc-graphing-two-numerical-variables" class="nav-link" data-scroll-target="#graphing-two-numerical-variables"><span class="header-section-number">4.5</span> Graphing two numerical variables</a></li>
+  <li><a href="#graphing-grouped-numerical-data" id="toc-graphing-grouped-numerical-data" class="nav-link" data-scroll-target="#graphing-grouped-numerical-data"><span class="header-section-number">4.6</span> Graphing grouped numerical data</a></li>
+  <li><a href="#publication-ready-graphics" id="toc-publication-ready-graphics" class="nav-link" data-scroll-target="#publication-ready-graphics"><span class="header-section-number">4.7</span> Publication-ready graphics</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">4.8</span> Conclusion</a>
   <ul class="collapse">
-  <li><a href="#numerical-prep" id="toc-numerical-prep" class="nav-link" data-scroll-target="#numerical-prep"><span class="header-section-number">4.8.1</span> Preparing and submitting your assignment</a></li>
+  <li><a href="#preparing-and-submitting-your-assignment" id="toc-preparing-and-submitting-your-assignment" class="nav-link" data-scroll-target="#preparing-and-submitting-your-assignment"><span class="header-section-number">4.8.1</span> Preparing and submitting your assignment</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/VectorPosse/intro_stats/edit/main/04-numerical_data-web.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/VectorPosse/intro_stats/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/VectorPosse/intro_stats/edit/main/04-numerical_data-web.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/VectorPosse/intro_stats/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="numerical" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Numerical data</span></span></h1>
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Numerical data</span></h1>
 </div>
 
 
@@ -362,77 +394,80 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
 
-<!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>
-<p style="color:#ffffff">
-2.0
-</p>
-<!-- Please don't mess with the previous few lines! -->
-<section id="functions-introduced-in-this-chapter" class="level3 unnumbered summary">
-<h3 class="unnumbered anchored" data-anchor-id="functions-introduced-in-this-chapter">Functions introduced in this chapter</h3>
-<p><code>mean</code>, <code>sd</code>, <code>var</code>, <code>median</code>, <code>sort</code>, <code>IQR</code>, <code>quantile</code>, <code>summary</code>, <code>min</code>, <code>max</code>, <code>geom_histogram</code>, <code>geom_point</code>, <code>geom_boxplot</code>, <code>facet_grid</code></p>
-</section>
-<section id="numerical-intro" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="numerical-intro"><span class="header-section-number">4.1</span> Introduction</h2>
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Functions introduced in this chapter
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>mean</code>, <code>sd</code>, <code>var</code>, <code>median</code>, <code>sort</code>, <code>IQR</code>, <code>quantile</code>, <code>unname</code>, <code>summary</code>, <code>min</code>, <code>max</code>, <code>geom_histogram</code>, <code>geom_point</code>, <code>geom_boxplot</code>, <code>facet_grid</code>, <code>scale_color_viridis_d</code>, <code>scale_shape_manual</code></p>
+</div>
+</div>
+<section id="introduction" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">4.1</span> Introduction</h2>
 <p>In this chapter, we’ll learn about numerical data and how to summarize it through summary statistics and graphs.</p>
-<section id="numerical-install" class="level3" data-number="4.1.1">
-<h3 data-number="4.1.1" class="anchored" data-anchor-id="numerical-install"><span class="header-section-number">4.1.1</span> Install new packages</h3>
+<section id="install-new-packages" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="install-new-packages"><span class="header-section-number">4.1.1</span> Install new packages</h3>
 <p>There are no new packages used in this chapter.</p>
 </section>
-<section id="numerical-download" class="level3" data-number="4.1.2">
-<h3 data-number="4.1.2" class="anchored" data-anchor-id="numerical-download"><span class="header-section-number">4.1.2</span> Download the R notebook file</h3>
-<p>Check the upper-right corner in RStudio to make sure you’re in your <code>intro_stats</code> project. Then click on the following link to download this chapter as an R notebook file (<code>.Rmd</code>).</p>
-<p><a href="https://vectorposse.github.io/intro_stats/chapter_downloads/04-numerical_data.Rmd" download="">https://vectorposse.github.io/intro_stats/chapter_downloads/04-numerical_data.Rmd</a></p>
+<section id="download-the-quarto-file" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="download-the-quarto-file"><span class="header-section-number">4.1.2</span> Download the Quarto file</h3>
+<p>Look at either the top (Posit Cloud) or the upper right corner of the RStudio screen to make sure you are in your <code>intro_stats</code> project.</p>
+<p>Then click on the following link to download this chapter as a Quarto file (<code>.qmd</code>).</p>
+<p><a href="https://vectorposse.github.io/intro_stats/chapter_downloads/04-numerical_data.qmd" download="">https://vectorposse.github.io/intro_stats/chapter_downloads/04-numerical_data.qmd</a></p>
 <p>Once the file is downloaded, move it to your project folder in RStudio and open it there.</p>
 </section>
-<section id="numerical-restart" class="level3" data-number="4.1.3">
-<h3 data-number="4.1.3" class="anchored" data-anchor-id="numerical-restart"><span class="header-section-number">4.1.3</span> Restart R and run all chunks</h3>
+<section id="restart-r-and-run-all-chunks" class="level3" data-number="4.1.3">
+<h3 data-number="4.1.3" class="anchored" data-anchor-id="restart-r-and-run-all-chunks"><span class="header-section-number">4.1.3</span> Restart R and run all chunks</h3>
 <p>In RStudio, select “Restart R and Run All Chunks” from the “Run” menu.</p>
 </section>
-<section id="numerical-load" class="level3" data-number="4.1.4">
-<h3 data-number="4.1.4" class="anchored" data-anchor-id="numerical-load"><span class="header-section-number">4.1.4</span> Load packages</h3>
+<section id="load-packages" class="level3" data-number="4.1.4">
+<h3 data-number="4.1.4" class="anchored" data-anchor-id="load-packages"><span class="header-section-number">4.1.4</span> Load packages</h3>
 <p>We load the <code>tidyverse</code> package to get <code>ggplot2</code> and the <code>palmerpenguins</code> package to work with the penguin data.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.1.2     ✔ readr     2.1.4
-✔ forcats   1.0.0     ✔ stringr   1.5.0
-✔ ggplot2   3.4.2     ✔ tibble    3.2.1
-✔ lubridate 1.9.2     ✔ tidyr     1.3.0
-✔ purrr     1.0.1     
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'palmerpenguins' was built under R version 4.3.1</code></pre>
-</div>
 </div>
 </section>
 </section>
-<section id="numerical-notation" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="numerical-notation"><span class="header-section-number">4.2</span> A note about mathematical notation</h2>
+<section id="a-note-about-mathematical-notation" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="a-note-about-mathematical-notation"><span class="header-section-number">4.2</span> A note about mathematical notation</h2>
 <p>From time to time, we will use mathematical notation that can’t be typed directly on the keyboard. For example, let’s suppose we want to typeset the quadratic formula, which involves a complicated fraction as well as a square root symbol.</p>
 <p>When such notation appears, it will be surrounded by double dollar signs as follows:</p>
 <p><span class="math display">\[
 x = \frac{-b \pm \sqrt{b^{2} - 4ac}}{2a}
 \]</span></p>
-<p>The R Notebook will interpret this special mathematical notation and render it on the screen as well as in the HTML document.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> If the nicely formatted formula does not appear on your screen, place your cursor anywhere inside the math formula and hit Ctrl-Enter or Cmd-Enter (PC or Mac respectively).</p>
+<p>The Quarto document will interpret this special mathematical notation and show it on the screen as well as in the HTML document.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> If the nicely formatted formula does not appear on your screen, place your cursor anywhere inside the math formula and hit Ctrl-Enter or Cmd-Enter (PC or Mac respectively).</p>
 <p>Sometimes, we want such math to appear inline. We can do this with single dollar signs. For example, the distance formula is <span class="math inline">\(d = \sqrt{(x_{2} - x_{1})^{2} + (y_{2} - y_{1})^{2}}\)</span>, a fact you may have learned a long time ago.</p>
-<p>This will <em>not</em> render visually in the R Notebook, but it will show up in the HTML file. If you want to check that it worked properly without having to preview the HTML, you can either hover your cursor over the math formula and wait a second, or you can place your cursor anywhere inside the math formula and hit Ctrl-Enter or Cmd-Enter (PC or Mac respectively) to see a pop-up window previewing the mathematical content properly formatted.</p>
+<p>This will <em>not</em> show up as a formatted equation in the Quarto document, but it will show up in the HTML file. If you want to check that it worked properly without having to render the HTML, you can either hover your cursor over the math formula and wait a second, or you can place your cursor anywhere inside the math formula and hit Ctrl-Enter or Cmd-Enter (PC or Mac respectively) to see a pop-up window showing the mathematical content properly formatted.</p>
 <p>You will be shown examples of any mathematical notation you need to use in any given chapter, so feel free to copy/paste/modify any math notation you need.</p>
 </section>
-<section id="numerical-statistics" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="numerical-statistics"><span class="header-section-number">4.3</span> Statistics</h2>
-<p>The word “statistics” has several meanings. On one hand, it’s an entire field of study, as in the subject of this course. More specifically, though, a “statistic” is any kind of numerical summary of data. While there are many ways to summarize data, they mostly fall into two main flavors: measures of <em>center</em> and measures of <em>spread</em>. Measures of center try to estimate some kind of average, middle, or common value in data. Measures of spread try to estimate something like the width, range, variability, or uncertainty of data.</p>
+<section id="statistics" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="statistics"><span class="header-section-number">4.3</span> Statistics</h2>
+<p>The word “statistics” has several meanings. On one hand, it’s an entire field of study, as in the subject of this course. More specifically, though, a “statistic” is any kind of numerical summary of data. While there are many ways to summarize numerical data, they mostly fall into two main flavors: measures of <em>center</em> and measures of <em>spread</em>. Measures of center try to estimate some kind of average, middle, or common value in data. Measures of spread try to estimate something like the width, range, variability, or uncertainty of data.</p>
 <p>There are two pairs of measurements that we will learn about in this chapter: the mean/standard deviation, and the median/IQR.</p>
-<section id="numerical-mean-sd" class="level3" data-number="4.3.1">
-<h3 data-number="4.3.1" class="anchored" data-anchor-id="numerical-mean-sd"><span class="header-section-number">4.3.1</span> Mean and standard deviation</h3>
+<section id="mean-and-standard-deviation" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="mean-and-standard-deviation"><span class="header-section-number">4.3.1</span> Mean and standard deviation</h3>
 <p>The first pair of the summary statistics we’ll discuss consists of the mean and the standard deviation.</p>
 <p>The <em>mean</em> of a variable <span class="math inline">\(y\)</span>—denoted <span class="math inline">\(\bar{y}\)</span> and pronounced “y bar”—is calculated by summing all the values of the variable, and dividing by the total number of observations. In formula form, this is</p>
 <p><span class="math display">\[
@@ -442,14 +477,14 @@ x = \frac{-b \pm \sqrt{b^{2} - 4ac}}{2a}
 <p>Throughout this chapter, we will be using the <code>penguins</code> data set. (If you need a reminder, look at the help file for <code>penguins</code> using one of the methods discussed in Chapter 2.)</p>
 <p>If we want to calculate the mean body mass of our penguins (in grams), we type the following:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(penguins<span class="sc">$</span>body_mass_g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(penguins<span class="sc">$</span>body_mass_g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] NA</code></pre>
 </div>
 </div>
-<p>Unfortunately, this didn’t give us an answer. As you may recall from previous chapters, this is because we are missing several values of body mass in this data. We need an extra piece of code to tell R to ignore that missing data and give us the mean of the valid data.</p>
+<p>Unfortunately, this didn’t give us an answer. As you may recall from previous chapters, this is because we are missing data. There are several values of body mass missing in this data. We need an extra piece of code to tell R to ignore that missing data and give us the mean of the valid data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(penguins<span class="sc">$</span>body_mass_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(penguins<span class="sc">$</span>body_mass_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 4201.754</code></pre>
 </div>
@@ -462,15 +497,15 @@ x = \frac{-b \pm \sqrt{b^{2} - 4ac}}{2a}
 <p><span class="math display">\[
 s = \sqrt{\frac{\sum (y - \bar{y})^2}{n - 1}}.
 \]</span></p>
-<p>This is a measure of spread because the <span class="math inline">\((y - \bar{y})\)</span> term measures the how far away each data point is from the mean.</p>
+<p>This is a measure of spread because the <span class="math inline">\((y - \bar{y})\)</span> term measures how far away each data point is from the mean.</p>
 <p>In R, this is calculated with the <code>sd</code> command. Again, we’ll need to add <code>na.rm = TRUE</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(penguins<span class="sc">$</span>body_mass_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(penguins<span class="sc">$</span>body_mass_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 801.9545</code></pre>
 </div>
 </div>
-<p>“The standard deviation of this group of penguins is about 801 grams.”</p>
+<p>“The standard deviation of this group of penguins is about 800 grams.”</p>
 <p>Or using inline code:</p>
 <p>“The standard deviation of this group of penguins is 801.9545357 grams.”</p>
 <p>The mean and the standard deviation should always be reported together. One without the other is incomplete and potentially misleading.</p>
@@ -480,27 +515,27 @@ s^2 = \frac{\sum (y - \bar{y})^2}{n - 1}.
 \]</span></p>
 <p>(Compare this formula to the one for the standard deviation. Nothing has changed except for the removal of the square root.) We rarely use the variance in an introductory stats class because it’s not as interpretable as the standard deviation. The main reason for this is units. If the data units are grams, then both the mean and the standard deviation are also reported in grams. The variance has units of “grams squared”, but what does that even mean? If you need to calculate the variance in R, the command is <code>var</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(penguins<span class="sc">$</span>body_mass_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(penguins<span class="sc">$</span>body_mass_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 643131.1</code></pre>
 </div>
 </div>
-<p>You can check and see that the number above really is just 801.9545357 squared. Regarding the inline code in the previous sentence, remember, in the R Notebook, you can click inside the inline code and hit Ctrl-Enter or Cmd-Enter. In the HTML document, the number will be calculated and will magically appear.</p>
+<p>You can check and see that the number above really is just 801.9545357 squared. Regarding the inline code in the previous sentence, remember, in the Quarto document, you can click inside the inline code and hit Ctrl-Enter or Cmd-Enter. In the HTML document, the number will be calculated and will magically appear.</p>
 </section>
-<section id="numerical-median-iqr" class="level3" data-number="4.3.2">
-<h3 data-number="4.3.2" class="anchored" data-anchor-id="numerical-median-iqr"><span class="header-section-number">4.3.2</span> Median and IQR</h3>
+<section id="median-and-iqr" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="median-and-iqr"><span class="header-section-number">4.3.2</span> Median and IQR</h3>
 <p>Another choice for measuring the center and spread of a data set is the median and the IQR.</p>
 <p>The median is just the middle value if the list of values is ordered. In R, it is calculated using the <code>median</code> command.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(penguins<span class="sc">$</span>body_mass_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(penguins<span class="sc">$</span>body_mass_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 4050</code></pre>
 </div>
 </div>
 <p>The median body mass of these penguins is 4050 grams.</p>
-<p>The median value depends on whether there are an even or odd number of data points. If there are an odd number, there is a middle value in the list. Convince yourself this is true; for example, look at the numbers 1 through 7.</p>
+<p>The median value depends on whether the number of data points is an even or odd number. If it’s odd, there is a middle value in the list. Convince yourself this is true; for example, look at the numbers 1 through 7.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">:</span><span class="dv">7</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">:</span><span class="dv">7</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1 2 3 4 5 6 7</code></pre>
 </div>
@@ -508,15 +543,30 @@ s^2 = \frac{\sum (y - \bar{y})^2}{n - 1}.
 <p>The number 4 is in the middle of the list, with three numbers to either side.</p>
 <p>However, if there are an even number of data points, there is no number right in the middle:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">:</span><span class="dv">8</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">:</span><span class="dv">8</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1 2 3 4 5 6 7 8</code></pre>
 </div>
 </div>
-<p>The “midpoint” of this list would lie between 4 and 5. If this is the case, we calculate the median by taking the mean of the two numbers straddling the middle. In the case of 1 though 8 above, the median would be 4.5.</p>
+<p>The “midpoint” of this list would lie between 4 and 5 with four values to either side of this line. If this is the case, we calculate the median by taking the mean of the two numbers straddling the middle. In the case of 1 though 8 above, the median would be 4.5.</p>
+<p>A nice shortcut “trick” for figuring out where the middle value should be is to use the formula <span class="math inline">\((n + 1)/2\)</span> where n is the number of data points:</p>
+<p><span class="math display">\[
+\frac{n + 1}{2}
+\]</span></p>
+<p>As before, if n = 7, then the formula says</p>
+<p><span class="math display">\[
+\frac{7 + 1}{2} = 4
+\]</span></p>
+<p>The median is the 4th value in the list.</p>
+<p>If n = 8,</p>
+<p>then the formula says</p>
+<p><span class="math display">\[
+\frac{8 + 1}{2} = 4.5
+\]</span></p>
+<p>The middle of the list of numbers is between the 4th and 5th entries. The median will be the average of those two numbers.</p>
 <p>Let’s print out the entire <code>body_mass_g</code> variable, all 342 valid values (not including the missing values, of course). If we’re clever about it, we can see them in order using the <code>sort</code> command.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(penguins<span class="sc">$</span>body_mass_g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(penguins<span class="sc">$</span>body_mass_g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  [1] 2700 2850 2850 2900 2900 2900 2900 2925 2975 3000 3000 3050 3050 3050 3050
  [16] 3075 3100 3150 3150 3150 3150 3175 3175 3200 3200 3200 3200 3200 3250 3250
@@ -545,7 +595,8 @@ s^2 = \frac{\sum (y - \bar{y})^2}{n - 1}.
 </div>
 <section id="exercise-1" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-1">Exercise 1</h5>
-<p>If there are 342 penguins in this data set with body mass data, between which two values in the list above would the median lie? In other words, between what two positions in the list will be median be found? Verify that the median you find from this list is the same as the one we calculated with the <code>median</code> command above.</p>
+<p>If there are 342 penguins in this data set with body mass data, between which two values in the list above would the median lie? In other words, between what two positions in the list will be median be found? Show your work using the <span class="math inline">\((n + 1)/2\)</span> trick.</p>
+<p>Verify that the median you find from this list is the same as the one we calculated with the <code>median</code> command above.</p>
 <div class="answer">
 <p>Please write up your answer here.</p>
 </div>
@@ -556,7 +607,7 @@ IQR = Q3 - Q1
 \]</span></p>
 <p>In R, you can get the IQR by using—are you ready for this?—the <code>IQR</code> command.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">IQR</span>(penguins<span class="sc">$</span>body_mass_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">IQR</span>(penguins<span class="sc">$</span>body_mass_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1200</code></pre>
 </div>
@@ -565,8 +616,8 @@ IQR = Q3 - Q1
 <p>The IQR is a measure of spread because the distance between Q1 and Q3 measures the span of the “middle 50%” of the data.</p>
 <p>A general function for computing any percentile in R is the <code>quantile</code> function. For example, since Q1 is the 25th percentile, you can compute it as follows:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Q1 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(penguins<span class="sc">$</span>body_mass_g, <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>Q1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>Q1 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(penguins<span class="sc">$</span>body_mass_g, <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>Q1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> 25% 
 3550 </code></pre>
@@ -574,8 +625,8 @@ IQR = Q3 - Q1
 </div>
 <p>The 25% label is cute, but somewhat unnecessary, and it will mess up a later command, so let’s get rid of it:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Q1 <span class="ot">&lt;-</span> <span class="fu">unname</span>(Q1)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>Q1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>Q1 <span class="ot">&lt;-</span> <span class="fu">unname</span>(Q1)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>Q1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 3550</code></pre>
 </div>
@@ -583,10 +634,10 @@ IQR = Q3 - Q1
 </section>
 <section id="exercise-2a" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-2a">Exercise 2(a)</h5>
-<p>Now you compute Q3.</p>
+<p>Now you compute Q3. (Hint: what number will go in the <code>quantile</code> function instead of 0.25?)</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to compute, store, and print out Q3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to compute, store, and print out Q3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -595,16 +646,17 @@ IQR = Q3 - Q1
 <p>Reassign <code>Q3</code> using the <code>unname</code> command as we did above to strip the unnecessary label.</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here that uses the unname command </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here that uses the unname command </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
 <section id="exercise-2c" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-2c">Exercise 2(c)</h5>
-<p>Finally, check that the IQR calculated above matches the value you get from subtracting Q3 minus Q1.</p>
+<p>Subtract Q3 minus Q1 in R. (Literally, the code is just Q3 - Q1.)</p>
+<p>Verify that the output below matches the value of the IQR we calculated earlier.</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to compute Q3 - Q1.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to compute Q3 - Q1.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <hr>
@@ -612,8 +664,8 @@ IQR = Q3 - Q1
 <p>Also, don’t mix and match. For example, it doesn’t really make sense to report the mean and the IQR. Nor should you report the median and the standard deviation. They go together in pairs: either the mean and the standard deviation together, or the median and the IQR together.</p>
 </section>
 </section>
-<section id="numerical-robust" class="level3" data-number="4.3.3">
-<h3 data-number="4.3.3" class="anchored" data-anchor-id="numerical-robust"><span class="header-section-number">4.3.3</span> Robust statistics</h3>
+<section id="robust-statistics" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="robust-statistics"><span class="header-section-number">4.3.3</span> Robust statistics</h3>
 <p>Some statistics are more sensitive than others to features of the data. For example, outliers are data points that are far away from the bulk of the data. The mean and especially the standard deviation can change a lot when outliers are present. Also, skewness in the data frequently pulls the mean too far in the direction of the skew while simultaneously inflating the standard deviation. (We’ll learn more about skewed data later in this chapter.)</p>
 <p>On the other hand, the median and IQR are “robust”, meaning that they do not change much (or at all) in the presence of outliers and they tend to be good summaries even for skewed data.</p>
 <section id="exercise-3" class="level5 unnumbered">
@@ -625,12 +677,12 @@ IQR = Q3 - Q1
 <hr>
 </section>
 </section>
-<section id="numerical-five" class="level3" data-number="4.3.4">
-<h3 data-number="4.3.4" class="anchored" data-anchor-id="numerical-five"><span class="header-section-number">4.3.4</span> Five-number summary</h3>
+<section id="five-number-summary" class="level3" data-number="4.3.4">
+<h3 data-number="4.3.4" class="anchored" data-anchor-id="five-number-summary"><span class="header-section-number">4.3.4</span> Five-number summary</h3>
 <p>A <em>five-number summary</em> is the minimum, Q1, median, Q3, and maximum of a set of numbers.</p>
 <p>The <code>summary</code> command in R gives you the five-number summary, and throws in the mean for good measure. (Note that it does not require <code>na.rm = TRUE</code>!)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(penguins<span class="sc">$</span>body_mass_g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(penguins<span class="sc">$</span>body_mass_g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
    2700    3550    4050    4202    4750    6300       2 </code></pre>
@@ -638,28 +690,28 @@ IQR = Q3 - Q1
 </div>
 <p>You can, of course, isolate the various pieces of this. You already know most of the commands below. (These individual commands all do require <code>na.rm = TRUE</code>.)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">min</span>(penguins<span class="sc">$</span>body_mass_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">min</span>(penguins<span class="sc">$</span>body_mass_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2700</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(penguins<span class="sc">$</span>body_mass_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(penguins<span class="sc">$</span>body_mass_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 4050</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(penguins<span class="sc">$</span>body_mass_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(penguins<span class="sc">$</span>body_mass_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 6300</code></pre>
 </div>
 </div>
-<p>Remember the <code>quantile</code> function from earlier, where we computed Q1? We’re going to use it in a new way. Instead of what we did earlier,</p>
+<p>Remember the <code>quantile</code> function from earlier, where we computed Q1? We’re going to use it in a new way. This is what we did before:</p>
 <p><code>quantile(penguins$body_mass_g, 0.25, na.rm = TRUE)</code>,</p>
-<p>what about this instead?</p>
+<p>What about this instead?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(penguins<span class="sc">$</span>body_mass_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(penguins<span class="sc">$</span>body_mass_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  0%  25%  50%  75% 100% 
 2700 3550 4050 4750 6300 </code></pre>
@@ -667,43 +719,49 @@ IQR = Q3 - Q1
 </div>
 <section id="exercise-4" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-4">Exercise 4</h5>
-<p>What is the difference between the way <code>quantile</code> was used in a previous exercise versus the way it was used here? How did that change the output?</p>
+<p>What is the small difference between the way <code>quantile</code> was used in a previous exercise versus the way it is used here? How did that change the output?</p>
 <div class="answer">
 <p>Please write up your answer here.</p>
 </div>
 <hr>
-<p>Also, don’t forget about the trick for using R commands inline. If you need to mention a statistic in the middle of a sentence, there is no need to break the sentence and display a code chunk. Be sure you’re looking at the R notebook file (not the HTML file) to note that the numbers in the next sentence are not manually entered, but are calculated on the fly:</p>
+<p>Also, don’t forget about the trick for using R commands inline. If you need to mention a statistic in the middle of a sentence, there is no need to break the sentence and display a code chunk. Be sure you’re looking at the Quarto document (not the HTML file) to note that the numbers in the next sentence are not manually entered, but are calculated on the fly:</p>
 <p>There are 344 penguins in this data set and their median body mass is 4050 grams.</p>
 </section>
 <section id="exercise-5" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-5">Exercise 5</h5>
 <p>Type a full, contextually meaningful sentence using inline R code (as above, but changing the commands) reporting the minimum and maximum body mass (in grams) in our data set.</p>
+<p>Remember that inline code requires a backtick immediately followed by the letter r and then a space. Then you can type your R code. The code must be followed by another backtick. You will need two pieces of inline code in your answer to report both the minimum and maximum in context.</p>
 <div class="answer">
 <p>Please write up your answer here.</p>
 </div>
 </section>
 </section>
 </section>
-<section id="numerical-graphing-one" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="numerical-graphing-one"><span class="header-section-number">4.4</span> Graphing one numerical variable</h2>
+<section id="graphing-one-numerical-variable" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="graphing-one-numerical-variable"><span class="header-section-number">4.4</span> Graphing one numerical variable</h2>
 <p>From the <code>penguins</code> data, let’s consider again the body mass in grams. This is clearly a numerical variable.</p>
 <p>The single most useful display of a single numerical variable is a histogram. Here is the <code>ggplot</code> command to do that:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> body_mass_g)) <span class="sc">+</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> body_mass_g)) <span class="sc">+</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2 rows containing non-finite values (`stat_bin()`).</code></pre>
+<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
+(`stat_bin()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
-<section id="numerical-shape" class="level3" data-number="4.4.1">
-<h3 data-number="4.4.1" class="anchored" data-anchor-id="numerical-shape"><span class="header-section-number">4.4.1</span> The shape of data</h3>
+</div>
 <p>The way histograms work is to create “bins”, which are ranges of numbers along the x-axis. R goes through the data and counts how many observations fall into each bin. In that way, a histogram is somewhat like a bar chart. However, a bar chart uses bars to represent distinct, discrete categories, whereas a histogram uses bars that are all next to each other to represent values along a continuous numerical range. Histograms are meant to give you–at a quick glance–a sense of the “shape” of the data.</p>
+<section id="the-shape-of-data" class="level3" data-number="4.4.1">
+<h3 data-number="4.4.1" class="anchored" data-anchor-id="the-shape-of-data"><span class="header-section-number">4.4.1</span> The shape of data</h3>
 <p>What do we mean by “shape”? Generally, we look for three things:</p>
 <ol type="1">
 <li>Modes</li>
@@ -715,7 +773,7 @@ IQR = Q3 - Q1
 <li>Symmetry</li>
 </ol>
 <ul>
-<li>If there is one mode, we can also ask if the data is spread evenly to the left and right of that mode. If so, we call the data <em>symmetric</em>. No data is perfectly symmetric, but we are looking for overall balance between the areas to the left and right of the mode. When data is not symmetric, we call is <em>skewed</em>. Assuming that there is one big mode around 3500 or 4000, the body mass data above is skewed. There is clearly more data above the mode than below the mode. The right side of the histogram stretches out further to the right of the mode than to the left. Therefore, the body mass data is <em>right-skewed</em>. There is a longer “tail” to the right. If it were the opposite, it would be <em>left-skewed</em>. It is common for beginning students to confuse these two terms. Be aware that we are not concerned about where the mode is. We want to know which side has more data spread into a longer tail. That is the direction of the skewness.</li>
+<li>If there is one mode, we can also ask if the data is spread evenly to the left and right of that mode. If so, we call the data <em>symmetric</em>. No data is perfectly symmetric, but we are looking for overall balance between the areas to the left and right of the mode. When data is not symmetric, we call it <em>skewed</em>. Assuming that there is one big mode around 3500 or 4000, the body mass data above is skewed. There is clearly more data to the right of the mode than to the left. The right side of the histogram stretches out further than the left relative to the mode. Therefore, the body mass data is <em>right-skewed</em>. There is a longer “tail” to the right. If it were the opposite, it would be <em>left-skewed</em>. It is common for beginning students to confuse these two terms. Be aware that we are not concerned about where the mode is. We want to know which side has more data spread into a longer tail. That is the direction of the skewness.</li>
 </ul>
 <ol start="3" type="1">
 <li>Outliers.</li>
@@ -724,7 +782,7 @@ IQR = Q3 - Q1
 <li>Outliers are data points that are far from the bulk of the data. The body mass data above appears to have no outliers. We are looking for a large gap between the main “mass” of data and any lingering data points far away from that mass. There is no such large gap in the histogram above.</li>
 </ul>
 <p><strong>Whenever you are asked about the “shape” of a numerical variable, be sure to comment on (1) modes, (2) symmetry, and (3) outliers.</strong></p>
-<p>Generally, the default binning for <code>ggplot</code> histograms is not great. This is by design. The creator of the <code>gglot2</code> package, Hadley Wickham, said the following:</p>
+<p>Generally, the default binning for <code>ggplot</code> histograms is not great. This is by design. The creator of the <code>ggplot2</code> package, Hadley Wickham, said the following:</p>
 <blockquote class="blockquote">
 <p>“In ggplot2, a very simple heuristic is used for the default number of bins: it uses 30, regardless of the data. This is perverse, and ignores all of the research on selecting good bin sizes automatically, but sends a clear message to the user that he or she needs to think about, and experiment with, the bin width. This message is reinforced with a warning that reminds the user to manually adjust the bin width.”</p>
 </blockquote>
@@ -733,27 +791,38 @@ IQR = Q3 - Q1
 <p>It’s also easier to interpret the histogram when the bins’ edges line up with numbers that are easy to see in the plot. Use <code>boundary</code> to determine where you want the bin boundaries to fall. For example, if we set the boundary to 3500, that means that one bar will start with its left edge at 3500. This is convenient because there is a tick mark labeled there on the x-axis. The boundary number is pretty arbitrary; once one boundary is set, it determines where all the other bins will line up. With a binwidth of 250, we’d get the same graph if the boundary were set to 3000 or 3250 or 5750, or even 0. Any other multiple of 250 would give the same graph.</p>
 <p>We use <code>binwidth</code> and <code>boundary</code> inside the parentheses of the <code>geom_histogram</code> to modify these parameters.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> body_mass_g)) <span class="sc">+</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">250</span>, <span class="at">boundary =</span> <span class="dv">3500</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> body_mass_g)) <span class="sc">+</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">250</span>, <span class="at">boundary =</span> <span class="dv">3500</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2 rows containing non-finite values (`stat_bin()`).</code></pre>
+<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
+(`stat_bin()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Even with the smoother look, it appears that there are multiple modes, maybe three? Do these correspond to the three species of penguin? Stay tuned.</p>
+<p>(Note that we are still seeing a warning, but this warning is about missing data. We can’t do anything about that, so we can safely ignore this warning.)</p>
 <section id="exercise-6a" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-6a">Exercise 6(a)</h5>
 <p>Here is a histogram of the penguin bill lengths (measured in millimeters):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> bill_length_mm)) <span class="sc">+</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">6</span>, <span class="at">boundary =</span> <span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> bill_length_mm)) <span class="sc">+</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">6</span>, <span class="at">boundary =</span> <span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2 rows containing non-finite values (`stat_bin()`).</code></pre>
+<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
+(`stat_bin()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Write a short paragraph describing the shape of the distribution of penguin bill lengths, focusing on the three key shape features (modes, symmetry, and outliers).</p>
@@ -767,27 +836,27 @@ IQR = Q3 - Q1
 <p>Change the binwidth (no need to change the boundary) to something smaller to see more clearly the bimodal nature of the distribution.</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here that changes the binwidth of the last histogram to see</span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the bimodal nature of the distribution.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here that changes the binwidth of the last histogram to see</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the bimodal nature of the distribution.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
 <section id="exercise-7a" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-7a">Exercise 7(a)</h5>
-<p>Make a histogram of the variable <code>flipper_length_mm</code>. Start with a histogram where you don’t modify the binwidth or boundary.</p>
+<p>Make a histogram of the variable <code>flipper_length_mm</code>. Start with a histogram where you don’t modify the binwidth or boundary. (In other words, use <code>geom_histogram()</code> with nothing inside the parentheses.)</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a histogram of flipper length</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a histogram of flipper length</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
 <section id="exercise-7b" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-7b">Exercise 7(b)</h5>
-<p>By examining the scale on the x-axis above, repeat the command, but this time change the binwidth and the boundary until you are satisfied that the bins are neither too wide nor too narrow.</p>
+<p>By examining the scale on the x-axis above, repeat the command, but this time change the binwidth until you are satisfied that the bins are neither too wide nor too narrow. (You can set the boundary too, but your choice of boundary is not super important.)</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to modify the histogram of flipper length,</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="co"># adding binwidth and boundary</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to modify the histogram of flipper length,</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="co"># adding binwidth and boundary</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -799,24 +868,29 @@ IQR = Q3 - Q1
 </div>
 </section>
 </section>
-<section id="numerical-less-useful" class="level3" data-number="4.4.2">
-<h3 data-number="4.4.2" class="anchored" data-anchor-id="numerical-less-useful"><span class="header-section-number">4.4.2</span> Less useful plot types</h3>
-<p>There are several other graph types that one might see for a single numerical variable: e.g., dotplots, stem-and-leaf plots, boxplots, etc. I’m not a big fan of dotplots or stem-and-leaf plots as they are just messier versions of histograms. I do like boxplots, but they are typically less informative than histograms. Boxplots are much better for comparing groups, and we’ll see them later in the chapter.</p>
+<section id="less-useful-plot-types" class="level3" data-number="4.4.2">
+<h3 data-number="4.4.2" class="anchored" data-anchor-id="less-useful-plot-types"><span class="header-section-number">4.4.2</span> Less useful plot types</h3>
+<p>There are several other graph types that one might see for a single numerical variable: e.g., dotplots, stem-and-leaf plots, boxplots, etc. We’re not big fans of dotplots or stem-and-leaf plots as they are just messier versions of histograms. We do like boxplots, but they are typically less informative than histograms. Boxplots are much better for comparing groups, and we’ll see them later in the chapter.</p>
 </section>
 </section>
-<section id="numerical-graphing-two" class="level2" data-number="4.5">
-<h2 data-number="4.5" class="anchored" data-anchor-id="numerical-graphing-two"><span class="header-section-number">4.5</span> Graphing two numerical variables</h2>
-<p>The proper graph for two numerical variables is a scatterplot. We graph the response variable on the y-axis and the predictor variable on the x-axis.</p>
+<section id="graphing-two-numerical-variables" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="graphing-two-numerical-variables"><span class="header-section-number">4.5</span> Graphing two numerical variables</h2>
+<p>The proper graph for two numerical variables is a scatterplot. We graph the response variable on the y-axis and the predictor variable on the x-axis.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
 <p>Let’s consider a possible association between bill length and body mass. For this question, there is not really a strong preference for which variable serves as response and which variable servers as predictor. We’ll consider bill length as the response variable and body mass as the predictor.</p>
 <p>Since we are plotting two variables, we have two aesthetics, one on the y-axis (the response variable) and one on the x-axis (the predictor variable). Since scatterplots use points to plot each data value, the correct layer to add is <code>geom_point()</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">y =</span> bill_length_mm, <span class="at">x =</span> body_mass_g)) <span class="sc">+</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">y =</span> bill_length_mm, <span class="at">x =</span> body_mass_g)) <span class="sc">+</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2 rows containing missing values (`geom_point()`).</code></pre>
+<pre><code>Warning: Removed 2 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>We are looking for evidence of a relationship between the two variables. This will manifest as a pattern in the data. We are interested in answering the following questions:</p>
@@ -842,19 +916,24 @@ IQR = Q3 - Q1
 <li>Outliers</li>
 </ol>
 <ul>
-<li>Are there outliers? These will be points that are isolated and relatively far from the bulk of the data. There are a few points above that are borderline, but none is a particularly strong outlier, especially give how spread out the rest of the data is.</li>
+<li>Are there outliers? These will be points that are isolated and relatively far from the bulk of the data. There are a few points above that are borderline, but none is a particularly strong outlier, especially given how spread out the rest of the data is.</li>
 </ul>
 <section id="exercise-8" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-8">Exercise 8</h5>
-<p>Here is a scatterplot of</p>
+<p>Here is a scatterplot of flipper lengths against body mass:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">y =</span> flipper_length_mm, <span class="at">x =</span> body_mass_g)) <span class="sc">+</span></span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">y =</span> flipper_length_mm, <span class="at">x =</span> body_mass_g)) <span class="sc">+</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2 rows containing missing values (`geom_point()`).</code></pre>
+<pre><code>Warning: Removed 2 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Write a short paragraph describing the association of penguin flipper lengths and body mass, focusing on the four key features (linearity, direction, strength, and outliers).</p>
@@ -863,200 +942,278 @@ IQR = Q3 - Q1
 </div>
 </section>
 </section>
-<section id="numerical-graphing-grouped" class="level2" data-number="4.6">
-<h2 data-number="4.6" class="anchored" data-anchor-id="numerical-graphing-grouped"><span class="header-section-number">4.6</span> Graphing grouped numerical data</h2>
+<section id="graphing-grouped-numerical-data" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="graphing-grouped-numerical-data"><span class="header-section-number">4.6</span> Graphing grouped numerical data</h2>
 <p>Suppose you want to analyze one numerical variable and one categorical variable. Usually, the idea here is that the categorical variable divides up the data into groups and you are interested in understanding the numerical variable for each group separately. Another way to say this is that your numerical variable is response and your categorical variable is predictor. (It is also possible for a categorical variable to be response and a numerical variable to be predictor. This is common in so-called “classification” problems. We will not cover this possibility in this course, but it is covered in more advanced courses.)</p>
-<p>This turns out to be exactly what we need in the penguins data. Throughout the above exercises, there was a concern that the penguin measurements are fundamentally different among three different species of penguin.</p>
+<p>This turns out to be exactly what we need in the penguins data. Throughout the above exercises, there was a concern that the penguin measurements are fundamentally different among the three different species of penguin.</p>
 <p>Graphically, there are two good options here. The first is a side-by-side boxplot.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">y =</span> body_mass_g, <span class="at">x =</span> species)) <span class="sc">+</span></span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">y =</span> body_mass_g, <span class="at">x =</span> species)) <span class="sc">+</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2 rows containing non-finite values (`stat_boxplot()`).</code></pre>
+<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
+(`stat_boxplot()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Notice the placement of the variables. The y-axis is <code>body_mass_g</code>, the numerical variable. The x-axis variable is <code>species</code>; the groups are placed along the x-axis. This is consistent with other graph types that place the response variable on the y-axis and the predictor variable on the x-axis.</p>
-<p>The other possible graph is a stacked histogram. This uses a feature called “faceting” that creates a different plot for each group. The syntax is a little unusual.</p>
+<p>The other possible graph is a stacked histogram. This uses a feature called “faceting” that creates a different plot for each group. The new <code>ggplot</code> command is called <code>facet_grid</code>. The only slightly unusual syntax you need to know is that the predictor variable has to be inside <code>vars()</code> as in the following code chunk:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> body_mass_g)) <span class="sc">+</span></span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_grid</span>(species <span class="sc">~</span> .)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> body_mass_g)) <span class="sc">+</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="at">rows =</span> <span class="fu">vars</span>(species))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2 rows containing non-finite values (`stat_bin()`).</code></pre>
+<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
+(`stat_bin()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
-<p>The argument <code>species ~ .</code> in the <code>facet_grid</code> function means, “Put each species on a different row.” We’ll explore this notation a little later.</p>
+</div>
 <p>As always, the default bins suck, so let’s change them.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> body_mass_g)) <span class="sc">+</span></span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">250</span>, <span class="at">boundary =</span> <span class="dv">3500</span>) <span class="sc">+</span></span>
-<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_grid</span>(species <span class="sc">~</span> .)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> body_mass_g)) <span class="sc">+</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">250</span>, <span class="at">boundary =</span> <span class="dv">3500</span>) <span class="sc">+</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="at">rows =</span> <span class="fu">vars</span>(species))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2 rows containing non-finite values (`stat_bin()`).</code></pre>
+<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
+(`stat_bin()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
-<p>Consider the following subtle change in notation:</p>
+</div>
+<p>Notice that we specified <code>rows</code> in the <code>facet_grid</code> function. What if we had specified columns instead?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> body_mass_g)) <span class="sc">+</span></span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">250</span>, <span class="at">boundary =</span> <span class="dv">3500</span>) <span class="sc">+</span></span>
-<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_grid</span>(. <span class="sc">~</span> species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> body_mass_g)) <span class="sc">+</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">250</span>, <span class="at">boundary =</span> <span class="dv">3500</span>) <span class="sc">+</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="at">cols =</span> <span class="fu">vars</span>(species))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2 rows containing non-finite values (`stat_bin()`).</code></pre>
+<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
+(`stat_bin()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
-<section id="exercise-9a" class="level5 unnumbered">
-<h5 class="unnumbered anchored" data-anchor-id="exercise-9a">Exercise 9(a)</h5>
-<p>Explain why that last graph (which might be called a side-by-side histogram) is less effective than the earlier stacked histogram. (Hint: what stays lined up when the histograms are stacked vertically rather than horizontally?)</p>
-<div class="answer">
-<p>Please write up your answer here.</p>
 </div>
-</section>
-<section id="exercise-9b" class="level5 unnumbered">
-<h5 class="unnumbered anchored" data-anchor-id="exercise-9b">Exercise 9(b)</h5>
-<p>Can you figure out what’s going on with the weird syntax of <code>species ~ .</code> vs <code>. ~ species</code>? Explain it in your own words.</p>
+<section id="exercise-9" class="level5 unnumbered">
+<h5 class="unnumbered anchored" data-anchor-id="exercise-9">Exercise 9</h5>
+<p>Explain why that last graph (which might be called a side-by-side histogram) is less effective than the earlier stacked histogram. (Hint: which variable can you line up with your eyes when the histograms are stacked vertically rather than horizontally?)</p>
 <div class="answer">
 <p>Please write up your answer here.</p>
 </div>
 <hr>
 <p>The other thing that kind of sucks is the fact that the y-axis is showing counts. That makes it harder to see the distribution of body mass among Chinstrap penguins, for example, as there are fewer of them in the data set. It would be nice to scale these using percentages.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> body_mass_g)) <span class="sc">+</span></span>
-<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> ..density..),</span>
-<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">binwidth =</span> <span class="dv">250</span>, <span class="at">boundary =</span> <span class="dv">3500</span>) <span class="sc">+</span></span>
-<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_grid</span>(species <span class="sc">~</span> .)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> body_mass_g)) <span class="sc">+</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)),</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">binwidth =</span> <span class="dv">250</span>, <span class="at">boundary =</span> <span class="dv">3500</span>) <span class="sc">+</span></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="at">rows =</span> <span class="fu">vars</span>(species))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: The dot-dot notation (`..density..`) was deprecated in ggplot2 3.4.0.
-ℹ Please use `after_stat(density)` instead.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2 rows containing non-finite values (`stat_bin()`).</code></pre>
+<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
+(`stat_bin()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Due to some technical issues in <code>ggplot2</code>, these are not strictly proportions. (If you were to add up the heights of all the bars, they would not add up to 100%.) Nevertheless, the graph is still useful because it does scale the groups to put them on equal footing. In other words, it treats each group as if they all had the same sample size.</p>
 </section>
 <section id="exercise-10" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-10">Exercise 10</h5>
-<p>Choose a numerical variable that’s not body mass and a categorical variable that’s not species from the <code>penguins</code> data set. Make both a side-by-side boxplot and a stacked histogram. Discuss the resulting graphs. Comment on the association (or independence) of the two variables. If there is an association, be sure to focus on the four key features (linearity, direction, strength, and outliers).</p>
+<p>Choose a numerical variable that’s not body mass and a categorical variable that’s not species from the <code>penguins</code> data set. Make both a side-by-side boxplot and a stacked histogram. Discuss the resulting graphs. Comment on the association (or independence) of the two variables.</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a side-by-side boxplot.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a side-by-side boxplot.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a stacked histogram.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to create a stacked histogram.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Please write up your answer here.</p>
 </div>
 </section>
 </section>
-<section id="numerical-pub" class="level2" data-number="4.7">
-<h2 data-number="4.7" class="anchored" data-anchor-id="numerical-pub"><span class="header-section-number">4.7</span> Publication-ready graphics</h2>
+<section id="publication-ready-graphics" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="publication-ready-graphics"><span class="header-section-number">4.7</span> Publication-ready graphics</h2>
 <p>The great thing about <code>ggplot2</code> graphics is that they are already quite pretty. To take them from exploratory data analysis to the next level, there are a few things we can do to tidy them up.</p>
 <p>Let’s go back to the first histogram from this chapter.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> body_mass_g)) <span class="sc">+</span></span>
-<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">250</span>, <span class="at">boundary =</span> <span class="dv">3500</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> body_mass_g)) <span class="sc">+</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">250</span>, <span class="at">boundary =</span> <span class="dv">3500</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2 rows containing non-finite values (`stat_bin()`).</code></pre>
+<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
+(`stat_bin()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>The variable names of this data set are already pretty informative, but we can do a little better with <code>labs</code> (for labels). Observe:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> body_mass_g)) <span class="sc">+</span></span>
-<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">250</span>, <span class="at">boundary =</span> <span class="dv">3500</span>) <span class="sc">+</span></span>
-<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of body mass for adult foraging penguins near</span></span>
-<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a><span class="st">         Palmer Station, Antarctica"</span>,</span>
-<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"Body mass (in grams)"</span>,</span>
-<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> body_mass_g)) <span class="sc">+</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">250</span>, <span class="at">boundary =</span> <span class="dv">3500</span>) <span class="sc">+</span></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of body mass for adult foraging penguins near</span></span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a><span class="st">       Palmer Station, Antarctica"</span>,</span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Body mass (grams)"</span>,</span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2 rows containing non-finite values (`stat_bin()`).</code></pre>
+<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
+(`stat_bin()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>You can also see that we took the opportunity to mention the units of measurement (grams) for our variable in the x-axis label. This is good practice.</p>
-<p>A quick note about formatting in R code chunks. Notice that I put different parts of the last <code>ggplot</code> command on their own separate lines. The command would still work if I did this:</p>
+<p>A quick note about formatting in R code chunks. Notice that we often put different parts of the commands on their own separate lines. The last <code>ggplot</code> command would still work if we did this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> body_mass_g)) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">250</span>, <span class="at">boundary =</span> <span class="dv">3500</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of body mass for adult foraging penguins near Palmer Station, Antarctica"</span>, <span class="at">x =</span> <span class="st">"Body mass (in grams)"</span>, <span class="at">y =</span> <span class="st">"Count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> body_mass_g)) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">250</span>, <span class="at">boundary =</span> <span class="dv">3500</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of body mass for adult foraging penguins near Palmer Station, Antarctica"</span>, <span class="at">x =</span> <span class="st">"Body mass (in grams)"</span>, <span class="at">y =</span> <span class="st">"Count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2 rows containing non-finite values (`stat_bin()`).</code></pre>
+<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
+(`stat_bin()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>But it’s much harder to read. If you find that your code is “wrapping” to the next line, find some spots like commas or plus signs to break the code. Be sure to break the line after the comma or plus sign.</p>
 <section id="exercise-11" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-11">Exercise 11</h5>
-<p>Modify the following scatterplot by adding a title and labels for both the y-axis and x-axis.</p>
+<p>Modify the following scatterplot by adding a title and labels for both the y-axis and x-axis. (Don’t forget to include units of measurement on both axes!)</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify the following scatterplot by adding a title and </span></span>
-<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="co"># labels for both the y-axis and x-axis.</span></span>
-<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">y =</span> bill_length_mm, <span class="at">x =</span> bill_depth_mm)) <span class="sc">+</span></span>
-<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify the following scatterplot by adding a title and </span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="co"># labels for both the y-axis and x-axis.</span></span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">y =</span> bill_length_mm, <span class="at">x =</span> bill_depth_mm)) <span class="sc">+</span></span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2 rows containing missing values (`geom_point()`).</code></pre>
+<pre><code>Warning: Removed 2 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </div>
 </section>
 <section id="exercise-12" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="exercise-12">Exercise 12</h5>
-<p>The previous scatterplot looked a little funny due to some odd groupings that we suspect (as usual) might be due to multiple species being measures. Add a new aesthetic (so, inside the parentheses following <code>aes</code>) to the following code to assign <code>color = species</code>. Comment on what you see.</p>
+<p>The previous scatterplot looks a little funny due to some odd groupings that we suspect (as usual) might be due to multiple species being measured. Let’s use color to investigate! Once we decide to involve color, we’ll need to add a Viridis color palette to make it colorblind-friendly. This time, though, the command is <code>scale_color_viridis_d</code> instead of <code>scale_fill_viridis_d</code>. In <code>ggplot</code>, the “color” aesthetic is used for points in a scatterplot, as opposed to “fill” for bars in a bar chart. We’ll also use a more simple black-and-white background theme. We’ve already added the necessary code below for you.</p>
+<p>Your task is to make the color appear. Add a new aesthetic (so, inside the parentheses following <code>aes</code>) to the following code to assign <code>color = species</code>.</p>
+<p>Below the graph, comment on what you see.</p>
 <div class="answer">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify the code below to add color = species</span></span>
-<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">y =</span> bill_length_mm, <span class="at">x =</span> bill_depth_mm)) <span class="sc">+</span></span>
-<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify the aesthetics to add color = species</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">y =</span> bill_length_mm, <span class="at">x =</span> bill_depth_mm)) <span class="sc">+</span></span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>() <span class="sc">+</span></span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2 rows containing missing values (`geom_point()`).</code></pre>
+<pre><code>Warning: Removed 2 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Please write up your answer here.</p>
 </div>
-<hr>
+<p>Another way to include a grouping variable is to use shape instead of color.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">y =</span> bill_length_mm, <span class="at">x =</span> bill_depth_mm,</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">shape =</span> species)) <span class="sc">+</span></span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The defaults here leave a lot to be desired. It’s hard to see clusters in the data when all the shapes (circle, triangle, and square) look like similar little blobs.</p>
+<p>With some advanced customization, we can get a slightly more visually distinct choice of shapes, but it may not be worth the extra work unless you are forced to print in black-and-white (say, as required by a print publication).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">y =</span> bill_length_mm, <span class="at">x =</span> bill_depth_mm,</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">shape =</span> species)) <span class="sc">+</span></span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">20</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="04-numerical_data-web_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This website has a nice description of all the available shapes and how to use them: <a href="https://blog.albertkuo.me/post/point-shape-options-in-ggplot/">https://blog.albertkuo.me/post/point-shape-options-in-ggplot/</a></p>
 <p>Every part of the graph can be customized, from the color scheme to the tick marks on the axes, to the major and minor grid lines that appear on the background. We won’t go into all that, but you can look at the <a href="http://ggplot2.tidyverse.org/">ggplot2 documentation</a> online and search Google for examples if you want to dig in and figure out how to do some of that stuff. However, the default options are often (but not always) the best, so be careful that your messing around doesn’t inadvertently make the graph less clear or less appealing.</p>
 </section>
 </section>
-<section id="numerical-conclusion" class="level2" data-number="4.8">
-<h2 data-number="4.8" class="anchored" data-anchor-id="numerical-conclusion"><span class="header-section-number">4.8</span> Conclusion</h2>
+<section id="conclusion" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">4.8</span> Conclusion</h2>
 <p>Summary statistics are simple numbers that describe and summarize data sets. Measures of center tell us where the “middle” of our numerical data lies, and measures of spread tell us how spread out our numerical data is. These measures should always be reported in pairs, for example the mean/standard deviation, or the median/IQR.</p>
 <p>The <code>ggplot2</code> package with its <code>ggplot</code> command is a very versatile tool for creating nice graphs relatively easily. For a single numerical variable, the standard graph type is a histogram. For two numerical variables, use a scatterplot. For a numerical response with a categorical predictor, use either a side-by-side boxplot or a stacked histogram.</p>
-<section id="numerical-prep" class="level3" data-number="4.8.1">
-<h3 data-number="4.8.1" class="anchored" data-anchor-id="numerical-prep"><span class="header-section-number">4.8.1</span> Preparing and submitting your assignment</h3>
+<section id="preparing-and-submitting-your-assignment" class="level3" data-number="4.8.1">
+<h3 data-number="4.8.1" class="anchored" data-anchor-id="preparing-and-submitting-your-assignment"><span class="header-section-number">4.8.1</span> Preparing and submitting your assignment</h3>
 <ol type="1">
 <li>From the “Run” menu, select “Restart R and Run All Chunks”.</li>
-<li>Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.</li>
+<li>Deal with any code errors that crop up. Repeat steps 1–2 until there are no more code errors.</li>
 <li>Spell check your document by clicking the icon with “ABC” and a check mark.</li>
-<li>Hit the “Preview” button one last time to generate the final draft of the <code>.nb.html</code> file.</li>
+<li>Hit the “Render” button one last time to generate the final draft of the HTML file. (If there are errors here, you may need to go back and fix broken inline code or other markdown issues.)</li>
 <li>Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1–5 again.</li>
 </ol>
 <p>If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.</p>
@@ -1068,6 +1225,7 @@ IQR = Q3 - Q1
 <hr>
 <ol>
 <li id="fn1"><p>This notation is part of a mathematical document preparation system called LaTeX, pronounced “Lay-tek” (not like the rubbery substance).<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Unless you run in certain circles with economists. For some reason, economists often switch their axes.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
@@ -1107,18 +1265,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1150,11 +1297,48 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1164,8 +1348,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1177,7 +1370,129 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1221,6 +1536,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1246,6 +1562,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1307,12 +1649,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./03-categorical_data-web.html" class="pagination-link">
+      <a href="./03-categorical_data-web.html" class="pagination-link" aria-label="Categorical data">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Categorical data</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./05-manipulating_data-web.html" class="pagination-link">
+      <a href="./05-manipulating_data-web.html" class="pagination-link" aria-label="Manipulating data">
         <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Manipulating data</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -1321,4 +1663,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body></html>
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/VectorPosse/intro_stats/edit/main/04-numerical_data-web.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/VectorPosse/intro_stats/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

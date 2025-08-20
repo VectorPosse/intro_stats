@@ -1,1 +1,0 @@
-options(scipen = 999)

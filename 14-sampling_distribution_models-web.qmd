@@ -1,39 +1,37 @@
-# Sampling distribution models {#samp-dist-models}
+# Sampling distribution models
 
-<!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(50,46,48))`</p>
-<!-- Please don't mess with the previous few lines! -->
+::: {.callout-note}
 
-::: {.summary}
-
-### Functions introduced in this chapter {-}
+### Functions introduced in this chapter
 
 No new R functions are introduced here.
 
 :::
 
 
-## Introduction {#samp-dist-models-intro}
+## Introduction
 
 In this chapter, we'll revisit the idea of a sampling distribution model. We've already seen how useful it can be to simulate the process of simulating samples from a population and looking at the distribution of values that can occur by chance (i.e., sampling variability). We've also had some experience working with normal models. Under certain assumptions, we can use normal models to approximate our simulated sampling distributions.
 
-### Install new packages {#samp-dist-models-install}
+### Install new packages
 
 There are no new packages used in this chapter.
 
-### Download the R notebook file {#samp-dist-models-download}
+### Download the Quarto file
 
-Check the upper-right corner in RStudio to make sure you're in your `intro_stats` project. Then click on the following link to download this chapter as an R notebook file (`.Rmd`).
+Look at either the top (Posit Cloud) or the upper right corner of the RStudio screen to make sure you are in your `intro_stats` project.
 
-<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/14-sampling_distribution_models.Rmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/14-sampling_distribution_models.Rmd</a>
+Then click on the following link to download this chapter as a Quarto file (`.qmd`).
+
+<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/14-sampling_distribution_models.qmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/14-sampling_distribution_models.qmd</a>
 
 Once the file is downloaded, move it to your project folder in RStudio and open it there.
 
-### Restart R and run all chunks {#samp-dist-models-restart}
+### Restart R and run all chunks
 
 In RStudio, select "Restart R and Run All Chunks" from the "Run" menu.
 
-## Load packages {#samp-dist-models-load}
+## Load packages
 
 We load the standard `tidyvese` package. The `mosaic` package will provide coin flips.
 
@@ -43,7 +41,7 @@ library(mosaic)
 ```
 
 
-## Sampling variability and sample size {#samp-dist-models-sampling-variability}
+## Sampling variability and sample size
 
 We know that when we sample from a population, our sample is "wrong": even when the sample is representative of the population, we don't actually expect our sample statistic to agree exactly with the population parameter of interest. Our prior simulations have demonstrated this. They are centered on the "true" value (for example, in a hypothesis test, the "true" value is the assumed null value), but there is some spread due to sampling variability.
 
@@ -74,9 +72,9 @@ Instead of focusing on the total number of successes, let's use the proportion o
 
 ```{r}
 ggplot(sims_1000_10, aes(x = prop)) +
-    geom_histogram(binwidth = 0.05) +
-    scale_x_continuous(limits = c(0, 1.1),
-                       breaks = seq(0, 1, 0.1))
+  geom_histogram(binwidth = 0.05) +
+  scale_x_continuous(limits = c(0, 1.1),
+                     breaks = seq(0, 1, 0.1))
 ```
 
 Because each sample has size 10, the proportion of successes can only be multiples of 0.1. Although the distribution is somewhat normally shaped, it is discrete (no values in between the bars) and there is an appreciable left skew.
@@ -90,9 +88,9 @@ sims_1000_20 <- do(1000) * rflip(20, prob = 0.64)
 
 ```{r}
 ggplot(sims_1000_20, aes(x = prop)) +
-    geom_histogram(binwidth = 0.025) +
-    scale_x_continuous(limits = c(0, 1.1),
-                       breaks = seq(0, 1, 0.1))
+  geom_histogram(binwidth = 0.025) +
+  scale_x_continuous(limits = c(0, 1.1),
+                     breaks = seq(0, 1, 0.1))
 ```
 
 
@@ -114,7 +112,11 @@ Run a set of simulations yourself, this time with samples of size 50. Use the sa
 
 ```{r}
 set.seed(13579)
-# Add code here to simulate 1000 random samples of size 50 and plot them.
+# Add code here to simulate 1000 random samples of size 50.
+```
+
+```{r}
+# Add code here to and plot the simulated values.
 ```
 
 :::
@@ -130,7 +132,7 @@ Please write up your answer here.
 :::
 
 
-## The sampling distribution model and the standard error {#samp-dist-models-se}
+## The sampling distribution model and the standard error
 
 In the last chapter on normal models, we mentioned briefly the Central Limit Theorem and the fact that under certain assumptions, our simulations would look normally distributed. More concretely, the Central Limit Theorem tells us that as our sample size increases, the distribution of sample proportions looks more and more like a normal model. This model is called the *sampling distribution model* because it describes how many different samples from a population should be distributed.
 
@@ -152,9 +154,9 @@ Please write up your answer here.
 
 *****
 
-The standard deviation of a sampling distribution is usually called the *standard error*. (The use of the word "error" in statistics does not mean that anyone made a mistake. A better word for error would be "uncertainty" or even just "variability".)
+The standard deviation of a sampling distribution is usually called the *standard error*. The use of the word "error" in statistics does not mean that anyone made a mistake. A better word for error would be "uncertainty" or even just "variability".
 
-There is some complicated mathematics involved in figuring out the standard error, so I'll just tell you what it is. If $p$ is the true population proportion, then the standard error is
+There is some complicated mathematics involved in figuring out the standard error, so we'll just tell you what it is. If $p$ is the true population proportion, then the standard error is
 
 $$
 \sqrt{\frac{p(1 - p)}{n}}.
@@ -195,7 +197,7 @@ Please write up your answer here.
 :::
 
 
-## Conditions {#samp-dist-models-conditions}
+## Conditions
 
 Like anything in statistics, there are assumptions that have to be met before applying any technique. We must check that certain conditions are true before we can reasonably make the necessary assumptions required by our model. 
 
@@ -238,9 +240,9 @@ sims_1000_100 <- do(1000) * rflip(100, prob = 0.01)
 
 ```{r}
 ggplot(sims_1000_100, aes(x = prop)) +
-    geom_histogram(binwidth = 0.005) +
-    scale_x_continuous(limits = c(-0.01, 0.1),
-                       breaks = seq(0, 0.1, 0.01))
+  geom_histogram(binwidth = 0.005) +
+  scale_x_continuous(limits = c(-0.01, 0.1),
+                     breaks = seq(0, 0.1, 0.01))
 ```
 
 (Note that the x-axis scale is much smaller than it was before.)
@@ -263,7 +265,7 @@ $$
 np = (100)(0.01) = 1 \ngeq 10.
 $$
 
-In other words, in a typical sample, we expect 1 success and 99 failures.
+In other words, in a typical sample, we expect 1 success and 99 failures. This does not satisfy the success/failure condition.
 
 ##### Exercise 6 {-}
 
@@ -276,7 +278,7 @@ Please write up your answer here.
 :::
 
 
-## Using the model to make predictions {#samp-dist-models-predictions}
+## Using the model to make predictions
 
 Once we know that a normal model is appropriate, we can employ all the tools we've previously developed to work with normal models, notably `pdist` and `qdist`.
 
@@ -293,8 +295,8 @@ survey_sim <- do(1000) * rflip(50, prob = 0.64)
 
 ```{r}
 ggplot(survey_sim, aes(x = prop)) +
-    geom_histogram(binwidth = 0.01) +
-    geom_vline(xintercept = 0.5, color = "blue")
+  geom_histogram(binwidth = 0.01) +
+  geom_vline(xintercept = 0.5, color = "blue")
 ```
 
 It looks like there are at least a few simulated samples that could come in less than 50% by chance.
@@ -302,13 +304,13 @@ It looks like there are at least a few simulated samples that could come in less
 Let's check the conditions to see if we can use a normal model:
 
 * Random
-    - We are told that our 50 voters are a random sample.
+  * We are told that our 50 voters are a random sample.
 
 * 10%
-    - It is safe to assume there are more than 500 voters for this election.
+  * It is safe to assume there are more than 500 voters for this election.
 
 * Success/failure
-    - The number of expected successes is `r 50 * 0.64` and the expected number of failures is `r 50 * (1 - 0.64)`. These are both greater than 10.
+  * The number of expected successes is `r 50 * 0.64` and the expected number of failures is `r 50 * (1 - 0.64)`. These are both greater than 10.
 
 Since the conditions are satisfied, our sampling distribution model can be approximated with a normal model. The standard error is `r sqrt(0.64 * (1 - 0.64) / 50)`. Therefore, our normal model is
 
@@ -335,26 +337,29 @@ First, simulate the sampling distribution using 1000 samples, each of size 143. 
 
 ```{r}
 set.seed(13579)
-# Add code here to simulate 1000 samples of size 143
-# and plot the resulting distribution.
+# Add code here to simulate 1000 samples of size 143.
+```
+
+```{r}
+# Add code here to plot the resulting distribution.
 ```
 
 :::
 
 ##### Exercise 7(b) {-}
 
-Next, check the conditions that would allow you to use a normal model as a sampling distribution model. I've given you an outline below:
+Next, check the conditions that would allow you to use a normal model as a sampling distribution model. We've given you an outline below:
 
 ::: {.answer}
 
-- Random
-    - [Check condition here.]
+* Random
+  * [Check condition here.]
 
-- 10%
-    - [Check condition here.]
+* 10%
+  * [Check condition here.]
 
-- Success/failure
-    - [Check condition here.]
+* Success/failure
+  * [Check condition here.]
 
 :::
 
@@ -381,16 +386,16 @@ Please write up your answer here.
 :::
 
 
-## Conclusion {#samp-dist-models-conclusion}
+## Conclusion
 
 It is very easy to work with normal models. Therefore, when we want to study sampling variability, it is useful to have a normal model as a sampling distribution model. The standard error is a measure of how variable random samples can be. Such variability naturally decreases as our sample size grows. (This makes sense: larger samples give us more precise estimates of the true population, so they should be "closer" to the true population value.) Once conditions are checked, we can use normal models to make predictions about what we are likely to see when we sample from the population.
 
-### Preparing and submitting your assignment {#samp-dist-models-prep}
+### Preparing and submitting your assignment
 
 1. From the "Run" menu, select "Restart R and Run All Chunks".
-2. Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.
+2. Deal with any code errors that crop up. Repeat steps 1--2 until there are no more code errors.
 3. Spell check your document by clicking the icon with "ABC" and a check mark.
-4. Hit the "Preview" button one last time to generate the final draft of the `.nb.html` file.
+4. Hit the "Render" button one last time to generate the final draft of the HTML file. (If there are errors here, you may need to go back and fix broken inline code or other markdown issues.)
 5. Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
 
 If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.

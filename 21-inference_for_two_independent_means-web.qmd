@@ -1,13 +1,8 @@
 # Inference for two independent means
 
-<!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(50,46,48))`</p>
-<!-- Please don't mess with the previous few lines! -->
+::: {.callout-note}
 
-
-::: {.summary}
-
-### Functions introduced in this chapter: {-}
+### Functions introduced in this chapter:
 
 No new R functions are introduced here.
 
@@ -23,11 +18,13 @@ If we have a numerical variable and a categorical variable with two categories, 
 
 There are no new packages used in this chapter.
 
-### Download the R notebook file
+### Download the Quarto file
 
-Check the upper-right corner in RStudio to make sure you're in your `intro_stats` project. Then click on the following link to download this chapter as an R notebook file (`.Rmd`).
+Look at either the top (Posit Cloud) or the upper right corner of the RStudio screen to make sure you are in your `intro_stats` project.
 
-<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/21-inference_for_two_independent_means.Rmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/21-inference_for_two_independent_means.Rmd</a>
+Then click on the following link to download this chapter as a Quarto file (`.qmd`).
+
+<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/21-inference_for_two_independent_means.qmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/21-inference_for_two_independent_means.qmd</a>
 
 Once the file is downloaded, move it to your project folder in RStudio and open it there.
 
@@ -64,7 +61,6 @@ Please write up your answer here.
 
 *****
 
-
 We have the actual birth weight of the babies in this data. So, rather than using a coarse classification into a binary "yes or no" variable, why not use the full precision of the birth weight measured in grams? This is a very precisely measured numerical variable.
 
 We'd like to compare mean birth weights among two groups: women who smoked during pregnancy, and women who didn't.
@@ -75,29 +71,32 @@ We'd like to compare mean birth weights among two groups: women who smoked durin
 The actual mean weights in each sample (the smoking women and the nonsmoking women) can be found using a `group_by` and `summarise` pipeline:
 
 ```{r}
-birthwt %>%
-  group_by(smoke) %>%
+birthwt |>
+  group_by(smoke) |>
   summarise(mean(bwt))
 ```
 
-Note that 0 means "nonsmoker" and 1 means "smoker". Looks like We need to address the fact the `smoke` variable is recorded as a numerical variable instead of a categorical variable. Here is `birthwt2` that we will use from here on out:
+Note that 0 means "nonsmoker" and 1 means "smoker". Looks like We need to address the fact the `smoke` variable is recorded as a numerical variable instead of a categorical variable:
 
 ```{r}
-birthwt2 <- birthwt %>%
-    mutate(smoke_fct = factor(smoke, levels = c(0, 1), labels = c("Nonsmoker", "Smoker")))
-birthwt2
+birthwt <- birthwt |>
+  mutate(smoke_fct = factor(smoke,
+                            levels = c(0, 1),
+                            labels = c("Nonsmoker", "Smoker")))
+birthwt
 ```
 
 ```{r}
-glimpse(birthwt2)
+glimpse(birthwt)
 ```
 
-The difference between the means is now calculated using `infer` tools. We will store the result as `obs_diff` for "observed difference".
+The difference between the means is now calculated using `infer` tools. We will store the result as `obs_diff` for "observed difference."
 
 ```{r}
-obs_diff <- birthwt2 %>%
-  specify(response = bwt, explanatory = smoke_fct) %>% 
-  calculate(stat = "diff in means", order = c("Nonsmoker", "Smoker"))
+obs_diff <- birthwt |>
+  specify(response = bwt, explanatory = smoke_fct) |> 
+  calculate(stat = "diff in means",
+            order = c("Nonsmoker", "Smoker"))
 obs_diff
 ```
 
@@ -114,8 +113,7 @@ Please write up your answer here.
 
 *****
 
-
-Note that it will not actually make a difference to the inferential process in which order we subtract. However, we do have to be consistent to use the same order throughout. When interpreting the test statistic, effect size, and confidence interval, we will need to pay attention to the order of subtraction to make sure we are interpreting our results correctly.
+Note that it will not actually make a difference to the inferential process in which order we subtract. However, we do have to be consistent to use the same order throughout. When interpreting the test statistic, confidence interval, and effect size, we will need to pay attention to the order of subtraction to make sure we are interpreting our results correctly.
 
 
 ## Every day I'm shuffling
@@ -129,25 +127,26 @@ We can simulate this assumption by shuffling the list of smoking status. More co
 For example, here is the actual smoking status of the women:
 
 ```{r}
-birthwt2$smoke_fct
+birthwt$smoke_fct
 ```
 
 But we're going to use values that have been randomly shuffled, like this one, for example:
 
 ```{r}
 set.seed(1729)
-sample(birthwt2$smoke_fct)
+sample(birthwt$smoke_fct)
 ```
 
 The `infer` package will perform this random shuffling over and over again. Given the now arbitrary labels of "Nonsmoker" and "Smoker" (which are meaningless because each women was assigned to one of these labels randomly with no regard to her actual smoking status), `infer` will calculate the mean birth weights among the first group of women (labeled "Nonsmokers" but not really consisting of all nonsmokers) and the second group of women (labeled "Smokers" but not really consisting of all smokers). Finally `infer` will compute the difference between those two means. And it will do this process 1000 times.
 
 ```{r}
 set.seed(1729)
-bwt_smoke_test <- birthwt2 %>%
-  specify(response = bwt, explanatory = smoke_fct) %>%
-  hypothesize(null = "independence") %>%
-  generate(reps = 1000, type = "permute") %>%
-  calculate(stat = "diff in means", order = c("Nonsmoker", "Smoker"))
+bwt_smoke_test <- birthwt |>
+  specify(response = bwt, explanatory = smoke_fct) |>
+  hypothesize(null = "independence") |>
+  generate(reps = 1000, type = "permute") |>
+  calculate(stat = "diff in means",
+            order = c("Nonsmoker", "Smoker"))
 bwt_smoke_test
 ```
 
@@ -163,12 +162,11 @@ Please write up your answer here.
 
 *****
 
-
 Here's the visualization:
 
 ```{r}
-bwt_smoke_test %>%
-    visualize()
+bwt_smoke_test |>
+  visualize()
 ```
 
 No surprise that this histogram looks nearly normal, centered at zero: the simulation is working under the assumption of the null hypothesis of no difference between the groups.
@@ -176,9 +174,9 @@ No surprise that this histogram looks nearly normal, centered at zero: the simul
 Here is the same plot but including our sample difference:
 
 ```{r}
-bwt_smoke_test %>%
-    visualize() +
-    shade_p_value(obs_stat = obs_diff, direction = "two_sided")
+bwt_smoke_test |>
+  visualize() +
+  shade_p_value(obs_stat = obs_diff, direction = "two_sided")
 ```
 
 Our observed difference (from the sampled data) is quite far out into the tail of this simulated sampling distribution, so it appears that our actual data would be somewhat unlikely due to pure chance alone if the null hypothesis were true.
@@ -186,8 +184,8 @@ Our observed difference (from the sampled data) is quite far out into the tail o
 We can even find a P-value by calculating how many of our sampled values are as extreme or more extreme than the observed data difference.
 
 ```{r}
-bwt_smoke_test %>%
-    get_p_value(obs_stat = obs_diff, direction = "two-sided")
+bwt_smoke_test |>
+  get_p_value(obs_stat = obs_diff, direction = "two-sided")
 ```
 
 Indeed, this is a small P-value.
@@ -213,7 +211,7 @@ However, $s_{1}$ and $s_{2}$ are not perfect estimates of $\sigma_{1}$ and $\sig
 
 In the one-sample case, a Student t model with $df = n - 1$ was the right choice. In the two-sample case, we don't know the right answer. And I don't mean that we haven't learned it yet in our stats class. I mean, statisticians have not found a formula for the correct sampling distribution. It is a famous unsolved problem, called the Behrens-Fisher problem.
 
-Several researchers have proposed solutions that are "close" though. One compelling one is called "Welch's t test". Welch showed that even though it's not quite right, a Student t model is very close as long as you pick the degrees of freedom carefully. Unfortunately, the way to compute the right degrees of freedom is crazy complicated. Fortunately, R is good at crazy complicated computations.
+Several researchers have proposed solutions that are "close" though. One compelling one is called "Welch's t test." Welch showed that, even though it's not quite right, a Student t model is very close as long as you pick the degrees of freedom carefully. Unfortunately, the way to compute the right degrees of freedom is crazy complicated. (You can see the formula [here](https://www.statisticshowto.com/satterthwaite-formula/) if you're really dying to know.) Fortunately, R is good at crazy complicated computations.
 
 Let's go through the full rubric.
 
@@ -234,16 +232,26 @@ glimpse(birthwt)
 
 ### Prepare the data for analysis.
 
-We need to be sure `smoke` is a factor variable, so we create the new tibble `birthwt2` with the mutated variable `smoke_fct`.
+Check for missing data:
 
 ```{r}
-birthwt2 <- birthwt %>%
-    mutate(smoke_fct = factor(smoke, levels = c(0, 1), labels = c("Nonsmoker", "Smoker")))
-birthwt2
+birthwt |>
+  drop_na(bwt, smoke) |>
+  NROW()
+```
+
+We need to be sure `smoke` is a factor variable, so we create the new mutated variable `smoke_fct`. (We did this above, but we'll include in here again for completeness.)
+
+```{r}
+birthwt <- birthwt |>
+  mutate(smoke_fct = factor(smoke,
+                            levels = c(0, 1),
+                            labels = c("Nonsmoker", "Smoker")))
+birthwt
 ```
 
 ```{r}
-glimpse(birthwt2)
+glimpse(birthwt)
 ```
 
 ### Make tables or plots to explore the data visually.
@@ -251,35 +259,36 @@ glimpse(birthwt2)
 How many women are in each group?
 
 ```{r}
-tabyl(birthwt2, smoke_fct) %>%
+birthwt |>
+  tabyl(smoke_fct) |>
   adorn_totals()
 ```
 
 With a numerical response variable and a categorical predictor variable, there are two useful plots: a side-by-side boxplot and a stacked histogram.
 
 ```{r}
-ggplot(birthwt2, aes(y = bwt, x = smoke_fct)) +
-    geom_boxplot()
+ggplot(birthwt, aes(y = bwt, x = smoke_fct)) +
+  geom_boxplot()
 ```
 
 ```{r}
-ggplot(birthwt2, aes(x = bwt)) +
-    geom_histogram(binwidth = 250, boundary = 0) +
-    facet_grid(smoke_fct ~ .)
+ggplot(birthwt, aes(x = bwt)) +
+  geom_histogram(binwidth = 250, boundary = 0) +
+  facet_grid(smoke_fct ~ .)
 ```
 
 The histograms for both groups look sort of normal, but the nonsmoker group may be a little left skewed and the smoker group may have some low outliers. Here are the QQ plots to give us another way to ascertain normality of the data.
 
 ```{r}
-ggplot(birthwt2, aes(sample = bwt)) +
-    geom_qq() +
-    geom_qq_line() +
-    facet_grid(smoke_fct ~ .)
+ggplot(birthwt, aes(sample = bwt)) +
+  geom_qq() +
+  geom_qq_line() +
+  facet_grid(smoke_fct ~ .)
 ```
 
 There's a little deviation from normality, but nothing too crazy.
 
-Commentary: The boxplots and histograms show why statistical inference is so important. It's clear that there is some difference between the two groups, but it's not obvious if that difference will turn out to be statistically significant. There appears to be a lot of variability in both groups, and both groups have a fair number of lighter and heavier babies.
+Commentary: The boxplots and histograms show why statistical inference is so important. It's clear that there is some difference between the two groups, but it's not obvious if that difference will turn out to be statistically discernible. There appears to be a lot of variability in both groups, and both groups have a fair number of lighter and heavier babies.
 
 
 ## Hypotheses
@@ -314,13 +323,13 @@ Commentary: For Welch's t test, the degrees of freedom won't usually be a whole 
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 * Random (for both groups)
-    - We have very little information about these women. We hope that the 115 nonsmoking mothers at this hospital are representative of other nonsmoking mothers, at least in that region at that time. And same for the 74 smoking mothers.
+  * We have very little information about these women. We hope that the 115 nonsmoking mothers at this hospital are representative of other nonsmoking mothers, at least in that region at that time. And same for the 74 smoking mothers.
 
 * 10% (for both groups)
-    - 115 is less than 10% of all nonsmoking mothers and 74 is less than 10% of all smoking mothers.
-    
+  * 115 is less than 10% of all nonsmoking mothers and 74 is less than 10% of all smoking mothers.
+
 * Nearly normal (for both groups)
-    - Since the sample sizes are more than 30 in each group, we meet the condition.
+  * Since the sample sizes are more than 30 in each group, we meet the condition.
 
 
 ## Mechanics
@@ -328,45 +337,48 @@ Commentary: For Welch's t test, the degrees of freedom won't usually be a whole 
 ### Compute the test statistic.
 
 ```{r}
-obs_diff <- birthwt2 %>%
-  specify(response = bwt, explanatory = smoke_fct) %>%
-  calculate(stat = "diff in means", order = c("Nonsmoker", "Smoker"))
+obs_diff <- birthwt |>
+  specify(response = bwt, explanatory = smoke_fct) |>
+  calculate(stat = "diff in means",
+            order = c("Nonsmoker", "Smoker"))
 obs_diff
 ```
 
 ```{r}
-obs_diff_t <- birthwt2 %>%
-  specify(response = bwt, explanatory = smoke_fct) %>%
+obs_diff_t <- birthwt |>
+  specify(response = bwt, explanatory = smoke_fct) |>
   calculate(stat = "t", order = c("Nonsmoker", "Smoker"))
 obs_diff_t
 ```
 
 ### Report the test statistic in context (when possible).
 
-The difference in the mean birth weight of babies born to nonsmoking mothers and smoking mothers is `r obs_diff %>% pull(1)` grams. This was obtained by subtracting nonsmoking mothers minus smoking mothers. In other words, the fact that this is positive indicates that nonsmoking mothers had heavier babies, on average, than smoking mothers.
+The difference in the mean birth weight of babies born to nonsmoking mothers and smoking mothers is `r obs_diff |> pull(1)` grams. This was obtained by subtracting nonsmoking mothers minus smoking mothers. In other words, the fact that this is positive indicates that nonsmoking mothers had heavier babies, on average, than smoking mothers.
 
-The t score is `r obs_diff_t %>% pull(1)`. The sample difference in birth weights is about 2.7 standard errors higher than the null value of zero.
+The t score is `r obs_diff_t |> pull(1)`. The sample difference in birth weights is about 2.7 standard errors higher than the null value of zero.
 
 Commentary: Remember that whenever you are computing the difference between two quantities, you must indicate the direction of that difference you so your reader knows how to interpret the value, whether it is positive or negative.
 
 ### Plot the null distribution.
 
 ```{r}
-bwt_smoke_test_t <- birthwt2 %>%
-  specify(response = bwt, explanatory = smoke_fct) %>%
-  hypothesise(null = "independence") %>%
+bwt_smoke_test_t <- birthwt |>
+  specify(response = bwt, explanatory = smoke_fct) |>
+  hypothesise(null = "independence") |>
   assume("t")
 bwt_smoke_test_t
 ```
 
 ```{r}
-bwt_smoke_test_t %>%
+bwt_smoke_test_t |>
   visualize() +
   shade_p_value(obs_stat = obs_diff_t, direction = "two-sided")
 ```
 
 
 Commentary: We use the name `bwt_smoke_test_t` (using the assumption of a Student t model) as a new variable name so that it doesn't overwrite the variable `bwt_smoke_test` we performed earlier as a permutation test (the one with the shuffling). This results of using `bwt_smoke_test` versus `bwt_smoke_test_t` will be very similar.
+
+Also be sure to use the t score `obs_diff_t` as the test statistic.
 
 Note that the `infer` output tells us there are 170 degrees of freedom. (It turns out to be 170.1.) Note that this number is the result of a complicated formula, and it's not just a simple function of the sample sizes 115 and 74.
 
@@ -375,14 +387,14 @@ Finally, note that the alternative hypothesis indicated a two-sided test, so we 
 ### Calculate the P-value.
 
 ```{r}
-bwt_smoke_p <- bwt_smoke_test_t %>%
+bwt_smoke_p <- bwt_smoke_test_t |>
   get_p_value(obs_stat = obs_diff_t, direction = "two-sided")
 bwt_smoke_p
 ```
 
 ### Interpret the P-value as a probability given the null.
 
-The P-value is `r bwt_smoke_p %>% pull(1)`. If there were no difference in the mean birth weights between nonsmoking and smoking women, there would be a `r 100 * bwt_smoke_p %>% pull(1)`% chance of seeing data at least as extreme as what we saw.
+The P-value is `r bwt_smoke_p |> pull(1)`. If there were no difference in the mean birth weights between nonsmoking and smoking women, there would be a `r 100 * bwt_smoke_p |> pull(1)`% chance of seeing data at least as extreme as what we saw.
 
 
 ## Conclusion
@@ -413,7 +425,7 @@ There are no additional conditions to check.
 ### Calculate the confidence interval.
 
 ```{r}
-bwt_smoke_ci <- bwt_smoke_test_t %>%
+bwt_smoke_ci <- bwt_smoke_test_t |>
   get_confidence_interval(point_estimate = obs_diff, level = 0.95)
 bwt_smoke_ci
 ```
@@ -430,15 +442,14 @@ Commentary: Again, remember to indicate the direction of the difference by indic
 
 Since zero is not contained in the confidence interval, zero is not a plausible value for the true difference in birth weights between the two groups of mothers.
 
-### When comparing two groups, comment on the effect size and the practical significance of the result.
+### Comment on the effect size and the practical significance of the result.
 
 In order to know if smoking is a risk factor for low birth weight, we would need to know what a difference of 80 g or 490 grams means for babies. Although most of us presumably don't have any special training in obstetrics, we could do a quick internet search to see that even half a kilogram is not a large amount of weight difference between two babies. Having said that, though, any difference in birth weight that might be attributable to smoking could be a concern to doctors. In any event, our data is observational, so we cannot make causal claims here.
 
 
-
 ## Your turn
 
-Continue to use the `birthwt` data set. This time, see if a history of hypertension is associated with a difference in the mean birth weight of babies. In the "Prepare the data for analysis" section, you will need to create a new tibble---call it `birthwt3`---in which you convert the `ht` variable to a factor variable.
+Continue to use the `birthwt` data set. This time, see if a history of hypertension is associated with a difference in the mean birth weight of babies. In the "Prepare the data for analysis" section, you will need to create a new variable converting `ht` to a factor variable.
 
 The rubric outline is reproduced below. You may refer to the worked example above and modify it accordingly. Remember to strip out all the commentary. That is just exposition for your benefit in understanding the steps, but is not meant to form part of the formal inference process.
 
@@ -453,7 +464,7 @@ Another word of warning: the copy/paste process is not a substitute for your bra
 
 ::: {.answer}
 
-Please write up your answer here
+Please write up your answer here.
 
 ```{r}
 # Add code here to print the data
@@ -465,7 +476,7 @@ Please write up your answer here
 
 :::
 
-###### Prepare the data for analysis. [Not always necessary.] {-}
+###### Prepare the data for analysis. {-}
 
 ::: {.answer}
 
@@ -561,9 +572,7 @@ Please write up your answer here.
 ::: {.answer}
 
 ```{r}
-# IF CONDUCTING A SIMULATION...
-set.seed(1)
-# Add code here to simulate the null distribution.
+# Add code here to generate the null distribution.
 ```
 
 ```{r}
@@ -665,7 +674,7 @@ Please write up your answer here.
 
 :::
 
-###### When comparing two groups, comment on the effect size and the practical significance of the result. [Not always applicable.] {-}
+###### Comment on the effect size and the practical significance of the result. {-}
 
 ::: {.answer}
 
@@ -676,14 +685,14 @@ Please write up your answer here.
 
 ## Conclusion
 
-A numerical variable can be split into two groups using a categorical variable. As long as the groups are independent of each other, we can use inference to determine if there is a statistically significant difference between the mean values of the response variable for each group. Such a test can be run by simulation (using a permutation test) or by meeting the conditions for and assuming a t distribution (with a complicated formula for the degrees of freedom).
+A numerical variable can be split into two groups using a categorical variable. As long as the groups are independent of each other, we can use inference to determine if there is a statistically discernible difference between the mean values of the response variable for each group. Such a test can be run by simulation (using a permutation test) or by meeting the conditions for and assuming a t distribution (with a complicated formula for the degrees of freedom).
 
 ### Preparing and submitting your assignment
 
 1. From the "Run" menu, select "Restart R and Run All Chunks".
-2. Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.
+2. Deal with any code errors that crop up. Repeat steps 1--2 until there are no more code errors.
 3. Spell check your document by clicking the icon with "ABC" and a check mark.
-4. Hit the "Preview" button one last time to generate the final draft of the `.nb.html` file.
+4. Hit the "Render" button one last time to generate the final draft of the HTML file. (If there are errors here, you may need to go back and fix broken inline code or other markdown issues.)
 5. Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
 
 If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.

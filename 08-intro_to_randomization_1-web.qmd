@@ -1,46 +1,42 @@
-# Introduction to randomization, Part 1 {#randomization1}
+# Introduction to randomization, Part 1
 
-<!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(50,46,48))`</p>
-<!-- Please don't mess with the previous few lines! -->
+::: {.callout-note}
 
-::: {.summary}
-
-### Functions introduced in this chapter {-}
+### Functions introduced in this chapter
 
 `set.seed`, `rflip`, `do`
 
 :::
 
 
-## Introduction {#randomization1-intro}
+## Introduction
 
 In this module, we'll learn about randomization and simulation. When we want to understand how sampling works, it's helpful to simulate the process of drawing samples repeatedly from a population. In the days before computing, this was very difficult to do. Now, a few simple lines of computer code can generate thousands (even millions) of random samples, often in a matter of seconds or less.
 
 
-### Install new packages {#randomization1-install}
+### Install new packages
 
-If you are using RStudio Workbench, you do not need to install any packages. (Any packages you need should already be installed by the server administrators.)
-
-If you are using R and RStudio on your own machine instead of accessing RStudio Workbench through a browser, you'll need to type the following command at the Console:
+Type the following at the Console:
 
 ```
 install.packages("mosaic")
 ```
 
-### Download the R notebook file {#randomization1-download}
+### Download the Quarto file
 
-Check the upper-right corner in RStudio to make sure you're in your `intro_stats` project. Then click on the following link to download this chapter as an R notebook file (`.Rmd`).
+Look at either the top (Posit Cloud) or the upper right corner of the RStudio screen to make sure you are in your `intro_stats` project.
 
-<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/08-intro_to_randomization_1.Rmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/08-intro_to_randomization_1.Rmd</a>
+Then click on the following link to download this chapter as a Quarto file (`.qmd`).
+
+<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/08-intro_to_randomization_1.qmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/08-intro_to_randomization_1.qmd</a>
 
 Once the file is downloaded, move it to your project folder in RStudio and open it there.
 
-### Restart R and run all chunks {#randomization1-restart}
+### Restart R and run all chunks
 
 In RStudio, select "Restart R and Run All Chunks" from the "Run" menu.
 
-### Load packages {#randomization1-load}
+### Load packages
 
 We load the `tidyverse` package. The `mosaic` package contains some tools for making it easier to learn about randomization and simulation.
 
@@ -50,7 +46,7 @@ library(mosaic)
 ```
 
 
-## Sample and population {#randomization1-sample-pop}
+## Sample and population
 
 The goal of the next few chapters is to help you think about the process of sampling from a population. What do these terms mean?
 
@@ -59,13 +55,13 @@ A *population* is a group of objects we would like to study. If that sounds vagu
 Populations are usually inaccessible in their entirety. It is impossible to survey every voter in any reasonably sized election, for example. Therefore, to study them, we have to collect a *sample*. A sample is a subset of the population. We might conduct a poll of 2000 voters to try to learn about voting intentions for the entire population. Of course, for that to work, the sample has to be *representative* of its population. We'll have more to say about that in the future.
 
 
-## Flipping a coin {#randomization1-coin}
+## Flipping a coin
 
 Before we talk about how samples are obtained from populations in the real world, we're going to perform some simulations.
 
 One of the simplest acts to simulate is flipping a coin. We could get an actual coin and physically flip it over and over again, but that is time-consuming and annoying. It is much easier to flip a "virtual" coin inside the computer. One way to accomplish this in R is to use the `rflip` command from the `mosaic` package. To make sure we're flipping a fair coin, we'll say that we want a 50% chance of heads by including the parameter `prob = 0.5`.
 
-One more bit of technical detail. Since there will be some randomness involved here, we will need to include an R command to ensure that we all get the same results every time this code runs. This is called "setting the seed". Don't worry too much about what this is doing under the hood. The basic idea is that two people who start with the same seed will generate the same sequence of "random" numbers.
+One more bit of technical detail. Since there will be some randomness involved here, we will need to include an R command to ensure that we all get the same results every time this code runs. This is called "setting the seed." Don't worry too much about what this is doing under the hood. The basic idea is that two people who start with the same seed will generate the same sequence of "random" numbers.
 
 The seed `1234` in the chunk below is totally arbitrary. It could have been any number at all. (And, in fact, we'll use different numbers just for fun.) If you change the seed, you will get different output, so we all need to use the same seed. But the actual common value we all use for the seed is irrelevant.
 
@@ -114,7 +110,7 @@ Please write up your answer here.
 :::
 
 
-## Multiple simulations {#randomization1-multiple}
+## Multiple simulations
 
 Suppose now that you are not the only person flipping coins. Suppose a bunch of people in a room are all flipping coins. We'll start with ten coin flips per person, a task that could be reasonably done even without a computer.
 
@@ -167,20 +163,20 @@ Let's look at a histogram of the number of heads we see in the simulated flips. 
 
 ```{r}
 ggplot(coin_flips_20_10, aes(x = heads)) +
-    geom_histogram(binwidth = 0.5) +
-    scale_x_continuous(limits = c(-1, 11), breaks = seq(0, 10, 1))
+  geom_histogram(binwidth = 0.5) +
+  scale_x_continuous(limits = c(0, 10), breaks = seq(0, 10, 1))
 ```
 
 Let's do the same thing, but now let's consider the *proportion* of heads.
 
 ```{r}
 ggplot(coin_flips_20_10, aes(x = prop)) +
-    geom_histogram(binwidth = 0.05) +
-    scale_x_continuous(limits = c(-0.1, 1.1), breaks = seq(0, 1, 0.1))
+  geom_histogram(binwidth = 0.05) +
+  scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.1))
 ```
 
 
-## Bigger and better! {#randomization1-bigger}
+## Bigger and better!
 
 With only twenty people, it was possible that, for example, nobody would get all heads or all tails. Indeed, in `coin_flips_20_10` there were no people who got all heads or all tails. Also, there were more people with six and seven heads than with five heads, even though we "expected" the average to be five heads. There is nothing particularly significant about that; it happened by pure chance alone. Another run through the above commands would generate a somewhat different outcome. That's what happens when things are random.
 
@@ -200,8 +196,8 @@ mean(coin_flips_2000_10$heads)
 
 ```{r}
 ggplot(coin_flips_2000_10, aes(x = heads)) +
-    geom_histogram(binwidth = 0.5) +
-    scale_x_continuous(limits = c(-1, 11), breaks = seq(0, 10, 1))
+  geom_histogram(binwidth = 0.5) +
+  scale_x_continuous(limits = c(0, 10), breaks = seq(0, 10, 1))
 ```
 
 This is helpful. In contrast with the set of simulations with twenty people, the last histogram gives us something closer to what we expect. The mode is at five heads, and every possible number of heads is represented, with decreasing counts as one moves away from five. With 2000 people flipping coins, all possible outcomes---including rare ones---are better represented.
@@ -210,8 +206,8 @@ Here is the the same histogram, but this time with the proportion of heads inste
 
 ```{r}
 ggplot(coin_flips_2000_10, aes(x = prop)) +
-    geom_histogram(binwidth = 0.05) +
-    scale_x_continuous(limits = c(-0.1, 1.1), breaks = seq(0, 1, 0.1))
+  geom_histogram(binwidth = 0.05) +
+  scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.1))
 ```
 
 ##### Exercise 3 {-}
@@ -229,7 +225,7 @@ Please write up your answer here.
 From now on, we will insist on using at least a thousand simulations---if not more---to make sure that we represent the full range of possible outcomes.^[There is some theory behind choosing the number of times we need to simulate, but we're not going to get into all that.]
 
 
-## More flips {#randomization1-more}
+## More flips
 
 Now let's increase the number of coin flips each person performs. We'll still use 2000 simulations (imagine 2000 people all flipping coins), but this time, each person will flip the coin 1000 times instead of only 10 times. The first code chunk below accounts for a substantial amount of the time it takes to run the code in this document.
 
@@ -245,16 +241,15 @@ mean(coin_flips_2000_1000$heads)
 
 ```{r}
 ggplot(coin_flips_2000_1000, aes(x = heads)) +
-    geom_histogram(binwidth = 10, boundary = 500)
+  geom_histogram(binwidth = 10, boundary = 500)
 ```
 
 And now the same histogram, but with proportions:
 
 ```{r}
 ggplot(coin_flips_2000_1000, aes(x = prop)) +
-    geom_histogram(binwidth = 0.01, boundary = 0.5)
+  geom_histogram(binwidth = 0.01, boundary = 0.5)
 ```
-
 
 ##### Exercise 4 {-}
 
@@ -277,7 +272,7 @@ Please write up your answer here.
 :::
 
 
-## But who cares about coin flips? {#randomization1-who-cares}
+## But who cares about coin flips?
 
 It's fair to ask why we go to all this trouble to talk about coin flips. The most pressing research questions of our day do not involve people sitting around and flipping coins, either physically or virtually.
 
@@ -359,7 +354,7 @@ Please write up your answer here.
 :::
 
 
-## Sampling variability {#randomization1-sampling-var}
+## Sampling variability
 
 We've seen that taking repeated samples (using the `do` command) leads to lots of different outcomes. That is randomness in action. We don't expect the results of each survey to be exactly the same every time the survey is administered.
 
@@ -376,6 +371,17 @@ Please write up your answer here.
 :::
 
 
-## Conclusion {#randomization1-conclusion}
+## Conclusion
 
 Simulation is a tool for understanding what happens when a statistical process is repeated many times in a randomized way. The availability of fast computer processing makes simulation easy and accessible. Eventually, the goal will be to use simulation to answer important questions about data and the processes in the world that generate data. This is possible because, despite the ubiquitous presence of randomness, a certain order emerges when the number of samples is large enough. Even though there is sampling variability (different random outcomes each time we sample), there are patterns in that variability that can be exploited to make predictions.
+
+### Preparing and submitting your assignment
+
+1. From the "Run" menu, select "Restart R and Run All Chunks".
+2. Deal with any code errors that crop up. Repeat steps 1--2 until there are no more code errors.
+3. Spell check your document by clicking the icon with "ABC" and a check mark.
+4. Hit the "Render" button one last time to generate the final draft of the HTML file. (If there are errors here, you may need to go back and fix broken inline code or other markdown issues.)
+5. Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
+
+If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
+

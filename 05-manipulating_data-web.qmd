@@ -1,39 +1,37 @@
-# Manipulating data {#manipulating}
+# Manipulating data
 
-<!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(50,46,48))`</p>
-<!-- Please don't mess with the previous few lines! -->
+::: {.callout-note}
 
-::: {.summary}
+### Functions introduced in this chapter
 
-### Functions introduced in this chapter {-}
-
-`read_csv`, `select`, `rename`, `rm`, `filter`, `slice`, `arrange`, `mutate`, `all.equal`, `ifelse`, `transmute`, `summarise`, `group_by`, `%>%`, `count`
+`read_csv`, `select`, `rename`, `filter`, `slice`, `arrange`, `mutate`, `all.equal`, `ifelse`, `transmute`, `summarise`, `group_by`, `|>`, `count`
 
 :::
 
 
-## Introduction {#manipulating-intro}
+## Introduction
 
 This tutorial will import some data from the web and then explore it using the amazing `dplyr` package, a package which is quickly becoming the *de facto* standard among R users for manipulating data. It's part of the `tidyverse` that we've already used in several chapters.
 
-### Install new packages {#manipulating-install}
+### Install new packages
 
 There are no new packages used in this chapter.
 
-### Download the R notebook file {#manipulating-download}
+### Download the Quarto file
 
-Check the upper-right corner in RStudio to make sure you're in your `intro_stats` project. Then click on the following link to download this chapter as an R notebook file (`.Rmd`).
+Look at either the top (Posit Cloud) or the upper right corner of the RStudio screen to make sure you are in your `intro_stats` project.
 
-<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/05-manipulating_data.Rmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/05-manipulating_data.Rmd</a>
+Then click on the following link to download this chapter as a Quarto file (`.qmd`).
+
+<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/05-manipulating_data.qmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/05-manipulating_data.qmd</a>
 
 Once the file is downloaded, move it to your project folder in RStudio and open it there.
 
-### Restart R and run all chunks {#manipulating-restart}
+### Restart R and run all chunks
 
 In RStudio, select "Restart R and Run All Chunks" from the "Run" menu.
 
-### Load packages {#manipulating-load}
+### Load packages
 
 We load the `tidyverse` package as usual, but this time it is to give us access to the `dplyr` package, which is loaded alongside our other `tidyverse` packages like `ggplot2`. The `tidyverse` also has a package called `readr` that will allow us to import data from an external source (in this case, a web site).
 
@@ -42,7 +40,7 @@ library(tidyverse)
 ```
 
 
-## Importing CSV data {#manipulating-csv}
+## Importing CSV data
 
 For most of the chapters, we use data sets that are either included in base R or included in a package that can be loaded into R. But it is useful to see how to get a data set from outside the R ecosystem. This depends a lot on the format of the data file, but a common format is a "comma-separated values" file, or CSV file. If you have a data set that is not formatted as a CSV file, it is usually pretty easy to open it in something like Google Spreadsheets or Microsoft Excel and then re-save it as a CSV file.
 
@@ -54,9 +52,13 @@ We use the `read_csv` command to import a CSV file. In this case, we're grabbing
 hf <- read_csv("https://vectorposse.github.io/intro_stats/data/hf.csv")
 ```
 
+Here is a preview of the data set. If you're looking at this on the website, you'll note that only the first 10,000 rows print here.
+
 ```{r}
 hf
 ```
+
+The `glimpse` command is the most reliable place to see the correct number of rows.
 
 ```{r}
 glimpse(hf)
@@ -66,7 +68,7 @@ The one disadvantage of a file imported from the internet or your computer is th
 
 ##### Exercise 1 {-}
 
-Go to the help tab in RStudio and search for `hflights`. Of the several options that appear, click the one from the `hflights` package (listed as `hflights::hflights`). Review the help file so you know what all the variables mean. Report below how many cases are in the original `hflights` data. What fraction of the original data has been sampled in the CSV file we imported above?
+Click or copy [this link](https://www.rdocumentation.org/packages/hflights/versions/0.1/topics/hflights) to view a copy of the documentation for the full Houston flights data. Read the webpage so you know what all the variables mean. Report below how many flights are in the original `hflights` data. What fraction of the original data has been sampled in the CSV file we imported above?
 
 ::: {.answer}
 
@@ -75,68 +77,77 @@ Please write up your answer here.
 :::
 
 
-## Introduction to `dplyr` {#manipulating-dplyr}
+## Introduction to `dplyr`
 
 The `dplyr` package (pronounced "dee-ply-er") contains tools for manipulating the rows and columns of tibbles. The key to using `dplyr` is to familiarize yourself with the "key verbs":
 
-- `select` (and `rename`)
-- `filter` (and `slice`)
-- `arrange`
-- `mutate` (and `transmute`)
-- `summarise` (with `group_by`)
+* `select` (and `rename`)
+* `filter` (and `slice`)
+* `arrange`
+* `mutate` (and `transmute`)
+* `summarise` (with `group_by`)
+* `count`
 
-We'll consider these one by one. We won't have time to cover every aspect of these functions. More information appears in the help files, as well as this very helpful "cheat sheet": [https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-transformation.pdf](https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-transformation.pdf)
+We'll consider these one by one. We won't have time to cover every aspect of these functions. More information appears in the help files, as well as this very helpful "cheat sheet": [https://rstudio.github.io/cheatsheets/html/data-transformation.html](https://rstudio.github.io/cheatsheets/html/data-transformation.html)
 
 
-## `select` {#manipulating-select}
+## `select`
 
 The `select` verb is very easy. It just selects some subset of variables (the columns of your data set).
 
 The `select` command from the `dplyr` package illustrates one of the common issues R users face. Because the word "select" is pretty common, and selecting things is a common task, there are multiple packages that have a function called `select`. Depending on the order in which packages were loaded, R might get confused as to which version of `select` you want and try to apply the wrong one. One way to get the correct version is to specify the package in the syntax. Instead of typing `select`, we can type `dplyr::select` to ensure we get the version from the `dplyr` package. We'll do this in all future uses of the `select` function. (The other functions in this chapter don't cause us trouble because we don't use any other packages whose functions conflict like this.)
 
-Suppose all we wanted to see was the carrier, origin, and destination. We would type
+Suppose all we wanted to see was the carrier, origin, and destination. The command to do this appears in the next code chunk. (Note that we're only going to print the first 100 rows. It takes a lot of memory to keep printing tibbles that have 22,758 rows!)
 
 ```{r}
 hf_select <- dplyr::select(hf, UniqueCarrier, Origin, Dest)
-hf_select
+head(hf_select, n = 100)
 ```
 
-A brief but important aside here: there is nothing special about the variable name `hf_select`. I could have typed
+A brief but important aside here: there is nothing special about the variable name `hf_select`. We could have typed
 
 `beef_gravy <- dplyr::select(hf, UniqueCarrier, Origin, Dest)`
 
 and it would work just as well. Generally speaking, though, you want to give variables a name that reflects the intent of your analysis.
 
-Also, **it is important to assign the result to a new variable**. If I had typed
+Also, **it is important to assign the result to a variable**. If we had just typed
+
+`dplyr::select(hf, UniqueCarrier, Origin, Dest)`
+
+the result would print to the screen, but it wouldn't be stored anywhere for future use.
+
+Also, it is important to assign the result to a **new** variable. If we had typed
 
 `hf <- dplyr::select(hf, UniqueCarrier, Origin, Dest)`
 
-this would have overwritten the original tibble `hf` with this new version with only three variables. I want to preserve `hf` because I want to do other things with the entire data set later. The take-home message here is this: **Major modifications to your data should generally be given a new variable name.** There are caveats here, though. Every time you create a new variable, you also fill up more memory with your creation. If you check your Global Environment, you'll see that both `hf` and `hf_select` are sitting in there. We'll have more to say about this in a moment.
+this would have overwritten the original tibble `hf` with this new version with only three variables. We want to preserve `hf` because we want to do other things with the entire data set later.
+
+The take-home message here is this: **Major modifications to your data should generally be given a new variable name.** There are caveats here, though. Every time you create a new tibble, you also fill up more memory with your creation. So if you don't need the old version of a tibble anymore, you are safe to overwrite the old version with something new and continue working with that newer modification.
 
 Okay, back to the `select` function. The first argument of `select` is the tibble. After that, just list all the names of the variables you want to select.
 
-If you don't like the names of the variables, you can change them as part of the select process.
+If you don't like the names of the variables, you can change them as part of the select process. For example,
 
 ```{r}
 hf_select <- dplyr::select(hf,
                            carrier = UniqueCarrier,
                            origin = Origin,
                            dest = Dest)
-hf_select
+head(hf_select, n = 100)
 ```
 
-(Note here that I am overwriting `hf_select` which had been defined slightly differently before. However, these two versions of `hf_select` are basically the same object, so no need to keep two copies here.)
+(Note here that we are overwriting `hf_select` which had been defined slightly differently before. However, these two versions of `hf_select` are basically the same object, so no need to keep the older version around just taking up space unnecessarily.)
 
-There are a few notational shortcuts. For example, see what the following do.
+There are a few notational shortcuts. For example, try to figure out what the following commands are doing:
 
 ```{r}
 hf_select2 <- dplyr::select(hf, DayOfWeek:UniqueCarrier)
-hf_select2
+head(hf_select2, n = 100)
 ```
 
 ```{r}
 hf_select3 <- dplyr::select(hf, starts_with("Taxi"))
-hf_select3
+head(hf_select3, n = 100)
 ```
 
 ##### Exercise 2 {-}
@@ -157,50 +168,31 @@ The other command that's related to `select` is `rename`. The only difference is
 
 ##### Exercise 3 {-}
 
-Putting a minus sign in front of a variable name in the `select` command will remove the variable. Create a tibble called `hf_select4` that removes `Year`, `DayofMonth`, `DayOfWeek`, `FlightNum`, and `Diverted`. (Be careful with the unusual---and inconsistent!---capitalization in those variable names.) In the second part of the code chunk below, type `hf_select4` so that the tibble prints to the screen (just like in all the above examples).
+Putting a minus sign in front of a variable name in the `select` command will remove the variable. Create a tibble called `hf_select4` that removes `Year`, `DayofMonth`, `DayOfWeek`, `FlightNum`, and `Diverted`. (Be careful with the unusual---and inconsistent!---capitalization in those variable names.) In the second part of the code chunk below, type `head(hf_select4, n = 100)` so that the first 100 rows of the tibble print to the screen (just like in all the above examples).
 
 ::: {.answer}
 
 ```{r}
 # Add code here to define hf_select4.
-# Add code here to print hf_select4.
+# Add code here to print the first 100 rows of hf_select4.
 ```
 
 :::
 
+*****
 
-## The `rm` command {#manipulating-rm}
-
-Recall that earlier we mentioned the pros and cons of creating a new tibble every time we make a change. On one hand, making a new tibble instead of overwriting the original one will keep the original one available so that we can run different commands on it. On the other hand, making a new tibble does eat up a lot of memory.
-
-One way to get rid of an object once we are done with it is the `rm` command, where `rm` is short for "remove". When you run the code chunk below, you'll see that all the tibbles we created with `select` will disappear from your Global Environment.
+To free up some memory, we're going to remove some of the tibbles we've created. This won't affect how they will print out above. You will never have to do this on your own.
 
 ```{r}
 rm(hf_select, hf_select2, hf_select3)
 ```
 
-If you need one these tibbles back later, you can always go back and re-run the code chunk that defined it.
 
-We'll use `rm` at the end of some of the following sections so that we don't use up too much memory.
-
-##### Exercise 4 {-}
-
-Remove `hf_select4` (that you created in Exercise 3) from the Global Environment.
-
-::: {.answer}
-
-```{r}
-# Add code here to remove hf_select4.
-```
-
-:::
-
-
-## `filter` {#manipulating-filter}
+## `filter`
 
 The `filter` verb works a lot like `select`, but for rows instead of columns.
 
-For example, let's say we only want to see Delta flights. We use `filter`:
+For example, let's say we only want to see Delta flights. We use `filter`. (We can print all the rows here because the resulting tibble is much smaller!)
 
 ```{r}
 hf_filter <- filter(hf, UniqueCarrier == "DL")
@@ -209,7 +201,7 @@ hf_filter
 
 In the printout of the tibble above, if you can't see the `UniqueCarrier` column, click the black arrow on the right to scroll through the columns until you can see it. You can click "Next" at the bottom to scroll through the rows.
 
-##### Exercise 5 {-}
+##### Exercise 4 {-}
 
 How many rows did we get in the `hf_filter` tibble? What do you notice about the `UniqueCarrier` of all those rows?
 
@@ -238,18 +230,18 @@ x == 3
 
 (It's true because we just assigned `x` to be 3 in the previous code chunk!)
 
-In the above `filter` command, we are saying, "Give me the rows where the value of `UniqueCarrier` is `"DL"`, or, in other words, where the statement `UniqueCarrier == "DL"` is true.
+In the above `filter` command, we are saying, "Give us the rows where the value of `UniqueCarrier` is `"DL"`, or, in other words, where the statement `UniqueCarrier == "DL"` is true.
 
-As another example, suppose we wanted to find out all flights that leave before 6:00 a.m.
+As another example, suppose we wanted to find out all flights that leave before 6:00 a.m. Due to the interesting way that times are stored in this data, we can do something like the following:
 
 ```{r}
 hf_filter2 <- filter(hf, DepTime < 600)
 hf_filter2
 ```
 
-##### Exercise 6 {-}
+##### Exercise 5 {-}
 
-Look at the help file for `hflights` again. Why do we have to use the number 600 in the command above? (Read the description of the `DepTime` variable.)
+Look at the help file for `hflights` again (linked in Exercise 1). Why do we have to use the number 600 in the command above? (Read the description of the `DepTime` variable.)
 
 ::: {.answer}
 
@@ -268,38 +260,28 @@ hf_filter3
 
 Again, check the cheat sheet for more complicated condition-checking if needed.
 
-##### Exercise 7(a) {-}
+##### Exercise 6(a) {-}
 
-The symbol `!=` means "not equal to" in R. Use the `filter` command to create a tibble called `hf_filter4` that finds all flights *except* those flying into Salt Lake City ("SLC"). As before, print the output to the screen.
+The symbol `!=` means "not equal to" in R. Use the `filter` command to create a tibble called `hf_filter4` that finds all flights *except* those flying into Salt Lake City ("SLC"). As before, print the first 100 rows to the screen.
 
 ::: {.answer}
 
 ```{r}
 # Add code here to define hf_filter4.
-# Add code here to print hf_filter4.
+# Add code here to print the first 100 rows of hf_filter4.
 ```
 
 :::
 
-##### Exercise 7(b) {-}
+##### Exercise 6(b) {-}
 
-Based on the output of the previous part, how many flights were there flying into SLC? (In other words, how many rows were removed from the original `hf` tibble to produce `hf_filter4`?)
+How many flights were there flying into SLC? In other words, how many rows were removed from the original `hf` tibble to produce `hf_filter4`?
+
+Be careful! You only printed 100 rows to the screen, but that doesn't represent all the filtered data. How can you figure out how many rows are actually left in `hf_filter4`?
 
 ::: {.answer}
 
 Please write up your answer here.
-
-:::
-
-##### Exercise 8 {-}
-
-Use the `rm` command to remove all the extra tibbles you created in this section with `filter`.
-
-::: {.answer}
-
-```{r}
-# Add code here to remove all filtered tibbles.
-```
 
 :::
 
@@ -308,17 +290,17 @@ Use the `rm` command to remove all the extra tibbles you created in this section
 The `slice` command is related, but fairly useless in practice. It will allow you to extract rows by position. So `slice(hf, 1:10)` will give you the first 10 rows. As a general rule, the information available in a tibble should never depend on the order in which the rows appear. Therefore, no function you run should make any assumptions about the ordering of your data. The only reason one might want to think about the order of data is for convenience in presenting that data visually for someone to inspect. And that brings us to...
 
 
-## `arrange` {#manipulating-arrange}
+## `arrange`
 
-This just re-orders the rows, sorting on the values of one or more specified columns. As I mentioned before, in most data analyses you work with summaries of the data that do not depend on the order of the rows, so this is not quite as interesting as some of the other verbs. In fact, since the re-ordering is usually for the visual benefit of the reader, there is often no need to store the output in a new variable. We'll just print the output to the screen.
+This just re-orders the rows, sorting on the values of one or more specified columns. As we mentioned before, in most data analyses you work with summaries of the data that do not depend on the order of the rows, so this is not quite as interesting as some of the other verbs. In fact, since the re-ordering is usually for the visual benefit of the reader, there is often no need to store the output in a new variable. We'll just print the output to the screen (well, the first 100 rows anyway).
 
 ```{r}
-arrange(hf, ActualElapsedTime)
+head(arrange(hf, ActualElapsedTime), n = 100)
 ```
 
 Scroll over to the `ActualElapsedTime` variable in the output above (using the black right arrow) to see that these are now sorted in ascending order.
 
-##### Exercise 9 {-}
+##### Exercise 7 {-}
 
 How long is the shortest actual elapsed time? Why is this flight so short? (Hint: look at the destination.) Which airline flies that route? You may have to use your best friend Google to look up airport and airline codes.
 
@@ -333,10 +315,10 @@ Please write up your answer here.
 If you want descending order, do this:
 
 ```{r}
-arrange(hf, desc(ActualElapsedTime))
+head(arrange(hf, desc(ActualElapsedTime)), n = 100)
 ```
 
-##### Exercise 10 {-}
+##### Exercise 8 {-}
 
 How long is the longest actual elapsed time? Why is this flight so long? Which airline flies that route? Again, you may have to use your best friend Google to look up airport and airline codes.
 
@@ -346,9 +328,9 @@ Please write up your answer here.
 
 :::
 
-##### Exercise 11(a) {-}
+##### Exercise 9(a) {-}
 
-You can sort by multiple columns. The first column listed will be the first in the sort order, and then within each level of that first variable, the next column will be sorted, etc. Print a tibble that sorts first by destination (`Dest`) and then by arrival time (`ArrTime`), both in the default ascending order.
+You can sort by multiple columns. The first column listed will be the first in the sort order, and then within each level of that first variable, the next column will be sorted, etc. Print a tibble that sorts first by destination (`Dest`) and then by arrival time (`ArrTime`), both in the default ascending order. Print only the first 100 rows as above.
 
 ::: {.answer}
 
@@ -358,7 +340,7 @@ You can sort by multiple columns. The first column listed will be the first in t
 
 :::
 
-##### Exercise 11(b) {-}
+##### Exercise 9(b) {-}
 
 Based on the output of the previous part, what is the first airport code alphabetically and to what city does it correspond? (Use Google if you need to link the airport code to a city name.) At what time did the earliest flight to that city arrive? 
 
@@ -369,13 +351,13 @@ Please write up your answer here.
 :::
 
 
-## `mutate` {#manipulating-mutate}
+## `mutate`
 
 Frequently, we want to create new variables that combine information from one or more existing variables. We use `mutate` for this. For example, suppose we wanted to find the total time of the flight. We might do this by adding up the minutes from several variables: `TaxiOut`, `AirTime`, and `TaxiIn`, and assigning that sum to a new variable called `total`. Scroll all the way to the right in the output below (using the black right arrow) to see the new `total` variable.
 
 ```{r}
 hf_mutate <- mutate(hf, total = TaxiOut + AirTime + TaxiIn)
-hf_mutate
+head(hf_mutate, n = 100)
 ```
 
 As it turns out, that was wasted effort because that variable already exists in `ActualElapsedTime`. The `all.equal` command below checks that both specified columns contain the exact same values.
@@ -388,7 +370,7 @@ Perhaps we want a variable that just classifies a flight as arriving late or not
 
 ```{r}
 hf_mutate2 <- mutate(hf, late = (ArrDelay > 0))
-hf_mutate2
+head(hf_mutate2, n = 100)
 ```
 
 This one is a little tricky. Keep in mind that `ArrDelay > 0` is a logical condition that is either true or false, so that truth value is what is recorded in the `late` variable. If the arrival delay is a positive number of minutes, the flight is considered "late", and if the arrival delay is zero or negative, it's not late.
@@ -399,7 +381,7 @@ If we would rather see more descriptive words than `TRUE` or `FALSE`, we have to
 hf_mutate3 <- mutate(hf,
                      late = as_factor(ifelse(ArrDelay > 0, 
                                              "Late", "On time")))
-hf_mutate3
+head(hf_mutate3, n = 100)
 ```
 
 The `as_factor` command tells R that `late` should be a categorical variable. Without it, the variable would be a "character" variable, meaning a list of character strings. It won't matter for us here, but in any future analysis, you want categorical data to be treated as such by R.
@@ -426,7 +408,7 @@ Notice that all the times are missing. There are a bunch of rows like this. Sinc
 mean(hf_mutate2$late)
 ```
 
-##### Exercise 12 {-}
+##### Exercise 10 {-}
 
 Why does taking the mean of a bunch of zeros and ones give us the proportion of ones? (Think about the formula for the mean. What happens when we take the sum of all the zeros and ones, and what happens when we divide by the total?)
 
@@ -436,31 +418,33 @@ Please write up your answer here.
 
 :::
 
-##### Exercise 13 {-}
+##### Exercise 11 {-}
 
-Create a new tibble called `hf_mutate4` that uses the `mutate` command to create a new variable called `dist_k` which measures the flight distance in kilometers instead of miles. (Hint: to get from miles to kilometers, multiply the distance by 1.60934.) Print the output to the screen.
+Create a new tibble called `hf_mutate4` that uses the `mutate` command to create a new variable called `dist_k` which measures the flight distance in kilometers instead of miles. (Hint: to get from miles to kilometers, multiply the distance by 1.60934.) Print the first 100 rows of the output to the screen.
 
 ::: {.answer}
 
 ```{r}
 # Add code here to define hf_mutate4.
-# Add code here to print hf_mutate4.
+# Add code here to print the first 100 rows of hf_mutate4.
 ```
 
 :::
 
 *****
 
-A related verb is `transmute`. The only difference between `mutate` and `transmute` is that `mutate` creates the new column(s) and keeps all the old ones too, whereas `transmute` will throw away all the columns except the newly created ones. This is not something that you generally want to do, but there are exceptions. For example, if I was preparing a report and I needed only to talk about flights being late or not, it would do no harm (and would save some memory) to throw away everything except the `late` variable.
+A related verb is `transmute`. The only difference between `mutate` and `transmute` is that `mutate` creates the new column(s) and keeps all the old ones too, whereas `transmute` will throw away all the columns except the newly created ones. This is not something that you generally want to do, but there are exceptions. For example, if we were preparing a report and we needed only to talk about flights being late or not, it would do no harm (and would save some memory) to throw away everything except the `late` variable.
 
-Before moving on to the next section, we'll clean up the extra tibbles lying around. You'll need to manually click the run button in the next code chunk since you have defined `hf_mutate4`.
+*****
+
+To free up some memory, we're going to remove some of the tibbles we've created. This won't affect how they will print out above. You will never have to do this on your own.
 
 ```{r}
-rm(hf_mutate, hf_mutate2, hf_mutate3, hf_mutate4)
+rm(hf_mutate, hf_mutate2, hf_mutate3)
 ```
 
 
-## `summarise` (with `group_by`) {#manipulating-summ-group}
+## `summarise` (with `group_by`)
 
 First, before you mention that `summarise` is spelled wrong...well, the author of the `dplyr` package is named Hadley Wickham (same author as the `ggplot2` package) and he is from New Zealand. So that's the way he spells it. He was nice enough to include the `summarize` function as an alias if you need to use it 'cause this is 'Murica!
 
@@ -482,13 +466,32 @@ hf_summ <- summarise(hf_summ_grouped, mean(Distance))
 hf_summ
 ```
 
-### Piping {#manipulating-piping}
+Also note that we can give summary columns a new name if we wish. In `hf_summ`, we didn't give the new column an explicit name, so it showed up in our tibble as a column called `mean(Distance)`. If we want to change it, we can do this:
 
-This is a good spot to introduce a time-saving and helpful device called "piping", denoted by the symbol `%>%`. We've seen this weird combination of symbols in past chapters, but we haven't really explained what they do.
+```{r}
+hf_summ_grouped <- group_by(hf, UniqueCarrier)
+hf_summ <- summarise(hf_summ_grouped, mean_dist = mean(Distance))
+hf_summ
+```
+
+Look at the earlier version of `hf_summ` and compare it to the one above. Make sure you see that the name of the second column changed.
+
+*****
+
+To free up some memory, we're going to remove some of the tibbles we've created. This won't affect how they will print out above. You will never have to do this on your own.
+
+```{r}
+rm(hf_summ_grouped)
+```
+
+
+## Piping
+
+This is a good spot to introduce a time-saving and helpful device called "piping", denoted by the symbol `|>`. We've seen this weird combination of symbols in past chapters, but we haven't really explained what they do.
 
 Piping always looks more complicated than it really is. The technical definition is that
 
-`x %>% f(y)`
+`x |> f(y)`
 
 is equivalent to 
 
@@ -503,7 +506,7 @@ sum(2, 3)
 Or using the pipe, we could do it like this:
 
 ```{r}
-2 %>% sum(3)
+2 |> sum(3)
 ```
 
 All this is really saying is that the pipe takes the thing on its left, and plugs it into the first slot of the function on its right. So why do we care?
@@ -511,83 +514,75 @@ All this is really saying is that the pipe takes the thing on its left, and plug
 Let's revisit the combination `group_by`/`summarise` example above. There are two ways to do this without pipes, and both are a little ugly. One way is above, where you have to keep reassigning the output to new variables (in the case above, to `hf_summ_grouped` and then `hf_summ`). The other way is to nest the functions:
 
 ```{r}
-summarise(group_by(hf, UniqueCarrier), mean(Distance))
+summarise(group_by(hf, UniqueCarrier), mean_dist = mean(Distance))
 ```
 
 This requires a lot of brain power to parse. In part, this is because the function is inside-out: first you group `hf` by `UniqueCarrier`, and then the result of that is summarized. Here's how the pipe fixes it:
 
 ```{r}
-hf %>%
-    group_by(UniqueCarrier) %>%
-    summarise(mean(Distance))
+hf |>
+  group_by(UniqueCarrier) |>
+  summarise(mean_dist = mean(Distance))
 ```
 
-Look at the `group_by` line. The `group_by` function should take two arguments, the tibble, and then the grouping variable. It appears to have only one argument. But look at the previous line. The pipe says to insert whatever is on its left (`hf`) into the first slot of the function on its right (`group_by`). So the net effect is still to evaluate the function `group_by(hf, UniqueCarrier)`.
+Look at the `group_by` line. The `group_by` function would normally take two arguments: the tibble, and then the grouping variable. But it appears to have only one argument. Now look at the previous line. The pipe says to insert whatever is on its left (`hf`) into the first slot of the function on its right (`group_by`). So the net effect is still to evaluate the function `group_by(hf, UniqueCarrier)`.
 
 Now look at the `summarise` line. Again, `summarise` is a function of two inputs, but all we see is the part that finds the mean. The pipe at the end of the previous line tells the `summarise` function to insert the stuff already computed (the grouped tibble returned by `group_by(hf, UniqueCarrier)`) into the first slot of the `summarise` function.
 
-Piping takes a little getting used to, but once you're good at it, you'll never go back. It's just makes more sense semantically. When I read the above set of commands, I see a set of instructions in chronological order:
+Piping takes a little getting used to, but once you're good at it, you'll never go back. It's just makes more sense semantically. When we read the above set of commands, we see a set of instructions in chronological order:
 
-- Start with the tibble `hf`.
-- Next, group by the carrier. 
-- Next, summarize each group using the mean distance.
+* Start with the tibble `hf`.
+* Next, group by the carrier. 
+* Next, summarize each group using the mean distance.
 
 Now we can assign the result of all that to the new variable `hf_summ`:
 
 ```{r}
-hf_summ <- hf %>%
-    group_by(UniqueCarrier) %>%
-    summarise(mean(Distance))
+hf_summ <- hf |>
+  group_by(UniqueCarrier) |>
+  summarise(mean_dist = mean(Distance))
 hf_summ
 ```
 
 Some people even take this one step further. The result of all the above is assigned to a new variable `hf_summ` that currently appears as the first command (`hf_summ <- ...`) But you could write this as
 
 ```{r}
-hf %>%
-    group_by(UniqueCarrier) %>%
-    summarise(mean(Distance)) -> hf_summ
+hf |>
+  group_by(UniqueCarrier) |>
+  summarise(mean_dist = mean(Distance)) -> hf_summ
 ```
 
 Now it says the following:
 
-- Start with the tibble `hf`.
-- Next, group by the carrier. 
-- Next, summarize each group using the mean distance.
-- *Finally*, assign the result to a new variable called `hf_summ`.
+* Start with the tibble `hf`.
+* Next, group by the carrier. 
+* Next, summarize each group using the mean distance.
+* *Finally*, assign the result to a new variable called `hf_summ`.
 
-In other words, the arrow operator for assignment works both directions!
+(As we've seen in a previous chapter, the arrow operator for assignment works both directions!)
 
-Let's try some counting. This one is common enough that `dplyr` doesn't even make us use `group_by` and `summarise`. We can just use the command `count`. What if we wanted to know how many flights correspond to each carrier?
+
+## `count`
+
+Let's try some counting. Counting is a form of summarizing data by groups. But this is a common enough task that `dplyr` doesn't make us use `group_by` and `summarise`. It provides a `count` command instead. What if we wanted to know how many flights correspond to each carrier?
 
 ```{r}
-hf_summ2 <- hf %>%
-    count(UniqueCarrier)
+hf_summ2 <- hf |>
+  count(UniqueCarrier)
 hf_summ2
 ```
-
-Also note that we can give summary columns a new name if we wish. In `hf_summ`, we didn't give the new column an explicit name, so it showed up in our tibble as a column called `mean(Distance)`. If we want to change it, we can do this:
-
-```{r}
-hf_summ <- hf %>%
-    group_by(UniqueCarrier) %>%
-    summarise(mean_dist = mean(Distance))
-hf_summ
-```
-
-Look at the earlier version of `hf_summ` and compare it to the one above. Make sure you see that the name of the second column changed.
 
 The new count column of `hf_summ2` is just called `n`. That's okay, but if we insist on giving it a more user-friendly name, we can do so as follows:
 
 ```{r}
-hf_summ2 <- hf %>%
-    count(UniqueCarrier, name = "total_count")
+hf_summ2 <- hf |>
+  count(UniqueCarrier, name = "total_count")
 hf_summ2
 ```
 
 This is a little different because it requires us to use a `name` argument and put the new name in quotes.
 
-##### Exercise 14(a) {-}
+##### Exercise 12(a) {-}
 
 Create a tibble called `hf_summ3` that lists the total count of flights for each day of the week. Be sure to use the pipe as above. Print the output to the screen. (You don't need to give the count column a new name.)
 
@@ -600,7 +595,7 @@ Create a tibble called `hf_summ3` that lists the total count of flights for each
 
 :::
 
-##### Exercise 14(b) {-}
+##### Exercise 12(b) {-}
 
 According to the output in the previous part, what day of the week had the fewest flights? (Assume 1 = Monday.)
 
@@ -610,50 +605,46 @@ Please write up your answer here.
 
 :::
 
-*****
 
-The tibbles created in this section are all just a few rows each. They don't take up much memory, so we don't really need to remove them. You can if you want, but it's not necessary.
-
-
-## Putting it all together {#manipulating-all-together}
+## Putting it all together
 
 Often we need more than one of these verbs. In many data analyses, we need to do a sequence of operations to get at the answer we seek. This is most easily accomplished using a more complicated sequence of pipes.
 
-Here's a example of multi-step piping. Let's say that we only care about Delta flights, and even then, we only want to know about the month of the flight and the departure delay. From there, we wish to group by month so we can find the maximum departure delay by month. Here is a solution, piping hot and ready to go. [groan]
+Here's an example of multi-step piping. Let's say that we only care about Delta flights, and even then, we only want to know about the month of the flight and the departure delay. From there, we wish to group by month so we can find the maximum departure delay by month. Here is a solution, piping hot and ready to go. [groan]
 
 ```{r}
-hf_grand_finale <- hf %>%
-    filter(UniqueCarrier == "DL") %>%
-    dplyr::select(Month, DepDelay) %>%
-    group_by(Month) %>%
-    summarise(max_delay = max(DepDelay, na.rm = TRUE))
+hf_grand_finale <- hf |>
+  filter(UniqueCarrier == "DL") |>
+  dplyr::select(Month, DepDelay) |>
+  group_by(Month) |>
+  summarise(max_delay = max(DepDelay, na.rm = TRUE))
 hf_grand_finale
 ```
 
 Go through each line of code carefully and translate it into English:
 
-- We define a variable called `hf_grand_finale` that starts with the original `hf` data.
-- We `filter` this data so that only Delta flights will be analyzed.
-- We `select` the variables `Month` and `DepDelay`, throwing away all other variables that are not of interest to us. (Don't forget to use the `dplyr::select` syntax to make sure we get the right function!)
-- We `group_by` month so that the results will be displayed by month.
-- We `summarise` each month by listing the maximum value of `DepDelay` that appears within each month.
-- We print the result to the screen.
+* We define a variable called `hf_grand_finale` that starts with the original `hf` data.
+* We `filter` this data so that only Delta flights will be analyzed.
+* We `select` the variables `Month` and `DepDelay`, throwing away all other variables that are not of interest to us. (Don't forget to use the `dplyr::select` syntax to make sure we get the right function!)
+* We `group_by` month so that the results will be displayed by month.
+* We `summarise` each month by listing the maximum value of `DepDelay` that appears within each month.
+* We print the result to the screen.
 
 Notice in the `summarise` line, we again took advantage of `dplyr`'s ability to rename any variable along the way, assigning our computation to the new variable `max_delay`. Also note the need for `na.rm = TRUE` so that the `max` command ignores any missing values.
 
 A minor simplification results from the realization that `summarise` must throw away any variables it doesn't need. (Think about why for a second: what would `summarise` do with, say, `ArrTime` if we've only asked it to calculate the maximum value of `DepDelay` for each month?) So you could write this instead, removing the `select` clause:
 
 ```{r}
-hf_grand_finale <- hf %>%
-    filter(UniqueCarrier == "DL") %>%
-    group_by(Month) %>%
-    summarise(max_delay = max(DepDelay, na.rm = TRUE))
+hf_grand_finale <- hf |>
+  filter(UniqueCarrier == "DL") |>
+  group_by(Month) |>
+  summarise(max_delay = max(DepDelay, na.rm = TRUE))
 hf_grand_finale
 ```
 
 Check that you get the same result. With *massive* data sets, it's possible that the selection and sequence of these verbs matter, but you don't see an appreciable difference here, even with `r NROW(hf)` rows. (There are ways of benchmarking performance in R, but that is a more advanced topic.)
 
-##### Exercise 15 {-}
+##### Exercise 13 {-}
 
 Summarize in your own words what information is contained in the `hf_grand_finale` tibble. In other words, what are the numbers in the `max_delay` column telling us? Be specific!
 
@@ -665,46 +656,45 @@ Please write up your answer here.
 
 The remaining exercises are probably the most challenging you've seen so far in the course. Take each slowly. Read the instructions carefully. Go back through the chapter and identify which "verb" needs to be used for each part of the task. Examine the sample code in those sections carefully to make sure you get the syntax right. Create a sequence of "pipes" to do each task, one-by-one. Copy and paste pieces of code from earlier and make minor changes to adapt the code to the given task.
 
-##### Exercise 16 {-}
+##### Exercise 14 {-}
 
-Create a tibble that counts the flights to LAX grouped by day of the week. (Hint: you need to `filter` to get flights to LAX. Then you'll need to `count` using `DayOfWeek` as a grouping variable. Because you're using `count`, you don't need `group_by` or `summarise`.) Print the output to the screen.
+Create a tibble named `hf_ex14` that counts the flights to LAX grouped by day of the week. (Hint: you need to `filter` to get flights to LAX. Then you'll need to `count` using `DayOfWeek` as a grouping variable. Because you're using `count`, you don't need `group_by` or `summarise`.) Print the output to the screen.
 
 ::: {.answer}
 
 ```{r}
 # Add code here to count the flights to LAX
 # grouped by day of the week.
-# Print the output to the screen.
+# Print hf_ex14 to the screen.
 ```
 
 :::
 
-##### Exercise 17 {-}
+##### Exercise 15 {-}
 
-Create a tibble that finds the median distance flight for each airline. Sort the resulting tibble from highest distance to lowest. (Hint: You'll need to `group_by` carrier and `summarise` using the `median` function. Finally, you'll need to `arrange` the result according to the median distance variable that you just created.) Print the output to the screen.
+Create a tibble named `hf_ex15` that finds the median distance flight for each airline. Sort the resulting tibble from highest distance to lowest. (Hint: You'll need to `group_by` carrier and `summarise` using the `median` function. Finally, you'll need to `arrange` the result according to the median distance variable that you just created.) Print the output to the screen.
 
 ::: {.answer}
 
 ```{r}
 # Add code here to find the median distance by airline.
-# Print the output to the screen.
+# Print hf_ex15 to the screen.
 ```
 
 :::
 
 
-## Conclusion {#manipulating-conclusion}
+## Conclusion
 
 Raw data often doesn't come in the right form for us to run our analyses. The `dplyr` verbs are powerful tools for manipulating tibbles until they are in the right form.
 
-### Preparing and submitting your assignment {#manipulating-prep}
+### Preparing and submitting your assignment
 
 1. From the "Run" menu, select "Restart R and Run All Chunks".
-2. Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.
+2. Deal with any code errors that crop up. Repeat steps 1--2 until there are no more code errors.
 3. Spell check your document by clicking the icon with "ABC" and a check mark.
-4. Hit the "Preview" button one last time to generate the final draft of the `.nb.html` file.
+4. Hit the "Render" button one last time to generate the final draft of the HTML file. (If there are errors here, you may need to go back and fix broken inline code or other markdown issues.)
 5. Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
 
 If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
-
 

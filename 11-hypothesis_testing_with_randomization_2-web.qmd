@@ -1,47 +1,44 @@
-# Hypothesis testing with randomization, Part 2 {#hypothesis2}
+# Hypothesis testing with randomization, Part 2
 
-<!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(50,46,48))`</p>
-<!-- Please don't mess with the previous few lines! -->
+::: {.callout-note}
 
-::: {.summary}
-
-### Functions introduced in this chapter {-}
+### Functions introduced in this chapter
 
 `factor`
 
 :::
 
 
-## Introduction {#hypothesis2-intro}
+## Introduction
 
 Now that we have learned about hypothesis testing, we'll explore a different example. Although the rubric for performing the hypothesis test will not change, the individual steps will be implemented in a different way due to the research question we're asking and the type of data used to answer it.
 
-### Install new packages {#hypothesis2-install}
+### Install new packages
 
-If you are using RStudio Workbench, you do not need to install any packages. (Any packages you need should already be installed by the server administrators.)
-
-If you are using R and RStudio on your own machine instead of accessing RStudio Workbench through a browser, you'll need to type the following command at the Console:
+Type the following at the Console:
 
 ```
 install.packages("MASS")
 ```
 
-### Download the R notebook file {#hypothesis2-download}
+### Download the Quarto file
 
-Check the upper-right corner in RStudio to make sure you're in your `intro_stats` project. Then click on the following link to download this chapter as an R notebook file (`.Rmd`).
+Look at either the top (Posit Cloud) or the upper right corner of the RStudio screen to make sure you are in your `intro_stats` project.
 
-<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/11-hypothesis_testing_with_randomization_2.Rmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/11-hypothesis_testing_with_randomization_2.Rmd</a>
+Then click on the following link to download this chapter as a Quarto file (`.qmd`).
+
+<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/11-hypothesis_testing_with_randomization_2.qmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/11-hypothesis_testing_with_randomization_2.qmd</a>
 
 Once the file is downloaded, move it to your project folder in RStudio and open it there.
 
-### Restart R and run all chunks {#hypothesis2-restart}
+### Restart R and run all chunks
 
 In RStudio, select "Restart R and Run All Chunks" from the "Run" menu.
 
-## Load packages {#hypothesis2-load}
 
-In additional to `tidyverse` and `janitor`, we load the `MASS` package to access the `Melanoma` data on patients in Denmark with malignant melanoma, and the `infer` package for inference tools.
+## Load packages
+
+In additional to `tidyverse` and `janitor`, we load the `MASS` package to access the `melanoma` data on patients in Denmark with malignant melanoma, and the `infer` package for inference tools.
 
 ```{r}
 library(tidyverse)
@@ -51,24 +48,24 @@ library(infer)
 ```
 
 
-## Our research question {#hypothesis2-question}
+## Our research question
 
 We know that certain types of cancer are more common among females or males. Is there a sex bias among patients with malignant melanoma?
 
 Let's jump into the "Exploratory data analysis" part of the rubric first.
 
 
-## Exploratory data analysis {#hypothesis2ex-eda}
+## Exploratory data analysis
 
-### Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure. {#hypothesis2-ex-documentation}
+### Use data documentation (help files, code books, Google, etc.) to determine as much as possible about the data provenance and structure.
 
-You can look at the help file by typing `?Melanoma` at the Console. However, do not put that command here in a code chunk. The R Notebook has no way of displaying a help file when it's processed. Be careful: there's another data set called `melanoma` with a lower-case "m". Make sure you are using an uppercase "M".
+You can look at the help file by typing `?Melanoma` at the Console. However, do not put that command here in a code chunk. The Quarto document has no way of displaying a help file when it's processed. Be careful: there's another data set called `melanoma` with a lower-case "m". Make sure you are using an uppercase "M".
 
 There is a reference at the bottom of the help file.
 
 ##### Exercise 1 {-}
 
-Using the reference in the help file, do an internet search to find the source of this data. How can you tell that this reference is not, in fact, a reference to a study of cancer patients in Denmark?
+At the bottom of the help file, there is a "Source" listed (by authors Andersen, Borgan, Gill, and Keiding). Look up this reference on the internet. How can you tell that this reference is not, in fact, a direct reference to a study of cancer patients in Denmark?
 
 ::: {.answer}
 
@@ -92,7 +89,7 @@ Use `glimpse` to examine the structure of the data:
 glimpse(Melanoma)
 ```
 
-### Prepare the data for analysis. {#hypothesis2-ex-prepare}
+### Prepare the data for analysis.
 
 It appears that `sex` is coded as an integer. You will recall that we need to convert it to a factor variable since it is categorical, not numerical.
 
@@ -113,36 +110,47 @@ We can convert a numerical variable a couple of different ways. In Chapter 3, we
 Instead, we will use the `factor` command. It allows us to manually relabel the levels. The `levels` argument requires a vector (with `c`) of the current levels, and the `labels` argument requires a vector listing the new names you want to assign, as follows:
 
 ```{r}
-Melanoma <- Melanoma %>%
-    mutate(sex_fct = factor(sex, levels = c(0, 1), labels = c("female", "male")))
+Melanoma <- Melanoma |>
+  mutate(sex_fct = factor(sex,
+                          levels = c(0, 1),
+                          labels = c("female", "male")))
 glimpse(Melanoma)
 ```
 
 You should check to make sure the first few entries of `sex_fct` agree with the numbers in the `sex` variable according to the labels explained in the help file. (If not, it means that you put the `levels` in one order and the `labels` in a different order.)
 
-### Make tables or plots to explore the data visually. {#hypothesis2-ex-plots}
+We should also check if there are any rows with missing data:
+
+```{r}
+Melanoma |>
+  drop_na(sex_fct)
+```
+
+There are still 205 rows, so that means that no data is missing from the `sex_fct` variable.
+
+### Make tables or plots to explore the data visually.
 
 We only have one categorical variable, so we only need a frequency table. Since we are concerned with proportions, we'll also look at a relative frequency table which the `tabyl` command provides for free.
 
 ```{r}
-tabyl(Melanoma, sex_fct) %>%
-    adorn_totals()
+tabyl(Melanoma, sex_fct) |>
+  adorn_totals()
 ```
 
 
-## The logic of inference and randomization {#hypothesis2-logic}
+## The logic of inference and randomization
 
 This is a good place to pause and remember why statistical inference is important. There are certainly more females than males in this data set. So why don't we just show the table above, declare females are more likely to have malignant melanoma, and then go home?
 
-Think back to coin flips. Even though there was a 50% chance of seeing heads, did that mean that exactly half of our flips came up heads? No. We have to acknowledge *sampling variability*: even if the truth were 50%, when w sample, we could accidentally get more or less than 50%, just by pure chance alone. Perhaps these 205 patients just happen to have more females than average.
+Think back to coin flips. Even though there was a 50% chance of seeing heads, did that mean that exactly half of our flips came up heads? No. We have to acknowledge *sampling variability*: even if the truth were 50%, when we sample, we could accidentally get more or less than 50%, just by pure chance alone. Perhaps these 205 patients just happen to have more females than average.
 
-The key, then, is to figure out if 61.5% is *significantly* larger than 50%, or if a number like 61.5% (or one even more extreme) could easily come about from random chance.
+The key, then, is to figure out if 61.5% is a "statistically discernible" difference from 50%. In other words, is it possible that a number like 61.5% (or one even more extreme) could easily come about from random chance? Or is 61.5% far enough away from 50% that it is not likely to be a random fluke?^[Most statisticians will use the term "statistically significant" instead of "statistically discernible." The problem with "statistically significant" is that the word "significant" is often synonymous with "important." An 11.5 % increase over 50% might be clinically important, or it might not be, depending on the context of the problem. All we can say from a hypothesis test is whether it is mathematically probable to see a number like 61.5% (or more extreme) if the null value of 50% were true. That mathematical fact does not say anything about whether the measurement is a clinically important one. With large enough sample sizes, even minor deviations from the null value will be statistically discernible.]
 
 As we know from the last chapter, we can run a formal hypothesis test to find out. As we do so, make note of the things that are the same and the things that have changed from the last hypothesis tests you ran. For example, we are not comparing two groups anymore. We have one group of patients, and all we're doing is measuring the percentage of this group that is female. It's tempting to think that we're comparing males and females, but that's not the case. We are not using sex to divide our data into two groups for the purpose of exploring whether some other variable differs between men and women. We just have one sample. "Female" and "Male" are simply categories in a single categorical variable. Also, because we are only asking about one variable (`sex_fct`), the mathematical form of the hypotheses will look a little different.
 
 Because this is no longer a question about two variables being independent or associated, the "permuting" idea we've been using no longer makes sense. So what does make sense?
 
-It helps to start by figuring out what our null hypothesis is. Remember, our question of interest is whether there is a sex bias in malignant melanoma. In other words, are there more or fewer females than males with malignant melanoma? As this is our research question, it will be the alternative hypothesis. So what is the null? What is the "default" situation in which nothing interesting is going on? Well, there would be no sex bias. In other words, there would be the same number of females and males with malignant melanoma. Or another way of saying that---with respect to the "success" condition of being female that we discussed earlier---is that females comprise 50% of all patients with malignant melanoma.
+It helps to start by figuring out what our null hypothesis is. Remember, our question of interest is whether there is a sex bias in malignant melanoma. In other words, are there more or fewer females than males with malignant melanoma? As this is our research question, it will be the alternative hypothesis. So what is the null? What is the "default" situation in which nothing interesting is going on? Well, there would be no sex bias. In other words, there would be the same number of females and males with malignant melanoma. Or another way of saying that---with respect to the "success" condition of being female---is that females comprise 50% of all patients with malignant melanoma.
 
 Okay, given our philosophy about the null hypothesis, let's take the skeptical position and assume that, indeed, 50% of all malignant melanoma patients in our population are female. Then let's take a sample of 205 patients. We can't get exactly 50% females from a sample of 205 (that would be 102.5 females!), so what numbers can we get?
 
@@ -153,86 +161,82 @@ This brings us full circle, back to the first randomization idea we explored. We
 Let's dive back into the remaining steps of the formal hypothesis test.
 
 
-## Hypotheses {#hypothesis2-ex-hypotheses}
+## Hypotheses
 
-### Identify the sample (or samples) and a reasonable population (or populations) of interest. {#hypothesis2-ex-sample-pop}
+### Identify the sample (or samples) and a reasonable population (or populations) of interest.
 
 The sample consists of 205 patients from Denmark with malignant melanoma. Our population is presumably all patients with malignant melanoma, although in checking conditions below, we'll take care to discuss whether patients in Denmark are representative of patients elsewhere.
 
-### Express the null and alternative hypotheses as contextually meaningful full sentences. {#hypothesis2-ex-express-words}
+### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
 $H_{0}:$ Half of malignant melanoma patients are female.
 
 $H_{A}:$ There is a sex bias among patients with malignant melanoma (meaning that females are either over-represented or under-represented).
 
-### Express the null and alternative hypotheses in symbols (when possible). {#hypothesis2-ex-express-math}
+### Express the null and alternative hypotheses in symbols (when possible).
 
 $H_{0}: p_{female} = 0.5$
 
 $H_{A}: p_{female} \neq 0.5$
 
 
-## Model {#hypothesis2-ex-model}
+## Model
 
-### Identify the sampling distribution model. {#hypothesis2-ex-sampling-dist-model}
+### Identify the sampling distribution model.
 
 We will randomize to simulate the sampling distribution.
 
-### Check the relevant conditions to ensure that model assumptions are met. {#hypothesis2-ex-ht-conditions}
+### Check the relevant conditions to ensure that model assumptions are met.
 
-- Random
-  - As mentioned above, these 205 patients are not a random sample of all people with malignant melanoma. We don't even have any evidence that they are a random sample of melanoma patients in Denmark. Without such evidence, we have to hope that these 205 patients are representative of all patients who have malignant melanoma. Unless there's something special about Danes in terms of their genetics or diet or something like that, one could imagine that their physiology makes them just as susceptible to melanoma as anyone else. More specifically, though, our question is about females and males getting malignant melanoma. Perhaps there are more female sunbathers in Denmark than in other countries. That might make Danes unrepresentative in terms of the gender balance among melanoma patients. We should be cautious in interpreting any conclusion we might reach in light of these doubts.
+* Random
+  * As mentioned above, these 205 patients are not a random sample of all people with malignant melanoma. We don't even have any evidence that they are a random sample of melanoma patients in Denmark. Without such evidence, we have to hope that these 205 patients are representative of all patients who have malignant melanoma. Unless there's something special about Danes in terms of their genetics or diet or something like that, one could imagine that their physiology makes them just as susceptible to melanoma as anyone else. More specifically, though, our question is about females and males getting malignant melanoma. Perhaps there are more female sunbathers in Denmark than in other countries. That might make Danes unrepresentative in terms of the gender balance among melanoma patients. We should be cautious in interpreting any conclusion we might reach in light of these doubts.
 
-- 10%
-  - Whether in Denmark or not, given that melanoma is a fairly common form of cancer, I assume 205 is less than 10% of all patients with malignant melanoma.
+* 10%
+  * Whether in Denmark or not, given that melanoma is a fairly common form of cancer, we assume 205 is less than 10% of all patients with malignant melanoma.
 
 
-## Mechanics {#hypothesis2-ex-mechanics}
+## Mechanics
 
-### Compute the test statistic. {#hypothesis2-ex-compute-test-stat}
+### Compute the test statistic.
 
 ```{r}
-female_prop <- Melanoma %>%
-    observe(response = sex_fct, success = "female",
-            stat = "prop")
+female_prop <- Melanoma |>
+  observe(response = sex_fct, success = "female",
+          stat = "prop")
 female_prop
 ```
 
-Note: Pay close attention to the difference in the `observe` command above. Unlike in the last chapter, we don't have any tildes. That's because there are not two variables involved. There is only one variable, which `observe` needs to see as the "response" variable. (Don't forget to use the factor version `sex_fct` and not `sex`!) We still have to specify a "success" condition. Since the hypotheses are about measuring females, we have to tell `observe` to calculate the proportion of females. Finally, the `stat` is no longer "diff in props" There are not two proportions with which to find a difference. There is just one proportion, hence, "prop".
+Note: Pay close attention to the difference in the `observe` command above. Unlike in the last chapter, we don't have any tildes. That's because there are not two variables involved. There is only one variable, which `observe` needs to see as the "response" variable. (Don't forget to use the factor version `sex_fct` and not `sex`!) We still have to specify a "success" condition. Since the hypotheses are about measuring females, we have to tell `observe` to calculate the proportion of females. Finally, the `stat` is no longer "diff in props" There are not two proportions with which to find a difference. There is just one proportion, hence, `prop`.
 
-### Report the test statistic in context (when possible). {#hypothesis2-ex-report-test-stat}
+### Report the test statistic in context (when possible).
 
-The observed percentage of females with melanoma in our sample is `r 100 * female_prop %>% pull(1)`%.
+The observed percentage of females with melanoma in our sample is `r 100 * female_prop |> pull(1)`%.
 
 Note: As explained in the last chapter, we have to use `pull` to pull out the number from the `female_prop` tibble.
 
-### Plot the null distribution. {#hypothesis2-ex-plot-null}
-
-Since this is the first step for which we need the simulated values, it will be convenient to run the simulation here. We'll need to set the seed as well.
+### Plot the null distribution.
 
 ```{r}
 set.seed(42)
-melanoma_test <- Melanoma %>%
-    specify(response = sex_fct, success = "female") %>%
-    hypothesize(null = "point", p = 0.5) %>%
-    generate(reps = 1000, type = "draw") %>%
-    calculate(stat = "prop")
+melanoma_test <- Melanoma |>
+  specify(response = sex_fct, success = "female") |>
+  hypothesize(null = "point", p = 0.5) |>
+  generate(reps = 1000, type = "draw") |>
+  calculate(stat = "prop")
 melanoma_test
 ```
 
-This list of proportions is the sampling distribution. It represents possible sample proportions of females with melanoma **under the assumption that the null is true**. In other words, even if the "true" proportion of female melanoma patients were 0.5, these are all values that can result from random samples.
+```{r}
+melanoma_test |>
+  visualize() +
+  shade_p_value(obs_stat = female_prop, direction = "two-sided")
+```
+
+Note: There will always be two code chunks in this step. The first performs the simulation (1000 "coin flips"). The output is a list of 1000 simulated proportions. This is the sampling distribution. It represents possible sample proportions of females with melanoma **under the assumption that the null is true**. In other words, even if the "true" proportion of female melanoma patients were 0.5, these are all values that can result from random samples.
 
 In the `hypothesize` command, we use "point" to tell `infer` that we want the null to be centered at the point 0.5. In the `generate` command, we need to specify the `type` as "draw" instead of "permute". We are not shuffling any values here; we are "drawing" values from a probability distribution like coin flips. Everything else in the command is pretty self-explanatory.
 
-The value of our test statistic, `female_prop`, is 0.6146341. It appears in the right tail:
-
-```{r}
-melanoma_test %>%
-    visualize() +
-    shade_p_value(obs_stat = female_prop, direction = "two-sided")
-```
-
-Although the line only appears on the right, keep in mind that we are conducting a two-sided test, so we are interested in values more extreme than the red line on the right, but also more extreme than a similarly placed line on the left.
+The second code chunk creates a histogram of the simulated values under the assumption of the null. The value of our test statistic, `female_prop` (0.6146341) appears in the right tail as a red line. Although the line only appears on the right, keep in mind that we are conducting a two-sided test, so we are interested in values more extreme than the red line on the right, but also more extreme than a similarly placed (invisible) line on the left.
 
 ##### Exercise 3 {-}
 
@@ -244,33 +248,38 @@ Please write up your answer here.
 
 :::
 
-### Calculate the P-value. {#hypothesis2-ex-calculate-p}
+### Calculate the P-value.
 
 ```{r}
-melanoma_test %>%
-    get_p_value(obs_stat = female_prop, direction = "two-sided")
+P1 <- melanoma_test |>
+  get_p_value(obs_stat = female_prop, direction = "two-sided")
+P1
 ```
 
-The P-value appears to be zero. Indeed, among the 1000 simulated values, we saw none that exceeded 0.615 and none that were less than 0.385. However, a true P-value can never be zero. If you did millions or billions of simulations (please don't try!), surely there would be one or two with even more extreme values. In cases when the P-value is really, really tiny, it is traditional to report $P < 0.001$. It is **incorrect** to say $P = 0$.
+The P-value appears to be zero. If we were to report this using inline R code, we would say that the P-value was `r P1 |> pull(1)`.
 
-### Interpret the P-value as a probability given the null. {#hypothesis2-ex-interpret-p}
+Indeed, among the 1000 simulated values, we saw none that exceeded 0.615 and none that were less than 0.385. However, a true P-value can never be zero. If you did millions or billions of simulations (please don't try!), surely there would be one or two with even more extreme values. In cases when the P-value is really, really tiny, it is traditional to report $P < 0.001$. It is **incorrect** to say $P = 0$.
+
+### Interpret the P-value as a probability given the null.
 
 $P < 0.001$. If there were no sex bias in malignant melanoma patients, there would be less than a 0.1% chance of seeing a percentage of females at least as extreme as the one we saw in our data.
 
 Note: Don't forget to interpret the P-value in a contextually meaningful way. The P-value is the probability under the assumption of the null hypothesis of seeing data at least as extreme as the data we saw. In this context, that means that if we assume 50% of patients are female, it would be extremely rare to see more than 61.5% or less than 38.5% females in a sample of size 205.
 
+Also note that if the P-value were not listed as 0, we would want to use inline code to report our sentence: "If there were no sex bias in malignant melanoma patients, there would be a `r 100 * P1 |> pull(1)`% chance of seeing a percentage of females at least as extreme as the one we saw in our data." But this sentence is incorrect here because it mistakenly calculates the P-value as if it were exactly 0 (which it never can be).
 
-## Conclusion {#hypothesis2-ex-ht-conclusion}
 
-### State the statistical conclusion. {#hypothesis2-ex-stat-conclusion}
+## Conclusion
+
+### State the statistical conclusion.
 
 We reject the null hypothesis.
 
-### State (but do not overstate) a contextually meaningful conclusion. {#hypothesis2-ex-context-conclusion}
+### State (but do not overstate) a contextually meaningful conclusion.
 
 There is sufficient evidence that there is a sex bias in patients who suffer from malignant melanoma.
 
-### Express reservations or uncertainty about the generalizability of the conclusion.  {#hypothesis2-ex-reservations}
+### Express reservations or uncertainty about the generalizability of the conclusion.
 
 We have no idea how these patients were sampled. Are these all the patients in Denmark with malignant melanoma over a certain period of time? Were they part of a convenience sample? As a result of our uncertainly about the sampling process, we can't be sure if the results generalize to a larger population, either in Denmark or especially outside of Denmark.
 
@@ -284,14 +293,16 @@ Please write up your answer here.
 
 :::
 
-### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses. {#hypothesis2-ex-errors}
+### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
 As we rejected the null, we run the risk of making a Type I error. If we have made such an error, that would mean that patients with malignant melanoma are equally likely to be male or female, but that we got a sample with an unusual number of female patients.
 
 
-## Your turn {#hypothesis2-your-turn}
+## Your turn
 
-Determine if the percentage of patients in Denmark with malignant melanoma who also have an ulcerated tumor (measured with the `ulcer` variable) is significantly different from 50%.
+Past studies have shown that the presence of ulcerated tumors (tumors that break through the skin on top of the melanoma) are more dangerous, significantly increasing the risk of death from melanoma. There is some disagreement among studies, however, about the rate at which melanoma ulcerations occur. A review article from 2022 cited another study that estimated the ulceration rate to be 18%.^[https://pmc.ncbi.nlm.nih.gov/articles/PMC9440663/] But that number was based on a sample of patients suffering from melanoma of varying degrees of severity, not just patients diagnosed with malignant melanoma.
+
+Determine if the percentage of patients in Denmark with malignant melanoma who also have an ulcerated tumor (measured with the `ulcer` variable) is significantly different from 18%. (Keep in mind that when you refer back to the example above, you will need to modify the null hypothesis value to reflect that it is now 18% and not 50%!)
 
 As before, you have the outline of the rubric for inference below. Some of the steps will be the same or similar to steps in the example above. It is perfectly okay to copy and paste R code, making the necessary changes. It is **not** okay to copy and paste text. You need to put everything into your own words.
 
@@ -304,19 +315,27 @@ The template below is exactly the same as in the appendix ([Rubric for inference
 
 ::: {.answer}
 
+Please write up your answer here.
+
 ```{r}
-# Add code here to understand the data.
+# Add code here to print the data
+```
+
+```{r}
+# Add code here to glimpse the variables
 ```
 
 :::
 
-###### Prepare the data for analysis. [Not always necessary.] {-}
+###### Prepare the data for analysis. {-}
 
 ::: {.answer}
 
 ```{r}
 # Add code here to prepare the data for analysis.
 ```
+
+Please write up your answer here.
 
 :::
 
@@ -423,6 +442,7 @@ set.seed(42)
 
 ```{r}
 # Add code here to calculate the P-value.
+# Don't forget to use P_2 instead.
 ```
 
 :::
@@ -471,21 +491,23 @@ Please write up your answer here.
 :::
 
 
-## Conclusion {#hypothesis2-conclusion}
+## Conclusion
 
 Now you have seen two fully-worked examples of hypothesis tests using randomization, and you have created two more examples on your own. Hopefully, the logic of inference and the process of running a formal hypothesis test are starting to make sense.
 
 Keep in mind that the outline of steps will not change. However, the way each step is carried out will vary from problem to problem. Not only does the context change (one example involved sex discrimination, the other melanoma patients), but the statistics you compute also change (one example compared proportions from two samples and the other only had one proportion from a single sample). Pay close attention to the research question and the data that will be used to answer that question. That will be the only information you have to help you know which hypothesis test applies.
 
-### Preparing and submitting your assignment {#hypothesis2-prep}
+### Preparing and submitting your assignment
 
 1. From the "Run" menu, select "Restart R and Run All Chunks".
-2. Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.
+2. Deal with any code errors that crop up. Repeat steps 1--2 until there are no more code errors.
 3. Spell check your document by clicking the icon with "ABC" and a check mark.
-4. Hit the "Preview" button one last time to generate the final draft of the `.nb.html` file.
+4. Hit the "Render" button one last time to generate the final draft of the HTML file. (If there are errors here, you may need to go back and fix broken inline code or other markdown issues.)
 5. Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
 
 If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
+
+
 
 
 

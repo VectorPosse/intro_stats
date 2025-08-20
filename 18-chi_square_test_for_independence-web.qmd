@@ -1,13 +1,8 @@
 # Chi-square test for independence
 
-<!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(50,46,48))`</p>
-<!-- Please don't mess with the previous few lines! -->
+::: {.callout-note}
 
-
-::: {.summary}
-
-### Functions introduced in this chapter: {-}
+### Functions introduced in this chapter:
 
 No new R functions are introduced here.
 
@@ -24,11 +19,13 @@ A chi-square test for independence tests the relationship between two categorica
 
 There are no new packages used in this chapter.
 
-### Download the R notebook file
+### Download the Quarto file
 
-Check the upper-right corner in RStudio to make sure you're in your `intro_stats` project. Then click on the following link to download this chapter as an R notebook file (`.Rmd`).
+Look at either the top (Posit Cloud) or the upper right corner of the RStudio screen to make sure you are in your `intro_stats` project.
 
-<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/18-chi_square_test_for_independence.Rmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/18-chi_square_test_for_independence.Rmd</a>
+Then click on the following link to download this chapter as a Quarto file (`.qmd`).
+
+<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/18-chi_square_test_for_independence.qmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/18-chi_square_test_for_independence.qmd</a>
 
 Once the file is downloaded, move it to your project folder in RStudio and open it there.
 
@@ -65,19 +62,19 @@ glimpse(birthwt)
 
 The `low` variable is an indicator of birth weight less than 2.5 kg. So even though birth weight is numerical, we have a convenient categorical variable that serves as a marker of low birth weight, gathering all low birth weight babies into a single group. The `race` variable is categorical, coded as 1 = white, 2 = black, 3 = other.
 
-Neither variable appears in the data frame as a factor variable, so we will need to change that. The new tibble will be called `birthwt2`.
+Neither variable appears in the data frame as a factor variable, so we will need to change that.
 
 ```{r}
-birthwt2 <- birthwt %>%
+birthwt <- birthwt |>
   mutate(low_fct = factor(low, levels = c(0, 1),
                           labels = c("no", "yes")),
          race_fct = factor(race, levels = c(1, 2, 3),
                            labels = c("white", "black", "other")))
-birthwt2
+birthwt
 ```
 
 ```{r}
-glimpse(birthwt2)
+glimpse(birthwt)
 ```
 
 
@@ -90,8 +87,8 @@ With two categorical variables, we use a contingency table instead of a frequenc
 Below is the contingency table for these two variables. Normally, we only care about column totals because we care how the response variable (here, `low_fct`) is distributed in each group of the predictor variable (i.e., each racial group). But for the calculation of chi-squared, we will need both row and column totals.
 
 ```{r}
-tabyl(birthwt2, low_fct, race_fct) %>%
-    adorn_totals(where = c("row", "col"))
+tabyl(birthwt, low_fct, race_fct) |>
+  adorn_totals(where = c("row", "col"))
 ```
 
 A test for independence has a simple null hypothesis: the two variables are independent. This gives us a way to compute expected counts. To see how, look at the sum of all the normal weight babies ($73 + 15 + 42 = 130$) and all the low birth weight babies ($23 + 11 + 25 = 59$). In other words, if race is ignored, there were 130 normal weight babies and 59 low birth weight babies out of 189 total babies. 59 of 189 is 0.31217 or 31.217%, and 130 of 189 is 0.68783 or 68.783%.
@@ -112,7 +109,6 @@ Complete the list of expected cell counts in the table above. In other words, ap
 :::
 
 *****
-
 
 Unlike the goodness-of-fit test that requires one to specify expected counts for each cell, the test for independence uses only the data to determine the expected counts. For any given cell, if $R$ is the row total, $C$ is the column total, and $n$ is the grand total (the sample size), the expected count in any cell is simply
 
@@ -165,30 +161,40 @@ glimpse(birthwt)
 
 ### Prepare the data for analysis.
 
+Check for missing data:
+
+```{r}
+birthwt |>
+  drop_na(low, race) |>
+  NROW()
+```
+
+Create factor variables:
+
 ```{r}
 # Although we've already done this above, 
 # we include it here again for completeness.
-birthwt2 <- birthwt %>%
+birthwt <- birthwt |>
   mutate(low_fct = factor(low, levels = c(0, 1),
                           labels = c("no", "yes")),
          race_fct = factor(race, levels = c(1, 2, 3),
                            labels = c("white", "black", "other")))
-birthwt2
+birthwt
 ```
 
 ### Make tables or plots to explore the data visually.
 
 ```{r}
-tabyl(birthwt2, low_fct, race_fct) %>%
-    adorn_totals()
+tabyl(birthwt, low_fct, race_fct) |>
+  adorn_totals()
 ```
 
 
 ```{r}
-tabyl(birthwt2, low_fct, race_fct) %>%
-    adorn_totals() %>%
-    adorn_percentages("col") %>%
-    adorn_pct_formatting()
+tabyl(birthwt, low_fct, race_fct) |>
+  adorn_totals() |>
+  adorn_percentages("col") |>
+  adorn_pct_formatting()
 ```
 
 Commentary: Earlier we used row and column total to explain how expected cell counts arise. Here, however, we will revert back to our previous standard practice of generating one contingency table with counts and another with column percentages.
@@ -220,13 +226,13 @@ We will use a chi-square model with 2 degrees of freedom.
 ### Check the relevant conditions to ensure that model assumptions are met.
 
 * Random
-    - We hope that these 189 women are representative of all women who gave birth in this hospital (or, at best, in that region) around that time.
+  * We hope that these 189 women are representative of all women who gave birth in this hospital (or, at best, in that region) around that time.
     
 * 10%
-    - We don't know how many women gave birth at this hospital, but perhaps over many years we might have more than 1890 women.
+  * We don't know how many women gave birth at this hospital, but perhaps over many years we might have more than 1890 women.
 
 * Expected cell counts
-    - You checked the cell counts as a part of Exercise 1. Note that all expected cell counts are larger than 5, so the condition is met.
+  * You checked the cell counts as a part of Exercise 1. Note that all expected cell counts are larger than 5, so the condition is met.
 
 
 ## Mechanics
@@ -234,30 +240,30 @@ We will use a chi-square model with 2 degrees of freedom.
 ### Compute the test statistic.
 
 ```{r}
-obs_chisq <- birthwt2 %>%
-  specify(response = low_fct, explanatory = race_fct) %>%
-  hypothesize(null = "independence") %>%
+obs_chisq <- birthwt |>
+  specify(response = low_fct, explanatory = race_fct) |>
+  hypothesize(null = "independence") |>
   calculate(stat = "chisq")
 obs_chisq
 ```
 
 ### Report the test statistic in context (when possible).
 
-The value of $\chi^{2}$ is `r obs_chisq %>% pull(1)`.
+The value of $\chi^{2}$ is `r obs_chisq |> pull(1)`.
 
 Commentary: As in the last chapter, there's not much context to report with a value of $\chi^{2}$, so the most we can do here is just report it in a full sentence.
 
 ### Plot the null distribution.
 
 ```{r}
-low_race_test <- birthwt2 %>%
-  specify(response = low_fct, explanatory = race_fct) %>%
+low_race_test <- birthwt |>
+  specify(response = low_fct, explanatory = race_fct) |>
   assume(distribution = "chisq")
 low_race_test
 ```
 
 ```{r}
-low_race_test %>%
+low_race_test |>
   visualize() +
   shade_p_value(obs_chisq, direction = "greater")
 ```
@@ -265,14 +271,14 @@ low_race_test %>%
 ### Calculate the P-value.
 
 ```{r}
-low_race_test_p <- low_race_test %>%
+low_race_test_p <- low_race_test |>
   get_p_value(obs_chisq, direction = "greater")
 low_race_test_p
 ```
 
 ### Interpret the P-value as a probability given the null.
 
-The P-value is `r low_race_test_p %>% pull(1)`. If low birth weight and race were independent, there would be a `r 100 * low_race_test_p %>% pull(1)`% chance of seeing results at least as extreme as we saw in the data.
+The P-value is `r low_race_test_p |> pull(1)`. If low birth weight and race were independent, there would be a `r 100 * low_race_test_p |> pull(1)`% chance of seeing results at least as extreme as we saw in the data.
 
 
 ## Conclusion
@@ -327,7 +333,7 @@ Please write up your answer here
 
 :::
 
-###### Prepare the data for analysis. [Not always necessary.] {-}
+###### Prepare the data for analysis. {-}
 
 ::: {.answer}
 
@@ -423,6 +429,11 @@ Please write up your answer here.
 ::: {.answer}
 
 ```{r}
+# Add code here to generate the null distribution.
+```
+
+
+```{r}
 # Add code here to plot the null distribution.
 ```
 
@@ -482,15 +493,15 @@ Please write up your answer here.
 :::
 
 
-## Bonus section: Residuals
+## Residuals
 
 Just like with the chi-square test for goodness of fit, rejecting the null hypothesis using the chi-square test for independence informs us that two variables are associated, but it doesn't tell us the useful information about which combinations of variables have higher and lower counts than expected. And just like the chi-square test for goodness of fit, we can examine the *residuals table* to find that information.
 
-**A word of caution**: You should only examine the residuals if your test was statistically significant! The residuals table for tests in which we fail to reject the null hypothesis can be misleading. 
+**A word of caution**: You should only examine the residuals if your test was statistically discernible! The residuals table for tests in which we fail to reject the null hypothesis can be misleading. 
 
 Because we failed to reject the null hypothesis in the `low_race_test`, it would be unwise for us to examine the residuals table in that test. Instead, we'll use a different example. 
 
-The `diabetes2` dataset in the `openintro` package contains information about an experiment evaluating three treatments for Type 2 diabetes in patients aged 10-17 who were being treated with metformin. The three treatments summarized in the `treatment` variable were: continued treatment with metformin (`met`), treatment with metformin combined with rosiglitazone (`rosi`), or a lifestyle intervention program (`lifestyle`). Each patient had a primary `outcome`, which was either "lacked glycemic control" (`failure`) or did not lack that control (`success`). Here is the summary of the results of the experiment:
+The `diabetes2` data set in the `openintro` package contains information about an experiment evaluating three treatments for Type 2 diabetes in patients aged 10-17 who were being treated with metformin. The three treatments summarized in the `treatment` variable were: continued treatment with metformin (`met`), treatment with metformin combined with rosiglitazone (`rosi`), or a lifestyle intervention program (`lifestyle`). Each patient had a primary `outcome`, which was either "lacked glycemic control" (`failure`) or did not lack that control (`success`). Here is the summary of the results of the experiment:
 
 ```{r}
 tabyl(diabetes2, treatment, outcome) 
@@ -499,12 +510,12 @@ tabyl(diabetes2, treatment, outcome)
 For the sake of a streamlined presentation, we'll omit the usual details of condition-checking, hypothesis-writing, etc., and skip right to the conclusion.
 
 ```{r}
-tabyl(diabetes2, treatment, outcome) %>%
+tabyl(diabetes2, treatment, outcome) |>
   chisq.test() -> outcome_treatment_chisq.test
 outcome_treatment_chisq.test
 ```
 
-Notice that the p-value obtained from the test is below our usual significance level \(\alpha = 0.05\), so it makes sense for us to examine the residuals. 
+Notice that the p-value obtained from the test is below our usual significance level $\alpha = 0.05$, so it makes sense for us to examine the residuals. 
 
 ```{r}
 outcome_treatment_chisq.test$residuals
@@ -512,12 +523,13 @@ outcome_treatment_chisq.test$residuals
 
 Again, these values don't mean much in the real world; our job is to look at the most positive and most negative values.
 
-- Since the `rosi` and `failure` cell has the most negative value, the count of people who failed to achieve glycemic control with rosiglitazone is the most *below* expected. (That's a good result!)
-- Since the `rosi` and `success` cell has the most positive value, the count of people who succeeded in achieving glycemic control with rosiglitazone is the most *above* expected. (That's also a good result!)
+* Since the `rosi` and `failure` cell has the most negative value, the count of people who failed to achieve glycemic control with rosiglitazone is the most *below* expected. (That's a good result!)
+* Since the `rosi` and `success` cell has the most positive value, the count of people who succeeded in achieving glycemic control with rosiglitazone is the most *above* expected. (That's also a good result!)
 
 Overall, we can conclude that the rosiglitazone treatment was quite successful in helping people achieve their glycemic control goals.
 
-### Your turn
+
+## Your turn
 
 Examine the residuals table to determine which marital statuses are most associated with smoking or not smoking.
 
@@ -525,28 +537,28 @@ Examine the residuals table to determine which marital statuses are most associa
 
 ```{r}
 # Add code here to produce the chisq.test result.
+```
 
+```{r}
 # Add code here to examine the residuals table.
-
 ```
 
 Please write your answer here.
 
 :::
 
+
 ## Conclusion
 
 With two categorical variables, we can run a chi-square test for independence to test the null hypothesis that the two variables are independent. While technically we can run this test for any two categorical variables, if both variables have only two levels, we would usually choose to run a test for two proportions. The chi-square test for independence is useful when one or both of the response and predictor variables have three or more levels. The expected cell counts are derived from the data and then the chi-squared statistic is computed as usual. Using the correct degrees of freedom, we can test how much the observed cell counts deviate from the expected cell counts and derive a P-value.
 
-
 ### Preparing and submitting your assignment
 
 1. From the "Run" menu, select "Restart R and Run All Chunks".
-2. Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.
+2. Deal with any code errors that crop up. Repeat steps 1--2 until there are no more code errors.
 3. Spell check your document by clicking the icon with "ABC" and a check mark.
-4. Hit the "Preview" button one last time to generate the final draft of the `.nb.html` file.
+4. Hit the "Render" button one last time to generate the final draft of the HTML file. (If there are errors here, you may need to go back and fix broken inline code or other markdown issues.)
 5. Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
 
 If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
-
 

@@ -1,40 +1,37 @@
-# Normal models {#normal}
+# Normal models
 
-<!-- Please don't mess with the next few lines! -->
-<style>h5{font-size:2em;color:#0000FF}h6{font-size:1.5em;color:#0000FF}div.answer{margin-left:5%;border:1px solid #0000FF;border-left-width:10px;padding:25px} div.summary{background-color:rgba(30,144,255,0.1);border:3px double #0000FF;padding:25px}</style>`r options(scipen=999)`<p style="color:#ffffff">`r intToUtf8(c(50,46,48))`</p>
-<!-- Please don't mess with the previous few lines! -->
+::: {.callout-note}
 
-::: {.summary}
+### Functions introduced in this chapter
 
-
-### Functions introduced in this chapter {-}
-
-`pdist`, `diff`, `qdist`, `scale`, `geom_qq`
+`pdist`, `diff`, `qdist`, `scale`, `geom_qq`, `geom_qq_line`
 
 :::
 
 
-## Introduction {#normal-intro}
+## Introduction
 
 In this chapter we will learn how to work with normal models. In addition to learning about theoretical normal distributions, we will also develop QQ plots to assess the normality of data.
 
-### Install new packages {#normal-install}
+### Install new packages
 
 There are no new packages used in this chapter.
 
-### Download the R notebook file {#normal-download}
+### Download the Quarto file
 
-Check the upper-right corner in RStudio to make sure you're in your `intro_stats` project. Then click on the following link to download this chapter as an R notebook file (`.Rmd`).
+Look at either the top (Posit Cloud) or the upper right corner of the RStudio screen to make sure you are in your `intro_stats` project.
 
-<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/13-normal_models.Rmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/13-normal_models.Rmd</a>
+Then click on the following link to download this chapter as a Quarto file (`.qmd`).
+
+<a href = "https://vectorposse.github.io/intro_stats/chapter_downloads/13-normal_models.qmd" download>https://vectorposse.github.io/intro_stats/chapter_downloads/13-normal_models.qmd</a>
 
 Once the file is downloaded, move it to your project folder in RStudio and open it there.
 
-### Restart R and run all chunks {#normal-restart}
+### Restart R and run all chunks
 
 In RStudio, select "Restart R and Run All Chunks" from the "Run" menu.
 
-## Load packages {#normal-load}
+## Load packages
 
 In addition to `tidyverse`, we return to the `mosaic` package to produce some nice visualizations of normal models.
 
@@ -44,14 +41,14 @@ library(mosaic)
 ```
 
 
-## The Central Limit Theorem {#normal-clt}
+## The Central Limit Theorem
 
 An important aspect of all the simulations that we've done so far---assuming that we've run a large enough number of them---is that their histograms all look like bell curves. This fact is known as the "Central Limit Theorem". Under some basic assumptions that we'll discuss in a later chapter, this will be typical of many of our simulated null distributions. 
 
 So rather than running a simulation each time we want to conduct a hypothesis test, we could also assume that the null distribution *is* a bell curve. The rest of this chapter will teach you how to work with the "normal distribution," which is just the mathematically correct term for a bell curve.
 
 
-## Normal models {#normal-normal}
+## Normal models
 
 The normal distribution looks like this:
 
@@ -59,8 +56,8 @@ The normal distribution looks like this:
 # Don't worry about the syntax here.
 # You won't need to know how to do this on your own.
 ggplot(data.frame(x = c(-4, 4)), aes(x)) +
-    stat_function(fun = dnorm) +
-    scale_x_continuous(breaks = -3:3)
+  stat_function(fun = dnorm) +
+  scale_x_continuous(breaks = -3:3)
 ```
 
 The curve pictured above is called the *standard normal distribution*. It has a mean of 0 and a standard deviation of 1. Mathematically, this is written as
@@ -91,28 +88,42 @@ $$
 N(114, 14).
 $$
 
-
 The graph now looks like this:
 
 ```{r}
 # Again, don't worry about the syntax here.
 ggplot(data.frame(x = c(58, 170)), aes(x)) +
-    stat_function(fun = dnorm, args = list(mean = 114, sd = 14)) +
-    scale_x_continuous(breaks = c(72, 86, 100, 114, 128, 142, 156))
+  stat_function(fun = dnorm, args = list(mean = 114, sd = 14)) +
+  scale_x_continuous(breaks = c(72, 86, 100, 114, 128, 142, 156))
 ```
 
 
-## Predictions using normal models {#normal-predictions}
+## Predictions using normal models
 
-Using this information, we can estimate the percentage of such women who are expected to have any range of SBP without having access to all such data.
+A nice feature of the normal model is that it allows us to see what percentage of the population being modeled lies in certain regions. 
+The following image illustrates a rule called the **68-95-99.7 Rule**.^[Some folks call this the "Empirical Rule" but that name is much more boring.] The beautiful thing about this rule is that, if you can remember the name of the rule, you can remember the content of the rule. (To see the figure below, you will either need to render the file to HTML and look at the HTML output, or copy and paste the link below into a browser tab.)
 
-For example, what percentage of women ages 30--44 in the U.S. and Canada are expected to have SBP under 130 mmHg? The `pdist` command from the `mosaic` package will not only help us with this calculation, but it also offers a nice visual representation depending on the arguments we supply to the function:
+![Normal Model](https://upload.wikimedia.org/wikipedia/commons/a/a9/Empirical_Rule.PNG)
+
+As explained in the diagram, 68% percentage (about two-thirds) of the population is expected to sit in the range from one standard deviation below the mean up to one standard deviation above the mean. In our blood pressure example above, since the mean is 114 and the standard deviation is 14, we might say the following:
+
+> The model predicts that around 68% of women ages 30--44 in the U.S. and Canada will have systolic blood pressure between 100 and 128 mmHg.
+
+95% of the population (the vast majority) is expected to sit within two standard deviations of the mean:
+
+> The model predicts that around 95% of women ages 30--44 in the U.S. and Canada will have systolic blood pressure between 86 and 142 mmHg.
+
+99.7% of the population is expected to sit within three standard deviations of the mean. While this seems like pretty much everyone, we do have to remember that about 3 out of every 1000 will still sit outside this predicted range:
+
+> The model predicts that around 99.7% of women ages 30--44 in the U.S. and Canada will have systolic blood pressure between 72 and 156 mmHg.
+
+We are not restricted to values that line up with standard deviations from the mean. But we will need technology to assist us with such calculations. For example, what percentage of women ages 30--44 in the U.S. and Canada are expected to have SBP under 130 mmHg? The `pdist` command from the `mosaic` package will not only help us with this calculation, but it also offers a nice visual representation depending on the arguments we supply to the function:
 
 ```{r}
 pdist("norm", q = 130, mean = 114, sd = 14)
 ```
 
-In the notebook view, you have to switch back and forth between the two boxes below the code chunk (above the graph) to see the number versus the graph. In the HTML output, however, both the number and the plot are visible.
+In the Quarto view, you have to switch back and forth between the two boxes below the code chunk (above the graph) to see the number versus the graph. In the HTML output, however, both the number and the plot are visible.
 
 For situations where we really just want to see the number, we can always add `plot = FALSE` to the function:
 
@@ -126,7 +137,7 @@ If you use this command inline, the pretty picture is not generated, just the va
 
 > The model predicts that `r 100 * pdist("norm", q = 130, mean = 114, sd = 14)`% of women ages 30--44 in the U.S. and Canada will have systolic blood pressure under 130 mmHg.
 
-Note that the above code multiplied the result of the `pdist` command by 100. This is important because the full sentence interpretation is meant to be read by human beings, and human beings tend to report these kinds of numbers as percentages and not decimals.^[When you preview this in HTML, you'll see a ridiculous number of decimal places that R reports. It's a bit of a hassle to try to change it, so we'll just ignore the issue.]
+Note that the above code multiplied the result of the `pdist` command by 100. This is important because the full sentence interpretation is meant to be read by human beings, and human beings tend to report these kinds of numbers as percentages and not decimals.^[When you render this in HTML, you'll see a ridiculous number of decimal places that R reports. It's a bit of a hassle to try to change it, so we'll just ignore the issue.]
 
 It's also important that you include the phrase, "The model predicts..." or something like that. Without that part, the claim is likely false. It would be too definitive. Remember that a model is just an approximation or simplification of reality. We're not claiming we've found the "True" number. All we know is that if the model is roughly correct, we can predict the true value.
 
@@ -156,7 +167,7 @@ What about the pretty picture? Unfortunately, this doesn't work so well:
 
 ```{r}
 pdist("norm", q = 130, mean = 114, sd = 14) - 
-    pdist("norm", q = 110, mean = 114, sd = 14)
+  pdist("norm", q = 110, mean = 114, sd = 14)
 ```
 
 The code is bulky and it prints two pictures, neither of which are quite right for our question.
@@ -178,15 +189,15 @@ pdist("norm", q = c(110, 130), mean = 114, sd = 14, plot = FALSE)
 There are two numbers shown, but neither is the correct answer. This command shows the percentages below 110 and below 130, respectively, but not the area in between 110 and 130. We still have to subtract. However, R can do this for us easily with the `diff` command:
 
 ```{r}
-pdist("norm", q = c(110, 130), mean = 114, sd = 14, plot = FALSE) %>%
+pdist("norm", q = c(110, 130), mean = 114, sd = 14, plot = FALSE) |>
     diff()
 ```
 
 Again, for inline R code, you don't need to specify `plot = FALSE`:
 
-> The model predicts that `r 100 * (pdist("norm", q = c(110, 130), mean = 114, sd = 14) %>% diff())`% of women ages 30--44 in the U.S. and Canada will have systolic blood pressure between 110 mmHg and 130 mmHg.
+> The model predicts that `r 100 * (pdist("norm", q = c(110, 130), mean = 114, sd = 14) |> diff())`% of women ages 30--44 in the U.S. and Canada will have systolic blood pressure between 110 mmHg and 130 mmHg.
 
-For the following exercises, we'll use a running example of IQ scores. Keep in mind that, at best, IQ scores fail to measure anything like "intelligence" (https://www.sciencedaily.com/releases/2012/12/121219133334.htm). At worse, IQ tests (and other forms of standardized testing) have been used to perpetuate systemic racism and inequality (https://www.nea.org/advocating-for-change/new-from-nea/racist-beginnings-standardized-testing).
+For the following exercises, we'll use a running example of IQ scores. Keep in mind that, at best, [IQ scores fail to measure anything like "intelligence"](https://www.sciencedaily.com/releases/2012/12/121219133334.htm). At worse, [IQ tests (and other forms of standardized testing) have been used to perpetuate systemic racism and inequality](https://www.nea.org/advocating-for-change/new-from-nea/racist-beginnings-standardized-testing).
 
 IQ scores---whatever they actually measure---are standardized so that they have a mean of 100 and a standard deviation of 16. For each exercise, use the `pdist` to draw the right picture and then state your answer in a contextually meaningful full sentence using inline R code. Don't forget to use the phrase "The model predicts..." and report numbers as percentages, not decimals.
 
@@ -233,7 +244,7 @@ Please write up your answer here.
 :::
 
 
-## Percentiles {#normal-percentiles}
+## Percentiles
 
 Often, the question is reversed: instead of getting a value and being asked what percentage of the population falls above or below it, we are given a percentile and asked about the value to which it corresponds.
 
@@ -314,7 +325,7 @@ Please write up your answer here.
 :::
 
 
-## Z scores {#normal-z}
+## Z scores
 
 Sometimes it is easier to refer to a value in terms of how many standard deviations it lies from the mean. For example, a systolic blood pressure of 100 is 14 mmHg below the mean, but since the standard deviation is 14 mmHg, this means that 100 is one standard deviation below the mean. This distance from the mean in terms of standard deviations is called a *z score*.
 
@@ -336,9 +347,9 @@ What is the z score for an SBP of 132? Look at the graph of the normal model $N(
 # Don't worry about the syntax here.
 # You won't need to know how to do this on your own.
 ggplot(data.frame(x = c(58, 170)), aes(x)) +
-    stat_function(fun = dnorm, args = list(mean = 114, sd = 14)) +
-    scale_x_continuous(breaks = c(72, 86, 100, 114, 128, 142, 156)) +
-    geom_vline(xintercept = 132, color = "blue")
+  stat_function(fun = dnorm, args = list(mean = 114, sd = 14)) +
+  scale_x_continuous(breaks = c(72, 86, 100, 114, 128, 142, 156)) +
+  geom_vline(xintercept = 132, color = "blue")
 ```
 
 We can see that 132 lies between 128 and 142, which are 1 and 2 standard deviations above the mean, respectively. The exact z score is 
@@ -357,7 +368,7 @@ scale(x = 100, center = 114, scale = 14)
 scale(x = 132, center = 114, scale = 14)
 ```
 
-Also note that the function spits about a bunch of extra crap we don't care about. This goes away for inline code. Go ahead and preview the HTML file now so you can see the effect in the following sentence:
+Also note that the function spits about a bunch of extra crap we don't care about. This goes away for inline code. Go ahead and render the HTML file now so you can see the effect in the following sentence:
 
 > The z score for 100 is `r scale(x = 100, center = 114, scale = 14)` and the z score for 132 is `r scale(x = 132, center = 114, scale = 14)`.
 
@@ -365,7 +376,7 @@ Also note that the function spits about a bunch of extra crap we don't care abou
 
 If IQ scores have a mean of 100 and a standard deviation of 16, what are the z scores for the following IQ scores? Write up your answers as full sentences using inline R code.
 
-- 80
+* 80
 
 ::: {.answer}
 
@@ -373,7 +384,7 @@ Please write up your answer here.
 
 :::
 
-- 102
+* 102
 
 ::: {.answer}
 
@@ -381,7 +392,7 @@ Please write up your answer here.
 
 :::
 
-- 130
+* 130
 
 ::: {.answer}
 
@@ -410,7 +421,7 @@ Please write up your answer here.
 :::
 
 
-## QQ plots {#normal-qq}
+## QQ plots
 
 All of the work we do with normal models assumes that a normal model is appropriate. When we want to summarize data using a normal model, this means that the data distribution should be reasonably unimodal, symmetric, and with no serious outliers.
 
@@ -422,15 +433,15 @@ Here is an example. The total snowfall in Grand Rapids, Michigan has been record
 
 ```{r}
 ggplot(SnowGR, aes(x = Total)) +
-    geom_histogram(binwidth = 10, boundary = 50)
+  geom_histogram(binwidth = 10, boundary = 50)
 ```
 
 Here is the QQ plot for the same data. Notice that the aesthetics are a little different; instead of `x`, we have to use `sample`.
 
 ```{r}
 ggplot(SnowGR, aes(sample = Total)) +
-    geom_qq() +
-    geom_qq_line()
+  geom_qq() +
+  geom_qq_line()
 ```
 
 (The warning is because there is one missing value in the data.)
@@ -443,15 +454,15 @@ Contrast that with skewed data. For example, the `Alcohol` data set contains per
 
 ```{r}
 ggplot(Alcohol, aes(x = alcohol)) +
-    geom_histogram(binwidth = 2, boundary = 0)
+  geom_histogram(binwidth = 2, boundary = 0)
 ```
 
 It is also apparent in the QQ plot that the data is not normally distributed.
 
 ```{r}
 ggplot(Alcohol, aes(sample = alcohol)) +
-    geom_qq() +
-    geom_qq_line()
+  geom_qq() +
+  geom_qq_line()
 ```
 
 The path of dots is sharply curved, indicating a lack of normality.
@@ -491,18 +502,16 @@ Now find a data set with a numerical variable that is skewed in its distribution
 :::
 
 
-## Conclusion {#normal-conclusion}
+## Conclusion
 
 The normal model is ubiquitous in statistics, so understanding how to use it to make predictions is critical. When certain assumptions are met (that will be discussed in a future chapter), we can use the normal model to make predictions. The use of z scores allows us to measure distances from the mean in terms of standard deviations, giving us a scale in which data from different contexts are comparable as long as such measurements are normally distributed. A QQ plot helps us check that assumption.
 
-### Preparing and submitting your assignment {#normal-prep}
+### Preparing and submitting your assignment
 
 1. From the "Run" menu, select "Restart R and Run All Chunks".
-2. Deal with any code errors that crop up. Repeat steps 1–-2 until there are no more code errors.
+2. Deal with any code errors that crop up. Repeat steps 1--2 until there are no more code errors.
 3. Spell check your document by clicking the icon with "ABC" and a check mark.
-4. Hit the "Preview" button one last time to generate the final draft of the `.nb.html` file.
+4. Hit the "Render" button one last time to generate the final draft of the HTML file. (If there are errors here, you may need to go back and fix broken inline code or other markdown issues.)
 5. Proofread the HTML file carefully. If there are errors, go back and fix them, then repeat steps 1--5 again.
 
 If you have completed this chapter as part of a statistics course, follow the directions you receive from your professor to submit your assignment.
-
-
