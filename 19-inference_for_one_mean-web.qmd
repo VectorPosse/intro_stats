@@ -318,7 +318,7 @@ With any outlier, we need to investigate.
 Let's sort the data by `total` (ascending) using the `arrange` command.
 
 ```{r}
-teacher %>%
+teacher |>
   arrange(total)
 ```
 
@@ -337,7 +337,7 @@ Based on your answer to the above exercise, hopefully it's clear that this is an
 **CAUTION: If you are copying and pasting from this example to use for another research question, the following code chuck is specific to this research question and not applicable in other contexts.**
 
 ```{r}
-teacher2 <- teacher %>%
+teacher2 <- teacher |>
   filter(total > 30000)
 ```
 
@@ -409,37 +409,37 @@ Commentary: The original `teacher` data had 71 observations. The `teacher2` data
 ### Compute the test statistic.
 
 ```{r}
-total_mean <- teacher2 %>%
-  specify(response = total) %>%
+total_mean <- teacher2 |>
+  specify(response = total) |>
   calculate(stat = "mean")
 total_mean
 ```
 
 ```{r}
-total_t <- teacher2 %>%
-  specify(response = total) %>%
-  hypothesize(null = "point", mu = 63024) %>%
+total_t <- teacher2 |>
+  specify(response = total) |>
+  hypothesize(null = "point", mu = 63024) |>
   calculate(stat = "t")
 total_t
 ```
 
 ### Report the test statistic in context (when possible).
 
-The sample mean is $`r total_mean %>% pull(1)`.
+The sample mean is $`r total_mean |> pull(1)`.
 
-The t score is `r total_t %>% pull(1)`. The mean teacher salary in our sample is almost 6 standard errors to the right of the null value.
+The t score is `r total_t |> pull(1)`. The mean teacher salary in our sample is almost 6 standard errors to the right of the null value.
 
 ### Plot the null distribution.
 
 ```{r}
-total_test <- teacher2 %>%
-  specify(response = total) %>%
+total_test <- teacher2 |>
+  specify(response = total) |>
   assume("t")
 total_test
 ```
 
 ```{r}
-total_test %>%
+total_test |>
   visualize() +
   shade_p_value(obs_stat = total_t, direction = "two-sided")
 ```
@@ -450,7 +450,7 @@ Commentary: Although we are conducting a two-sided test, the area in the tails i
 ### Calculate the P-value.
 
 ```{r}
-total_test_p <- total_test %>%
+total_test_p <- total_test |>
   get_p_value(obs_stat = total_t, direction = "two-sided")
 total_test_p
 ```
@@ -490,13 +490,13 @@ All the conditions have been checked already.
 ### Calculate and graph the confidence interval.
 
 ```{r}
-total_ci <- total_test %>%
+total_ci <- total_test |>
   get_confidence_interval(point_estimate = total_mean, level = 0.95)
 total_ci
 ```
 
 ```{r}
-total_test %>%
+total_test |>
   visualize() +
   shade_confidence_interval(endpoints = total_ci)
 ```
