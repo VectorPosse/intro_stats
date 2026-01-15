@@ -225,9 +225,17 @@ cyl_test_sim |>
   shade_p_value(obs_chisq, direction = "greater")
 ```
 
+Note: the `visualize` command does not respect setting the `boundary` as we've done with histograms before, so it's centering a bar on 0 even though all $\chi^{2}$ values are positive. It *should* look more like this:
+
+```{r}
+cyl_test_sim |>
+  ggplot(aes(x = stat)) +
+    geom_histogram(boundary = 0, binwidth = 1)
+```
+
 A few things are apparent:
 
-1. The values are all positive. (The leftmost bar is sitting at 0, but it represents values greater than zero.) This makes sense when you remember that each piece of the $\chi^{2}$ calculation was positive. This is different from our earlier simulations that looked like normal models. (Z scores can be positive or negative, but not $\chi^{2}$.)
+1. The values are all positive. This makes sense when you remember that each piece of the $\chi^{2}$ calculation was positive. This is different from our earlier simulations that looked like normal models. (Z scores can be positive or negative, but not $\chi^{2}$.)
 
 2. This is a severely right-skewed graph. Although most values are near zero, the occasional unusual sample can have a large value of $\chi^{2}$.
 
