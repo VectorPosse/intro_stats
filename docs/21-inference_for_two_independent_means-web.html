@@ -368,7 +368,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#hypotheses" id="toc-hypotheses" class="nav-link" data-scroll-target="#hypotheses"><span class="header-section-number">21.8</span> Hypotheses</a>
   <ul class="collapse">
-  <li><a href="#identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest." id="toc-identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest." class="nav-link" data-scroll-target="#identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest."><span class="header-section-number">21.8.1</span> Identify the sample (or samples) and a reasonable population (or populations) of interest.</a></li>
+  <li><a href="#identify-the-sample-and-a-reasonable-population-of-interest." id="toc-identify-the-sample-and-a-reasonable-population-of-interest." class="nav-link" data-scroll-target="#identify-the-sample-and-a-reasonable-population-of-interest."><span class="header-section-number">21.8.1</span> Identify the sample and a reasonable population of interest.</a></li>
   <li><a href="#express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences." id="toc-express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences." class="nav-link" data-scroll-target="#express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences."><span class="header-section-number">21.8.2</span> Express the null and alternative hypotheses as contextually meaningful full sentences.</a></li>
   <li><a href="#express-the-null-and-alternative-hypotheses-in-symbols-when-possible." id="toc-express-the-null-and-alternative-hypotheses-in-symbols-when-possible." class="nav-link" data-scroll-target="#express-the-null-and-alternative-hypotheses-in-symbols-when-possible."><span class="header-section-number">21.8.3</span> Express the null and alternative hypotheses in symbols (when possible).</a></li>
   </ul></li>
@@ -445,7 +445,7 @@ window.Quarto = {
 </div>
 <section id="introduction" class="level2" data-number="21.1">
 <h2 data-number="21.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">21.1</span> Introduction</h2>
-<p>If we have a numerical variable and a categorical variable with two categories, we can think of the numerical variable as response and the categorical variable as predictor. The idea is that the two categories sort your numerical data into two groups which can be compared. Assuming the two groups are independent of each other, we can use them as samples of two larger populations. This leads to inference to decide if the difference between the means of the two groups is statistically significant and then estimate the difference between the means of the two populations represented. The relevant hypothesis test is called a two-sample t test (or Welch’s t test, to be specific).</p>
+<p>If we have a numerical variable and a categorical variable with two categories, we can think of the numerical variable as response and the categorical variable as predictor. The idea is that the two categories sort your numerical data into two groups which can be compared. Assuming the two groups are independent of each other, this leads to inference to decide if the difference between the means of the two groups is statistically discernible and then estimate the difference between the means of the two population groups represented. The relevant hypothesis test is called a two-sample t test (or Welch’s t test, to be specific).</p>
 <section id="install-new-packages" class="level3" data-number="21.1.1">
 <h3 data-number="21.1.1" class="anchored" data-anchor-id="install-new-packages"><span class="header-section-number">21.1.1</span> Install new packages</h3>
 <p>There are no new packages used in this chapter.</p>
@@ -516,7 +516,7 @@ The following object is masked from 'package:dplyr':
 </section>
 <section id="data-preparation" class="level2" data-number="21.4">
 <h2 data-number="21.4" class="anchored" data-anchor-id="data-preparation"><span class="header-section-number">21.4</span> Data preparation</h2>
-<p>The actual mean weights in each sample (the smoking women and the nonsmoking women) can be found using a <code>group_by</code> and <code>summarise</code> pipeline:</p>
+<p>The actual mean weights in each group (the smoking women and the nonsmoking women) can be found using a <code>group_by</code> and <code>summarise</code> pipeline:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>birthwt <span class="sc">|&gt;</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(smoke) <span class="sc">|&gt;</span></span>
@@ -529,7 +529,7 @@ The following object is masked from 'package:dplyr':
 </div>
 </div>
 </div>
-<p>Note that 0 means “nonsmoker” and 1 means “smoker”. Looks like We need to address the fact the <code>smoke</code> variable is recorded as a numerical variable instead of a categorical variable:</p>
+<p>Note that 0 means “nonsmoker” and 1 means “smoker”. We need to address the fact the <code>smoke</code> variable is recorded as a numerical variable instead of a categorical variable:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>birthwt <span class="ot">&lt;-</span> birthwt <span class="sc">|&gt;</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">smoke_fct =</span> <span class="fu">factor</span>(smoke,</span>
@@ -740,7 +740,7 @@ N\left(\mu_{1} - \mu_{2}, \sqrt{\frac{\sigma_{1}^{2}}{n_{1}} + \frac{\sigma_{2}^
 SE = \sqrt{\frac{s_{1}^{2}}{n_{1}} + \frac{s_{2}^{2}}{n_{2}}}.
 \]</span></p>
 <p>However, <span class="math inline">\(s_{1}\)</span> and <span class="math inline">\(s_{2}\)</span> are not perfect estimates of <span class="math inline">\(\sigma_{1}\)</span> and <span class="math inline">\(\sigma_{2}\)</span>; they are subject to sampling variability too. This extra variability means that a normal model is no longer appropriate as the sampling distribution model.</p>
-<p>In the one-sample case, a Student t model with <span class="math inline">\(df = n - 1\)</span> was the right choice. In the two-sample case, we don’t know the right answer. And I don’t mean that we haven’t learned it yet in our stats class. I mean, statisticians have not found a formula for the correct sampling distribution. It is a famous unsolved problem, called the Behrens-Fisher problem.</p>
+<p>In the one-sample case, a Student t model with <span class="math inline">\(df = n - 1\)</span> was the right choice. In the two-sample case, we don’t know the right answer. And we don’t mean that we haven’t learned it yet in our stats class. We mean, statisticians have not found a formula for the correct sampling distribution. It is a famous unsolved problem, called the Behrens-Fisher problem.</p>
 <p>Several researchers have proposed solutions that are “close” though. One compelling one is called “Welch’s t test.” Welch showed that, even though it’s not quite right, a Student t model is very close as long as you pick the degrees of freedom carefully. Unfortunately, the way to compute the right degrees of freedom is crazy complicated. (You can see the formula <a href="https://www.statisticshowto.com/satterthwaite-formula/">here</a> if you’re really dying to know.) Fortunately, R is good at crazy complicated computations.</p>
 <p>Let’s go through the full rubric.</p>
 </section>
@@ -882,9 +882,9 @@ $ smoke_fct &lt;fct&gt; Nonsmoker, Nonsmoker, Smoker, Smoker, Smoker, Nonsmoker,
 </section>
 <section id="hypotheses" class="level2" data-number="21.8">
 <h2 data-number="21.8" class="anchored" data-anchor-id="hypotheses"><span class="header-section-number">21.8</span> Hypotheses</h2>
-<section id="identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest." class="level3" data-number="21.8.1">
-<h3 data-number="21.8.1" class="anchored" data-anchor-id="identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest."><span class="header-section-number">21.8.1</span> Identify the sample (or samples) and a reasonable population (or populations) of interest.</h3>
-<p>The samples consist of 115 nonsmoking mothers and 74 smoking mothers. The populations are those women who do not smoke during pregnancy and those women who do smoke during pregnancy.</p>
+<section id="identify-the-sample-and-a-reasonable-population-of-interest." class="level3" data-number="21.8.1">
+<h3 data-number="21.8.1" class="anchored" data-anchor-id="identify-the-sample-and-a-reasonable-population-of-interest."><span class="header-section-number">21.8.1</span> Identify the sample and a reasonable population of interest.</h3>
+<p>The sample consists of 189 mothers. The population is all pregnant women, but perhaps we should restrict our population to women in, say, Massachusetts in the 1980s.</p>
 </section>
 <section id="express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences." class="level3" data-number="21.8.2">
 <h3 data-number="21.8.2" class="anchored" data-anchor-id="express-the-null-and-alternative-hypotheses-as-contextually-meaningful-full-sentences."><span class="header-section-number">21.8.2</span> Express the null and alternative hypotheses as contextually meaningful full sentences.</h3>
@@ -908,17 +908,17 @@ $ smoke_fct &lt;fct&gt; Nonsmoker, Nonsmoker, Smoker, Smoker, Smoker, Nonsmoker,
 <section id="check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met." class="level3" data-number="21.9.2">
 <h3 data-number="21.9.2" class="anchored" data-anchor-id="check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met."><span class="header-section-number">21.9.2</span> Check the relevant conditions to ensure that model assumptions are met.</h3>
 <ul>
-<li>Random (for both groups)
+<li>Random
 <ul>
-<li>We have very little information about these women. We hope that the 115 nonsmoking mothers at this hospital are representative of other nonsmoking mothers, at least in that region at that time. And same for the 74 smoking mothers.</li>
+<li>We have very little information about these women. We hope that the 189 mothers at this hospital are representative of other mothers, at least in that region at that time.</li>
 </ul></li>
-<li>10% (for both groups)
+<li>10%
 <ul>
-<li>115 is less than 10% of all nonsmoking mothers and 74 is less than 10% of all smoking mothers.</li>
+<li>189 is less than 10% of all mothers.</li>
 </ul></li>
-<li>Nearly normal (for both groups)
+<li>Nearly normal
 <ul>
-<li>Since the sample sizes are more than 30 in each group, we meet the condition.</li>
+<li>We do need to check this for both groups of mothers (smokers and non-smokers). Since there are more than 30 in each group, we meet the condition.</li>
 </ul></li>
 </ul>
 </section>
@@ -987,7 +987,7 @@ $ smoke_fct &lt;fct&gt; Nonsmoker, Nonsmoker, Smoker, Smoker, Smoker, Nonsmoker,
 </div>
 <p>Commentary: We use the name <code>bwt_smoke_test_t</code> (using the assumption of a Student t model) as a new variable name so that it doesn’t overwrite the variable <code>bwt_smoke_test</code> we performed earlier as a permutation test (the one with the shuffling). This results of using <code>bwt_smoke_test</code> versus <code>bwt_smoke_test_t</code> will be very similar.</p>
 <p>Also be sure to use the t score <code>obs_diff_t</code> as the test statistic.</p>
-<p>Note that the <code>infer</code> output tells us there are 170 degrees of freedom. (It turns out to be 170.1.) Note that this number is the result of a complicated formula, and it’s not just a simple function of the sample sizes 115 and 74.</p>
+<p>Note that the <code>infer</code> output tells us there are 170 degrees of freedom. (It turns out to be 170.1.) Note that this number is the result of a complicated formula, and it’s not just a simple function of the group sizes 115 and 74.</p>
 <p>Finally, note that the alternative hypothesis indicated a two-sided test, so we need to specify a “two-sided” P-value in the <code>shade_p_value</code> command.</p>
 </section>
 <section id="calculate-the-p-value." class="level3" data-number="21.10.4">
@@ -1022,11 +1022,11 @@ $ smoke_fct &lt;fct&gt; Nonsmoker, Nonsmoker, Smoker, Smoker, Smoker, Nonsmoker,
 </section>
 <section id="express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion." class="level3" data-number="21.11.3">
 <h3 data-number="21.11.3" class="anchored" data-anchor-id="express-reservations-or-uncertainty-about-the-generalizability-of-the-conclusion."><span class="header-section-number">21.11.3</span> Express reservations or uncertainty about the generalizability of the conclusion.</h3>
-<p>As when we looked at this data before, our uncertainly about the data provenance means that we don’t know if the difference observed in these samples at this one hospital at this one time are generalizable to larger populations. Also keep in mind that this data is observational, so we cannot draw any causal conclusion about the “effect” of smoking on birth weight.</p>
+<p>As when we looked at this data before, our uncertainly about the data provenance means that we don’t know if the difference observed in this sample at this one hospital at this one time is generalizable to a larger population. Also keep in mind that this data is observational, so we cannot draw any causal conclusion about the “effect” of smoking on birth weight.</p>
 </section>
 <section id="identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses." class="level3" data-number="21.11.4">
 <h3 data-number="21.11.4" class="anchored" data-anchor-id="identify-the-possibility-of-either-a-type-i-or-type-ii-error-and-state-what-making-such-an-error-means-in-the-context-of-the-hypotheses."><span class="header-section-number">21.11.4</span> Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.</h3>
-<p>If we’ve made a Type I error, then that means that there might be no difference in the birth weights of babies from nonsmoking versus smoking mothers, but we got some unusual samples that showed a difference.</p>
+<p>If we’ve made a Type I error, then that means that there might be no difference in the birth weights of babies from nonsmoking versus smoking mothers, but we got some unusual sample that showed a difference.</p>
 </section>
 </section>
 <section id="confidence-interval" class="level2" data-number="21.12">
@@ -1104,8 +1104,8 @@ $ smoke_fct &lt;fct&gt; Nonsmoker, Nonsmoker, Smoker, Smoker, Smoker, Nonsmoker,
 </section>
 <section id="hypotheses-1" class="level5 unnumbered">
 <h5 class="unnumbered anchored" data-anchor-id="hypotheses-1">Hypotheses</h5>
-<section id="identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-1" class="level6 unnumbered">
-<h6 class="unnumbered anchored" data-anchor-id="identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.-1">Identify the sample (or samples) and a reasonable population (or populations) of interest.</h6>
+<section id="identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest." class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="identify-the-sample-or-samples-and-a-reasonable-population-or-populations-of-interest.">Identify the sample (or samples) and a reasonable population (or populations) of interest.</h6>
 <div class="answer">
 <p>Please write up your answer here.</p>
 </div>

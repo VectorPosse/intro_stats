@@ -73,10 +73,12 @@ ggplot(data.frame(x = c(-4, 4)), aes(x)) +
 The curve pictured above is called the *standard normal distribution*. It has a mean of 0 and a standard deviation of 1. Mathematically, this is written as
 
 $$
-N(\mu = 0, \sigma = 1),
+N(\mu = 0, \sigma = 1).
 $$
 
-or usually just
+The symbol $\mu$ is the Greek letter *mu* (pronounced "myoo") and it represents a population mean. Unlike the symbol $\bar{y}$ introduced in Chapter 4 as the "sample mean" calculated from data, the population mean $\mu$ is a theoretical mean for an entire population. Similarly, the symbol $\sigma$ is the Greek letter *sigma* and it represents a population standard deviation (in contrast to $s$, the sample standard deviation calculated from data).
+
+Often, we leave those Greek letters out and write more simply,
 
 $$
 N(0, 1).
@@ -154,6 +156,10 @@ It's also important that you include the phrase, "The model predicts..." or some
 Here's another question: how many women are predicted to have SBP *greater* than 130? If 87.3% of women have SBP under 130, then 12.7% must have SBP over 130. Why? Because all women have to add up to 100%!
 
 Therefore, all we have to do to solve this problem is subtract the number we obtained in the previous question from 1. (Remember that 1 = 100%.)
+
+```{r}
+1 - pdist("norm", q = 130, mean = 114, sd = 14)
+```
 
 > The model predicts that `r 100 * (1 - pdist("norm", q = 130, mean = 114, sd = 14))`% of women ages 30--44 in the U.S. and Canada will have systolic blood pressure over 130 mmHg.
 
