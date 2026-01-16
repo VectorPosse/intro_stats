@@ -52,7 +52,7 @@ We use the `read_csv` command to import a CSV file. In this case, we're grabbing
 hf <- read_csv("https://vectorposse.github.io/intro_stats/data/hf.csv")
 ```
 
-Here is a preview of the data set. If you're looking at this on the website, you'll note that only the first 10,000 rows print here.
+Here is a preview of the data set:
 
 ```{r}
 hf
@@ -97,7 +97,7 @@ The `select` verb is very easy. It just selects some subset of variables (the co
 
 The `select` command from the `dplyr` package illustrates one of the common issues R users face. Because the word "select" is pretty common, and selecting things is a common task, there are multiple packages that have a function called `select`. Depending on the order in which packages were loaded, R might get confused as to which version of `select` you want and try to apply the wrong one. One way to get the correct version is to specify the package in the syntax. Instead of typing `select`, we can type `dplyr::select` to ensure we get the version from the `dplyr` package. We'll do this in all future uses of the `select` function. (The other functions in this chapter don't cause us trouble because we don't use any other packages whose functions conflict like this.)
 
-Suppose all we wanted to see was the carrier, origin, and destination. The command to do this appears in the next code chunk. (Note that we're only going to print the first 100 rows. It takes a lot of memory to keep printing tibbles that have 22,758 rows!)
+Suppose all we wanted to see was the carrier, origin, and destination. The command to do this appears in the next code chunk. (Note that we're only going to print the first 100 rows. It takes a lot of memory to keep printing tibbles that have 2000 rows!)
 
 ```{r}
 hf_select <- dplyr::select(hf, UniqueCarrier, Origin, Dest)
@@ -178,14 +178,6 @@ Putting a minus sign in front of a variable name in the `select` command will re
 ```
 
 :::
-
-*****
-
-To free up some memory, we're going to remove some of the tibbles we've created. This won't affect how they will print out above. You will never have to do this on your own.
-
-```{r}
-rm(hf_select, hf_select2, hf_select3)
-```
 
 
 ## `filter`
@@ -396,10 +388,10 @@ mean(hf_mutate2$late, na.rm = TRUE)
 
 This gives us the proportion of late flights.
 
-Note that we needed `na.rm` as you've seen in previous chapter. For example, look at the 93rd row of the tibble:
+Note that we needed `na.rm` as you've seen in previous chapter. For example, look at the 23rd row of the tibble:
 
 ```{r}
-slice(hf_mutate2, 93)
+slice(hf_mutate2, 23)
 ```
 
 Notice that all the times are missing. There are a bunch of rows like this. Since there is not always an arrival delay listed, the `ArrDelay` variable doesn't always have a value, and if `ArrDelay` is `NA`, the `late` variable will be too. So if we try to calculate the mean with just the `mean` command, this happens:
@@ -437,12 +429,6 @@ A related verb is `transmute`. The only difference between `mutate` and `transmu
 
 *****
 
-To free up some memory, we're going to remove some of the tibbles we've created. This won't affect how they will print out above. You will never have to do this on your own.
-
-```{r}
-rm(hf_mutate, hf_mutate2, hf_mutate3)
-```
-
 
 ## `summarise` (with `group_by`)
 
@@ -477,12 +463,6 @@ hf_summ
 Look at the earlier version of `hf_summ` and compare it to the one above. Make sure you see that the name of the second column changed.
 
 *****
-
-To free up some memory, we're going to remove some of the tibbles we've created. This won't affect how they will print out above. You will never have to do this on your own.
-
-```{r}
-rm(hf_summ_grouped)
-```
 
 
 ## Piping
@@ -621,6 +601,8 @@ hf_grand_finale <- hf |>
 hf_grand_finale
 ```
 
+(Think about what it might mean for a departure delay to be negative.)
+
 Go through each line of code carefully and translate it into English:
 
 * We define a variable called `hf_grand_finale` that starts with the original `hf` data.
@@ -642,7 +624,7 @@ hf_grand_finale <- hf |>
 hf_grand_finale
 ```
 
-Check that you get the same result. With *massive* data sets, it's possible that the selection and sequence of these verbs matter, but you don't see an appreciable difference here, even with `r NROW(hf)` rows. (There are ways of benchmarking performance in R, but that is a more advanced topic.)
+Check that you get the same result. With *massive* data sets, it's possible that the selection and sequence of these verbs matter, but you don't see an appreciable difference here. (There are ways of benchmarking performance in R, but that is a more advanced topic.)
 
 ##### Exercise 13 {-}
 
