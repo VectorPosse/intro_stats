@@ -21,8 +21,7 @@ No new R functions are introduced here.
 
 ## Introduction
 
-If we have a numerical variable and a categorical variable with two categories, we can think of the numerical variable as response and the categorical variable as predictor. The idea is that the two categories sort your numerical data into two groups which can be compared. Assuming the two groups are independent of each other, we can use them as samples of two larger populations. This leads to inference to decide if the difference between the means of the two groups is statistically significant and then estimate the difference between the means of the two populations represented. The relevant hypothesis test is called a two-sample t test (or Welch's t test, to be specific).
-
+If we have a numerical variable and a categorical variable with two categories, we can think of the numerical variable as response and the categorical variable as predictor. The idea is that the two categories sort your numerical data into two groups which can be compared. Assuming the two groups are independent of each other, this leads to inference to decide if the difference between the means of the two groups is statistically discernible and then estimate the difference between the means of the two population groups represented. The relevant hypothesis test is called a two-sample t test (or Welch's t test, to be specific).
 
 ### Install new packages
 
@@ -78,7 +77,7 @@ We'd like to compare mean birth weights among two groups: women who smoked durin
 
 ## Data preparation
 
-The actual mean weights in each sample (the smoking women and the nonsmoking women) can be found using a `group_by` and `summarise` pipeline:
+The actual mean weights in each group (the smoking women and the nonsmoking women) can be found using a `group_by` and `summarise` pipeline:
 
 ```{r}
 birthwt |>
@@ -86,7 +85,7 @@ birthwt |>
   summarise(mean(bwt))
 ```
 
-Note that 0 means "nonsmoker" and 1 means "smoker". Looks like We need to address the fact the `smoke` variable is recorded as a numerical variable instead of a categorical variable:
+Note that 0 means "nonsmoker" and 1 means "smoker". We need to address the fact the `smoke` variable is recorded as a numerical variable instead of a categorical variable:
 
 ```{r}
 birthwt <- birthwt |>
@@ -219,7 +218,7 @@ $$
 
 However, $s_{1}$ and $s_{2}$ are not perfect estimates of $\sigma_{1}$ and $\sigma_{2}$; they are subject to sampling variability too. This extra variability means that a normal model is no longer appropriate as the sampling distribution model.
 
-In the one-sample case, a Student t model with $df = n - 1$ was the right choice. In the two-sample case, we don't know the right answer. And I don't mean that we haven't learned it yet in our stats class. I mean, statisticians have not found a formula for the correct sampling distribution. It is a famous unsolved problem, called the Behrens-Fisher problem.
+In the one-sample case, a Student t model with $df = n - 1$ was the right choice. In the two-sample case, we don't know the right answer. And we don't mean that we haven't learned it yet in our stats class. We mean, statisticians have not found a formula for the correct sampling distribution. It is a famous unsolved problem, called the Behrens-Fisher problem.
 
 Several researchers have proposed solutions that are "close" though. One compelling one is called "Welch's t test." Welch showed that, even though it's not quite right, a Student t model is very close as long as you pick the degrees of freedom carefully. Unfortunately, the way to compute the right degrees of freedom is crazy complicated. (You can see the formula [here](https://www.statisticshowto.com/satterthwaite-formula/) if you're really dying to know.) Fortunately, R is good at crazy complicated computations.
 
@@ -303,9 +302,9 @@ Commentary: The boxplots and histograms show why statistical inference is so imp
 
 ## Hypotheses
 
-### Identify the sample (or samples) and a reasonable population (or populations) of interest.
+### Identify the sample and a reasonable population of interest.
 
-The samples consist of 115 nonsmoking mothers and 74 smoking mothers. The populations are those women who do not smoke during pregnancy and those women who do smoke during pregnancy.
+The sample consists of 189 mothers. The population is all pregnant women, but perhaps we should restrict our population to women in, say, Massachusetts in the 1980s.
 
 ### Express the null and alternative hypotheses as contextually meaningful full sentences.
 
@@ -332,14 +331,14 @@ Commentary: For Welch's t test, the degrees of freedom won't usually be a whole 
 
 ### Check the relevant conditions to ensure that model assumptions are met.
 
-* Random (for both groups)
-  * We have very little information about these women. We hope that the 115 nonsmoking mothers at this hospital are representative of other nonsmoking mothers, at least in that region at that time. And same for the 74 smoking mothers.
+* Random
+  * We have very little information about these women. We hope that the 189 mothers at this hospital are representative of other mothers, at least in that region at that time.
 
-* 10% (for both groups)
-  * 115 is less than 10% of all nonsmoking mothers and 74 is less than 10% of all smoking mothers.
+* 10%
+  * 189 is less than 10% of all mothers.
 
-* Nearly normal (for both groups)
-  * Since the sample sizes are more than 30 in each group, we meet the condition.
+* Nearly normal
+  * We do need to check this for both groups of mothers (smokers and non-smokers). Since there are more than 30 in each group, we meet the condition.
 
 
 ## Mechanics
@@ -390,7 +389,7 @@ Commentary: We use the name `bwt_smoke_test_t` (using the assumption of a Studen
 
 Also be sure to use the t score `obs_diff_t` as the test statistic.
 
-Note that the `infer` output tells us there are 170 degrees of freedom. (It turns out to be 170.1.) Note that this number is the result of a complicated formula, and it's not just a simple function of the sample sizes 115 and 74.
+Note that the `infer` output tells us there are 170 degrees of freedom. (It turns out to be 170.1.) Note that this number is the result of a complicated formula, and it's not just a simple function of the group sizes 115 and 74.
 
 Finally, note that the alternative hypothesis indicated a two-sided test, so we need to specify a "two-sided" P-value in the `shade_p_value` command.
 
@@ -419,11 +418,11 @@ We have sufficient evidence that there is a difference in the mean birth weight 
 
 ### Express reservations or uncertainty about the generalizability of the conclusion.
 
-As when we looked at this data before, our uncertainly about the data provenance means that we don't know if the difference observed in these samples at this one hospital at this one time are generalizable to larger populations. Also keep in mind that this data is observational, so we cannot draw any causal conclusion about the "effect" of smoking on birth weight.
+As when we looked at this data before, our uncertainly about the data provenance means that we don't know if the difference observed in this sample at this one hospital at this one time is generalizable to a larger population. Also keep in mind that this data is observational, so we cannot draw any causal conclusion about the "effect" of smoking on birth weight.
 
 ### Identify the possibility of either a Type I or Type II error and state what making such an error means in the context of the hypotheses.
 
-If we've made a Type I error, then that means that there might be no difference in the birth weights of babies from nonsmoking versus smoking mothers, but we got some unusual samples that showed a difference.
+If we've made a Type I error, then that means that there might be no difference in the birth weights of babies from nonsmoking versus smoking mothers, but we got some unusual sample that showed a difference.
 
 
 ## Confidence interval
@@ -509,7 +508,7 @@ Please write up your answer here.
 
 ##### Hypotheses
 
-###### Identify the sample (or samples) and a reasonable population (or populations) of interest.
+###### Identify the sample and a reasonable population of interest.
 
 ::: {.answer}
 
