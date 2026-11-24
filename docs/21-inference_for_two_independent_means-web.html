@@ -395,7 +395,7 @@ window.Quarto = {
   <li><a href="#confidence-interval" id="toc-confidence-interval" class="nav-link" data-scroll-target="#confidence-interval"><span class="header-section-number">21.12</span> Confidence interval</a>
   <ul class="collapse">
   <li><a href="#check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-1" id="toc-check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-1" class="nav-link" data-scroll-target="#check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-1"><span class="header-section-number">21.12.1</span> Check the relevant conditions to ensure that model assumptions are met.</a></li>
-  <li><a href="#calculate-the-confidence-interval." id="toc-calculate-the-confidence-interval." class="nav-link" data-scroll-target="#calculate-the-confidence-interval."><span class="header-section-number">21.12.2</span> Calculate the confidence interval.</a></li>
+  <li><a href="#calculate-and-graph-the-confidence-interval." id="toc-calculate-and-graph-the-confidence-interval." class="nav-link" data-scroll-target="#calculate-and-graph-the-confidence-interval."><span class="header-section-number">21.12.2</span> Calculate and graph the confidence interval.</a></li>
   <li><a href="#state-but-do-not-overstate-a-contextually-meaningful-interpretation." id="toc-state-but-do-not-overstate-a-contextually-meaningful-interpretation." class="nav-link" data-scroll-target="#state-but-do-not-overstate-a-contextually-meaningful-interpretation."><span class="header-section-number">21.12.3</span> State (but do not overstate) a contextually meaningful interpretation.</a></li>
   <li><a href="#if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test." id="toc-if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test." class="nav-link" data-scroll-target="#if-running-a-two-sided-test-explain-how-the-confidence-interval-reinforces-the-conclusion-of-the-hypothesis-test."><span class="header-section-number">21.12.4</span> If running a two-sided test, explain how the confidence interval reinforces the conclusion of the hypothesis test.</a></li>
   <li><a href="#comment-on-the-effect-size-and-the-practical-significance-of-the-result." id="toc-comment-on-the-effect-size-and-the-practical-significance-of-the-result." class="nav-link" data-scroll-target="#comment-on-the-effect-size-and-the-practical-significance-of-the-result."><span class="header-section-number">21.12.5</span> Comment on the effect size and the practical significance of the result.</a></li>
@@ -1035,8 +1035,8 @@ $ smoke_fct &lt;fct&gt; Nonsmoker, Nonsmoker, Smoker, Smoker, Smoker, Nonsmoker,
 <h3 data-number="21.12.1" class="anchored" data-anchor-id="check-the-relevant-conditions-to-ensure-that-model-assumptions-are-met.-1"><span class="header-section-number">21.12.1</span> Check the relevant conditions to ensure that model assumptions are met.</h3>
 <p>There are no additional conditions to check.</p>
 </section>
-<section id="calculate-the-confidence-interval." class="level3" data-number="21.12.2">
-<h3 data-number="21.12.2" class="anchored" data-anchor-id="calculate-the-confidence-interval."><span class="header-section-number">21.12.2</span> Calculate the confidence interval.</h3>
+<section id="calculate-and-graph-the-confidence-interval." class="level3" data-number="21.12.2">
+<h3 data-number="21.12.2" class="anchored" data-anchor-id="calculate-and-graph-the-confidence-interval."><span class="header-section-number">21.12.2</span> Calculate and graph the confidence interval.</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>bwt_smoke_ci <span class="ot">&lt;-</span> bwt_smoke_test_t <span class="sc">|&gt;</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_confidence_interval</span>(<span class="at">point_estimate =</span> obs_diff, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
@@ -1046,6 +1046,18 @@ $ smoke_fct &lt;fct&gt; Nonsmoker, Nonsmoker, Smoker, Smoker, Smoker, Nonsmoker,
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["lower_ci"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["upper_ci"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"78.57486","2":"488.9786"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>bwt_smoke_test_t <span class="sc">|&gt;</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visualize</span>() <span class="sc">+</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shade_confidence_interval</span>(<span class="at">endpoints =</span> bwt_smoke_ci)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="21-inference_for_two_independent_means-web_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
 </div>
@@ -1078,10 +1090,10 @@ $ smoke_fct &lt;fct&gt; Nonsmoker, Nonsmoker, Smoker, Smoker, Smoker, Nonsmoker,
 <div class="answer">
 <p>Please write up your answer here.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to print the data</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to print the data</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to glimpse the variables</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to glimpse the variables</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1089,7 +1101,7 @@ $ smoke_fct &lt;fct&gt; Nonsmoker, Nonsmoker, Smoker, Smoker, Smoker, Nonsmoker,
 <h6 class="unnumbered anchored" data-anchor-id="prepare-the-data-for-analysis.-1">Prepare the data for analysis.</h6>
 <div class="answer">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to prepare the data for analysis.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to prepare the data for analysis.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1097,7 +1109,7 @@ $ smoke_fct &lt;fct&gt; Nonsmoker, Nonsmoker, Smoker, Smoker, Smoker, Nonsmoker,
 <h6 class="unnumbered anchored" data-anchor-id="make-tables-or-plots-to-explore-the-data-visually.-1">Make tables or plots to explore the data visually.</h6>
 <div class="answer">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to make tables or plots.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to make tables or plots.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1146,7 +1158,7 @@ $ smoke_fct &lt;fct&gt; Nonsmoker, Nonsmoker, Smoker, Smoker, Smoker, Nonsmoker,
 <h6 class="unnumbered anchored" data-anchor-id="compute-the-test-statistic.-1">Compute the test statistic.</h6>
 <div class="answer">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to compute the test statistic.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to compute the test statistic.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1160,10 +1172,10 @@ $ smoke_fct &lt;fct&gt; Nonsmoker, Nonsmoker, Smoker, Smoker, Smoker, Nonsmoker,
 <h6 class="unnumbered anchored" data-anchor-id="plot-the-null-distribution.-1">Plot the null distribution.</h6>
 <div class="answer">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to generate the null distribution.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to generate the null distribution.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to plot the null distribution.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to plot the null distribution.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1171,7 +1183,7 @@ $ smoke_fct &lt;fct&gt; Nonsmoker, Nonsmoker, Smoker, Smoker, Smoker, Nonsmoker,
 <h6 class="unnumbered anchored" data-anchor-id="calculate-the-p-value.-1">Calculate the P-value.</h6>
 <div class="answer">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to calculate the P-value.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to calculate the P-value.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1217,14 +1229,14 @@ $ smoke_fct &lt;fct&gt; Nonsmoker, Nonsmoker, Smoker, Smoker, Smoker, Nonsmoker,
 <p>Please write up your answer here. (Some conditions may require R code as well.)</p>
 </div>
 </section>
-<section id="calculate-and-graph-the-confidence-interval." class="level6 unnumbered">
-<h6 class="unnumbered anchored" data-anchor-id="calculate-and-graph-the-confidence-interval.">Calculate and graph the confidence interval.</h6>
+<section id="calculate-and-graph-the-confidence-interval.-1" class="level6 unnumbered">
+<h6 class="unnumbered anchored" data-anchor-id="calculate-and-graph-the-confidence-interval.-1">Calculate and graph the confidence interval.</h6>
 <div class="answer">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to calculate the confidence interval.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to calculate the confidence interval.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to graph the confidence interval.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add code here to graph the confidence interval.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>

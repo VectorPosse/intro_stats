@@ -384,7 +384,6 @@ bwt_smoke_test_t |>
   shade_p_value(obs_stat = obs_diff_t, direction = "two-sided")
 ```
 
-
 Commentary: We use the name `bwt_smoke_test_t` (using the assumption of a Student t model) as a new variable name so that it doesn't overwrite the variable `bwt_smoke_test` we performed earlier as a permutation test (the one with the shuffling). This results of using `bwt_smoke_test` versus `bwt_smoke_test_t` will be very similar.
 
 Also be sure to use the t score `obs_diff_t` as the test statistic.
@@ -431,12 +430,18 @@ If we've made a Type I error, then that means that there might be no difference 
 
 There are no additional conditions to check.
 
-### Calculate the confidence interval.
+### Calculate and graph the confidence interval.
 
 ```{r}
 bwt_smoke_ci <- bwt_smoke_test_t |>
   get_confidence_interval(point_estimate = obs_diff, level = 0.95)
 bwt_smoke_ci
+```
+
+```{r}
+bwt_smoke_test_t |>
+  visualize() +
+  shade_confidence_interval(endpoints = bwt_smoke_ci)
 ```
 
 Commentary: Pay close attention to when we use `obs_diff` and `obs_diff_t`. In the hypothesis test, we assumed a t distribution for the null and so we have to use the t score `obs_diff_t` to shade the P-value. However, for a confidence interval, we are building the interval centered on our sample difference `obs_diff`.
